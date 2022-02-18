@@ -1,0 +1,350 @@
+<div class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2">
+                    Account Payment Settings
+                </span>
+
+            </h1>
+
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-16" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <div class="text-uppercase go-back-link" (click)="onBack($event)">
+                    <i class="long arrow alternate left icon"></i>
+                    <span>Go Back</span>
+                </div>
+
+                <div></div>
+
+            </div>
+            <!--/ CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24 pt-16" fxLayout="column" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <h3 class="my-16 mx-0"><i class="file alternate outline left icon mr-8"></i>Create Payment Plan</h3>
+
+                <form nz-form name="paymentPlanForm" fxLayout="column" [formGroup]="paymentPlanForm"
+                    (ngSubmit)="onSubmit()" [nzLayout]="'vertical'">
+
+                    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8">
+
+                            <nz-form-item>
+    
+                                <nz-form-label nzRequired>Payment Frequency</nz-form-label>
+    
+                                <nz-form-control nzHasFeedback [nzErrorTip]="paymentFrequencyErrorTpl">
+    
+                                    <nz-select formControlName="payment_frequency" nzPlaceHolder="Payment Frequency">
+    
+                                        <nz-option *ngFor="let frequency of paymentFrequencies" [nzValue]="frequency.value"
+                                            [nzLabel]="frequency.name"></nz-option>
+    
+                                    </nz-select>
+    
+                                    <ng-template #paymentFrequencyErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please select payment frequency
+                                        </ng-container>
+                                    </ng-template>
+    
+                                </nz-form-control>
+    
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8">
+
+                            <nz-form-item>
+    
+                                <nz-form-label [nzRequired]="paymentPlanForm.get('payment_day').enabled">
+                                    Payment Day
+                                    <i nz-tooltip nzTooltipTitle="Payment will start from this day and continue on same day for upcoming weeks" class="info circle right icon ml-8 primary-color"></i>
+                                </nz-form-label>
+    
+                                <nz-form-control nzHasFeedback [nzErrorTip]="paymentDayErrorTpl">
+    
+                                    <nz-select formControlName="payment_day" nzPlaceHolder="Start Day" [nzDisabled]="paymentPlanForm.get('payment_day').disabled">
+    
+                                        <nz-option *ngFor="let day of paymentdays" [nzValue]="day.value"
+                                            [nzLabel]="day.name"></nz-option>
+    
+                                    </nz-select>
+    
+                                    <ng-template #paymentDayErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please select payment day
+                                        </ng-container>
+                                    </ng-template>
+    
+                                </nz-form-control>
+    
+                            </nz-form-item>
+                            
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8">
+
+                            <nz-form-item>
+    
+                                <nz-form-label [nzRequired]="paymentPlanForm.get('billing_term').enabled">Billing Term</nz-form-label>
+    
+                                <nz-form-control nzHasFeedback [nzErrorTip]="billingTermErrorTpl">
+    
+                                    <nz-select formControlName="billing_term" nzPlaceHolder="Billing Term" [nzDisabled]="paymentPlanForm.get('billing_term').disabled">
+    
+                                        <nz-option *ngFor="let term of billingTerms" [nzValue]="term.value"
+                                            [nzLabel]="term.name"></nz-option>
+    
+                                    </nz-select>
+    
+                                    <ng-template #billingTermErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please select Billing Term
+                                        </ng-container>
+                                    </ng-template>
+    
+                                </nz-form-control>
+    
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8">
+
+                            <nz-form-item>
+    
+                                <nz-form-label>
+                                    Activation Date 
+                                    <i nz-tooltip nzTooltipTitle="Plan will be active from this date" class="info circle right icon ml-8 primary-color"></i>
+                                </nz-form-label>
+    
+                                <nz-form-control nzHasFeedback [nzErrorTip]="startWeekErrorTpl">
+    
+                                    <nz-date-picker 
+                                        [nzInputReadOnly]="true" 
+                                        [nzDisabledDate]="disabledDate" 
+                                        formControlName="activation_date" 
+                                        nzPlaceHolder="Activation Date" 
+                                        class="block"
+                                        [nzDisabled]="!paymentPlanForm.get('payment_frequency').value"
+                                        (ngModelChange)="activationChange($event)">
+                                    </nz-date-picker>
+    
+                                    <ng-template #startWeekErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please input activation date
+                                        </ng-container>
+                                    </ng-template>
+    
+                                </nz-form-control>
+    
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8">
+
+                            <nz-form-item>
+    
+                                <nz-form-label>
+                                    Amount Limit
+                                    <i nz-tooltip nzTooltipTitle="This determines the maximum amount to be charged on scheduled payment" class="info circle right icon ml-8 primary-color"></i>
+                                </nz-form-label>
+    
+                                <nz-form-control nzHasFeedback>
+    
+                                    <input nz-input formControlName="amount_limit" placeholder="Amount Limit"
+                                        type="number" />
+    
+                                </nz-form-control>
+    
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8">
+
+                            <nz-form-item>
+    
+                                <nz-form-label>
+                                    Fixed Amount
+                                    <i nz-tooltip nzTooltipTitle="This will override the account balance and account limit value and the account will be charged at this value on scheduled payment" class="info circle right icon ml-8 primary-color"></i>
+                                </nz-form-label>
+    
+                                <nz-form-control nzHasFeedback>
+    
+                                    <input nz-input formControlName="fixed_amount" placeholder="Fixed Amount"
+                                        type="number" />
+    
+                                </nz-form-control>
+    
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8">
+        
+                            <nz-form-item>
+            
+                                <label nz-checkbox formControlName="auto_charge">
+                                    Auto Charge
+                                    <i nz-tooltip nzTooltipTitle="System will automatically generate payments on next payment date if this option is enabled" class="info circle right icon ml-8 primary-color"></i>
+                                </label>
+            
+                            </nz-form-item>
+        
+                        </div>
+
+                    </div>
+
+                    <nz-alert 
+                        class="mb-16" 
+                        nzType="warning" 
+                        nzMessage="Once saved, this plan will be activated immediately" 
+                        *ngIf="!paymentPlanForm.get('activation_date').value && paymentPlanForm.get('payment_day').value && paymentPlanForm.get('payment_frequency').value !== 'custom'">
+                    </nz-alert>
+
+                    <nz-alert class="mb-16" nzType="info" [nzMessage]="getNextPaymentText()" *ngIf="nextPaymentDate && paymentPlanForm.get('payment_frequency').value !== 'custom'"></nz-alert>
+
+                    <div fxLayout="row" fxLayoutAlign="space-between center">
+                        <span></span>
+
+                        <span class="text-right">
+
+                            <button class="text-uppercase mr-8" type="submit" *hasPermission="['AC1']; belongsTo 'N47'"
+                                nz-button nzType="primary" [disabled]="paymentPlanForm.invalid"
+                                [promiseBtn]="buttonLoading">
+                                <i class="save outline icon mr-8"></i> Save
+                            </button>
+
+                        </span>
+                    </div>
+
+                </form>
+
+                <div fxLayout="row" fxLayoutAlign="start center">
+
+                    <h3 class="my-16 mx-0"><i class="calendar alternate left icon mr-8"></i>Payment Plan History</h3>
+
+                    <button class="text-uppercase blank ml-12" nz-button nzType="link" (click)="reloadTable($event)">
+                        <i class="sync alternate icon"></i>
+                    </button>
+
+                </div>
+
+                <nz-table #planHistoryTable nzBordered [nzData]="planList" [nzLoadingIndicator]="indicatorTemplate" [nzShowPagination]="false" [nzLoading]="tableLoader">
+                    <thead>
+                        <tr>
+                            <th>Payment Frequency</th>
+                            <th>Billing Term</th>
+                            <th>Payment Day</th>
+                            <!-- <th>Payment Date</th> -->
+                            <th>Activation Date</th>
+                            <th>Next Payment Date</th>
+                            <th>Amount Limit</th>
+                            <th>Fixed Amount</th>
+                            <th>Status</th>
+                            <!-- <th>Created Date</th> -->
+                            <!-- <th>Created By</th> -->
+                            <th>Auto Charge</th>
+                            <!-- <th>Created On</th>
+                            <th>Updated On</th> -->
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of planHistoryTable.data">
+                            <td>{{ data.paymentFrequency | titlecase }}</td>
+                            <td>{{ billingTermDescriptionMap[data.billingTerm] }}</td>
+                            <td>{{ data.paymentDay | titlecase }}</td>
+                            <!-- <td>{{ data.paymentDate | date:'mediumDate' }}</td> -->
+                            <td>{{ data.activationDate ? (data.activationDate | date:'mediumDate') : 'Effective Immediately' }}</td>
+                            <td>{{ data.nextPaymentDate | date:'mediumDate' }}</td>
+                            <td>{{ data.amountLimit | currency }}</td>
+                            <td>{{ data.fixedAmount | currency }}</td>
+                            <td>
+                                <nz-tag *ngIf="data.status === 'active'" [nzColor]="'green'">{{ data.status | titlecase }}</nz-tag>
+                                <nz-tag *ngIf="data.status === 'inactive'" [nzColor]="'red'">{{ data.status | titlecase }}</nz-tag>
+                                <nz-tag *ngIf="data.status === 'upcoming'" [nzColor]="'blue'">{{ data.status | titlecase }}</nz-tag>
+                                <nz-tag *ngIf="data.status === 'paused'" [nzColor]="'orange'">{{ data.status | titlecase }}</nz-tag>
+                            </td>
+                            <td>
+                                <nz-tag [nzColor]="data.autoCharge ? 'green' : 'red'">{{ data.autoCharge ? 'Yes' : 'No' }}</nz-tag>
+                            </td>
+                            <!-- <td>{{ data.createdAt | date:'medium' }}</td> -->
+                            <!-- <td>{{ data?.createdBy?.getFullName() }}</td> -->
+                            <!-- <td>{{ data.createdAt | date }}</td>
+                            <td>{{ data.updatedAt | date }}</td> -->
+                            <td>
+                                <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="menu">
+                                    <i class="ellipsis vertical icon"></i>
+                                </button>
+                                
+                                <mat-menu #menu="matMenu" backdropClass="tlp-more">
+                                    <button mat-menu-item (click)="showDetail($event, data)">
+                                        <i class="tasks icon primary-color"></i>
+                                        <span class="font-weight-600">Details</span>
+                                    </button>
+                                    <button mat-menu-item (click)="edit($event, data)" *ngIf="data.status === 'active' || data.status === 'upcoming'">
+                                        <i class="edit outline icon primary-color"></i>
+                                        <span class="font-weight-600">Edit amounts</span>
+                                    </button>
+                                    <button mat-menu-item (click)="toggleAutoCharge($event, data.id, !data.autoCharge)" *ngIf="data.status === 'active'">
+                                        <i class="credit card outline icon" [ngClass]="{'danger-color': data.autoCharge, 'success-color': !data.autoCharge}"></i>
+                                        <span class="font-weight-600">{{ data.autoCharge ? 'Disable auto charge' : 'Enable auto charge' }}</span>
+                                    </button>
+                                    <button mat-menu-item (click)="changeStatus($event, data.id, 'inactive')" *ngIf="data.status === 'active'">
+                                        <i class="x icon danger-color"></i>
+                                        <span class="font-weight-600">Deactivate</span>
+                                    </button>
+                                    <button mat-menu-item (click)="deletePlan($event, data.id)" *ngIf="data.status === 'upcoming'">
+                                        <i class="trash icon danger-color"></i>
+                                        <span class="font-weight-600">Delete</span>
+                                    </button>
+                                    <button mat-menu-item *ngIf="data.status === 'inactive'" disabled>
+                                        <i class="ban icon danger-color"></i>
+                                        <span class="font-weight-600">No Action</span>
+                                    </button>
+                                
+                                </mat-menu>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+
+                <app-finance-parent-exclusions-settings class="mt-28" [userId]="userId"></app-finance-parent-exclusions-settings>
+
+            </div>
+
+            <!-- LOADER VIEW -->
+            <ng-template #indicatorTemplate>
+                <div class="is-loading">
+                    <span class="btn-spinner card-loader"></span>
+                </div>
+            </ng-template>
+            <!-- / LOADER VIEW -->
+
+            <!--/ CONTENT -->
+
+        </div>
+        <!--/ CONTENT CARD -->
+
+    </div>
+    <!--/ CENTER -->
+
+</div>

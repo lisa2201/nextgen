@@ -1,0 +1,19 @@
+@import "src/@fuse/scss/fuse";
+
+ccms-query-remittance {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+    /*.sidebar{
+    width: 160px!important;
+    min-width: 150px!important;
+}*/
+    .small-text{
+        font-size: 12px;
+    }
+}

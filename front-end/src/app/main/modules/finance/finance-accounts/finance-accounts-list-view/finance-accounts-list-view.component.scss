@@ -1,0 +1,48 @@
+
+.mat-menu-panel {
+    min-height: 50px !important;
+}
+
+app-finance-accounts-list-view {
+
+    .bulk-operations {
+        .ant-btn {
+            height: unset;
+        }
+    }
+
+    .child-tag {
+        margin: 2px;
+        padding: 2px 4px;
+        display: inline-block;
+        border-radius: 4px;
+        font-size: 12px;
+
+        &.tag-blue {
+            border: 1px solid #91d5ff;
+            background: #e6f7ff;
+            color: #009fe9;
+        }
+
+        &.tag-green {
+            border: 1px solid #91d5ff;
+            background: #e6f7ff;
+            color: #009fe9;
+        }
+
+        &.tag-red {
+            border: 1px solid #91d5ff;
+            background: #e6f7ff;
+            color: #009fe9;
+        }
+
+        &.link {
+            &:hover {
+                cursor: pointer;
+                opacity: 0.85;
+            }
+        }
+    }
+
+    
+}

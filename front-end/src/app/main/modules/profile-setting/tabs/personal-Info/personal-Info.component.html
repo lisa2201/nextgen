@@ -1,0 +1,693 @@
+<div id="about" class="p-24" fxLayout="row wrap">
+
+    <div class="about-content" fxLayout="column" fxFlex="100" fxFlex.gt-sm="50" fxFlex.gt-md="50">
+
+        <div class="profile-box info-box general" fxLayout="column" nzLoading="true">
+
+            <nz-spin [nzTip]="'Loading...'" [nzSpinning]="isLoadingBasicTpl" [nzIndicator]="indicatorTpl">
+
+                <header>
+                    <div class="title">
+                        <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="space-between center">
+                            <span>General Information</span>
+
+                            <span class="text-right">
+                                <ng-container *ngIf="!isEditBasic; else closeBasicTpl">
+                                    <span (click)="editBasic($event)" style="    cursor: pointer">
+                                        <i nz-icon nzType="edit" nzTheme="outline"></i>
+                                    </span>
+                                </ng-container>
+                                <ng-template #closeBasicTpl>
+                                    <span (click)="cancelBasic($event)" style="    cursor: pointer">
+                                        <i nz-icon nzType="close" nzTheme="outline"></i>
+                                    </span>
+                                </ng-template>
+
+                            </span>
+                        </div>
+
+                    </div>
+
+                </header>
+
+                <div class="content">
+                    <ng-container *ngIf="!isEditBasic; else nameInputTpl">
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">First Name</span>
+                                {{userData.firstName || 'N/A'}}
+                            </p>
+                        </div>
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">Last Name</span>
+                                {{userData.lastName || 'N/A'}}
+                            </p>
+                        </div>
+
+                        <div class="info-line">
+
+                            <p>
+                                <span class="lbl font-weight-600">Date of Birth</span>
+                                {{userData.dob || 'N/A'}}
+                            </p>
+
+                        </div>
+
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">Email</span>
+                                {{userData.email || 'N/A'}}
+                            </p>
+                        </div>
+
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">Secondary Email</span>
+                                {{userData.secondaryEmail || 'N/A'}}
+                            </p>
+                        </div>
+                    </ng-container>
+
+                    <ng-template #nameInputTpl>
+                        <form class="compose-form" [formGroup]="profileForm" nz-form
+                            (ngSubmit)="onBasicFormSubmit($event)">
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class=" font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                        First Name
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="fNameErrorTpl">
+                                        <input nz-input formControlName="first_name" placeholder="First Name" />
+                                        <ng-template #fNameErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('required')">Please input your first
+                                                name</ng-container>
+                                            <ng-container *ngIf="control.hasError('pattern')">Invalid input first name
+                                            </ng-container>
+                                        </ng-template>
+
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class="font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                        Last Name
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="lNameErrorTpl">
+                                        <input nz-input formControlName="last_name" placeholder="Last Name" />
+                                        <ng-template #lNameErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('required')">Please input your last
+                                                name</ng-container>
+                                            <ng-container *ngIf="control.hasError('pattern')">Invalid input last name
+                                            </ng-container>
+                                        </ng-template>
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class="font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                        Date of Birth
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="dobErrorTpl">
+                                        <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledDate"
+                                            formControlName="date_of_birth" nzPlaceHolder="date of birth" class="block">
+                                        </nz-date-picker>
+                                        <ng-template #dobErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('required')"> Please input your data
+                                                of birth </ng-container>
+                                        </ng-template>
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class="font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                        Email
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="emailErrorTpl">
+                                        <input nz-input formControlName="email" placeholder="Email" />
+                                        <ng-template #emailErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('required')">Please input a valid
+                                                email
+                                            </ng-container>
+                                            <ng-container *ngIf="control.hasError('email')">Please input a valid email
+                                            </ng-container>
+                                        </ng-template>
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class="font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                        Secondary Email
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback
+                                        [nzErrorTip]="sEmailErrorTpl">
+                                        <input nz-input formControlName="secondary_email"
+                                            placeholder="Secondary Email" />
+                                        <ng-template #sEmailErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('email')">
+                                                Please input a valid email
+                                            </ng-container>
+                                        </ng-template>
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row"
+                                fxLayoutAlign="space-between center" *ngIf="isEditBasic">
+
+                                <span></span>
+
+                                <span class="text-right">
+                                    <ng-container>
+                                        <button class="text-uppercase mr-8" nz-button nzType="primary"
+                                            [disabled]="!profileForm.valid" [promiseBtn]="buttonLoader">
+                                            <i class="plus icon mr-8"></i> Save
+                                        </button>
+                                    </ng-container>
+                                    <ng-container>
+                                        <button class="text-uppercase mr-8" nz-button nzType="danger"
+                                            (click)="cancelBasic($event)">
+                                            Cancel
+                                        </button>
+                                    </ng-container>
+                                </span>
+                            </div>
+                        </form>
+                    </ng-template>
+                </div>
+            </nz-spin>
+        </div>
+
+        <ng-template #indicatorTpl>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+
+        <div class="profile-box info-box general" fxLayout="column">
+            <nz-spin [nzTip]="'Loading...'" [nzSpinning]="isLoadingContactTpl" [nzIndicator]="indicatorTpl">
+                <header>
+                    <div class="title">
+                        <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="space-between center">
+                            <span>Contact Information</span>
+
+                            <span class="text-right">
+                                <ng-container *ngIf="!isEditContact; else closeContactTpl">
+                                    <span (click)="editContact($event)" style="    cursor: pointer">
+                                        <i nz-icon nzType="edit" nzTheme="outline"></i>
+                                    </span>
+                                </ng-container>
+                                <ng-template #closeContactTpl>
+                                    <span (click)="cancelContact($event)" style="    cursor: pointer">
+                                        <i nz-icon nzType="close" nzTheme="outline"></i>
+                                    </span>
+                                </ng-template>
+
+                            </span>
+                        </div>
+
+                    </div>
+
+                </header>
+
+                <div class="content">
+                    <ng-container *ngIf="!isEditContact; else contactInputTpl">
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">Home Phone Number</span>
+                                {{userData.phoneNumber || 'N/A'}}
+                            </p>
+                        </div>
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">Mobile Number</span>
+                                {{userData.mobileNumber || 'N/A'}}
+                            </p>
+                        </div>
+
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">Work Mobile Number</span>
+                                {{userData.workMobileNumber || 'N/A'}}
+                            </p>
+                        </div>
+
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">Work Phone Number</span>
+                                {{userData.workPhoneNumber || 'N/A'}}
+                            </p>
+                        </div>
+
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">Individual CRN</span>
+                                {{userData.ccsId || 'N/A'}}
+                            </p>
+                        </div>
+
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">Address Line 1</span>
+                                {{userData.address1 || 'N/A'}}
+                            </p>
+                        </div>
+
+                        <div class="info-line">
+
+                            <p>
+                                <span class="lbl font-weight-600">Address Line 2</span>
+                                {{userData.address2 || 'N/A'}}
+                            </p>
+
+                        </div>
+
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">City</span>
+                                {{userData.city || 'N/A'}}
+                            </p>
+                        </div>
+
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">PostCode</span>
+                                {{userData.zipCode || 'N/A'}}
+                            </p>
+                        </div>
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">State</span>
+                                {{ userData.state || 'N/A'}}
+                            </p>
+                        </div>
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">Country</span>
+                                <ng-container *ngIf="userData.country">
+                                    <ng-container *ngFor="let item of countriesList; trackBy: trackByFn;">
+                                        {{ (item.code == userData.country)? item.name : null}}
+                                    </ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="!userData.country">
+                                    N/A
+                                </ng-container>
+                            </p>
+                        </div>
+                    </ng-container>
+
+                    <ng-template #contactInputTpl>
+                        <form class="compose-form" [formGroup]="profileForm" nz-form
+                            (ngSubmit)="onContactFormSubmit($event)">
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class=" font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                        Home Phone Number
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="phoneErrorTpl">
+                                        <input nz-input formControlName="mobile" placeholder="phone number" />
+                                        <ng-template #phoneErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('maxlength')">Phone Number can't be
+                                                longer than 15 characters </ng-container>
+                                            <ng-container *ngIf="control.hasError('pattern')">Only numbers are allowed
+                                            </ng-container>
+                                        </ng-template>
+
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class=" font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                        Mobile Number
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="phoneErrorTpl">
+                                        <input nz-input formControlName="phone" placeholder="mobile number" />
+                                        <ng-template #phoneErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('maxlength')">Mobile Number can't be
+                                                longer than 15 characters </ng-container>
+                                            <ng-container *ngIf="control.hasError('pattern')">Mobile numbers are allowed
+                                            </ng-container>
+                                        </ng-template>
+
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <ng-container *ngIf="userData.isParentType()">
+                                <div class="info-line">
+                                    <nz-form-item>
+                                        <nz-form-label class=" font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                            Work Mobile Number
+                                        </nz-form-label>
+                                        <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback
+                                            [nzErrorTip]="phoneErrorTpl">
+                                            <input nz-input formControlName="work_mobile"
+                                                placeholder="work mobile number" />
+                                            <ng-template #phoneErrorTpl let-control>
+                                                <ng-container *ngIf="control.hasError('maxlength')">Work mobile Number
+                                                    can't be
+                                                    longer than 15 characters </ng-container>
+                                                <ng-container *ngIf="control.hasError('pattern')">Work mobile are
+                                                    allowed </ng-container>
+                                            </ng-template>
+
+                                        </nz-form-control>
+                                    </nz-form-item>
+
+                                </div>
+
+                                <div class="info-line">
+                                    <nz-form-item>
+                                        <nz-form-label class=" font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                            Work Phone Number
+                                        </nz-form-label>
+                                        <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback
+                                            [nzErrorTip]="phoneErrorTpl">
+                                            <input nz-input formControlName="work_phone"
+                                                placeholder="work phone number" />
+                                            <ng-template #phoneErrorTpl let-control>
+                                                <ng-container *ngIf="control.hasError('maxlength')">Work mobile can't
+                                                    be
+                                                    longer than 15 characters </ng-container>
+                                                <ng-container *ngIf="control.hasError('pattern')">Work mobile numbers are
+                                                    allowed </ng-container>
+                                            </ng-template>
+
+                                        </nz-form-control>
+                                    </nz-form-item>
+
+                                </div>
+
+                                <div class="info-line">
+                                    <nz-form-item>
+                                        <nz-form-label class=" font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                            Individual CRN
+                                        </nz-form-label>
+                                        <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback
+                                            [nzErrorTip]="phoneErrorTpl">
+                                            <input nz-input formControlName="ccs_id"
+                                                placeholder="individual CRN" />
+                                            <ng-template #phoneErrorTpl let-control>
+                                                <ng-container *ngIf="control.hasError('maxlength')">CRN can't
+                                                    be
+                                                    longer than 15 characters </ng-container>
+                                                </ng-template>
+
+                                        </nz-form-control>
+                                    </nz-form-item>
+
+                                </div>
+
+                            </ng-container>
+
+
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class="font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                        Address Line 1
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback
+                                        [nzErrorTip]="address1ErrorTpl">
+                                        <input nz-input formControlName="address_line_1" placeholder="Address Line 1" />
+                                        <ng-template #address1ErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('maxlength')">Address Line 1 can't be
+                                                longer than 320 characters</ng-container>
+                                        </ng-template>
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class="font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                        Address Line 2
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback
+                                        [nzErrorTip]="address1ErrorTp2">
+                                        <input nz-input formControlName="address_line_2" placeholder="Address Line 2" />
+                                        <ng-template #address1ErrorTp2 let-control>
+                                            <ng-container *ngIf="control.hasError('maxlength')">Address Line 2 can't be
+                                                longer than 320 characters</ng-container>
+                                        </ng-template>
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class="font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                        City
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback [nzErrorTip]="cityErrorTpl">
+                                        <input nz-input formControlName="city" placeholder="City" />
+                                        <ng-template #cityErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('maxlength')">City can't be
+                                                longer than 120 characters</ng-container>
+                                        </ng-template>
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class="font-weight-600" [nzSm]="6" nzHasFeedback [nzXs]="24"
+                                        nzFor="nickname">
+                                        PostCode
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="zipErrorTpl">
+                                        <input nz-input formControlName="zip_code" placeholder="Zip code" />
+                                        <ng-template #zipErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('pattern')">Invalid input zip code
+                                            </ng-container>
+                                        </ng-template>
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class="font-weight-600" [nzSm]="6" nzHasFeedback [nzXs]="24"
+                                        nzFor="nickname">
+                                        State
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24">
+                                        <input nz-input formControlName="state" placeholder="State" />
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class="font-weight-600" [nzSm]="6" nzHasFeedback [nzXs]="24"
+                                        nzFor="nickname">
+                                        Country
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="countryErrorTpl">
+
+                                        <nz-select formControlName="country" nzShowSearch nzAllowClear
+                                            nzPlaceHolder="select a country">
+
+                                            <nz-option *ngFor="let item of countriesList; trackBy: trackByFn;"
+                                                nzValue="{{ item.code }}" nzLabel="{{ item.name }}"></nz-option>
+
+                                        </nz-select>
+
+                                        <ng-template #countryErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('required')">Please input your country
+                                            </ng-container>
+                                        </ng-template>
+
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+
+                            <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row"
+                                fxLayoutAlign="space-between center" *ngIf="isEditContact">
+
+                                <span></span>
+
+                                <span class="text-right">
+                                    <ng-container>
+                                        <button class="text-uppercase mr-8" nz-button nzType="primary"
+                                            [disabled]="!profileForm.valid" [promiseBtn]="buttonLoader">
+                                            <i class="plus icon mr-8"></i> Save
+                                        </button>
+                                    </ng-container>
+                                    <ng-container>
+                                        <button class="text-uppercase mr-8" nz-button nzType="danger"
+                                            (click)="cancelContact($event)">
+                                            Cancel
+                                        </button>
+                                    </ng-container>
+                                </span>
+                            </div>
+                        </form>
+
+                    </ng-template>
+
+                </div>
+            </nz-spin>
+        </div>
+
+    </div>
+
+
+    <div class="timeline-sidebar" fxLayout="column" fxFlex="100" fxFlex.gt-sm="50" fxFlex.gt-md="50">
+        <div class="profile-box info-box general" fxLayout="column">
+            <nz-spin [nzTip]="'Loading...'" [nzSpinning]="isLoadingPasswordTpl" [nzIndicator]="indicatorTpl">
+                <header>
+                    <div class="title">
+                        <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="space-between center">
+                            <span>Password</span>
+
+                            <span class="text-right">
+                                <ng-container *ngIf="!isEditPassword; else closePasswordTpl">
+                                    <span (click)="editPassword($event)" style="    cursor: pointer">
+                                        <i nz-icon nzType="edit" nzTheme="outline"></i>
+                                    </span>
+                                </ng-container>
+                                <ng-template #closePasswordTpl>
+                                    <span (click)="cancelPassword($event)" style="    cursor: pointer">
+                                        <i nz-icon nzType="close" nzTheme="outline"></i>
+                                    </span>
+                                </ng-template>
+
+                            </span>
+                        </div>
+
+                    </div>
+
+                </header>
+
+                <div class="content">
+                    <ng-container *ngIf="!isEditPassword; else passwordInputTpl">
+                        <div class="info-line">
+                            <p>
+                                <span class="lbl font-weight-600">Password</span>
+                                ***********
+                                <!-- {{userData.phoneNumber || 'N/A'}} -->
+                            </p>
+                        </div>
+                    </ng-container>
+
+                    <ng-template #passwordInputTpl>
+                        <form class="compose-form" [formGroup]="passwordForm" nz-form
+                            (ngSubmit)="onPasswordFormSubmit($event)">
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class=" font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                        Current Password
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback
+                                        [nzErrorTip]="currentpasswordErrorTpl">
+                                        <input nz-input formControlName="current_password" placeholder="password"
+                                            type="password" />
+
+                                        <ng-template #currentpasswordErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('required')">
+                                                <p class="m-0">Current Password is required</p>
+                                            </ng-container>
+                                        </ng-template>
+
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class=" font-weight-600" [nzSm]="6" [nzXs]="24" nzFor="nickname">
+                                        Password
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback
+                                        [nzErrorTip]="passwordErrorTpl">
+                                        <input nz-input formControlName="password" placeholder="password"
+                                            type="password" />
+
+                                        <ng-template #passwordErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('required')">
+                                                <p class="m-0">Password is required</p>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.hasError('hasNumber')">
+                                                <p class="m-0">Must contain at least 1 number</p>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.hasError('hasCapitalCase')">
+                                                <p class="m-0">Must contain at least 1 in Capital Case</p>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.hasError('hasSmallCase')">
+                                                <p class="m-0">Must contain at least 1 Letter in Small Case</p>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.hasError('hasSpecialCharacters')">
+                                                <p class="m-0">Must contain at least 1 Special Character</p>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.hasError('minlength')">
+                                                <p class="m-0">Your password should have at least 6 characters</p>
+                                            </ng-container>
+                                        </ng-template>
+
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div class="info-line">
+                                <nz-form-item>
+                                    <nz-form-label class=" font-weight-600" [nzSm]="6" [nzXs]="24">Password (Confirm)
+                                    </nz-form-label>
+                                    <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="confirmPasswordErrorTpl">
+
+                                        <input nz-input formControlName="passwordConfirm" placeholder="confirm password"
+                                            type="password" />
+
+                                        <ng-template #confirmPasswordErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('required')">Password confirmation is
+                                                required
+                                            </ng-container>
+                                            <ng-container
+                                                *ngIf="!passwordForm.get('passwordConfirm').hasError('required') && passwordForm.get('passwordConfirm').hasError('passwordsNotMatching')">
+                                                Passwords must match
+                                            </ng-container>
+                                        </ng-template>
+                                    </nz-form-control>
+                                </nz-form-item>
+
+                            </div>
+                            <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row"
+                                fxLayoutAlign="space-between center" *ngIf="isEditPassword">
+
+                                <span></span>
+
+                                <span class="text-right">
+                                    <ng-container>
+                                        <button class="text-uppercase mr-8" nz-button nzType="primary"
+                                            [disabled]="!passwordForm.valid" [promiseBtn]="buttonLoader">
+                                            <i class="plus icon mr-8"></i> Save
+                                        </button>
+                                    </ng-container>
+                                    <ng-container>
+                                        <button class="text-uppercase mr-8" nz-button nzType="danger"
+                                            (click)="cancelPassword($event)">
+                                            Cancel
+                                        </button>
+                                    </ng-container>
+                                </span>
+                            </div>
+                        </form>
+
+                    </ng-template>
+
+                </div>
+            </nz-spin>
+        </div>
+    </div>
+
+</div>

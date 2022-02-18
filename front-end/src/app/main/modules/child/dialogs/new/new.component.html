@@ -1,0 +1,311 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="childForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="childForm" nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>First Name</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="firstNameErrorTpl">
+
+                            <input nz-input formControlName="f_name" placeholder="first name" type="text" />
+
+                            <ng-template #firstNameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input first name</ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">First name can't be longer than 150 characters</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Last Name</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="lastNameErrorTpl" >
+
+                            <input nz-input formControlName="l_name" placeholder="last name" type="text" />
+
+                            <ng-template #lastNameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input first name</ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">Last name can't be longer than 150 characters</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Date of Birth</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="dobErrorTpl">
+
+                            <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledDate" formControlName="date_of_birth" nzPlaceHolder="date of birth" class="block"></nz-date-picker>
+
+                            <ng-template #dobErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input date of birth</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Start Date</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="sDateErrorTpl">
+
+                            <nz-date-picker [nzInputReadOnly]="true" formControlName="join_date" nzPlaceHolder="start date" class="block"></nz-date-picker>
+
+                            <ng-template #sDateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input start date</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                    
+                    <nz-form-item>
+                    
+                        <nz-form-label nzRequired>Gender</nz-form-label>
+                    
+                        <nz-form-control [nzErrorTip]="genderErrorTpl">
+                    
+                            <nz-radio-group formControlName="gender" nzButtonStyle="solid" class="has-img">
+                    
+                                <label nz-radio-button nzValue="0">
+                                    <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/male.svg" alt="male icon">
+                                    <span>Male</span>
+                                </label>
+                    
+                                <label nz-radio-button nzValue="1">
+                                    <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/femenine.svg" alt="female icon">
+                                    <span>Female</span>
+                                </label>
+                    
+                            </nz-radio-group>
+                    
+                            <ng-template #genderErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select an gender</ng-container>
+                            </ng-template>
+                    
+                        </nz-form-control>
+                    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Attendance</nz-form-label>
+
+                        <nz-form-control 
+                            [nzValidateStatus]="attendanceFormStatus"
+                            [nzErrorTip]="attendanceErrorTpl"
+                            formArrayName="attendance">
+
+                            <div class="day-selector">
+
+                                <p class="mb-8">
+                                    <label class="no-select"
+                                        nz-checkbox
+                                        [ngModelOptions]="{ standalone: true }"
+                                        [(ngModel)]="allChecked"
+                                        (ngModelChange)="updateAllChecked()"
+                                        [nzIndeterminate]="indeterminate">
+                                        Select all
+                                    </label>
+                                </p>
+
+                                <div class="day-selector-inner">
+
+                                    <ng-container *ngFor="let item of attendanceList; trackBy trackByFn;">
+
+                                        <label class="attendance-chk"
+                                            nz-checkbox 
+                                            [formControlName]="item?.index"
+                                            [nzDisabled]="!item.enable"
+                                            tooltip="{{ item?.name }}" placement="top" display-mobile="false" hide-delay="50">
+            
+                                            <span class="attendance-lbl-inner no-select" [ngClass]="{ weekend : item.weekend }">{{ item?.name | shorten: 2: '' }}</span>
+            
+                                        </label>
+
+                                    </ng-container>
+
+                                </div>
+
+                            </div>
+
+                            <ng-template #attendanceErrorTpl let-control>
+                                <ng-container>Please select at least one option from the list</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label>Account Status</nz-form-label>
+
+                        <nz-form-control [nzErrorTip]="statusErrorTpl">
+
+                            <nz-radio-group formControlName="status" nzButtonStyle="solid" class="has-img">
+                    
+                                <label nz-radio-button nzValue="1">
+                                    <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/switch-on.svg" alt="active icon">
+                                    <span>Active</span>
+                                </label>
+                    
+                                <label nz-radio-button nzValue="0">
+                                    <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/switch-off.svg" alt="inactive icon">
+                                    <span>Inactive</span>
+                                </label>
+
+                                <!-- <label nz-radio-button nzValue="2">
+                                    <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/wait.svg" alt="wait-list icon">
+                                    <span>Waitlist</span>
+                                </label> -->
+                    
+                            </nz-radio-group>
+
+                            <ng-template #statusErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select an status</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    
+                    <nz-form-item>
+                    
+                        <nz-form-label>Nappy Change Required</nz-form-label>
+                    
+                        <nz-form-control>
+                    
+                            <nz-switch formControlName="nappy" nzCheckedChildren="Yes" nzUnCheckedChildren="No"></nz-switch>
+                    
+                        </nz-form-control>
+                    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    
+                    <nz-form-item>
+                    
+                        <nz-form-label>Bottle Feed Required</nz-form-label>
+                    
+                        <nz-form-control>
+                    
+                            <nz-switch formControlName="bottle_feed" nzCheckedChildren="Yes" nzUnCheckedChildren="No"></nz-switch>
+                    
+                        </nz-form-control>
+                    
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span>
+
+                <label class="no-select"
+                    *hasPermission="['AC1']; belongsTo 'N07'" 
+                    formControlName="continue_edit"
+                    nz-checkbox 
+                    [nzDisabled]="!childForm.valid">
+                    Save & Continue Edit
+                </label>
+
+            </span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8"
+                    *hasPermission="['AC1']; belongsTo 'N07'"
+                    nz-button 
+                    nzType="primary" 
+                    [disabled]="!childForm.valid"
+                    [promiseBtn]="buttonLoader">
+                    <i class="plus icon mr-8"></i> Save
+                </button>
+    
+                <button class="text-uppercase mr-8" 
+                    type="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+    
+                <button class="text-uppercase mat-close-btn" 
+                    type="button"
+                    nz-button 
+                    nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

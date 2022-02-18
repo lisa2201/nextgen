@@ -1,0 +1,277 @@
+<mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+        <span class="title dialog-title">{{ dialogTitle }}</span>
+        <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+            aria-label="Close dialog">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+
+<div class="dialog-content-wrapper">
+
+
+    <form name="organizationForm" class="compose-form" nz-form (ngSubmit)="onFormSubmit($event)">
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+
+            <div fxLayout="row wrap" fxFlex fxLayoutAlign="space-between" [formGroup]="organizationForm">
+
+
+                <!-- <div></div> -->
+
+                <nz-form-item fxLayout="column" fxLayoutAlign="space-between start" fxFlex.lt-sm="100" fxFlex.lt-md="49"
+                    fxFlex.lt-lg="49" fxFlex.lt-xl="49">
+                    <nz-form-label nzRequired>Billing Frequency</nz-form-label>
+                    <nz-form-control nzHasFeedback [nzErrorTip]="payFrequencyErrorTpl">
+                        <nz-select formControlName="billingFrequency" nzPlaceHolder="Select billing frequency"
+                            nzShowSearch>
+                            <nz-option *ngFor="let freq of paymentFrequencyList" nzValue="{{ freq }}"
+                                nzLabel="{{ freq | titlecase }}">
+                            </nz-option>
+                        </nz-select>
+                        <ng-template #payFrequencyErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input billing
+                                frequency</ng-container>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+
+
+                <nz-form-item fxLayout="column" fxLayoutAlign="space-between start" fxFlex.lt-sm="100" fxFlex.lt-md="49"
+                    fxFlex.lt-lg="49" fxFlex.lt-xl="49">
+                    <nz-form-label nzRequired>Subscription</nz-form-label>
+                    <nz-form-control nzHasFeedback [nzErrorTip]="subscriptionErrorTpl">
+                        <nz-select formControlName="subscription" nzPlaceHolder="Select Subscription" nzShowSearch>
+                            <nz-option *ngFor="let sub of subscriptionList" nzValue="{{ sub }}"
+                                nzLabel="{{ sub | titlecase }}">
+                            </nz-option>
+                        </nz-select>
+                        <ng-template #subscriptionErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input subscription</ng-container>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+
+
+
+                <!-- <nz-form-item>
+                <nz-form-label nzRequired>Effective date</nz-form-label>
+                <nz-form-control nzHasFeedback [nzErrorTip]="effectiveDateErrorTpl">
+                    <nz-date-picker formControlName="effectiveDate" format={dateFormat} placeholder="Effective date"
+                        [(ngModel)]="date" [nzInputReadOnly]="true" (ngModelChange)="onChange($event)"></nz-date-picker>
+                    <ng-template #effectiveDateErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input Effective date
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item> -->
+
+
+
+
+                <div fxFlex fxLayoutAlign="space-between">
+
+                    <br>
+                    <nz-form-item fxLayout="column" fxLayoutAlign="space-between" fxFlex.lt-sm="48" fxFlex.lt-md="48"
+                        fxFlex.lt-lg="30" fxFlex.lt-xl="30">
+                        <nz-form-label>Select Addon </nz-form-label>
+                        <nz-form-control nzHasFeedback>
+                            <nz-select formControlName="addon" nzPlaceHolder="Select addon" nzShowSearch>
+                                <nz-option *ngFor="let addon of AddonList" nzValue="{{ addon.id }}"
+                                    nzLabel="{{ addon.title }}">
+                                </nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <div fxLayout="column" fxLayoutAlign="space-between" fxFlex.lt-sm="48" fxFlex.lt-md="48"
+                        fxFlex.lt-lg="30" fxFlex.lt-xl="30">
+                        <button [disabled]="organizationForm.get('addon').value == null" class="add-sub-button"
+                            nz-button nzType="primary" (click)="addItem()">Add new
+                            Subscription</button>
+                    </div>
+
+                    <div fxLayout="column" fxLayoutAlign="space-between" fxFlex.lt-sm="0" fxFlex.lt-md="0"
+                        fxFlex.lt-lg="30" fxFlex.lt-xl="30">
+
+                    </div>
+                </div>
+
+                <br>
+
+                <nz-collapse class="collapse-panel">
+
+                    <nz-collapse-panel  formArrayName="subscriptions" [nzActive]="false" [nzDisabled]="false"
+                        *ngFor="let item of subscriptions.controls; let i = index;"
+                        [nzHeader]="item['controls']['addonName']['value']">
+
+
+                        <br>
+
+                        <div [formGroup]="subscriptions.controls[i]" fxLayout="row wrap" fxLayoutAlign="space-between">
+
+
+
+                            <nz-form-item fxFlex.lt-sm="99" fxFlex.lt-md="32" fxFlex.lt-lg="32" fxFlex.lt-xl="32">
+                                <nz-form-label nzRequired>Billing Type</nz-form-label>
+                                <nz-form-control nzHasFeedback [nzErrorTip]="unitTypeErrorTpl">
+                                    <nz-select (ngModelChange)="unitTypeChange($event,i)" formControlName="unitType"
+                                        nzPlaceHolder="Select unit type" nzShowSearch>
+                                        <nz-option *ngFor="let unit of unitList" nzValue="{{ unit.value }}"
+                                            nzLabel="{{ unit.name }}">
+                                        </nz-option>
+                                    </nz-select>
+                                    <ng-template #unitTypeErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please select the billing
+                                            type
+                                        </ng-container>
+                                    </ng-template>
+                                </nz-form-control>
+                            </nz-form-item>
+
+
+
+                            <nz-form-item
+                                *ngIf="organizationForm.get('subscriptions')['controls'][i]['controls']['unitType']['value'] != 'fixed'"
+                                fxFlex.lt-sm="99" fxFlex.lt-md="32" fxFlex.lt-lg="32" fxFlex.lt-xl="32">
+                                <!-- <nz-form-label nzRequired>agreedPrice</nz-form-label> -->
+                                <nz-form-label
+                                    *ngIf="organizationForm.get('subscriptions')['controls'][i]['controls']['unitType']['value'] == 'child'"
+                                    nzRequired>Price per Child</nz-form-label>
+                                <nz-form-label
+                                    *ngIf="organizationForm.get('subscriptions')['controls'][i]['controls']['unitType']['value'] == 'educator'"
+                                    nzRequired>Price per Staff</nz-form-label>
+                                <nz-form-label
+                                    *ngIf="organizationForm.get('subscriptions')['controls'][i]['controls']['unitType']['value'] == null "
+                                    nzRequired>Price per quantity</nz-form-label>
+                                <nz-form-control nzHasFeedback [nzErrorTip]="priceForErrorTpl">
+                                    <input nz-input formControlName="agreedPrice" placeholder="Enter agreed price"
+                                        type="number" />
+                                    <ng-template #priceForErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please input unit price
+                                        </ng-container>
+                                    </ng-template>
+                                </nz-form-control>
+                            </nz-form-item>
+
+
+
+                            <nz-form-item
+                                *ngIf="organizationForm.get('subscriptions')['controls'][i]['controls']['unitType']['value'] == 'fixed'"
+                                fxFlex.lt-sm="99" fxFlex.lt-md="32" fxFlex.lt-lg="32" fxFlex.lt-xl="32">
+                                <nz-form-label nzRequired>Amount</nz-form-label>
+                                <nz-form-control nzHasFeedback [nzErrorTip]="amountPriceErrorTpl">
+                                    <input nz-input formControlName="amount" placeholder="Enter agreed price"
+                                        type="number" />
+                                    <ng-template #amountPriceErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please input Amount
+                                        </ng-container>
+                                    </ng-template>
+                                </nz-form-control>
+                            </nz-form-item>
+
+
+
+                            <nz-form-item
+                                *ngIf="organizationForm.get('subscriptions')['controls'][i]['controls']['unitType']['value'] != 'fixed'"
+                                fxFlex.lt-sm="99" fxFlex.lt-md="32" fxFlex.lt-lg="32" fxFlex.lt-xl="32">
+                                <nz-form-label nzRequired>Starting at</nz-form-label>
+                                <nz-form-control nzHasFeedback [nzErrorTip]="startingAtErrorTpl">
+                                    <input nz-input formControlName="minimumPrice" placeholder="Enter starting price"
+                                        type="number" />
+                                    <ng-template #startingAtErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please input Starting at
+                                            price
+                                        </ng-container>
+                                    </ng-template>
+                                </nz-form-control>
+                            </nz-form-item>
+
+                            <nz-form-item
+                                *ngIf="organizationForm.get('subscriptions')['controls'][i]['controls']['unitType']['value'] == 'fixed'"
+                                fxFlex.lt-sm="00" fxFlex.lt-md="32" fxFlex.lt-lg="32" fxFlex.lt-xl="32">
+                                <nz-form-label></nz-form-label>
+                                <nz-form-control>
+                                </nz-form-control>
+                            </nz-form-item>
+
+                        </div>
+
+
+                    </nz-collapse-panel>
+
+                </nz-collapse>
+
+
+
+                <br>
+                <div>
+                    <br>
+                    Automated Invoice Generation: <nz-switch formControlName="invoiceGeneration" nzCheckedChildren="yes"
+                        nzUnCheckedChildren="no" [nzDisabled]="disable"></nz-switch>
+
+                    Automated Payment Method: <nz-switch formControlName="paymentMethod" nzCheckedChildren="yes"
+                        nzUnCheckedChildren="no"></nz-switch>
+                    <br>
+                </div>
+
+            </div>
+        </div>
+        <br>
+
+
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <nz-upload nzAction="https://jsonplaceholder.typicode.com/posts/">
+                <button class="text-uppercase mat-close-btn" type="button" [disabled] nz-button nzType="primary">
+                    <!-- <i nz-icon nzType="upload"></i> -->
+                    <span>Upload Documents</span>
+                </button>
+            </nz-upload>
+
+            <span></span>
+            <!-- <span class="text-right"> -->
+
+            <button class="text-uppercase mr-8" *hasPermission="['AC1']; belongsTo 'N09'" nz-button nzType="primary"
+                (click)="onFormSubmit($event)" [disabled]="!organizationForm.valid" [promiseBtn]="buttonLoader"
+                [nzLoading]="buttonLoader">
+                <i class="plus icon mr-8"></i> Send Quotation
+            </button>
+
+            <!-- <button class="text-uppercase mr-8" type="button" nz-button nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button> -->
+
+
+            <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                (click)="matDialogRef.close()">
+                Close
+            </button>
+
+            <!-- </span> -->
+
+        </div>
+
+    </form>
+
+</div>
+
+
+
+
+
+<!-- <hr>
++ <br>
++ <p>
+    + Form Value: {{ organizationForm.value | json }}
+    + </p>
++
++
++ <p>
+    + Form Status: {{ organizationForm.status }}
+    + </p> -->

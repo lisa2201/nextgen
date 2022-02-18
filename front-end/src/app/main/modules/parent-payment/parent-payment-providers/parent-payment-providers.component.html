@@ -1,0 +1,51 @@
+<div id="parent-payment-providers" class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{value:'*',params:{delay:'100ms', x:'-25px'}}">Manage Parent Payment Providers</h1>
+
+        <ng-container *hasPermission="['AC1']; belongsTo 'N45'">
+
+            <button class="text-uppercase" nz-button nzType="primary" (click)="addDialog($event)"
+                [nzLoading]="buttonLoader" *ngIf="!providerFull">
+                <i nz-icon nzType="plus"></i> Add Payment Provider
+            </button>
+
+        </ng-container>
+
+
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="payment-providers-sidebar" position="left">
+
+            <app-parent-payment-providers-left-sidenav 
+                [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }" 
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+                (updateTableScroll)="updateScroll($event)">
+            </app-parent-payment-providers-left-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <app-parent-payment-providers-list-view 
+            class="center p-24 pt-0" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+            (updateTableScroll)="updateScroll($event)"
+            [@animate]="{ value:'*', params:{ delay: '200ms', x:'15px' } }">
+        </app-parent-payment-providers-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+
+
+</div>

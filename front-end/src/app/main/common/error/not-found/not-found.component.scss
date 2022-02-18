@@ -1,0 +1,17 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+not-found-page {
+
+    .page-layout {
+        &.flex {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    nz-result {
+        width: 500px;
+    }
+}

@@ -1,0 +1,57 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32" style="padding-top: 32px !important;">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0">
+
+    <form fxLayout="column" fxFlex [formGroup]="financialAdjustmentsFilterForm">
+
+        <div class="mb-16">
+
+            <label class="filter-label">Date</label>
+
+            <nz-date-picker class="block" nzPlaceHolder="Select Date" nzSize="small" nzAllowClear="false"
+                formControlName="date" [nzInputReadOnly]="true" [nzDisabled]="financialAdjustmentsFilterForm.controls['date'].disabled">
+            </nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Item</label>
+
+            <nz-select formControlName="item" nzMode="default" nzPlaceHolder="Select Adjustment Item">
+
+                <nz-option *ngFor="let item of adjustmentItems" nzValue="{{ item.id }}" nzLabel="{{ item.name }}">
+                </nz-option>
+
+            </nz-select>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Type</label>
+
+            <nz-radio-group formControlName="type"
+                [nzDisabled]="financialAdjustmentsFilterForm.controls['type'].disabled">
+
+                <label nz-radio nzValue="0" class="_filter">All</label>
+                <label nz-radio nzValue="other_fee" class="_filter">Credit</label>
+                <label nz-radio nzValue="discount" class="_filter">Debit</label>
+
+            </nz-radio-group>
+
+        </div>
+
+        <button nz-button nzType="default" *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button>
+
+    </form>
+
+
+</div>
+<!-- / SIDEBAR CONTENT -->

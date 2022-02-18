@@ -1,0 +1,207 @@
+<div class="child-detail" *ngIf="child else empty" [@animate]="{ value:'*', params:{ delay: '150ms', x:'15px' } }">
+
+    <div class="child-profile-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span>
+
+            <button class="text-uppercase blank" *ngIf="child" fxHide.gt-sm nz-button nzType="link"
+                (click)="deselectCurrentChild($event)">
+                <i class="arrow left icon"></i>
+            </button>
+
+        </span>
+
+        <span>
+
+            <ng-container *hasPermission="['AC2']; belongsTo 'N07'">
+
+                <sync-kinder-connect-profile [id]="child.id" [type]="'child'"></sync-kinder-connect-profile>
+
+                <button class="text-uppercase blank" type="button" nz-button nzType="link"
+                    [routerLink]="['/manage-children/child/' + child.id]">
+                    <i class="edit outline icon"></i>
+                </button>
+
+            </ng-container>
+
+            <ng-container *hasPermission="['AC3']; belongsTo 'N07'">
+
+                <button class="text-uppercase blank" type="button" (click)="delete($event)" nz-button nzType="link">
+                    <i class="trash alternate outline icon"></i>
+                </button>
+
+            </ng-container>
+
+            <button class="text-uppercase blank" type="button"
+                (click)="toggleSidebar('child-detail-navigation-sidebar')" nz-button nzType="link">
+                <i class="ellipsis vertical icon"></i>
+            </button>
+
+        </span>
+
+    </div>
+
+    <div class="child-profile-info" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <ul class="status-icons-bar mb-16">
+            <li>
+                <span tooltip="{{ child.isActive() ? 'Active' : 'Inactive' }}" display-mobile="false" hide-delay="50">
+                    <img 
+                        [ngStyle]="!child.isActive() && { 'padding': '3px' }" 
+                        src="assets/icons/flat/ui_set/custom_icons/child/{{ (child.isActive()) ? 'tick' : 'cross' }}.svg" alt="status">
+                </span>    
+            </li>
+            <li *ngIf="child.nappyRequired">
+                <span tooltip="Nappy Change" display-mobile="false" hide-delay="50">
+                    <img src="assets/icons/flat/ui_set/custom_icons/child/baby-changing.svg" alt="nappy change">
+                </span>    
+            </li>
+            <li *ngIf="child.bottleFeedRequired">
+                <span tooltip="Bottle Feed" display-mobile="false" hide-delay="50">
+                    <img src="assets/icons/flat/ui_set/custom_icons/child/bottle-feed.svg" alt="bottle feed">
+                </span>    
+            </li>
+            <li *ngIf="child.hasAllergiesMedications">
+                <span tooltip="Allergies/Medications" display-mobile="false" hide-delay="50">
+                    <img src="assets/icons/flat/ui_set/custom_icons/child/pills.svg" alt="allergies/medications">
+                </span>    
+            </li>
+        </ul>
+
+        <div class="section mb-16">
+
+            <div class="sub-title">Full name</div>
+            <h1>{{ child.getFullName() }}</h1>
+
+        </div>
+        
+        <div class="section mb-16" *ngIf="child.legalFirstName">
+
+            <div class="sub-title">Legal first name</div>
+            <h1>{{ child.legalFirstName }}</h1>
+
+        </div>
+
+        <div class="section mb-16" *ngIf="child.legalLastName">
+
+            <div class="sub-title">Legal last name</div>
+            <h1>{{ child.legalLastName }}</h1>
+
+        </div>
+
+        <div class="section mb-16">
+
+            <div class="sub-title">Gender</div>
+            <h1>{{ child.getGenderLabel() }}</h1>
+
+        </div>
+
+        <div *ngIf="viewMoreBasicDetails" [@slideMotion]="'bottom'">
+
+            <div class="section mb-16">
+
+                <div class="sub-title">Attendance</div>
+                <h1>{{ child.getAttendanceLabel() || 'N/A' }}</h1>
+    
+            </div>
+
+            <div class="section mb-16">
+
+                <div class="sub-title">Note</div>
+                <h1>{{ child.desc || 'N/A' }}</h1>
+    
+            </div>
+
+            <div class="section mb-16">
+
+                <div class="sub-title">Profile Created Date</div>
+                <h1>{{ child.created }}</h1>
+    
+            </div>
+
+            <div class="section mb-16">
+
+                <div class="sub-title">Start Date</div>
+                <h1>{{ child.joinDate || 'N/A'  }}</h1>
+    
+            </div>
+
+        </div>
+
+        <p class="mb-16">
+            <a class="more-btn" (click)="toggleMoreDetails($event)">
+                <i class="angle down icon mr-4" [ngClass]="{ 'rotate' : viewMoreBasicDetails }"></i>
+                {{ viewMoreBasicDetails ? 'Hide' : 'Show' }} Additional Details
+            </a>
+        </p>
+
+        <ng-container *ngIf="ccsExists">
+            <child-details-enrolment-view class="section mb-24"
+                *hasPermission="['AC0']; belongsTo 'N23'"
+                [selected]="child" 
+                (updateScroll)="updateScroll()">
+            </child-details-enrolment-view>
+        </ng-container>
+
+        <child-detail-booking-view class="section mb-16"
+            *hasPermission="['AC0']; belongsTo 'N25'"
+            [selected]="child" 
+            (updateScroll)="updateScroll()">
+        </child-detail-booking-view>
+
+        <child-details-rooms-view class="section mb-16"
+            *hasPermission="['AC0']; belongsTo 'N04'"
+            [selected]="child" 
+            (updateScroll)="updateScroll()">
+        </child-details-rooms-view>
+
+        <child-details-users-view class="section mb-16" 
+            *hasPermission="['AC0']; belongsTo 'N21'"
+            [selected]="child" 
+            (updateScroll)="updateScroll()">
+        </child-details-users-view>
+
+        <child-emergency-contact-view class="section mb-16" 
+            *hasPermission="['AC0']; belongsTo 'N21'"
+            [selected]="child" 
+            (updateScroll)="updateScroll()">
+        </child-emergency-contact-view>
+
+        <child-cultural-background-view class="section mb-16" 
+            *hasPermission="['AC0']; belongsTo 'N21'"
+            [selected]="child" 
+            (updateScroll)="updateScroll()">
+        </child-cultural-background-view>
+
+    </div>
+
+</div>
+
+<ng-template #empty>
+
+    <div fxLayout="column" fxLayoutAlign="center center" fxFlex [@fadeInOnEnter]>
+
+        <!-- EMPTY VIEW -->
+        <nz-empty class="pt-24 pb-24 m-0"
+            [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/state/' + (!isChildrenAvailable ? 'support' : 'clicking') + '.svg'"
+            [nzNotFoundContent]="contentTpl">
+    
+            <ng-template #contentTpl>
+    
+                <ng-container *ngIf="isChildrenAvailable; else createBlock">
+                    <h4 class="mt-24">Select a child</h4>
+                    <span class="hint-txt">Looks like there's no information to display here</span>
+                </ng-container>
+    
+                <ng-template #createBlock>
+                    <h4 class="mt-24">Create a new child profile by clicking the create new button</h4>
+                </ng-template>
+    
+            </ng-template>
+    
+        </nz-empty>
+        <!-- / EMPTY VIEW -->
+    
+    </div>
+
+</ng-template>

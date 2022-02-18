@@ -1,0 +1,21 @@
+@import "src/@fuse/scss/fuse";
+
+debt-list-view {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 640px;
+    }
+
+    .custom-icon{
+        padding-left: unset;
+    }
+
+    .content{
+        background-color: white;
+        margin: 25px;
+    }
+}

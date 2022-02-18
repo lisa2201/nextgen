@@ -1,0 +1,290 @@
+<!-- CONTENT CARD -->
+<div [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+    <ng-container *hasPermission="['AC1']; belongsTo 'N39'">
+        <!-- HEADER -->
+        <div fxLayout="row" fxLayoutAlign="space-between center" style="margin: 10px 25px;">
+
+            <div></div>
+
+            <div>
+                <button nz-button nzType="primary" (click)="addDialog($event)"
+                    class="text-uppercase"> <i class="plus icon mr-8"></i> Create
+                    New</button>
+            </div>
+
+        </div>
+        <!-- / HEADER -->
+    </ng-container>
+
+    <!-- CONTENT TOOLBAR -->
+    <div class="content" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+        <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span fxLayout="row" fxLayoutAlign="space-between center">
+
+                <button class="text-uppercase blank" nz-button nzType="link" (click)="toggleSidebar('apa-sidebar')">
+                    <i class="filter icon custom-icon"></i>
+                </button>
+
+                <nz-divider nzType="vertical" class="mr-16"></nz-divider>
+
+            </span>
+
+            <nz-input-group class="search-container" [nzSuffix]="suffixTemplate" [nzPrefix]="prefixTemplate">
+                <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+            </nz-input-group>
+
+            <ng-template #prefixTemplate>
+                <i nz-icon nzType="search" class="search-icon"></i>
+            </ng-template>
+
+            <ng-template #suffixTemplate>
+                <i class="times circle outline icon ant-input-clear-icon" *ngIf="searchInput.value" [@fadeInOnEnter]
+                    [@fadeOutOnLeave] (click)="clearSearch($event)">
+                </i>
+            </ng-template>
+
+        </div>
+        <!-- / CONTENT TOOLBAR -->
+
+        <ng-container class="content">
+
+            <!-- DATA TABLE VIEW -->
+            <nz-table #ApaTable [nzFrontPagination]="false" [nzData]="tableData" [nzLoading]="tableLoading"
+                [nzNoResult]="emptyBlock" [nzLoadingIndicator]="indicatorTemplate" [nzSimple]="mobilePagination">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Provider ID</th>
+                        <th>Status</th>
+                        <th>Payment Arrangement Type</th>
+                        <th>Payment Arrangement Start Date</th>
+                        <th>Even Amounts Payment Period</th>
+                        <th>Offsetting Arrangement Service ID</th>
+                        <th>Offsetting Arrangement Percentage</th>
+                        <th>Date Submitted</th>
+                        <th>Total Amount</th>
+                        <th *hasPermission="['AC0']; belongsTo 'N39'">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <ng-container *ngIf="apiData?.results != ''">
+
+                        <tr *ngFor="let data of apiData?.results" [ngClass]="{'error': data.is_synced == '2'}">
+                            <td>{{data.alternativePaymentArrangementID}}</td>
+                            <td>{{data.providerID}}</td>
+                            <td>
+                                <!-- Current -->
+                                <ng-container *ngIf="data.status === 'CUR';else labelO"><span
+                                        class=" label-tag green-600 txt-w">Current</span></ng-container>
+
+                                <!-- Pending Approval  -->
+                                <ng-template #labelO>
+                                    <ng-container><span class=" label-tag red-600 txt-w">Pending Approval</span>
+                                    </ng-container>
+                                </ng-template>
+                            </td>
+                            <td>
+                                <!-- Instalments -->
+                                <ng-container *ngIf="data.paymentArrangementType === 'P2P';else labelTw">
+                                    <span>Instalments</span>
+                                </ng-container>
+
+                                <!-- Withholdings  -->
+                                <ng-template #labelTw>
+                                    <span>Withholdings</span>
+                                </ng-template>
+                            </td>
+                            <td>{{data.paymentArrangementStartDate}}</td>
+                            <td>
+                                <ng-container *ngIf="data.evenAmountsPaymentPeriod != '';else labelSi">
+                                    <span>{{data.evenAmountsPaymentPeriod }} months</span>
+                                </ng-container>
+
+                                <ng-template #labelSi>
+                                    <span></span>
+                                </ng-template>
+                            </td>
+                            <td>{{data.offsettingArrangementServiceID}}</td>
+                            <td>{{data.offsettingArrangementPercentage}}</td>
+                            <td>{{data.dateSubmitted}}</td>
+                            <td>{{data.totalAmount}}</td>
+
+
+                            <td class="tbl-style">
+
+                                <ng-container *hasPermission="['AC2']; belongsTo 'N39'">
+
+                                    <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="menu">
+                                        <i class="ellipsis vertical icon"></i>
+                                    </button>
+
+                                    <mat-menu #menu="matMenu" backdropClass="tlp-more">
+
+                                        <ng-container *hasPermission="['AC2']; belongsTo 'N39'">
+
+                                            <button mat-menu-item (click)=editApiData(data)>
+                                                <i class="edit outline icon primary-color"></i>
+                                                <span class="font-weight-600">Edit</span>
+                                            </button>
+
+                                        </ng-container>
+
+                                    </mat-menu>
+
+                                </ng-container>
+
+                            </td>
+
+                            <ng-template #emptytd>
+                                <td></td>
+                            </ng-template>
+
+                        </tr>
+                    </ng-container>
+
+                    <ng-container *ngFor="let data of apaList">
+
+                        <tr *ngIf="data.is_synced != '1'" [ngClass]="{'error': data.is_synced == '2'}">
+                            <td>{{ (data.alternativePaymentArrangementID) ? data.alternativePaymentArrangementID : 'N/A' }}
+                            </td>
+                            <td>{{data.properties.providerID}}</td>
+                            <td>
+                                <!-- Current -->
+                                <ng-container *ngIf="data.is_synced === '1';else labelT"><span
+                                        class=" label-tag green-600 txt-w">Current</span></ng-container>
+
+                                <!-- Pending Approval  -->
+                                <ng-template #labelT>
+                                    <ng-container><span class=" label-tag red-600 txt-w">Pending Approval</span>
+                                    </ng-container>
+                                </ng-template>
+                            </td>
+                            <td>
+                                <!-- Instalments -->
+                                <ng-container *ngIf="data.properties.paymentArrangementType === 'P2P';else labelF">
+                                    <span>Instalments</span>
+                                </ng-container>
+
+                                <!-- Withholdings  -->
+                                <ng-template #labelF>
+                                    <span>Withholdings</span>
+                                </ng-template>
+                            </td>
+                            <td>{{data.properties.paymentArrangementStartDate}}</td>
+                            <td>
+                                <ng-container *ngIf="data.properties.evenAmountsPaymentPeriod != '';else labelFi">
+                                    <span>{{data.properties.evenAmountsPaymentPeriod }} months</span>
+                                </ng-container>
+
+                                <ng-template #labelFi>
+                                    <span></span>
+                                </ng-template>
+                            </td>
+                            <td>{{data.properties.offsettingArrangementServiceID}}</td>
+                            <td>{{data.properties.offsettingArrangementPercentage}}</td>
+                            <td>N/A</td>
+                            <td>N/A</td>
+
+
+                            <td *ngIf="data.is_synced == '2'; else emptytd" class="tbl-style">
+
+                                <ng-container *hasPermission="['AC2']; belongsTo 'N39'">
+
+                                    <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="menu">
+                                        <i class="ellipsis vertical icon"></i>
+                                    </button>
+
+                                    <mat-menu #menu="matMenu" backdropClass="tlp-more">
+
+                                        <ng-container *hasPermission="['AC2']; belongsTo 'N39'">
+
+                                            <button mat-menu-item (click)=edit(data)>
+                                                <i class="edit outline icon primary-color"></i>
+                                                <span class="font-weight-600">Edit</span>
+                                            </button>
+
+                                        </ng-container>
+
+                                    </mat-menu>
+
+                                </ng-container>
+
+                            </td>
+
+                            <ng-template #emptytd>
+                                <td>
+                                    <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="menu">
+                                        <i class="ellipsis vertical icon"></i>
+                                    </button>
+
+                                    <mat-menu #menu="matMenu" backdropClass="tlp-more">
+
+                                        <ng-container>
+
+                                            <button mat-menu-item>
+                                                <i class="ban icon danger-color"></i>
+                                                <span class="font-weight-600">None</span>
+                                            </button>
+
+                                        </ng-container>
+
+                                    </mat-menu>
+                                </td>
+                            </ng-template>
+
+                        </tr>
+
+                    </ng-container>
+
+                </tbody>
+
+            </nz-table>
+            <!-- / DATA TABLE VIEW -->
+
+            <!-- TOTAL LABEL VIEW -->
+            <ng-template #totalTemplate let-range="range" let-total>
+                <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing
+                    {{ range[0] }}
+                    to {{ range[1] }} of {{ total }} entries</span>
+                <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} -
+                    {{ range[1] }} of {{ total }} entries</span>
+            </ng-template>
+            <!-- / TOTAL LABEL VIEW -->
+
+            <!-- LOADER VIEW -->
+            <ng-template #indicatorTemplate>
+                <div class="is-loading">
+                    <span class="btn-spinner card-loader"></span>
+                </div>
+            </ng-template>
+            <!-- / LOADER VIEW -->
+
+            <!-- EMPTY VIEW -->
+            <ng-template #emptyBlock>
+
+                <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                    [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                    <ng-template #contentTpl>
+                        <h4 class="mt-24">No Data Found</h4>
+                        <span>Looks like there's no information to display here</span>
+                    </ng-template>
+
+                </nz-empty>
+
+            </ng-template>
+            <!-- / EMPTY VIEW -->
+
+        </ng-container>
+
+    </div>
+
+</div>
+
+<!-- / CONTENT CARD -->

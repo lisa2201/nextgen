@@ -1,0 +1,245 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="immunisationForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="immunisationForm" nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Immunisation Type</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="firstNameErrorTpl">
+
+                            <input nz-input formControlName="name" placeholder="name" type="text" />
+
+                            <ng-template #firstNameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input  name</ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">Name can't be longer than 150 characters</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                        <nz-table style="margin-bottom: 30px" class="mr-t-8 " #roleSelectData [nzData]="immunisationForm.get('scheduleArray')['controls']"
+                            [nzShowPagination]="false" nzSize="small">
+                            <thead>
+                                <tr>
+                                    <th nzWidth="160px">Schedule</th>
+                                    <th nzWidth="160px"></th>
+                                    <th nzWidth="160px"></th>
+                                    <th nzWidth="160px">
+                                        <a class="action-btn add mr-8 btn-add-role" (click)="addSchedule()" *ngIf="isScheduleValid()">
+                                            <i nz-icon nzType="plus-circle" nzTheme="twotone"></i>
+                                            Add
+                                        </a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container formArrayName="scheduleArray"
+                                    *ngFor="let control of immunisationForm.get('scheduleArray')['controls']; let i = index;">
+                                    <ng-container [formGroupName]="i">
+                                        <tr>
+                                        
+                                            <td class="ant-table-selection-column">
+                                                <nz-form-label class="f-left" style="float: left;"> Schedule {{i+ 1}}</nz-form-label>
+                                            </td>
+                                            <td style="width: 300px;">
+                                                <nz-form-control>
+
+                                                    <input nz-input formControlName="number" placeholder="number" type="number" />
+                        
+                                                    <ng-template #numberErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please input  number of selected period</ng-container>
+                                                        <ng-container *ngIf="control.hasError('maxlength')">Number only allowed</ng-container>
+                                                    </ng-template>
+                        
+                                                </nz-form-control>
+                                            </td>
+                                            <td style="width: 300px;">
+                                                <nz-form-control>
+                                                    <nz-select formControlName="period" nzShowSearch
+                                                        nzPlaceHolder="select a option">
+    
+                                                        <nz-option *ngFor="let item of immunisationOption; trackBy: trackByFn;"
+                                                            nzValue="{{ item.value }}" nzLabel="{{ item.name}}">
+                                                        </nz-option>
+    
+                                                    </nz-select>
+                                                    <ng-template #periodErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please select a period</ng-container>
+                                                    </ng-template>
+
+                                                </nz-form-control>
+
+                                            </td>
+                                            <td style="width: 50px;">
+                                                <span *ngIf="immunisationForm.get('scheduleArray')['controls'].length !== 1; else dissableLink">
+                                                    <a class="action-btn remove btn-add-role" (click)="deleteSchedule($event, i, false)">
+                                                        <i class="trash alternate outline icon mr-4"></i>
+                                                        remove
+                                                    </a>
+                                                </span>
+                                                <ng-template #dissableLink>
+                                                    <span >
+                                                        <a class="action-btn-dissable remove btn-add-role-dissabled" (click)="deleteSchedule($event, i, false)">
+                                                            <i class="trash alternate outline icon mr-4"></i>
+                                                            remove
+                                                        </a>
+                                                    </span>
+                                                </ng-template>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                
+                                </ng-container>
+                                </tbody>
+
+                        </nz-table>
+                    
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" *ngIf="isOwnerView && !isEdit">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label> Branch</nz-form-label>
+
+                        <nz-form-control [nzErrorTip]="statusErrorTpl">
+                        
+                            <nz-select nzMode="multiple" formControlName="branches" nzShowSearch nzPlaceHolder="select a branch">
+                        
+                                <nz-option *ngFor="let item of branches; trackBy: trackByFn;" nzValue="{{ item.id }}"
+                                    nzLabel="{{ item.name}}-{{ item.url}}">
+                                </nz-option>
+                        
+                            </nz-select>
+                        
+                            <ng-template #statusErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select branch</ng-container>
+                            </ng-template>
+                        
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label> Status</nz-form-label>
+
+                        <nz-form-control [nzErrorTip]="statusErrorTpl">
+
+                            <nz-radio-group formControlName="status" nzButtonStyle="solid" class="has-img">
+                    
+                                <label nz-radio-button nzValue="1">
+                                    <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/switch-on.svg" alt="active icon">
+                                    <span>Active</span>
+                                </label>
+                    
+                                <label nz-radio-button nzValue="0">
+                                    <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/switch-off.svg" alt="inactive icon">
+                                    <span>Inactive</span>
+                                </label>
+
+                            </nz-radio-group>
+
+                            <ng-template #statusErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select an status</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    <nz-form-item>
+
+                        <nz-form-label>Important Information About The Immunisation <small>(Max 250 characters)</small></nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="descErrorTpl">
+
+                            <textarea formControlName="desc" nz-input rows="4" placeholder="description"></textarea>
+
+                            <ng-template #descErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('maxlength')">Important information can't be longer than 250 characters</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+                </div>
+
+               
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span>
+            </span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8"
+                    *hasPermission="['AC1']; belongsTo 'N60'"
+                    nz-button 
+                    nzType="primary" 
+                    [disabled]="!immunisationForm.valid"
+                    [promiseBtn]="buttonLoader">
+                    <i class="plus icon mr-8"></i> {{buttonValue}}
+                </button>
+    
+                <button class="text-uppercase mr-8" 
+                    type="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+    
+                <button class="text-uppercase mat-close-btn" 
+                    type="button"
+                    nz-button 
+                    nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

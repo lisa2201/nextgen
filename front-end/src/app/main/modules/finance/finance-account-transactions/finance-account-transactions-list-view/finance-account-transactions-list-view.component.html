@@ -1,0 +1,132 @@
+<!-- CONTENT CARD -->
+<div class="content" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+    <!-- CONTENT TOOLBAR -->
+    <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span fxLayout="row" fxLayoutAlign="space-between center" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <button class="text-uppercase blank" nz-button nzType="link"
+                (click)="toggleSidebar('finance-account-transactions-sidebar')">
+                <i class="filter icon"></i>
+            </button>
+
+            <nz-divider nzType="vertical" class="mr-16"></nz-divider>
+
+        </span>
+
+        <nz-input-group class="search-container" [nzSuffix]="suffixTemplate" [nzPrefix]="prefixTemplate">
+            <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+        </nz-input-group>
+
+        <ng-template #prefixTemplate>
+            <i nz-icon nzType="search" class="search-icon"></i>
+        </ng-template>
+
+        <ng-template #suffixTemplate>
+            <i class="times circle outline icon ant-input-clear-icon" *ngIf="searchInput.value" [@fadeInOnEnter]
+                [@fadeOutOnLeave] (click)="clearSearch($event)">
+            </i>
+        </ng-template>
+
+        <span>
+            <button class="text-uppercase blank" nz-button nzType="link"
+                (click)="reloadTable($event)">
+                <i class="sync alternate icon"></i>
+            </button>
+
+        </span>
+
+    </div>
+    <!-- / CONTENT TOOLBAR -->
+
+    <ng-container>
+
+        <!-- DATA TABLE VIEW -->
+        <nz-table #financeAccountTransactionsTable [nzShowSizeChanger]="pageSizeChanger" [nzShowTotal]="totalTemplate"
+            [nzFrontPagination]="false" [nzData]="financeAccountTransactionList" [nzLoading]="tableLoading" [nzTotal]="total"
+            [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" [nzPageSizeOptions]="pageSizeOptions"
+            (nzPageIndexChange)="onTableChange()" (nzPageSizeChange)="onTableChange(true)" [nzNoResult]="emptyBlock"
+            [nzLoadingIndicator]="indicatorTemplate" [nzSimple]="mobilePagination">
+
+            <thead>
+                <tr>
+                    <th nzShowSort [(nzSort)]="mapOfSort.created" (nzSortChange)="sortColumns('created', $event)">Transaction Date</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.date" (nzSortChange)="sortColumns('date', $event)">Date</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.parent" (nzSortChange)="sortColumns('parent', $event)">Parent</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.child" (nzSortChange)="sortColumns('child', $event)">Child</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.category" (nzSortChange)="sortColumns('category', $event)">Transaction Category</th>
+                    <th>Description</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.amount" (nzSortChange)="sortColumns('amount', $event)">Amount</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.type" (nzSortChange)="sortColumns('type', $event)">Type</th>
+                    <th *ngIf="showReversed">Reversed</th>
+                    <th *ngIf="filterByParent">Running Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <ng-template ngFor let-data [ngForOf]="financeAccountTransactionsTable.data" [ngForTrackBy]="trackByFn">
+                    <tr>
+                        <td>{{ data.createdAt | date:'yyyy-MM-dd'}}</td>
+                        <td>{{ data.date | date:'yyyy-MM-dd'}}</td>
+                        <td>{{ data?.parent?.getFullName() }}</td>
+                        <td>
+                            <nz-tag class="child-tag" *ngIf="data?.child" (click)="goToChildPage($event, data?.child?.id)" [nzColor]="'blue'">{{ data?.child?.getFullName() }}</nz-tag>
+                        </td>
+                        <td>
+                            {{ data.getTransactionType() }} 
+                        </td>
+                        <td>{{ data.description }}</td>
+                        <td>{{ data.amount | currency }}</td>
+                        <td>{{ data.mode == 'credit' ? 'Credit(-)' : 'Debit(+)' }}</td>
+                        <td *ngIf="showReversed">
+                            <nz-tag *ngIf="data.reversed === true" [nzColor]="'green'">Yes</nz-tag>
+                            <nz-tag *ngIf="data.reversed === false" [nzColor]="'red'">No</nz-tag>
+                        </td>
+                        <td *ngIf="filterByParent">{{ data.runningTotal | currency }}</td>
+                    </tr>
+                </ng-template>
+            </tbody>
+
+        </nz-table>
+        <!-- / DATA TABLE VIEW -->
+
+        <!-- TOTAL LABEL VIEW -->
+        <ng-template #totalTemplate let-range="range" let-total>
+            <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ range[0] }}
+                to
+                {{ range[1] }} of {{ total }} entries</span>
+            <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} -
+                {{ range[1] }} of
+                {{ total }} entries</span>
+        </ng-template>
+        <!-- / TOTAL LABEL VIEW -->
+
+        <!-- LOADER VIEW -->
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+        <!-- / LOADER VIEW -->
+
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+
+    </ng-container>
+
+</div>
+<!-- / CONTENT CARD -->

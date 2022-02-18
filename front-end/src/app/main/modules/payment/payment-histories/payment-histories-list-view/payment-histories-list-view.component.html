@@ -1,0 +1,133 @@
+<!-- CONTENT CARD -->
+<div class="content" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+    <!-- CONTENT TOOLBAR -->
+    <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span fxLayout="row" fxLayoutAlign="space-between center" fxHide.gt-md [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <button class="text-uppercase blank" nz-button nzType="link" (click)="toggleSidebar('payment-histories-sidebar')">
+                <i class="filter icon"></i>
+            </button>
+
+            <nz-divider nzType="vertical" class="mr-16"></nz-divider>
+
+        </span>
+
+        <nz-input-group class="search-container" [nzSuffix]="suffixTemplate" [nzPrefix]="prefixTemplate">
+            <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+        </nz-input-group>
+
+        <ng-template #prefixTemplate>
+            <i nz-icon nzType="search" class="search-icon"></i>
+        </ng-template>
+
+        <ng-template #suffixTemplate>
+            <i class="times circle outline icon ant-input-clear-icon" *ngIf="searchInput.value" [@fadeInOnEnter]
+                [@fadeOutOnLeave] (click)="clearSearch($event)">
+            </i>
+        </ng-template>
+
+    </div>
+    <!-- / CONTENT TOOLBAR -->
+
+    <ng-container>
+
+        <!-- DATA TABLE VIEW -->
+        <nz-table #paymentHistoriesTable [nzShowSizeChanger]="pageSizeChanger" [nzShowTotal]="totalTemplate"
+            [nzFrontPagination]="false" [nzData]="paymentHistoriesList" [nzLoading]="tableLoading" [nzTotal]="total"
+            [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" [nzPageSizeOptions]="pageSizeOptions"
+            (nzPageIndexChange)="onTableChange()" (nzPageSizeChange)="onTableChange(true)" [nzNoResult]="emptyBlock"
+            [nzLoadingIndicator]="indicatorTemplate" [nzSimple]="mobilePagination">
+
+            <thead>
+                <tr>
+                    <th nzShowSort [(nzSort)]="mapOfSort.number" (nzSortChange)="sortColumns('number', $event)">Invoice Number</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.reference" (nzSortChange)="sortColumns('reference', $event)">Payment Reference</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.date" (nzSortChange)="sortColumns('date', $event)">Date</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.amount" (nzSortChange)="sortColumns('amount', $event)">Amount</th>
+                    <th>Payment Method</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.status" (nzSortChange)="sortColumns('status', $event)">Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <ng-template ngFor let-data [ngForOf]="paymentHistoriesTable.data" [ngForTrackBy]="trackByFn">
+                    <tr>
+                        <td>{{ data.invoice.number }}</td>
+                        <td>{{ data.paymentRef | uppercase }}</td>
+                        <td>{{ data.date | date }}</td>
+                        <td>{{ data.amount | currency:'AUD':'code' }}</td>
+                        <td>{{ data.paymentMethod.instrument }}</td>
+                        <td>
+
+                            <ng-container *ngIf="data.status === 'paid'">
+                                <nz-tag nzColor="green">Paid</nz-tag>
+                            </ng-container>
+
+                            <ng-container *ngIf="data.status === 'failed'">
+                                <nz-tag nzColor="red">Failed</nz-tag>
+                            </ng-container>
+
+                            <ng-container *ngIf="data.status === 'scheduled'">
+                                <nz-tag nzColor="blue">Scheduled</nz-tag>
+                            </ng-container>
+
+                            <ng-container *ngIf="data.status === 'submitted'">
+                                <nz-tag nzColor="geekblue">Submitted</nz-tag>
+                            </ng-container>
+
+                            <ng-container *ngIf="data.status === 'pending'">
+                                <nz-tag nzColor="purple">Pending</nz-tag>
+                            </ng-container>
+
+                            <ng-container *ngIf="data.status === 'rejected_gateway'">
+                                <nz-tag nzColor="red">Rejected Gateway</nz-tag>
+                            </ng-container>
+                        </td>
+                    </tr>
+                </ng-template>
+            </tbody>
+
+        </nz-table>
+        <!-- / DATA TABLE VIEW -->
+
+        <!-- TOTAL LABEL VIEW -->
+        <ng-template #totalTemplate let-range="range" let-total>
+            <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ range[0] }}
+                to
+                {{ range[1] }} of {{ total }} entries</span>
+            <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} -
+                {{ range[1] }} of
+                {{ total }} entries</span>
+        </ng-template>
+        <!-- / TOTAL LABEL VIEW -->
+
+        <!-- LOADER VIEW -->
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+        <!-- / LOADER VIEW -->
+
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+
+    </ng-container>
+
+</div>
+<!-- / CONTENT CARD -->

@@ -1,0 +1,104 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <nz-alert nzCloseable nzType="warning" class="alert"  *ngFor="let obj of errorMsg" nzMessage="{{ (obj.message) ? obj.message : 'Sync Error' }}"></nz-alert>
+
+    <form name="ReturnFeeReductionCancleForm" fxLayout="column" fxFlex [nzLayout]="'vertical'"
+        [formGroup]="ReturnFeeReductionCancleForm" nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <nz-form-item nz-col [nzMd]="24" [nzLg]="24">
+
+                    <nz-form-label nzRequired>Return Fee Reduction ID</nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="feeReductionIdErrorTpl">
+
+                        <input readOnly nz-input formControlName="returnFeeReductionID" placeholder="Return Fee Reduction ID" type="text" />
+
+                        <ng-template #feeReductionIdErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input Return Fee Reduction ID</ng-container>
+                            <ng-container *ngIf="control.hasError('maxlength')">Return Fee Reduction ID can't be longer than 20
+                                characters</ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+                <nz-form-item nz-col [nzMd]="24" [nzLg]="24">
+
+                    <nz-form-label nzRequired>Cancel Return Fee Reduction Reason </nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="cancellationReasonErrorTpl">
+
+                        <textarea nz-input formControlName="cancelReturnFeeReductionReason" placeholder="Cancel Return Fee Reduction Reason" type="text"></textarea>
+
+                        <ng-template #cancellationReasonErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input Cancel Return Fee Reduction Reason</ng-container>
+                            <ng-container *ngIf="control.hasError('maxlength')">Reason can't be longer than 250 characters
+                                characters</ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+            </div>
+
+        </div>
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+            
+            <span></span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8"
+                    *hasPermission="['AC1']; belongsTo 'N37'"
+                    nz-button 
+                    nzType="primary" 
+                    [disabled]="!ReturnFeeReductionCancleForm.valid"
+                    [promiseBtn]="buttonLoader">
+                    <i class="plus icon mr-8"></i> Cancel
+                </button>
+    
+                <button class="text-uppercase mr-8" 
+                    type="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+    
+                <button class="text-uppercase mat-close-btn" 
+                    type="button"
+                    nz-button 
+                    nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

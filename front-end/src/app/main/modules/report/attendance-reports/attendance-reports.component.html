@@ -1,0 +1,48 @@
+<!-- <div id="is-cases" class="page-layout simple left-sidebar inner-sidebar" *canViewAuth [@fadeInOnEnter]
+    [@fadeOutOnLeave]>
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-15px' } }">Attendance Reports</h1>
+
+        <ng-container [@fadeInOnEnter] [@fadeOutOnLeave]>
+            <button class="text-uppercase" nz-button nzType="primary">
+                <i class="plus icon mr-8"></i> Manage
+            </button>
+        </ng-container>
+        
+
+    </div>
+
+    <attendance-report-filter></attendance-report-filter>
+    <attendance-report-list-view></attendance-report-list-view>
+
+</div> -->
+
+<div class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <div id="care_provided_vacancy_wrapper" class="center">
+
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2">
+                    Attendance Reports
+                </span>
+
+            </h1>
+
+        </div>
+
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <div class="content p-24 pt-16" fxLayout="column" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+    
+            <attendance-report-filter></attendance-report-filter>
+            <attendance-report-list-view></attendance-report-list-view>
+    
+            </div>
+
+        </div>
+    </div>
+</div>

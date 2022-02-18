@@ -1,0 +1,73 @@
+<div id="login" fxLayout="column">
+
+    <div id="login-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+
+        <div id="login-form" [@animate]="{ value:'*', params:{ delay:'300ms', y:'-15px', opacity: 0 }}">
+
+            <div class="bg-pattern-wrapper" [ngStyle]="{ 'background-image': 'url(assets/patterns/bg-pattern-login-2.svg)', 'height': '200px' }"></div>
+
+            <div class="bg-inner-wrapper p-24">
+
+                <h2>
+                    <span class="first">KinderPay</span>
+                    <span class="last">Site Manager</span>
+                </h2>
+                <h2>Welcome to Kinder m8</h2>
+    
+                <p class="desc">Site Manager allows to manage your branches, user roles, payments and many more features all in one platform.</p>
+    
+                <form name="loginForm" [formGroup]="loginForm" novalidate>
+    
+                    <mat-form-field appearance="outline">
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email">
+                        <mat-icon matSuffix class="secondary-text">mail</mat-icon>
+                        <mat-error *ngIf="loginForm.get('email').hasError('required')">
+                            Email is required
+                        </mat-error>
+                        <mat-error *ngIf="!loginForm.get('email').hasError('required') && loginForm.get('email').hasError('email')">
+                            Please enter a valid email address
+                        </mat-error>
+                    </mat-form-field>
+    
+                    <mat-form-field appearance="outline">
+                        <mat-label>Password</mat-label>
+                        <input matInput type="password" formControlName="password">
+                        <mat-icon matSuffix class="secondary-text">vpn_key</mat-icon>
+                        <mat-error>
+                            Password is required
+                        </mat-error>
+                    </mat-form-field>
+    
+                    <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center">
+                        <label nz-checkbox>
+                            <span style="font-weight: 500">Remember me</span>
+                        </label>
+
+                        <a class="forgot-password" (click)="goForgotPassword($event)">
+                            Forgot Password?
+                        </a>
+                    </div>
+    
+                    <button nz-button 
+                        nzBlock
+                        nzType="primary" 
+                        nzSize="large" 
+                        [promiseBtn]="isLoading"
+                        [disabled]="loginForm.invalid"
+                        (click)="onSubmit()">LOG IN</button>
+    
+                    <div class="copyright">
+                        Copyright © {{ copyRightYear }}
+                        <strong>Kinder m8</strong>, All rights reserved.
+                    </div>
+    
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

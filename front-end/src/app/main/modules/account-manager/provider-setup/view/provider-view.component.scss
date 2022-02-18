@@ -1,0 +1,41 @@
+// .p{
+//     text-align: center;
+//     width: 100;
+// }
+
+// @import "src/@fuse/scss/fuse";
+
+// #provider-setup {
+
+//          background-color: rgb(255, 255, 255);
+// }
+
+.mat-menu-panel {
+    min-height: 50px;
+}
+
+#provider-view {
+
+    
+    
+    .th {
+        text-align: center;
+        width: 100%;
+        padding: 100%;
+    }
+    
+    .td {
+        text-align: center;
+        width: 100%;
+        padding: 100%;
+    }
+
+    .basic-info {
+        background-color: #ececec;
+        padding: 28px;
+    }
+
+    nz-divider {
+        margin: 24px 0px;
+    }
+}

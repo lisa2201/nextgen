@@ -1,0 +1,151 @@
+<!--
+<fuse-widget class="widget" fxLayout="column">
+
+    &lt;!&ndash; Front &ndash;&gt;
+    <div class="fuse-widget-front">
+
+        <nz-spin
+                [nzSpinning]="widgetLoader"
+                [nzIndicator]="indicatorTemplate">
+
+            <div class="p-16 table-title border-bottom" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="font-size-16">Center Wise Ratio  <ng-container *ngIf="errorMessage!=null"><a routerLink="/service-settings/educator-ratio"> {{(this.errorMessage!=null) ? '('+ this.errorMessage+')' : ''}} </a> </ng-container></span>
+
+                <button class="refresh-button" nz-button nzType="link" nzSize="small" (click)="updateCenterWiseRatioWidget()">
+                    <i class="sync vertical icon"></i>
+                </button>
+            </div>
+
+            <table class="simple">
+
+                <thead>
+                <tr>
+                    <th>Age Group</th>
+                    <th>Educator Child Ratio</th>
+                    <th>Children Count</th>
+                    <th>Required Educators</th>
+                    &lt;!&ndash;<th>Live Ratio</th>&ndash;&gt;
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr *ngFor="let item of widgetTableData">
+
+                    <td> {{ item.age_group }}</td>
+                    <td>{{ item.ratio_display }}</td>
+                    <td>{{ item.count }}</td>
+                    <td>{{ item.educators_needed }}</td>
+                    &lt;!&ndash;<td>{{ attendance.live_ratio }}</td>&ndash;&gt;
+                </tr>
+                </tbody>
+            </table>
+            <div class="p-16 border-top" fxLayout="row" fxLayoutAlign="start center">
+                    <span class="h4 secondary-text text-truncate">
+                        Total Educators Needed
+                    </span>
+                <span class="h4 ml-8">
+                        {{ this.totalEducatorsNeeded }}
+                    </span>
+                <span class="h4 secondary-text text-truncate">
+                        &nbsp;&nbsp;&nbsp;
+                    </span>
+                <span class="h4 secondary-text text-truncate">
+                        Educators In Attendance
+                    </span>
+                <span class="h4 ml-8">
+                        {{ this.totalEducatorsInAttendance }}
+                    </span>
+            </div>
+        </nz-spin>
+
+    </div>
+    &lt;!&ndash; / Front &ndash;&gt;
+
+</fuse-widget>
+
+&lt;!&ndash; LOADER VIEW &ndash;&gt;
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+&lt;!&ndash; / LOADER VIEW &ndash;&gt;
+-->
+<fuse-widget class="widget" fxLayout="column">
+
+    <!-- Front -->
+    <div class="fuse-widget-front">
+
+        <nz-spin
+                [nzSpinning]="widgetLoader"
+                [nzIndicator]="indicatorTemplate">
+
+            <div class="fuse-widget-front">
+
+                <div class="p-16 h-52" fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <div class="h3">Centre-based Ratio
+                        <a target="_blank" href="https://www.acecqa.gov.au/nqf/educator-to-child-ratios">
+                        <i nz-tooltip nzTooltipTitle="Ratios are calculated across the service (not by individual rooms). An educator who is caring for one age range of children can also be counted against another age range of children, as long as the ratio for each age range is maintained and adequate supervision is maintained at all times. Source: https://www.acecqa.gov.au/nqf/educator-to-child-ratios" class="info circle icon primary-color"></i>
+                        </a>
+                    </div>
+                    <ng-container *ngIf="errorMessage!=null">
+                        <a *ngIf="!is_sitemanager" routerLink="/service-settings/educator-ratio"> {{(this.errorMessage!=null) ? '('+ this.errorMessage+')' : ''}} </a>
+                        <span *ngIf="is_sitemanager"> {{(this.errorMessage!=null) ? '('+ this.errorMessage+')' : ''}} </span>
+                    </ng-container>
+                    <button class="refresh-button" nz-button nzType="link" nzSize="small" (click)="updateCenterWiseRatioWidget()">
+                        <i class="sync vertical icon"></i>
+                    </button>
+
+                </div>
+
+                <div class="pt-8 pb-32" [ngClass]="{'waitlist_count': !is_sitemanager}" fxLayout="column" fxLayoutAlign="center center"
+                     nz-popover
+                     [nzPopoverTitle]="contentTemplateTitle"
+                     [(nzPopoverVisible)]="popupVisible"
+                     nzPopoverTrigger="click"
+                     [nzPopoverContent]="contentTemplate"
+                >
+                    <ng-template #contentTemplateTitle>
+                        Staff Names
+                        <a style="float: right;text-decoration: none;" (click)="closePopup()"><i class="close vertical icon"></i></a>
+                    </ng-template>
+                    <ng-template #contentTemplate>
+                        <nz-list>
+                            <nz-list-item style="padding: 6px 0;" *ngFor="let item of educatorsInAttendance">
+                                <span nz-typography>{{ item.first_name }}  {{ item.last_name }} </span>
+                            </nz-list-item>
+                        </nz-list>
+                    </ng-template>
+                    <div class="font-size-72 line-height-72" [ngClass]="'blue-grey-fg'">
+                        {{ this.totalEducatorsInAttendance }}
+                    </div>
+                    <div class="h3 secondary-text font-weight-500">Current Educators
+                    </div>
+                </div>
+
+                <div class="p-16 border-top" fxLayout="row" fxLayoutAlign="start center">
+                    <span class="h4 secondary-text text-truncate">
+                        Required Educators
+                    </span>
+                    <span class="h4 ml-8">
+                        {{ this.totalEducatorsNeeded }}
+                    </span>
+                </div>
+            </div>
+
+        </nz-spin>
+
+    </div>
+    <!-- / Front -->
+
+</fuse-widget>
+
+<!-- LOADER VIEW -->
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+<!-- / LOADER VIEW -->

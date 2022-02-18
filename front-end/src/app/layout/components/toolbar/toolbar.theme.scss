@@ -1,0 +1,13 @@
+@import "@fuse/scss/variables";
+
+@mixin toolbar-theme($theme) {
+
+    // $foreground: map-get($theme, foreground);
+
+    toolbar {
+
+        .toolbar-separator {
+            background: $layout-border-color;
+        }
+    }
+}

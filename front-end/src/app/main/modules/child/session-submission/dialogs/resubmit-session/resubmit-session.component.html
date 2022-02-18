@@ -1,0 +1,203 @@
+<div class="dialog-content-wrapper ps">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">
+                {{ dialogTitle }} ({{ session.enrolment.enrolId }})
+            </span>
+
+            <ng-container *ngIf="!buttonSessionLoader else showFormLoading">
+                <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </ng-container>
+
+            <ng-template #showFormLoading>
+                <span class="modal-close-loader is-loading">
+                    <span class="btn-spinner"></span>
+                </span>
+            </ng-template>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form class="compose-form" fxLayout="column" fxFlex nz-form [nzLayout]="'vertical'">
+    
+        <div mat-dialog-content class="p-24 pt-16 m-0" 
+            fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+    
+            <p class="mb-8 text-center">
+                Session Week <span class="font-weight-600">{{ getPreviewTitle().start }}</span> to <span class="font-weight-600">{{ getPreviewTitle().end }}</span>
+            </p>
+
+            <nz-form-item>
+
+                <p class="mb-8 ">
+                    <label class="no-select"
+                        nz-checkbox
+                        [ngModelOptions]="{ standalone: true }"
+                        [(ngModel)]="isAllPreviewDataChecked"
+                        (nzCheckedChange)="checkAllPreviews($event)"
+                        [nzIndeterminate]="isPreviewIndeterminate"
+                        [nzDisabled]="isNoCareProvided">
+                        Select all
+                    </label>
+                </p>
+
+                <nz-form-control
+                    [nzValidateStatus]="sessionSelectionErrorStatus"
+                    [nzErrorTip]="previewBookingSelectionErrorTpl">
+
+                    <ng-container *ngFor="let data of sessionPreviewList; let row_idx = index; trackBy: trackByFn">
+
+                        <div class="preview-list" [@slideMotion]="'bottom'">
+
+                            <p class="title">
+                                {{ data.date }} <span class="small">({{ data.day }})</span>
+                            </p>
+
+                            <nz-table
+                                [nzData]="data.bookings"
+                                [nzShowPagination]="false"
+                                [nzNoResult]="emptyDay"
+                                [nzSize]="'small'"
+                                [ngClass]="{ 'ant-table-empty-h-b' : data.bookings.length < 1 }">
+        
+                                <thead>
+                                    <tr>
+                                        <th [nzWidth]="'40px'"></th>
+                                        <th [nzWidth]="'100px'">Status</th>
+                                        <th [nzWidth]="'140px'">Fee</th>
+                                        <th>Session Time</th>
+                                        <th>Check In/Out Time</th>
+                                        <th>Type</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    <tr *ngFor="let booking of data.bookings; let booking_idx = index; trackBy: trackByFn">
+
+                                        <td [nzAlign]="'center'">
+                                            <label 
+                                                nz-checkbox
+                                                [(nzChecked)]="booking.isSelected"
+                                                [nzDisabled]="booking.isDisabled"
+                                                (nzCheckedChange)="refreshSessionSelectionStatus()"></label>
+                                        </td>
+                                        <td>
+                                            <ng-container [ngSwitch]="booking.statusCode">
+
+                                                <ng-container *ngSwitchCase="'2'">
+                                                    <span class="status-lbl absence">Absence</span>
+                                                </ng-container>
+
+                                                <ng-container *ngSwitchCase="'3'">
+                                                    <span class="status-lbl holiday">Holiday</span>
+                                                </ng-container>
+
+                                                <ng-container *ngSwitchDefault>
+
+                                                    <ng-container *ngIf="booking.attendance; else noAttendanceStatus">
+
+                                                        <span class="status-lbl success" 
+                                                            *ngIf="booking.attendance && booking.attendance.isCompleted(); else incompleteAttendance">Completed</span>
+    
+                                                        <ng-template #incompleteAttendance>
+                                                            <span class="status-lbl warning">Incomplete</span>
+                                                        </ng-template>
+
+                                                    </ng-container>
+    
+                                                    <ng-template #noAttendanceStatus>
+                                                        <span class="status-lbl danger">Conflict</span>
+                                                    </ng-template>
+
+                                                </ng-container>
+
+                                            </ng-container>
+
+                                        </td>
+                                        <td>
+                                            {{ booking.fee.name }} ({{ booking?.price | currency: client.currency :'symbol':'1.2-2' }})
+                                        </td>
+                                        <td>
+                                            <span>{{ booking.sessionStart | convertTimeString }} - {{ booking.sessionEnd | convertTimeString }}</span>
+                                        </td>
+                                        <td>
+                                            <ng-container *ngIf="booking.attendance && booking.attendance.type === '0'; else naBlock">
+                                                        
+                                                {{ booking.attendance.checkInTime | convertTimeString }} - 
+                                                <ng-container *ngIf="booking.attendance.checkOutTime; else naBlock">
+                                                    {{ booking.attendance.checkOutTime | convertTimeString }}
+                                                </ng-container>
+                                                
+                                            </ng-container>
+
+                                            <ng-template #naBlock>N/A</ng-template>
+                                        </td>
+                                        <td>
+                                            {{ booking.isCasual ? 'Casual' : 'Standard' }}
+                                        </td>
+                                        <td>
+                                            <a (click)="updateSessionSlot($event, booking, row_idx, booking_idx)"><i class="edit outline icon"></i></a>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                                                    
+                            </nz-table>
+
+                        </div>
+
+                    </ng-container>
+                    
+                    <ng-template #previewBookingSelectionErrorTpl let-control>
+                        <ng-container>Please select at least one option</ng-container>
+                    </ng-template>
+
+                    <ng-template #emptyDay>
+                        <span>Looks like there's no information to display here.</span>
+                    </ng-template>
+                    
+
+                </nz-form-control>
+
+            </nz-form-item>
+    
+        </div>
+    
+    </form>
+
+    <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span></span>
+
+        <span class="text-right">
+
+            <button class="text-uppercase mr-8"
+                *hasPermission="['AC1']; belongsTo 'N33'"
+                nz-button 
+                nzType="primary" 
+                [disabled]="!isNoCareProvided && !hasPreviewSessionSelected()"
+                [promiseBtn]="buttonLoader"
+                (click)="saveChanges($event)">
+                <i class="plus icon mr-8"></i> Resubmit
+            </button>
+
+            <button class="text-uppercase mat-close-btn" 
+                type="button"
+                nz-button 
+                nzType="danger"
+                (click)="matDialogRef.close()">
+                Close
+            </button>
+
+        </span>
+
+    </div>
+
+</div>

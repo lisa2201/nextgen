@@ -1,0 +1,76 @@
+<div id="about" class="p-24" fxLayout="row wrap">
+
+    <div class="about-content" fxLayout="column" fxFlex="100">
+        <!-- CONTENT -->
+        <div class="content p-24 pt-16" fusePerfectScrollbar
+             [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <form name="emailNotification" [nzLayout]="'vertical'" [formGroup]="emailNotificationForm" nz-form>
+
+                <div class="pl-4 pr-4">
+
+                    <div nz-row [nzGutter]="24">
+                        <div nz-col [nzXs]="8" [nzSm]="8" [nzMd]="12" [nzLg]="12" [nzXl]="24" [nzXXl]="24">
+                            <nz-form-item>
+                                <div nz-row nzJustify="space-between" nzAlign="middle">
+                                    <nz-form-label><b>Email Notification</b></nz-form-label>
+                                    <nz-form-label><b>On/Off Status</b></nz-form-label>
+
+                                </div>
+
+                            </nz-form-item>
+                        </div>
+
+
+                        <div nz-col [nzXs]="8" [nzSm]="8" [nzMd]="12" [nzLg]="12" [nzXl]="24" [nzXXl]="24">
+                            <nz-form-item>
+                                <div nz-row nzJustify="space-between" nzAlign="middle">
+                                    <nz-form-label>New Enquiry Email</nz-form-label>
+                                    <nz-switch class="upload-switch"
+                                               formControlName="enquiry"
+                                               nzCheckedChildren="Yes"
+                                               nzUnCheckedChildren="No"
+                                               (click)="submit($event)"
+                                    >
+                                    </nz-switch>
+                                </div>
+
+                            </nz-form-item>
+                        </div>
+                        <div nz-col [nzXs]="8" [nzSm]="8" [nzMd]="12" [nzLg]="12" [nzXl]="24" [nzXXl]="24">
+                            <nz-form-item>
+                                <div nz-row nzJustify="space-between" nzAlign="middle">
+                                    <nz-form-label>New Waitlist Email</nz-form-label>
+                                    <nz-switch class="upload-switch"
+                                               formControlName="waitlist"
+                                               nzCheckedChildren="Yes"
+                                               nzUnCheckedChildren="No"
+                                               (click)="submit($event)"
+                                    >
+                                    </nz-switch>
+                                </div>
+
+                            </nz-form-item>
+                        </div>
+                        <div nz-col [nzXs]="8" [nzSm]="8" [nzMd]="12" [nzLg]="12" [nzXl]="24" [nzXXl]="24">
+                            <nz-form-item>
+                                <div nz-row nzJustify="space-between" nzAlign="middle">
+                                    <nz-form-label>New Enrolment Email</nz-form-label>
+                                    <nz-switch class="upload-switch"
+                                               formControlName="enrolment"
+                                               nzCheckedChildren="Yes"
+                                               nzUnCheckedChildren="No"
+                                               (click)="submit($event)"
+                                    >
+                                    </nz-switch>
+                                </div>
+
+                            </nz-form-item>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

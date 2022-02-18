@@ -1,0 +1,124 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+market-place-auth {
+
+    .container {
+        width: 100%;
+        height: auto;
+        background-color: white;
+
+        .header {
+            align-items: center;
+            width: 100%;
+            background-color: white;
+        }
+
+        .addon-card-container {
+
+            min-width: 300px;
+
+            .addon-image {
+                width: 80%;
+                margin: 0 auto;
+            }
+
+        }
+
+
+        .box1 {
+            padding-left: 2%;
+            padding-right: 2%;
+
+
+            img {
+                max-width: 50%;
+                /* height: 200px; */
+                max-height: 50%;
+                vertical-align: top;
+                padding: 3%;
+                border: none;
+            }
+
+            .appcard {
+                border-radius: 5px;
+            }
+
+            .ant-card-hoverable:hover {
+                border-color: rgba(0, 0, 0, 0.09);
+                box-shadow: 0 0 25px 0px rgba(0, 0, 0, 0.25);
+                background-color: white;
+            }
+
+            .ant-card-bordered {
+                border: 1px solid #e8e8e8;
+                border-radius: 8px;
+            }
+
+            .ant-card-meta-detail > div:not(:last-child) {
+                margin-bottom: 8px;
+                margin-top: 8px;
+            }
+        }
+    }
+}
+
+// vertical-layout-3 #main > .container > .container {
+//     position: relative;
+//     display: -webkit-box;
+//     display: flex;
+//     -webkit-box-flex: 1;
+//     flex: 1 0 auto;
+//     width: 100%;
+//     min-width: 0;
+//     padding: 0;
+// }
+
+// h2,
+// .h2 {
+//     font-size: 20px;
+//     padding-top: 25px;
+// }
+
+// body.theme-default .icon,
+// body.theme-default i {
+//     color: currentColor;
+// }
+
+// .ant-card-body {
+//     padding-top: 0px;
+//     padding-left: 24px;
+//     padding-right: 24px;
+//     padding-bottom: 24px;
+//     zoom: 1;
+// }
+
+// .ant-rate {
+//     box-sizing: border-box;
+//     color: rgba(0, 0, 0, 0.65);
+//     font-size: 14px;
+//     font-variant: tabular-nums;
+//     line-height: 1.5;
+//     -webkit-font-feature-settings: "tnum";
+//     font-feature-settings: "tnum";
+//     display: inline-block;
+//     margin: 0;
+//     padding: 0;
+//     color: #fadb14;
+//     font-size: 20px;
+//     line-height: unset;
+//     list-style: none;
+//     outline: none;
+//     position: relative;
+//     top: -14px;
+// }
+
+// market-place-auth .container .box1 .ant-btn {
+//     top: 3px;
+// }
+
+// .primary {
+//     background: white !important;
+//     border-color: gr !important;
+//     background-image: linear-gradient(-152deg, #377fea 1%, #430aad 65%) !important;
+// }

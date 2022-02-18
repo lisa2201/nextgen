@@ -1,0 +1,8 @@
+<div class="main-wrapper">
+    <div class="content-wrapper">
+        <p>{{ content }}</p>
+    </div>
+    <div *ngIf="button" class="button-wrapper">
+        <button nz-button nzType="primary" [nzLoading]="isLoading" (click)="clickMethod()">{{ buttonLabel }}</button>
+    </div>
+</div>

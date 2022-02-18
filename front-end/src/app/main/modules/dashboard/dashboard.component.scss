@@ -1,0 +1,70 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+app-dashboard {
+
+    #dashboard {
+    
+        > .center {
+    
+            > .header {
+                // height: 160px;
+                // min-height: 160px;
+                // max-height: 160px;
+                background-color: #1BB0B4;
+
+                .welcome-message {
+                    color: white;
+                    @include media-breakpoint('xs'){
+                        font-size: 18px;
+                    }
+                }
+    
+                .selected-project {
+                    background: rgba(0, 0, 0, 0.12);    
+                    color: #FFFFFF;
+                    padding: 8px 16px;
+                    height: 40px;
+                    line-height: 24px;
+                    font-size: 16px;
+                    border-radius: 8px 0 0 0;
+                }
+
+            }
+    
+            > .content {
+                flex: 1;
+                // overflow: scroll;
+
+                .widget {
+
+                    .refresh-button {
+                        color: grey;
+                    }
+
+                    table {
+                        thead {
+                            tr {
+                                background-color: #f1f1f1;
+                            }
+                        }
+                    }
+
+                    .waitlist_count{
+                        cursor: pointer;
+                    }
+                }
+                
+
+            }
+            
+        }
+
+        .p-0{
+            padding-left: 0px!important;
+            padding-right: 0px!important;
+        }
+    
+    }
+
+}

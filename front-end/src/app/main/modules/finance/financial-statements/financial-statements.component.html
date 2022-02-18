@@ -1,0 +1,74 @@
+<div 
+    id="financial-statements" 
+    class="page-layout simple left-sidebar inner-sidebar inner-scroll" 
+    *canViewAuth
+    [@fadeInOnEnter] 
+    [@fadeOutOnLeave]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+    
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-15px' } }">Financial Statements</h1>
+
+        <span class="text-right" fxLayout="row">
+            
+            <ng-container *hasPermission="['AC1']; belongsTo 'N36'">
+                
+                <!-- <button 
+                    class="mr-8"
+                    *ngIf="true"
+                    nz-button 
+                    nzType="primary" 
+                    [nzLoading]="buttonLoader" 
+                    (click)="openEntitlementStatementGenerationDialog($event)"
+                    [@animate]="{ value:'*', params:{ delay: '100ms', x:'15px' } }">
+                    <i class="plus left icon pr-8"></i>
+                    Statement of Entitlement
+                </button> -->
+
+                <button 
+                    nz-button
+                    nzType="primary"
+                    (click)="handleParentStatement($event)"
+                    [@animate]="{ value:'*', params:{ delay: '100ms', x:'15px' } }">
+                    <i class="plus left icon pr-8"></i>
+                    Parent Statement
+                </button>
+
+            </ng-container>
+
+        </span>
+
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="financial-statements-sidebar" position="left">
+
+            <app-financial-statements-left-sidenav 
+                [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }" 
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+                (updateTableScroll)="updateScroll($event)">
+            </app-financial-statements-left-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <app-financial-statements-list-view
+            class="center p-24 pt-0" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+            (updateTableScroll)="updateScroll($event)"
+            [@animate]="{ value:'*', params:{ delay: '200ms', x:'15px' } }">
+        </app-financial-statements-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

@@ -1,0 +1,103 @@
+<fuse-widget class="widget" fxLayout="column">
+
+    <!-- Front -->
+    <div class="fuse-widget-front">
+
+        <nz-spin
+            [nzSpinning]="widgetLoader"
+            [nzIndicator]="indicatorTemplate">
+
+            <div class="fuse-widget-front">
+
+                <div class="p-16 h-52" fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <div class="h3">CRM <span
+                        id="calander-date">({{'week starts ' + week  }})</span></div>
+
+                    <span fxLayout="row" fxLayoutAlign="center center">
+
+                        <span class="date-input-wrapper mr-8" (click)="toggleCalendar($event)">
+
+                            <span class="date-label">
+                                <img src="assets/icons/flat/ui_set/custom_icons/child/calendar.svg">
+                            </span>
+
+                            <span #weekPicker>
+                                <nz-week-picker class="date-input"
+                                                [formControl]="calendarWeek"
+                                                [nzInputReadOnly]="true"
+                                                nzPlaceHolder="select week"></nz-week-picker>
+                            </span>
+
+                        </span>
+
+                        <button class="refresh-button" nz-button nzType="link" nzSize="small"
+                                (click)="updateWaitListWidget()">
+                            <i class="sync vertical icon"></i>
+                        </button>
+
+                    </span>
+
+                </div>
+
+                <div [ngClass]="{'waitlist_count': !is_sitemanager}" fxLayout="column"
+                     fxLayoutAlign="center center" (click)=navigate($event)>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td class="p-20" [ngClass]="'blue-900-fg'">
+                                <div class="font-size-72"
+                                     style="font-size: 45px !important; font-weight: 400;text-align: center">
+                                    {{ waitlistData.enquiry_count }}
+                                </div>
+                                <div class="font-size-12 label" style="text-align: center">
+                                    Enquiry
+                                </div>
+                            </td>
+                            <td class="p-20" [ngClass]="'green-900-fg'">
+                                <div class="font-size-72"
+                                     style="font-size: 45px !important; font-weight: 400;text-align: center">
+                                    {{waitlistData.waitlist_count }}
+                                </div>
+                                <div class="font-size-12 label" style="text-align: center">
+                                    Waitlist
+                                </div>
+                            </td>
+                            <td class="p-20" [ngClass]="'purple-900-fg'">
+                                <div class="font-size-72"
+                                     style="font-size: 45px !important; font-weight: 400;text-align: center">
+                                    {{waitlistData.enrol_count}}
+                                </div>
+                                <div class="font-size-12 label" style="text-align: center">
+                                    Enrolment
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-16 border-top" fxLayout="row" fxLayoutAlign="start center">
+                    <span class="h4 secondary-text text-truncate">
+                        Active
+                    </span>
+                    <span class="h4 ml-8">
+                        {{waitlistData.activated_count}}
+                    </span>
+                </div>
+            </div>
+
+        </nz-spin>
+
+    </div>
+    <!-- / Front -->
+
+</fuse-widget>
+
+<!-- LOADER VIEW -->
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+<!-- / LOADER VIEW -->

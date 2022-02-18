@@ -1,0 +1,89 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32" style="padding-top: 32px !important;">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0">
+
+    <form fxLayout="column" fxFlex [formGroup]="isCaseClaimFilterForm">
+
+        <div class="mb-16">
+
+            <label class="filter-label">IS Case ID</label>
+
+            <input nz-input formControlName="case_id" placeholder="IS Case ID" type="text" />
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">IS Case Claim ID</label>
+
+            <input nz-input formControlName="claim_id" placeholder="IS Case Claim ID" type="text" />
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">IS Case Claim Reference</label>
+
+            <input nz-input formControlName="claim_ref" placeholder="IS Case Claim Reference" type="text" />
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Week Ending</label>
+
+            <nz-date-picker [nzInputReadOnly]="true" [nzAllowClear]="true" class="block" [nzDisabledDate]="disabledEndDate" nzPlaceHolder="Week Ending" formControlName="week_ending"></nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Updated Since</label>
+
+            <nz-date-picker class="block" [nzInputReadOnly]="true" [nzAllowClear]="true" [nzShowTime]="true" nzPlaceHolder="Updated Since" formControlName="updated_since"></nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">IS Case Types</label>
+
+            <nz-select [nzAllowClear]="true" formControlName="case_type" nzMode="default" nzPlaceHolder="IS Case Types">
+
+                <nz-option *ngFor="let item of isCaseTypes" nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                </nz-option>
+
+            </nz-select>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Status</label>
+
+            <nz-select [nzAllowClear]="true" formControlName="status" nzMode="default" nzPlaceHolder="Status">
+
+                <nz-option *ngFor="let item of statuses" nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                </nz-option>
+
+            </nz-select>
+
+        </div>
+
+
+        <button class="mb-16" nz-button nzType="default" [disabled]="tableLoader" (click)="queryData($event)"
+            [@fadeInOnEnter] [@fadeOutOnLeave]>
+            <i class="sync left icon pr-8"></i>
+            Query Case Claims
+        </button>
+
+    </form>
+
+
+</div>
+<!-- / SIDEBAR CONTENT -->

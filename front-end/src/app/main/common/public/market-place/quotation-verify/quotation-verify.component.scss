@@ -1,0 +1,74 @@
+app-quotation-verify {
+    .container {
+        width: 100%;
+        background-color: white;
+
+        .header {
+            align-items: center;
+            width: 100%;
+            padding-top: 1%;
+            padding-bottom: 0%;
+            background-color: white;
+        }
+
+       
+    }
+}
+
+.mat-form-field-infix {
+    display: block;
+    position: relative;
+    flex: auto;
+    min-width: 0;
+}
+
+.basic {
+    width: 100%;
+}
+
+.with_icon {
+    width: 100%;
+}
+
+.mat-list-base .mat-list-item .mat-list-item-content,
+.mat-list-base .mat-list-option .mat-list-item-content {
+    display: flex;
+    flex-direction: row;
+    align-items: unset;
+    box-sizing: border-box;
+    /* padding: 2px 16px; */
+    position: relative;
+    height: inherit;
+}
+
+.mat-icon {
+    margin-right: 30px;
+}
+
+
+
+.iconImg {
+    width: 180px;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
+.ant-spin-lg .ant-spin-dot {
+    font-size: 52px;
+}
+
+.ant-result-success .anticon {
+    color: #52c41a !important;
+}
+
+.ant-result-warning .anticon {
+    color: #faad14 !important;
+}
+
+.ant-result-icon > .anticon {
+    font-size: 72px !important;
+}

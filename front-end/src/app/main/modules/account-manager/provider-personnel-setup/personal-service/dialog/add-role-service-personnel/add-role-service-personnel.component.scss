@@ -1,0 +1,44 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.role-new-personal{
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 640px;
+    }
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        .selection-btn{
+            nz-form-item{
+                float: right ;
+            }
+        }
+
+        .compose-form{
+            .help-text{
+                img{
+                margin-left: 12px;
+                width: 20px;
+                height: 20px; 
+                }
+            }
+
+            .f-left{
+                float: left
+            }
+
+        }
+
+        nz-table{
+            .btn-add-role{
+                float: right!important;
+                cursor: pointer;
+            }
+        }
+    }
+}

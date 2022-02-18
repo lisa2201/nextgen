@@ -1,0 +1,185 @@
+<form name="servicesetupForm" class="compose-form" fxLayout="column" fxFlex 
+    [formGroup]="businessInfoForm" 
+    nz-form [nzLayout]="'vertical'"
+    (ngSubmit)="onFormSubmit($event)">
+
+    <div nz-row [nzGutter]="24">
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+            <nz-form-item>
+                <nz-form-label nzRequired>Global Date Format</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="dateFormatErrorTpl" class="ant-form-flex">
+
+                    <nz-select  
+                        formControlName="globalDateFormat"
+                        nzPlaceHolder="select a date format">
+
+                        <nz-option *ngFor="let item of globalDateFormats; trackBy: trackByFn;" nzValue="{{ item }}" nzLabel="{{ item }}"></nz-option>
+                        
+                    </nz-select>
+
+                    <ng-template #dateFormatErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please select a date format</ng-container>
+                    </ng-template>
+                    
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+            <nz-form-item>
+                <nz-form-label nzRequired>Global Time Format</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="timeFormatErrorTpl" class="ant-form-flex">
+
+                    <nz-select  
+                        formControlName="globalTimeFormat"
+                        nzPlaceHolder="select a time format">
+
+                        <nz-option *ngFor="let item of globalTimeFormats; trackBy: trackByFn;" nzValue="{{ item }}" nzLabel="{{ item }}"></nz-option>
+                        
+                    </nz-select>
+
+                    <ng-template #timeFormatErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please select a time format</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+            <nz-form-item>
+                <nz-form-label nzRequired>Business Name</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="businessNameErrorTpl" class="ant-form-flex">
+                    <input nz-input formControlName="businessName" placeholder="Business Name" type="text" autocomplete="off" />
+
+                    <ng-template #businessNameErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input Business Name </ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+            <nz-form-item>
+                <nz-form-label>Business Description</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="businessDescriptionErrorTpl" class="ant-form-flex">
+                    <textarea nz-input formControlName="businessDescription" placeholder="Business Description" [nzAutosize]="{ minRows: 5, maxRows: 10 }"></textarea>
+
+                    <ng-template #businessDescriptionErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input Business Description</ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+            <nz-form-item>
+                <nz-form-label>Address</nz-form-label>
+    
+                <nz-form-control nzHasFeedback [nzErrorTip]="addressErrorTpl" class="ant-form-flex">
+                    <input nz-input formControlName="address" placeholder="Address" autocomplete="off"/>
+    
+                    <ng-template #addressErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input the Address</ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+            <nz-form-item>
+                <nz-form-label>Email</nz-form-label>
+    
+                <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl" class="ant-form-flex">
+                    <input nz-input formControlName="email" placeholder="First Name" autocomplete="off"/>
+    
+                    <ng-template #emailErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input the Email</ng-container>
+                        <ng-container *ngIf="control.hasError('email')">Please input a valid Email</ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+            
+            <nz-form-item>
+                <nz-form-label>Phone Number</nz-form-label>
+    
+                <nz-form-control nzHasFeedback [nzErrorTip]="phoneErrorTpl" class="ant-form-flex">
+                    <input nz-input formControlName="phone" placeholder="Phone Number" autocomplete="off"/>
+    
+                    <ng-template #phoneErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input the Phone Number</ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+            <nz-form-item>
+                <nz-form-label>Fax Number</nz-form-label>
+    
+                <nz-form-control nzHasFeedback [nzErrorTip]="faxErrorTpl" class="ant-form-flex">
+                    <input nz-input formControlName="fax" placeholder="Fax Number" autocomplete="off"/>
+    
+                    <ng-template #faxErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input Fax Number</ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+            
+            <nz-form-item>
+                <nz-form-label>Zip Code</nz-form-label>
+    
+                <nz-form-control nzHasFeedback [nzErrorTip]="zipCodeErrorTpl" class="ant-form-flex">
+                    <input nz-input formControlName="zipCode" placeholder="Zip Code" autocomplete="off"/>
+    
+                    <ng-template #zipCodeErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input Zip Code</ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 py-16 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span></span>
+
+        <span>
+            <button class="text-uppercase mr-8" *hasPermission="['AC2']; belongsTo: 'N53'" nz-button 
+                nzType="primary" 
+                [disabled]="!businessInfoForm.valid" 
+                [promiseBtn]="buttonLoading">
+                <i class="plus icon mr-8"></i> Save
+            </button>
+        </span>
+    </div>
+
+</form>

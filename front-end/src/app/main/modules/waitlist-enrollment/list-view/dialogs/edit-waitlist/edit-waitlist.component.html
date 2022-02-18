@@ -1,0 +1,95 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                    aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form nz-form name="waitlistForm" [formGroup]="waitlistForm" class="compose-form" fxLayout="column" fxFlex
+          [nzLayout]="'vertical'" nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+             [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div id="idGlobal" nz-row [nzGutter]="24">
+                <!--============================================ new sections ====================================================-->
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24"
+                     *ngFor="let section of newSections"
+                >
+
+                    <div class="parentsubtitle">{{section['name']}}</div>
+                    <!-----------------   new fields  --------------------------->
+                    <div *ngIf="newInputs?.length > 0" nz-col [nzMd]="24" [nzLg]="24">
+                        <new-input [formGroup]="waitlistForm"
+                                   [newInputs]="newInputs"
+                                   [form]="form"
+                                   [uploadedFiles]="uploadedFiles"
+                                   [uploadSwitchInputs]="uploadSwitchInputs"
+                                   [section]="section"
+                                   [signaturesList]="signaturesList"
+                                   (uploadsValidate)="checkedUploadsValidate($event)"
+                                   (newUploads)="newUploads($event)"
+                                   (checkBoxes)="checkedFieldsGet($event)"
+                                   (signatureFill)="checkedSignatures($event)"
+                        >
+                        </new-input>
+                    </div>
+                    <!-----------------   / new fields --------------------------->
+                </div>
+                <!--============================================ / new sections ====================================================-->
+
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row"
+             fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <ng-container>
+                    <button class="text-uppercase mr-8" *hasPermission="['AC2']; belongsTo 'N26'" nz-button
+                            nzType="primary"
+                            [disabled]="!waitlistForm.valid  || attendanceCheck() || !validateUploads"
+                            [promiseBtn]="buttonLoader"
+                            (click)="onFormSubmit($event)">
+                                            <i class="plus icon mr-8"></i> {{buttonString}}
+                                        </button>
+                    <!--                                        <button class="text-uppercase mr-8" *hasPermission="['AC2']; belongsTo 'N26'"-->
+                    <!--                                                nz-button-->
+                    <!--                                                nzType="primary"-->
+                    <!--                                                (click)="onFormSubmit($event)">-->
+                    <!--                                            <i class="plus icon mr-8"></i> Update-->
+                    <!--                                        </button>-->
+                </ng-container>
+
+                <button class="text-uppercase mr-8" type="button" nz-button nzType="default"
+                        (click)="resetForm($event)">
+                    Reset
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                        (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

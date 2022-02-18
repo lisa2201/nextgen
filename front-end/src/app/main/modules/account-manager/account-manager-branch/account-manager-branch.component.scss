@@ -1,0 +1,17 @@
+
+
+app-account-manager {
+
+    .mat-tab-link {
+         text-decoration: none !important;
+ 
+     }
+     
+     mat-ink-bar {
+ 
+         &.mat-ink-bar {
+ 
+             background-color: #1f8de9 !important;
+         }
+     }
+ }

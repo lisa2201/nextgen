@@ -1,0 +1,51 @@
+<div 
+    id="finance-ccs-payments" 
+    class="page-layout simple left-sidebar inner-sidebar inner-scroll" 
+    *canViewAuth
+    [@fadeInOnEnter] 
+    [@fadeOutOnLeave]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+    
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-15px' } }">CCS Payments</h1>
+
+        <!-- <div fxLayout="row" fxLayoutAlign="center center">
+            <span class="mr-8">Select Date:</span>
+            <nz-date-picker class="block" [nzInputReadOnly]="true" [(ngModel)]="date" (ngModelChange)="onDateChange($event)" nzPlaceHolder="Select Date" nzSize="small" nzAllowClear="false">
+            </nz-date-picker>
+        </div> -->
+    
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="finance-ccs-payments-sidebar" position="left">
+
+            <app-financial-ccs-payments-left-sidenav 
+                [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }" 
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+                (updateTableScroll)="updateScroll($event)">
+            </app-financial-ccs-payments-left-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <app-financial-ccs-payments-list-view 
+            class="center p-24" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+            (updateTableScroll)="updateScroll($event)"
+            [@animate]="{ value:'*', params:{ delay: '200ms', x:'15px' } }">
+        </app-financial-ccs-payments-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

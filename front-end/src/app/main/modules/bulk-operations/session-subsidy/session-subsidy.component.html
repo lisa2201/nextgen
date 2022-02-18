@@ -1,0 +1,45 @@
+<div 
+    id="session-subsidy" 
+    class="page-layout simple left-sidebar inner-sidebar inner-scroll" 
+    *canViewAuth
+    [@fadeInOnEnter] 
+    [@fadeOutOnLeave]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+    
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-15px' } }">Session Subsidy</h1>
+    
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="session-subsidy-sidebar" position="left" lockedOpen="gt-md">
+
+            <app-session-subsidy-left-sidenav 
+                [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }" 
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+                (updateTableScroll)="updateScroll($event)">
+            </app-session-subsidy-left-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <app-session-subsidy-list-view 
+            class="center p-24" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+            (updateTableScroll)="updateScroll($event)"
+            [@animate]="{ value:'*', params:{ delay: '200ms', x:'15px' } }">
+        </app-session-subsidy-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

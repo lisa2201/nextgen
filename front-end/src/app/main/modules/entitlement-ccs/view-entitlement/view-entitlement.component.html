@@ -1,0 +1,49 @@
+<div 
+    id="view-entitlement-component" 
+    class="page-layout simple left-sidebar inner-sidebar inner-scroll" 
+    *canViewAuth
+    [@fadeInOnEnter] 
+    [@fadeOutOnLeave]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-15px' } }">View Entitlement</h1>
+
+    </div>
+    <!-- HEADER -->
+    
+    <div class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+        <!-- / HEADER -->
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- SIDEBAR -->
+            <fuse-sidebar class="sidebar" name="entitlement-filter-sidebar" position="left">
+
+                <view-entitlement-left-sidenav
+                    [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }"
+                    fusePerfectScrollbar
+                    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+                    (updateTableScroll)="updateScroll($event)">
+                </view-entitlement-left-sidenav>
+
+            </fuse-sidebar>
+            <!-- / SIDEBAR -->
+
+            <!-- CENTER -->
+            <view-entitlement-list-view 
+                class="center p-24"
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+                (updateTableScroll)="updateScroll()"
+                [@animate]="{ value:'*', params:{ delay: '200ms', x:'15px' } }">
+            </view-entitlement-list-view>
+            <!-- / CENTER -->
+
+        </div>
+    </div>
+</div>
+
+<!-- / CONTENT -->

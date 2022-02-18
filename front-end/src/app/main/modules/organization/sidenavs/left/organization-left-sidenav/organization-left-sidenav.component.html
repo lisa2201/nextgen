@@ -1,0 +1,109 @@
+<!-- <div class="content">
+
+  <div class="filterbar">
+    <mat-form-field class="filters">
+      <mat-label>Status</mat-label>
+      <mat-select #statusFilter [(ngModel)]="filterBy.status" (ngModelChange)="changeFilter()">
+        <mat-option *ngFor="let status of statuses" [value]="status.value">
+          {{status.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="filters">
+      <mat-label>Plan</mat-label>
+      <mat-select #statusFilter [(ngModel)]="filterBy.plan" (ngModelChange)="changeFilter()">
+        <mat-option *ngFor="let plan of plans" [value]="plan.value">
+          {{plan.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="filters">
+      <input matInput [matDatepicker]="picker" placeholder="Created Date" [(ngModel)]="filterBy.date"
+        (ngModelChange)="changeFilter()">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <button class="resetButton" nz-button nzType="primary" (click)="resetFilters()">
+      Clear Filters
+    </button>
+  </div>
+
+
+</div>
+
+
+ -->
+
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex>
+
+        <div class="mb-16">
+            <ng-container>
+
+            </ng-container>
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Status</label>
+            <div #statusFilter>
+                <nz-radio-group [(ngModel)]="filterBy.status" [ngModelOptions]="{standalone: true}"
+                    (ngModelChange)="changeFilter()" *ngFor="let status of statuses">
+                    <label nz-radio [nzValue]="status.value"> {{status.viewValue}} </label>
+                </nz-radio-group>
+            </div>
+
+
+            <!--       
+      <label class="filter-label">Plan</label>
+      <div #statusFilter >
+        <nz-radio-group [(ngModel)]="filterBy.plan" [ngModelOptions]="{standalone: true}" (ngModelChange)="changeFilter()" *ngFor="let plan of plans">
+          <label nz-radio [nzValue]="plan.value"> {{plan.viewValue}}</label>
+        </nz-radio-group>
+      </div> -->
+
+            <br>
+            <label class="filter-label">Created Date</label>
+            <div #statusFilter>
+
+
+                <nz-date-picker [(ngModel)]="filterBy.date" (ngModelChange)="changeFilter()"
+                    [ngModelOptions]="{standalone: true}" [nzInputReadOnly]="true"></nz-date-picker>
+
+                <!-- <mat-form-field class="filters">
+
+
+          <input matInput [matDatepicker]="picker" name="something" placeholder="Select Created Date"
+            [(ngModel)]="filterBy.date" (ngModelChange)="changeFilter()">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+
+
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field> -->
+            </div>
+
+
+
+        </div><br>
+
+        <button nz-button nzType="default" *ngIf="showFilterButton == true" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="resetFilters()"> Clear
+            Filters</button>
+
+
+    </form>
+
+
+</div>
+<!-- / SIDEBAR CONTENT -->

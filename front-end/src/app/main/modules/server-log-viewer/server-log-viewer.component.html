@@ -1,0 +1,72 @@
+<div id="server_log_viewer" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+    
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">View Server Logs</h1>
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card ps" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="pl-16">
+                    <span class="table-loader is-loading" *ngIf="weekCalendarLoading" [@fadeMotion]>
+                        <span class="btn-spinner"></span>
+                    </span>
+                </span>
+
+                <span class="date-input-wrapper" fxLayout="row" fxLayoutAlign="center center" (click)="toggleCalendar($event)">
+
+                    <span class="date-label">
+                        <img src="assets/icons/flat/ui_set/custom_icons/child/calendar.svg" alt="date">
+                        <span class="text">
+                            <p class="big">{{ getCalendarDate() }}</p>
+                        </span>
+                    </span>
+
+                    <span #weekPicker>
+                        <nz-date-picker class="date-input"
+                            [formControl]="calendarWeek"
+                            [nzDisabledDate]="disabledDate"
+                            [nzDisabled]="weekCalendarLoading"
+                            [nzInputReadOnly]="true"
+                            nzPlaceHolder="select week"></nz-date-picker>
+                    </span>                    
+                    
+                </span>
+
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content"
+                fusePerfectScrollbar 
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <server-log-viewer-list-view></server-log-viewer-list-view>
+
+                
+
+            </div>
+            <!-- / CONTENT --> 
+
+            <!-- <div class="toolbar bottom px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                hello
+            
+            </div> -->
+
+        </div>
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

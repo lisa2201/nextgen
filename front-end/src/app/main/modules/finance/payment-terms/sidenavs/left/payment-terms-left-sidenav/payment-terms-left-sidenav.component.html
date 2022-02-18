@@ -1,0 +1,102 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32" style="padding-top: 32px !important;">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0">
+
+    <form fxLayout="column" fxFlex [formGroup]="paymentTermFilterForm">
+
+        <div class="mb-16">
+
+            <label class="filter-label">Start Date</label>
+
+            <nz-date-picker 
+                class="block" 
+                nzPlaceHolder="Start Date" 
+                nzSize="small" 
+                [nzAllowClear]="true" 
+                formControlName="start_date"
+                [nzInputReadOnly]="true">
+            </nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">End Date</label>
+
+            <nz-date-picker 
+                class="block" 
+                nzPlaceHolder="End Date" 
+                nzSize="small" 
+                [nzAllowClear]="true" 
+                [nzDisabledDate]="disabledDate" 
+                formControlName="end_date"
+                [nzDisabled]="!paymentTermFilterForm.controls['start_date'].value" 
+                [nzInputReadOnly]="true">
+            </nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Transaction Date</label>
+
+            <nz-date-picker 
+                class="block" 
+                nzPlaceHolder="Transaction Date" 
+                nzSize="small" 
+                nzAllowClear="false" 
+                formControlName="transaction_date"
+                [nzInputReadOnly]="true">
+            </nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Payment Date</label>
+
+            <nz-date-picker 
+                class="block" 
+                nzPlaceHolder="Payment Date" 
+                nzSize="small" 
+                nzAllowClear="false" 
+                formControlName="payment_date" 
+                [nzInputReadOnly]="true">
+            </nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Status</label>
+        
+            <nz-radio-group formControlName="status">
+        
+                <label nz-radio nzValue="all" class="_filter">All</label>
+                <label nz-radio nzValue="0" class="_filter">Active</label>
+                <label nz-radio nzValue="1" class="_filter">Inactive</label>
+        
+            </nz-radio-group>
+        
+        </div>
+
+        <button class="mb-12" nz-button nzType="default" *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button>
+
+        <button 
+            nz-button 
+            nzType="default" 
+            (click)="filter($event)"
+            [disabled]="loading || paymentTermFilterForm.invalid"
+        > <i class="filter icon mr-8"></i> Filter</button>
+
+    </form>
+
+
+</div>
+<!-- / SIDEBAR CONTENT -->

@@ -1,0 +1,122 @@
+<form nz-form name="childCuturalForm" [formGroup]="childCuturalForm" fxLayout="column" [nzLayout]="'vertical'">
+
+    <div nz-row [nzGutter]="24">
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+            <nz-form-item>
+
+                <nz-form-control>
+
+                    <nz-form-label>Aboriginal or Torres Strait Islander descent?</nz-form-label>
+
+                    <nz-select formControlName="ab_or_tsi" nzShowSearch nzAllowClear nzPlaceHolder="Select...">
+
+                        <nz-option *ngFor="let items of aboriginals" nzValue="{{ items }}" nzLabel="{{ items }}"
+                                   title="{{items}}">
+                        </nz-option>
+
+                    </nz-select>
+
+                </nz-form-control>
+
+            </nz-form-item>
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+            <nz-form-item>
+
+                <nz-form-label>Child's cultural background?</nz-form-label>
+
+                <nz-form-control nzHasFeedback>
+
+                    <input nz-input formControlName="cultural_background"
+                           placeholder="Child's cultural background" type="text"/>
+
+                </nz-form-control>
+
+            </nz-form-item>
+        </div>
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+            <nz-form-item>
+
+                <nz-form-label>What language is spoken at home?</nz-form-label>
+
+                <nz-form-control nzHasFeedback>
+
+                    <input nz-input formControlName="language" placeholder="What language is spoken at home"
+                           type="text"/>
+
+                </nz-form-control>
+
+            </nz-form-item>
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+            <nz-form-item>
+
+                <nz-form-control>
+                    <nz-form-label>Does the child have any cultural requirements?</nz-form-label>
+
+                    <nz-switch (ngModelChange)="onCulturalRequirement($event)"
+                               formControlName="cultural_requirements_chk"
+                               nzCheckedChildren="Yes" nzUnCheckedChildren="No"></nz-switch>
+
+                </nz-form-control>
+
+            </nz-form-item>
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="16" [nzXl]="16" [nzXXl]="16">
+
+            <nz-form-item>
+
+                <nz-form-control>
+
+                    <input *ngIf="culturalrequirementschecked" nz-input formControlName="cultural_requirements"
+                           placeholder="Cultural requirements" type="text"/>
+                </nz-form-control>
+
+            </nz-form-item>
+
+        </div>
+
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+            <nz-form-item>
+
+                <nz-form-control>
+                    <nz-form-label>Does the child have any religious requirements?</nz-form-label>
+
+                    <nz-switch (ngModelChange)="onReligiousRequirementsChange($event)"
+                               formControlName="religious_requirements_chk" nzCheckedChildren="Yes"
+                               nzUnCheckedChildren="No">
+                    </nz-switch>
+                </nz-form-control>
+
+            </nz-form-item>
+        </div>
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="16" [nzXl]="16" [nzXXl]="16">
+            <nz-form-item>
+
+                <nz-form-control>
+
+<!--                    <nz-select *ngIf="religiousrequirementschecked" formControlName="religious_requirements"-->
+<!--                               nzShowSearch nzAllowClear-->
+<!--                               nzPlaceHolder="Select..">-->
+
+<!--                        <nz-option *ngFor="let items of aboriginals" nzValue="{{ items }}" nzLabel="{{ items }}"-->
+<!--                                   title="{{items}}">-->
+<!--                        </nz-option>-->
+
+<!--                    </nz-select>-->
+                    <input nz-input formControlName="religious_requirements"
+                           placeholder="Religious requirements" type="text"/>
+                </nz-form-control>
+
+            </nz-form-item>
+        </div>
+
+    </div>
+
+</form>

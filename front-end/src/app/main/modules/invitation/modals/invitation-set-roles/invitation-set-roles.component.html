@@ -1,0 +1,74 @@
+<form name="invitationAddRolesForm" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="invitationAddRolesForm" nz-form>
+
+    <nz-form-item>
+
+        <nz-form-label nzRequired>Type</nz-form-label>
+
+        <nz-form-control [nzErrorTip]="typeErrorTpl">
+
+            <nz-radio-group formControlName="type" nzButtonStyle="solid" class="has-img">
+
+                <ng-container *ngFor="let item of levels | keyvalue; trackBy: trackByFn;">
+
+                    <label nz-radio-button *ngIf="item.key !== 'KM8-OA'" nzValue="{{ item.key }}">
+                        {{ item.value | replace: '-' : ' ' }}
+                    </label>
+
+                </ng-container>
+
+
+            </nz-radio-group>
+
+            <ng-template #typeErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">Please input your type</ng-container>
+            </ng-template>
+
+        </nz-form-control>
+
+
+    </nz-form-item>
+
+    <nz-form-item *ngIf="showRolesControl">
+
+        <nz-form-label nzRequired>Select Roles</nz-form-label>
+
+        <nz-form-control 
+            formArrayName="roles"
+            [nzValidateStatus]="rolesFormStatus"
+            [nzErrorTip]="rolesErrorTpl">
+
+            <ng-container *ngIf="selectedRoles.length > 0; else typeEmpty">
+
+                <ng-container *ngFor="let item of selectedRoles; trackBy: item?.index;">
+
+                    <div>
+                        <label nz-checkbox [formControlName]="item.index" (ngModelChange)="onCheckboxChange($event)">{{ item?.display }}</label>
+                    </div>
+
+                </ng-container>
+
+            </ng-container>
+            
+            <ng-template #typeEmpty>
+            
+                <nz-empty
+                    class="e-sm-img"
+                    [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                    [nzNotFoundContent]="contentTpl">
+                </nz-empty>
+
+                <ng-template #contentTpl>
+                    <div class="mt-16">Roles not available! Please select different role type</div>
+                </ng-template>
+
+            </ng-template>
+
+            <ng-template #rolesErrorTpl let-control>
+                <ng-container>Please select at least one option from the list</ng-container>
+            </ng-template>
+
+        </nz-form-control>
+
+    </nz-form-item>
+
+</form>

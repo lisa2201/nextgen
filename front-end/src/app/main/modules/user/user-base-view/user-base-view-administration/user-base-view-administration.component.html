@@ -1,0 +1,46 @@
+<!-- HEADER -->
+<ng-container *ngIf="!isParent">
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+            <!-- <span *ngIf="isParent">
+                Manage Parents
+            </span>
+
+            <span *ngIf="!isParent">
+                Manage Staffs
+            </span> -->
+            <span>
+                Manage Staff
+            </span>
+
+        </h1>
+
+    </div>
+    <!-- / HEADER -->
+    <!-- CONTENT -->
+    <div class="content">
+
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="users-card-filter-sidebar" position="left" lockedOpen="gt-md">
+
+            <manager-users-card-left-sidenav [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">
+            </manager-users-card-left-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <users-administration-card-view class="center p-24 pt-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" (updateTableScroll)="updateScroll($event)">
+        </users-administration-card-view>
+        <!-- / CENTER -->
+
+    </div>
+</ng-container>
+
+<!-- <ng-template #parentTpl>
+    <user-base-parent-view> </user-base-parent-view>
+</ng-template> -->
+<!-- / CONTENT -->

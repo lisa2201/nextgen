@@ -1,0 +1,49 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+#children {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .content-card {
+
+        .toolbar {
+            .active {
+                color: $primary-color !important;
+            }
+        }
+
+        @include media-breakpoint('lt-md') {
+
+            child-list-view {
+                max-width: 100%;
+                border: none;
+            }
+
+            child-details-view {
+                
+                display: none !important;
+            }
+
+            &.current-item-selected {
+
+                child-list-view {
+                    display: none !important;
+                }
+    
+                child-details-view {
+                    display: flex !important;
+                }
+            }
+
+        }
+
+    }
+
+}

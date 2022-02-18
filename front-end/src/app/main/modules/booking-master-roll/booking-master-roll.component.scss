@@ -1,0 +1,256 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+#booking-master-roll {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .help-panel {
+        display: flex;
+        width: 100%;
+        padding: 0;
+        margin-bottom: 12px;
+
+        @media only screen and (max-width: 997px) {
+            align-items: flex-start !important;
+        }
+
+        .booking-summary {
+            display: inline-flex;
+            margin-right: 16px;
+
+            @media only screen and (max-width: 997px) {
+                flex-direction: column;
+                flex: 1 0 auto;
+            }
+
+            ul {
+                @media only screen and (max-width: 997px) {
+                    margin: 0 0 8px;
+
+                    &:last-of-type {
+                        margin-bottom: 0;
+                    }
+                }
+
+                li {
+                    @media only screen and (max-width: 997px) {
+                        flex: 1;
+                        justify-content: space-between;
+                    }
+                }
+            }
+
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: inline-flex;
+
+            &:last-of-type {
+                margin-right: 0;
+            }
+
+            &.booking-types {
+                margin: 0;
+                
+                @media only screen and (max-width: 997px) {
+                    flex-direction: column;
+                    flex: 1 0 auto;
+                }
+            }
+
+            &.__wrapper {
+                margin-right: 16px;
+
+                &:last-of-type {
+                    margin-right: 0;
+                }
+
+                @media only screen and (max-width: 997px) {
+                    margin-right: 0;
+                }
+            }
+
+            li {
+                display: inline-flex;
+                align-items: center;
+                margin-right: 8px;
+
+                @media only screen and (max-width: 997px) {
+                    margin-bottom: 4px;
+
+                    &:last-of-type {
+                        margin-bottom: 0;
+                    }
+                }
+
+                &:last-of-type {
+                    margin-right: 0;
+                }
+                
+                .color-box {
+                    font-size: 21px;
+                }
+
+                .label {
+                    font-size: 14px;
+                    font-weight: 600;
+
+                    &.highlight {
+                        padding-left: 6px;
+                        color: $success-color;
+                    }
+                }
+            }
+        }
+    }
+
+    .occupancy-summary {
+        position: relative;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: $custom-box-shadow;
+        padding: 16px;
+        margin-bottom: 16px;
+
+        .line {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+
+            @media screen and (max-width: 1180px) {
+                padding-right: 0;
+                // margin-right: 16px;
+            }
+
+            &.master-view {
+                @media screen and (max-width: 1180px) {
+                    overflow-x: scroll;
+                    overflow-y: hidden;
+                }
+            }
+
+            li {
+                display: flex;
+                flex: 0 0 100%;
+                margin-bottom: 8px;
+                align-items: center;
+
+                &:last-of-type {
+                    margin-bottom: 0;
+                }
+
+                &.list-header {
+                    position: relative;
+                }
+
+                .title {
+                    width: 150px;
+                }
+
+                .row-view {
+                    display: inline-flex;
+                    flex: 1 0 auto;
+
+                    .row-day {
+                        flex: 1 1 0;
+                        width: 0;
+                        margin-right: 4px;
+
+                        &:last-of-type {
+                            margin-right: 0;
+                        }
+        
+                        @media screen and (max-width: 1180px) {
+                            min-width: 150px;
+                            max-width: 150px;
+                        }
+
+                        .row-day-content {
+                            flex: 1;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .week-booking-info {
+        position: relative;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+
+        li {
+            margin: 0;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+
+            @media screen and (max-width: 1180px) {
+                flex-basis: 25%;
+            }
+
+            span {
+                height: 24px;
+                width: 24px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 100%;
+                font-size: 12px;
+                margin: 2px;
+                color: #fff;
+
+                &.standard {
+                    background-color: rgba(255, 149, 0, 0.5);
+                }
+            
+                &.attendance {
+                    background-color: rgba(76, 175, 80, 0.6);
+                }
+            
+                &.absence {
+                    background-color: rgba(96, 125, 139, 0.55);
+                }
+            
+                &.holiday {
+                    background-color: rgba(158, 158, 158, 0.35);
+                }
+            
+                &.casual {
+                    background-color: rgba(126, 87, 194, 0.68);
+                }
+
+                &.missing {
+                    background-color: rgba(231, 76, 60, 0.6);
+                }
+
+                &.incomplete {
+                    background-color: rgba(255, 87, 34, 0.6);
+                }
+            }
+        }
+    }
+}
+
+content {
+    &.inner-scroll {
+
+        booking-master-roll-calendar-week-view, booking-master-roll-calendar-week-list-view {
+            overflow-y: auto;
+        }
+    }
+}

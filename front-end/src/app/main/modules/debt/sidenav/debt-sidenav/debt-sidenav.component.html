@@ -1,0 +1,55 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex [formGroup]="debtFiltersForm">
+
+        <div class="mb-16" *ngIf="isSiteManager">
+
+                <label class="filter-label">Provider ID</label>
+
+                <nz-select formControlName="provider_id" nzShowSearch nzAllowClear nzPlaceHolder="Provider ID">
+
+                    <nz-option *ngFor="let provider of providers" nzValue="{{ provider.id }}" nzLabel="{{ provider.providerId }}">
+                    </nz-option>
+
+                </nz-select>
+
+        </div>
+
+        <div class="mb-16">
+
+                <label class="filter-label">Issued Date</label>
+
+                <nz-date-picker [nzInputReadOnly]="true" formControlName="issuedDate" class="block"></nz-date-picker>
+
+        </div>
+
+
+        <!-- <button nz-button nzType="default" *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button> -->
+
+    </form>
+
+</div>
+<!-- / SIDEBAR CONTENT -->
+
+<!-- SIDEBAR ACTION -->
+<nz-button-group class="filter-action px-24 py-16">
+
+    <button nz-button 
+    (click)="clearDebtFilter($event)" 
+    [disabled]="checkClearFilter()">Clear</button>
+
+<button nz-button nzType="primary" 
+    [disabled]="debtFiltersForm.invalid"
+    [promiseBtn]="buttonLoader"
+    (click)="submitDebtFilter($event)">Filter</button>
+
+</nz-button-group>
+<!-- / SIDEBAR ACTION -->

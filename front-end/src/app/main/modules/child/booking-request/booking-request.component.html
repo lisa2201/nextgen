@@ -1,0 +1,155 @@
+<div class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2">
+                    Booking Request
+                </span>
+
+            </h1>
+
+            <ng-container *hasPermission="['AC1']; belongsTo 'N03'">
+
+                <button class="text-uppercase"
+                    nz-button 
+                    nzType="primary" 
+                    (click)="''" 
+                    [promiseBtn]="buttonLoader">
+                    <i class="plus icon mr-8"></i> Create New
+                </button>
+    
+            </ng-container>
+
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+               <span class="child-info">
+
+                <nz-avatar [nzSize]="56" nzSrc="{{ getChildProfileImage(child) }}" class="child-img img-bg"></nz-avatar>
+
+                <span class="child-name text-truncate">{{ child.getFullName() }}</span>
+
+                </span>
+
+            </div>
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="text-uppercase go-back-link" (click)="onBack($event)">
+                    <i class="long arrow alternate left icon"></i>
+                    <span>Go Back</span>
+                </span>
+
+            </div>
+
+            <!--/ CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24 pt-16" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <nz-table #basicTable [nzData]="bookings" [nzBordered]="true">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th colspan="2">Days</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let data of basicTable.data">
+                            <td>{{data.date}}</td>
+                            <td>Initial Booking</td>
+
+                            <td colspan="2">
+                                <table>
+                                    <tr *ngFor="let days of data.days">
+                                        <table>
+                                            <tr>
+                                                <td *ngIf="days.monday">Monday</td>
+                                                <td *ngIf="days.monday" class="table-float">{{days.mornings}}</td>
+                                            </tr>
+                                        </table>
+                                    </tr>
+                                    <tr *ngFor="let days of data.days">
+                                        <table>
+                                            <tr>
+                                                <td *ngIf="days.tuesday">Tuesday</td>
+                                                <td *ngIf="days.tuesday" class="table-float">{{days.mornings}}</td>
+                                            </tr>
+                                        </table>
+                                    </tr>
+                                    <tr *ngFor="let days of data.days">
+                                        <table>
+                                            <tr>
+                                                <td *ngIf="days.wednesday">Wednesday</td>
+                                                <td *ngIf="days.wednesday" class="table-float">{{days.mornings}}</td>
+                                            </tr>
+                                        </table>
+                                    </tr>
+                                    <tr *ngFor="let days of data.days">
+                                        <table>
+                                            <tr>
+                                                <td *ngIf="days.thursday">Thursday</td>
+                                                <td *ngIf="days.thursday" class="table-float">{{days.mornings}}</td>
+                                            </tr>
+                                        </table>
+                                    </tr>
+                                    <tr *ngFor="let days of data.days">
+                                        <table>
+                                            <tr>
+                                                <td *ngIf="days.friday">Friday</td>
+                                                <td *ngIf="days.friday" class="table-float">{{days.mornings}}</td>
+                                            </tr>
+                                        </table>
+                                    </tr>
+                                    <tr *ngFor="let days of data.days">
+                                        <table>
+                                            <tr>
+                                                <td *ngIf="days.saturday">Saturday</td>
+                                                <td *ngIf="days.saturday" class="table-float">{{days.mornings}}</td>
+                                            </tr>
+                                        </table>
+                                    </tr>
+                                    <tr *ngFor="let days of data.days">
+                                        <table>
+                                            <tr>
+                                                <td *ngIf="days.sunday">Sunday</td>
+                                                <td *ngIf="days.sunday" class="table-float">{{days.mornings}}</td>
+                                            </tr>
+                                        </table>
+                                    </tr>
+                                </table>
+                            </td>
+
+                            <td>{{data.status}}</td>
+                            <td>
+                                <nz-switch nzCheckedChildren="Yes" nzUnCheckedChildren="No"> </nz-switch>
+                            </td>
+                        </tr>
+                        <ng-template #emptyData>
+                            <td></td>
+                        </ng-template>
+                    </tbody>
+                </nz-table>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

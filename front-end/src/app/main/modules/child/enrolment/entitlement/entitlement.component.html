@@ -1,0 +1,89 @@
+<ng-container *ngIf="entitlement; else emptyBlock">
+
+    <div class="pl-4 pr-4">
+
+        <div nz-row [nzGutter]="24">
+
+            <div class="section" nz-col [nzMd]="24" [nzLg]="8">
+                <h3>Date of Entitlement</h3>
+                <h1>{{ entitlement.dateOfEntitlement }}</h1>
+            </div>
+    
+            <div class="section" nz-col [nzMd]="24" [nzLg]="8">
+                <h3>CCS Percentage</h3>
+                <h1>{{ entitlement.percentage }}%</h1>
+            </div>
+    
+            <div class="section" nz-col [nzMd]="24" [nzLg]="8">
+                <h3>CCS Withholding Percentage</h3>
+                <h1>{{ entitlement.withholdingPercentage + '%' || 'N/A' }}</h1>
+            </div>
+    
+            <div class="section" nz-col [nzMd]="24" [nzLg]="8">
+                <h3>CCS Total Hours Per Fortnight</h3>
+                <h1>{{ entitlement.totalHoursPerFortnight }}</h1>
+            </div>
+    
+            <div class="section" nz-col [nzMd]="24" [nzLg]="8">
+                <h3>Apportioned Hours Per Fortnight</h3>
+                <h1>{{ entitlement.apportionedHoursPerFortnight }}</h1>
+            </div>
+            
+            <div class="section" nz-col [nzMd]="24" [nzLg]="8">
+                <h3>ACCS Hourly Rate Cap Increase Percentage</h3>
+                <h1>{{ entitlement.hourlyRateCapIncreasePercentage + '%' || 'N/A' }}</h1>
+            </div>
+    
+            <div class="section" nz-col [nzMd]="24" [nzLg]="8">
+                <h3>Annual Cap Reached</h3>
+                <h1>{{ entitlement.annualCapReached }}</h1>
+            </div>
+    
+            <div class="section" nz-col [nzMd]="24" [nzLg]="8">
+                <h3>Absence Count</h3>
+                <h1>{{ entitlement.absenceCount || '0' }}</h1>
+            </div>
+    
+            <div class="section" nz-col [nzMd]="24" [nzLg]="8">
+                <h3>Preschool Exemption</h3>
+                <h1>{{ entitlement.getPreschoolExemptionLabel() }}</h1>
+            </div>
+
+            <div class="section" nz-col [nzMd]="24" [nzLg]="8">
+                <h3>Paid Absences</h3>
+                <h1>{{ entitlement.paidAbsences }}</h1>
+            </div>
+
+            <div class="section" nz-col [nzMd]="24" [nzLg]="8">
+                <h3>Unpaid Absences</h3>
+                <h1>{{ entitlement.unpaidAbsences }}</h1>
+            </div>
+
+            <div class="section" nz-col [nzMd]="24" [nzLg]="8">
+                <h3>Absences Available No Evidence</h3>
+                <h1>{{ entitlement.absencesAvailableNoEvidence }}</h1>
+            </div>
+
+        </div>
+
+    </div>
+
+</ng-container>
+
+<!-- EMPTY VIEW -->
+<ng-template #emptyBlock>
+
+    <nz-empty class="m-0" 
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+        [nzNotFoundContent]="contentTpl" 
+        [@fadeInOnEnter]>
+
+        <ng-template #contentTpl>
+            <h4 class="mt-24">No Data Found</h4>
+            <span>Looks like there's no information to display here.</span>
+        </ng-template>
+
+    </nz-empty>
+
+</ng-template>
+<!-- / EMPTY VIEW -->

@@ -1,0 +1,135 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Add Service</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="serviceForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="serviceForm" nz-form
+        (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Proda Organisation</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="prodaErrorTpl">
+    
+                            <nz-select 
+                                formControlName="ccs_setup" 
+                                nzPlaceHolder="Select Proda Organisation"
+                                [nzAllowClear]="false">
+
+                            <nz-option *ngFor="let org of ccsSetups" nzValue="{{ org.id }}" nzLabel="{{ org.PRODAOrgId }}">
+                            </nz-option>
+
+                        </nz-select>
+
+                        <ng-template #prodaErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please select proda organisation
+                            </ng-container>
+                        </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Provider ID</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="providerErrorTpl">
+    
+                            <nz-select 
+                                formControlName="provider" 
+                                nzPlaceHolder="Select Provider"
+                                [nzAllowClear]="false"
+                                [nzDisabled]="!serviceForm.get('ccs_setup').value">
+
+                            <nz-option *ngFor="let provider of providers" nzValue="{{ provider.id }}" nzLabel="{{ provider.providerId }}">
+                            </nz-option>
+
+                        </nz-select>
+
+                        <ng-template #providerErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please select provider
+                            </ng-container>
+                        </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Service ID</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="nameErrorTpl">
+    
+                            <input nz-input formControlName="serviceid" placeholder="Service ID" type="text" />
+    
+                            <ng-template #nameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your service id
+                                </ng-container>
+                                <ng-container *ngIf="control.hasError('exists')">Service id already exists</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <ng-container>
+                    <button class="text-uppercase mr-8" nz-button nzType="primary" [disabled]="!serviceForm.valid"
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Read Service
+                    </button>
+                </ng-container>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

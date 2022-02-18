@@ -1,0 +1,44 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex [formGroup]="paymentHistoriesFilterForm">
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Payment Date</label>
+        
+            <nz-date-picker nzPlaceHolder="Select Date" nzSize="small" nzAllowClear="false" formControlName="date" [nzInputReadOnly]="true" [nzDisabled]="paymentHistoriesFilterForm.controls['date'].disabled"></nz-date-picker>
+        
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Payment Status</label>
+
+            <nz-radio-group formControlName="status" [nzDisabled]="paymentHistoriesFilterForm.controls['status'].disabled">
+
+                <label nz-radio nzValue="0" class="_filter">All</label>
+                <label nz-radio nzValue="1" class="_filter">Failed</label>
+                <label nz-radio nzValue="2" class="_filter">Paid</label>
+                <label nz-radio nzValue="3" class="_filter">Pending</label>
+                <label nz-radio nzValue="4" class="_filter">Submitted</label>
+                <label nz-radio nzValue="5" class="_filter">Rejected Gateway</label>
+
+            </nz-radio-group>
+
+        </div>
+
+        <button nz-button nzType="default" *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button>
+
+    </form>
+
+
+</div>
+<!-- / SIDEBAR CONTENT -->

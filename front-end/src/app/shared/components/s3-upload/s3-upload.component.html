@@ -1,0 +1,27 @@
+<div class="s3-updload-container">
+    
+    <nz-upload 
+        nzType="drag" 
+        [nzMultiple]="uploadCountLimit>1"
+        [nzLimit]="uploadCountLimit"
+        [nzShowUploadList]="uploadListConfig"
+        (nzChange)="handleFileChange($event)"
+        nzListType="picture"
+        [nzAccept]="uploadTypeLimit"
+        [nzCustomRequest]="customRequest"
+        [nzDisabled]="uploadDisabled"
+        [nzFileList]="defaultFileData">
+
+        <p class="ant-upload-drag-icon">
+            <i nz-icon nzType="inbox"></i>
+        </p>
+
+        <p class="ant-upload-text">Click or drag file to this area to upload</p>
+
+        <p class="ant-upload-hint" *ngIf="uploadDescription">
+            {{uploadDescription}}
+        </p>
+
+    </nz-upload>
+
+</div>

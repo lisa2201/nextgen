@@ -1,0 +1,61 @@
+<form name="dateSetForm" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="form" nz-form>
+
+    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+        <nz-form-item>
+
+            <nz-form-label nzRequired>Organisation</nz-form-label>
+    
+            <nz-form-control nzHasFeedback [nzErrorTip]="orgErrorTpl">
+    
+                <nz-select  
+                    formControlName="org"
+                    nzPlaceHolder="select organisation">
+    
+                    <nz-option 
+                        *ngFor="let org of organizations; trackBy: trackByFn;" 
+                        nzValue="{{ org.id }}" 
+                        nzLabel="{{ org.companyName }}"></nz-option>
+                    
+                </nz-select>
+    
+                <ng-template #orgErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('required')">Please select a organisation</ng-container>
+                </ng-template>
+    
+            </nz-form-control>
+    
+        </nz-form-item>
+
+    </div>
+
+    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+        <nz-form-item>
+        
+            <nz-form-label nzRequired>Branch</nz-form-label>
+    
+            <nz-form-control nzHasFeedback [nzErrorTip]="branchErrorTpl">
+    
+                <nz-select  
+                    formControlName="branch"
+                    nzPlaceHolder="select branch"
+                    [nzDisabled]="!form.get('org').value || branches.length < 1">
+    
+                    <nz-option 
+                        *ngFor="let item of branches; trackBy: trackByFn;" 
+                        nzValue="{{ item.id }}" 
+                        nzLabel="{{ item.name }}"></nz-option>
+                    
+                </nz-select>
+    
+                <ng-template #branchErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('required')">Please select a branch</ng-container>
+                </ng-template>
+    
+            </nz-form-control>
+    
+        </nz-form-item>
+        
+    </div>
+</form>

@@ -1,0 +1,158 @@
+<div class="loading-bar" *ngIf="listViewLoading" [@fadeMotion]>
+    <div class="__inner">
+        <img src="assets/loading/gears_c1.svg">
+        <span>Loading! Please Wait...</span>
+    </div>
+</div>
+
+<div class="toolbar px-8 pt-8 pb-24 br-0" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <ng-container>
+
+        <nz-input-group class="search-container" [nzSuffix]="suffixTemplate" [nzPrefix]="prefixTemplate">
+            <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+        </nz-input-group>
+        
+        <ng-template #prefixTemplate>
+            <i nz-icon nzType="search" class="search-icon"></i>
+        </ng-template>
+        
+        <ng-template #suffixTemplate>
+            <i class="times circle outline icon ant-input-clear-icon" *ngIf="searchInput.value" [@fadeInOnEnter]
+                [@fadeOutOnLeave] (click)="clearSearch($event)">
+            </i>
+        </ng-template>
+    </ng-container>
+
+
+
+    <ng-container *hasPermission="['AC1']; belongsTo 'N65'" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <button class="text-uppercase blank"
+            type="button"
+            nz-button 
+            nzType="link"
+            (click)="addCategory($event)"
+            [promiseBtn]="buttonLoader">
+            <i class="plus icon mr-8"></i>
+            Add
+        </button>
+        
+    </ng-container>
+
+
+
+</div>
+
+
+<nz-list class="child-item-list"
+    [nzNoResult]="emptyBlock"
+    [nzDataSource]="catergory" 
+    [nzRenderItem]="item" 
+    [nzPagination]="pagination"
+    [nzGrid]="{ gutter: 16, xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 8 }">
+
+    <ng-template #item let-item>
+
+        <nz-list-item 
+            [nzContent]="item.isLoading ? '' : nzContent">
+
+            <nz-skeleton [nzAvatar]="true" [nzActive]="true" [nzTitle]="false" [nzParagraph]="{ rows: 3 }" [nzLoading]="item.isLoading">
+
+                <ng-template #nzContent>
+
+                    <nz-card>
+
+                        <nz-list-item-meta 
+                            [nzAvatar]="nzAvatar" 
+                            [nzTitle]="nzTitle"
+                            [nzDescription]="nzDescription">
+
+                            <ng-template #nzAvatar>
+
+                                <nz-avatar 
+                                    [nzSize]="48" 
+                                    nzSrc="{{ item.getImage() }}"
+                                    class="item-img img-bg">
+                                </nz-avatar>
+
+                            </ng-template>
+
+                            <ng-template #nzTitle>
+
+                                <h4 class="text-truncate mb-4">{{ item.name }}</h4>
+
+                            </ng-template>
+
+                            <ng-template #nzDescription>
+
+                                <p class="m-0">
+                                    <span class="font-weight-600">Type</span>:
+                                    {{ item.getTypeText()}}
+                                </p>
+
+                                <a class="action-btn edit p-4"
+                                *hasPermission="['AC2']; belongsTo 'N65'"
+                                    (click)="editCategory($event,item)">
+                                    <i class="edit outline icon text-dec-none mr-4"></i>
+                                    Edit
+                                </a>
+                                <a class="action-btn remove-btn p-4"
+                                *hasPermission="['AC3']; belongsTo 'N65'"
+                                    (click)="delete($event,item)">
+                                    <i class="trash alternate outline icon mr-4"></i>
+                                    Delete
+                                </a>
+
+                            </ng-template>
+
+                        </nz-list-item-meta>
+
+                    </nz-card>
+
+                </ng-template>
+
+            </nz-skeleton>
+
+        </nz-list-item>
+
+    </ng-template>
+
+</nz-list>
+
+<ng-template #pagination>
+    <nz-pagination
+        *ngIf="total > 0"
+        [nzShowSizeChanger]="pageSizeChanger"
+        [nzTotal]="total"
+        [(nzPageIndex)]="pageIndex"
+        [(nzPageSize)]="pageSize"
+        [nzPageSizeOptions]="pageSizeOptions"
+        [nzShowTotal]="totalTemplate"
+        [nzSimple]="mobilePagination"
+        (nzPageIndexChange)="onPaginationChange()"
+        (nzPageSizeChange)="onPaginationChange(true)">
+    </nz-pagination>
+</ng-template>
+
+<ng-template #totalTemplate let-range="range" let-total>
+    <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ range[0] }} to {{ range[1] }} of {{ total }} entries</span>
+    <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} - {{ range[1] }} of {{ total }} entries</span>
+</ng-template>
+
+<ng-template #emptyBlock>
+
+    <nz-empty 
+        class="m-0" 
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+        [nzNotFoundContent]="contentTpl" 
+        [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <ng-template #contentTpl>
+            <h4 class="mt-24">No Data Found</h4>
+            <span>Please click on add button to add rooms to this child</span>
+        </ng-template>
+
+    </nz-empty>
+
+</ng-template>

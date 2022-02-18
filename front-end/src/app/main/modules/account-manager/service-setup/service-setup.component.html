@@ -1,0 +1,92 @@
+<div class="header pt-8 pr-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <div>
+    </div>
+
+    <div>
+        <button nz-button nzType="primary" (click)="addDialog($event)" [nzLoading]="buttonLoader">
+            <i class="plus icon mr-8"></i> Add Service
+        </button>
+    </div>
+</div>
+
+<div id="service-list" class="content p-24">
+    <div nz-row [nzGutter]="8" *ngIf="services.length > 0">
+        <div nz-col [nzSpan]="8" *ngFor="let service of services; let i = index">
+                    <nz-card class="mb-20" [nzBordered]="true" [nzActions]="[actionView]" [@animate]="{
+                            value: '*',
+                            params: { delay: (i + 1) * 100 + 'ms', x: '-25px' }
+                        }">
+                        <div class="color-bar {{ service.is_synced === '2' || service.is_synced === '3'? 'inactive' : 'active' }}"></div>
+
+                        <p>
+                            <span class="font-weight-600">Proda Organisation ID</span>
+                            <br />
+                            {{ service?.provider?.ccs_setup?.PRODA_org_id }}
+                        </p>
+                        <p>
+                            <span class="font-weight-600">Provider ID</span>
+                            <br />
+                            {{ service?.provider?.provider_id }}
+                        </p>
+                        <p>
+                            <span class="font-weight-600">Service ID</span>
+                            <br />
+                            {{ service.service_id }}
+                        </p>
+                        <p>
+                            <ng-container class="font-weight-600">Service Type</ng-container> <br />
+                            <ng-container *ngIf="service.service_type === 'ZOSH'"> Outside School Hours Care </ng-container>
+                            <ng-container *ngIf="service.service_type === 'ZCDC'"> Centre-based Day Care </ng-container>
+                            <ng-container *ngIf="service.service_type === 'ZFDC'"> Family Day Care </ng-container>
+                            <ng-container *ngIf="service.service_type === 'ZIHC'"> In Home Care </ng-container>
+                            <!-- {{ service.service_type }} -->
+                        </p>
+                        <p>
+                            <span class="font-weight-600">Service Name</span> <br />
+                            {{ service.service_name }}
+                        </p>
+                        <p>
+                            <span class="font-weight-600">No Of Weeks</span> <br />
+                            {{ service.no_of_weeks }}
+                        </p>
+
+                        <p>
+                            <span class="font-weight-600">ACECQA Registration Code</span> <br />
+                            {{ service.ACECQARegistrationCode }}
+                        </p>
+
+                        <ng-template #actionView>
+                            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+                                <div nz-col [nzMd]="8" [nzLg]="8">
+                                    <span style="margin-right: 140px !important;" class="pr-8 pl-8" [routerLink]="[service.id, 'view']"
+                                        *hasPermission="['AC2']; belongsTo: 'N03'">
+                                        <i class="eye icon primary-color"></i>
+                                    </span>
+                                </div>
+                                <div nz-col [nzMd]="8" [nzLg]="8">
+                                    <span class="pr-8 pl-8">
+                                        &nbsp;
+                                    </span>
+                                </div>
+                                <div nz-col [nzMd]="8" [nzLg]="8">
+                                    <span class="pr-8 pl-8" (click)="pingCCMS(service.service_id)"
+                                                 *hasPermission="['AC2']; belongsTo: 'N03'">
+                                        <i class="handshake outline icon primary-color custom-tooltip"><span class="tooltiptext">Ping CCMS</span></i>
+                                    </span>
+                                </div>
+
+                            </div>
+                        </ng-template>
+                    </nz-card>
+        </div>
+    </div>
+
+    <nz-empty class="mb-16" *ngIf="services.length == 0" [nzNotFoundImage]="
+            'assets/icons/flat/ui_set/navigation-maps/svg/location3.svg'
+        " [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+        <ng-template #contentTpl>
+            <h4 class="mt-24">No Data Found</h4>
+        </ng-template>
+    </nz-empty>
+</div>

@@ -1,0 +1,37 @@
+@import "../../../../../../../@fuse/scss/fuse";
+
+.buslist-view-children-in-school {
+
+  @include media-breakpoint('xs') {
+    width: 100%;
+  }
+
+  @include media-breakpoint('gt-xs') {
+    width: 640px;
+  }
+
+  .mat-dialog-container {
+    padding: 0;
+    width: 640px;
+  }
+
+  .dialog-content-wrapper {
+    display: flex;
+    flex-direction: column;
+
+
+    .pinreset{
+      margin-left: 25px;
+      margin-top: 30px;
+      padding: 1px 5px;
+    }
+  }
+
+  nz-select {
+    width: 100%;
+  }
+
+  .loading-icon {
+    margin-right: 8px;
+  }
+}

@@ -1,0 +1,17 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.child-set-crn-modal {
+
+    .custom-validator-error{
+        color: #e74c3c!important;
+    }
+    .has-error{
+        border-color: #ff7875!important;
+        border-right-width: 2px !important;
+        outline: 0;
+        box-shadow: 0 0 0 2px rgb(255,77,79,0.2);
+    }
+   
+}
+

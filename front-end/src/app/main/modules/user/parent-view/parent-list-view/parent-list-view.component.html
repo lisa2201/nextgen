@@ -1,0 +1,150 @@
+<div class="child-list-top-panel" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <span class="mr-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <button class="text-uppercase blank"
+            nz-button nzType="link"
+            (click)="toggleSidebar('parent-list-filter-sidebar')">
+            <i class="filter icon"></i>
+        </button>
+
+        <button class="text-uppercase blank"
+            nz-button nzType="link"
+            (click)="refreshList($event)">
+            <i class="sync alternate icon"></i>
+        </button>
+
+    </span>
+
+    <nz-input-group class="search-container" [nzSuffix]="suffixTemplate" [nzPrefix]="prefixTemplate">
+        <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+    </nz-input-group>
+    <ng-template #prefixTemplate>
+
+        <i nz-icon nzType="search" class="search-icon"></i>
+    </ng-template>
+
+    <ng-template #suffixTemplate>
+        <i class="times circle outline icon ant-input-clear-icon" *ngIf="searchInput.value" [@fadeInOnEnter]
+            [@fadeOutOnLeave] (click)="clearSearch($event)">
+        </i>
+    </ng-template>
+
+</div>
+
+<!-- SIDEBAR FILTER -->
+<fuse-sidebar class="sidebar" 
+name="parent-list-filter-sidebar" 
+position="left">
+
+<parent-filters [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }"
+                    (updateFilterActiveStatus)="updateFilterActiveStatus($event)"></parent-filters>
+
+</fuse-sidebar>
+
+<div class="child-list" 
+    fusePerfectScrollbar 
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+    infiniteScroll
+    [infiniteScrollDistance]="1" 
+    [infiniteScrollThrottle]="150" 
+    [infiniteScrollDisabled]="false"
+    [immediateCheck]="true" 
+    [scrollWindow]="false" 
+    (scrolled)="onScroll()">
+
+    <nz-spin [nzIndicator]="indicatorTemplate" [nzSpinning]="listViewLoading">
+
+        <nz-list class="list-view-pagination"
+                [nzNoResult]="emptyBlock"
+                [nzDataSource]="userList"
+                [nzRenderItem]="item"
+                [nzItemLayout]="'horizontal'"
+                [nzPagination]="pagination">
+
+            <ng-template #item let-item let-index="index">
+
+                <nz-list-item class="list-view-item" 
+                                (click)="getUser($event, item.id)"
+                                [ngClass]="{ 'current-item': item?.id == currentUser?.id }"
+                                >
+
+                    <nz-list-item-meta [nzAvatar]="nzAvatar" [nzTitle]="nzTitle" [nzDescription]="nzDescription">
+
+                        <ng-template #nzAvatar>
+
+                            <nz-avatar [nzSize]="56" nzSrc="{{ getStaffProfileImage(item) }}" class="child-list-img img-bg">
+                            </nz-avatar>
+
+                        </ng-template>
+
+                        <ng-template #nzTitle>
+
+                            <h4 class="child-list-title text-truncate">{{ item.getFullName() }}</h4>
+
+                        </ng-template>
+
+                        <ng-template #nzDescription>
+                            <p class="m-0">
+                                <span class="font-weight-600">Date of Birth</span>:
+                                {{ item.dob }}
+                            </p>
+
+                            <p class="m-0">
+                                <span class="font-weight-600">Email</span>:
+                                {{ item.email }}
+                            </p>
+
+                            <ul class="status-icons-bar">
+                                <li>
+                                    <span tooltip="{{ item.status ? 'Active' : 'Inactive' }}" display-mobile="false"
+                                        hide-delay="50">
+                                        <img src="assets/icons/flat/ui_set/custom_icons/{{ (item.status) ? 'checked' : 'cancel' }}.svg"
+                                            alt="status">
+                                    </span>
+                                </li>
+                            </ul>
+
+                        </ng-template>
+
+                    </nz-list-item-meta>
+
+                    <button class="text-uppercase blank arrow-key" fxHide.gt-sm nz-button nzType="link">
+                        <i class="chevron right icon"></i>
+                    </button>
+
+                </nz-list-item>
+
+            </ng-template>
+
+        </nz-list>
+
+    </nz-spin>
+
+    <ng-template #pagination class="custom-style">
+        <nz-pagination *ngIf="total > 0" [nzTotal]="total" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize"
+            [nzPageSizeOptions]="pageSizeOptions"[nzSimple]="mobilePagination"
+            (nzPageIndexChange)="onPaginationChange()" (nzPageSizeChange)="onPaginationChange(true)"></nz-pagination>
+    </ng-template>
+   
+    <ng-template #indicatorTemplate>
+        <div class="is-loading">
+            <span class="btn-spinner card-loader"></span>
+        </div>
+    </ng-template>
+    
+    <ng-template #emptyBlock>
+
+        <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+            [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <ng-template #contentTpl>
+                <h4 class="mt-24">No Data Found</h4>
+                <span>Looks like there's no information to display here</span>
+            </ng-template>
+
+        </nz-empty>
+
+    </ng-template>
+    
+</div>

@@ -1,0 +1,24 @@
+@import "src/@fuse/scss/fuse";
+
+.ccs-subsidy-details-dialog {
+
+    @include media-breakpoint("xs") {
+        width: 100%;
+    }
+
+    @include media-breakpoint("gt-xs") {
+        width: 768px;
+    }
+
+    .mat-dialog-container {
+
+        padding: 0px;
+
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+}

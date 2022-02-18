@@ -1,0 +1,40 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+report-side-nav {
+
+    .demo-loadmore-list {
+        min-height: 350px;
+      }
+
+      .ant-card-body {
+        padding: 14px!important;
+    }
+    .ant-list-grid .ant-col>.ant-list-item {
+        padding: 0 16px!important;
+    }
+
+    .remove {
+        color: $danger-color;
+
+        i {
+            color: $danger-color;
+        }
+    }
+
+    .ant-card {
+        margin-top: 5px!important;
+    }
+
+    .text-truncate {
+        font-size: small!important;
+    }
+    .remove-btn{
+        padding: 5px!important;
+        font-size: 10px!important;
+        height: 25px!important;
+        border: none!important;
+        // background: none!important;
+    }
+    
+}

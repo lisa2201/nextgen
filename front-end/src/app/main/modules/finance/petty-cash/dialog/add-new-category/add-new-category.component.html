@@ -1,0 +1,113 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{dialogTitle}}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="form" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="form" nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Name</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="NameErrorTpl">
+
+                            <input nz-input formControlName="name" placeholder="name" type="text" />
+
+                            <ng-template #NameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input  name</ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')"> Name can't be longer than 150 characters</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Type</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="typeErrorTpl">
+
+                            <nz-select formControlName="type" nzShowSearch
+                                    nzPlaceHolder="select a type">
+
+                                    <nz-option nzCustomContent *ngFor="let item of categoryType"
+                                    nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                                    {{ item.name }}
+                                    </nz-option>
+                                </nz-select>
+
+                            <ng-template #typeErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input  name</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span>
+
+            </span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8"
+                    *hasPermission="['AC1']; belongsTo 'N07'"
+                    nz-button 
+                    nzType="primary" 
+                    [disabled]="!form.valid"
+                    [promiseBtn]="buttonLoader">
+                    <i class="plus icon mr-8"></i> {{buttonVal}}
+                </button>
+    
+                <button class="text-uppercase mr-8" 
+                    type="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+    
+                <button class="text-uppercase mat-close-btn" 
+                    type="button"
+                    nz-button 
+                    nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

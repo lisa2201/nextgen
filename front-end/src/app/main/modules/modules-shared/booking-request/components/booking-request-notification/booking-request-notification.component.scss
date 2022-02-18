@@ -1,0 +1,15 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.booking-request-notification {
+
+    @include media-breakpoint('xs') {
+       
+    }
+
+    @include media-breakpoint('gt-xs') {
+        
+    }
+
+    
+}

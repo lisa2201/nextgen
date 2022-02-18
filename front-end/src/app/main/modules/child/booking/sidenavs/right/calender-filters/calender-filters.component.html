@@ -1,0 +1,117 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0" 
+    fusePerfectScrollbar 
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex [formGroup]="calendarFiltersForm">
+
+        <div class="mb-16">
+
+            <label class="filter-label">Type</label>
+
+            <nz-select  
+                formControlName="type"
+                nzPlaceHolder="select a type"
+                [nzCustomTemplate]="custom">
+
+                <nz-option nzCustomContent nzValue="" nzLabel="All">
+                    <i class="circle icon color-code all mr-8"></i>
+                    <span>All</span>
+                </nz-option>
+
+                <nz-option *ngFor="let item of bookingTypes; trackBy: trackByFn;" nzCustomContent nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                    <i class="circle icon color-code mr-8 {{ item.name | lowercase }}"></i>
+                    <span>{{ item.name }}</span>
+                </nz-option>
+
+                <ng-template #custom let-selected>
+                    <i class="circle icon color-code mr-8 {{ selected.nzLabel | lowercase }}"></i>
+                    <span>{{ selected.nzLabel }}</span>
+                </ng-template>
+
+            </nz-select>
+
+        </div>
+
+        <div class="mb-16" 
+            *ngIf="calendarFiltersForm.get('type').value === '1'"
+            [@fadeInOnEnter]>
+
+            <label class="filter-label">Attendance Type</label>
+
+            <nz-select 
+                formControlName="attend_type" 
+                nzPlaceHolder="select a attendance type">
+
+                <nz-option nzValue="" nzLabel="All"></nz-option>
+                <nz-option nzValue="0" nzLabel="Completed"></nz-option>
+                <nz-option nzValue="1" nzLabel="Incomplete"></nz-option>
+
+            </nz-select>
+        
+        </div>
+
+        <div class="mb-16" *ngIf="fees.length > 0">
+
+            <ng-container *hasPermission="['AC0']; belongsTo 'N24'">
+
+                <label class="filter-label">Fee</label>
+    
+                <nz-select  
+                    formControlName="fee"
+                    nzShowSearch
+                    nzPlaceHolder="select a fee">
+    
+                    <nz-option nzValue="0" nzLabel="All"></nz-option>
+        
+                    <nz-option *ngFor="let item of fees; trackBy: trackByFn;" 
+                        nzValue="{{ item.id }}" 
+                        nzLabel="{{ item.name }} {{ item.isArchived() ? '(Archived)' : '' }}"
+                        nzCustomContent>
+                    
+                        {{ item.name }}
+                        <span [ngClass]="{'danger-color': item.isArchived() }">{{ item.isArchived() ? '(Archived)' : '' }}</span>
+                    
+                    </nz-option>
+                    
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16" *ngIf="child.rooms.length > 0">
+
+            <label class="filter-label">Room</label>
+
+            <ng-container *hasPermission="['AC0']; belongsTo 'N21'">
+
+                <nz-select  
+                    formControlName="room"
+                    nzShowSearch
+                    nzPlaceHolder="select a room">
+    
+                    <nz-option nzValue="0" nzLabel="All"></nz-option>
+        
+                    <nz-option *ngFor="let item of child.rooms; trackBy: trackByFn;" nzValue="{{ item.id }}" nzLabel="{{ item.title }}"></nz-option>
+                    
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <button nz-button nzType="default" 
+            *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button>
+
+    </form>
+
+</div>
+<!-- / SIDEBAR CONTENT -->

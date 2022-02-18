@@ -1,0 +1,119 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex [formGroup]="filtersForm">
+
+        <div class="mb-16">
+
+            <ng-container>
+
+                <label class="filter-label">Start Date</label>
+
+                <nz-date-picker [nzInputReadOnly]="true" [nzSize]="size" formControlName="date"  nzPlaceHolder="select date" class="block">
+                </nz-date-picker>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16">
+
+            <ng-container>
+
+                <label class="filter-label">End Date</label>
+
+                <nz-date-picker [nzInputReadOnly]="true" [nzSize]="size" formControlName="endDate"  nzPlaceHolder="select date" class="block">
+                </nz-date-picker>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16">
+
+            <ng-container>
+
+                <label class="filter-label">Select Child</label>
+
+                <nz-select nzMode="multiple" formControlName="child" nzShowSearch nzAllowClear nzPlaceHolder="Select Status">
+
+                    <nz-option nzValue="ServiceID"
+                               nzLabel="All Children" title="All Children">
+                    </nz-option>
+                    <ng-container *ngFor="let item of this.childrenList">
+                        <nz-option *ngIf="item.id" nzValue="{{ item.id }}"
+                                   nzLabel="{{ item.firstName }} {{ item.lastName}} ({{ (item.enrollments[0])? item.enrollments[0].enrolId : 'No Enrolment ID'}})" title="{{ item.firstName }} {{ item.lastName}} ({{ (item.enrollments[0])? item.enrollments[0].enrolId : 'No Enrolment ID'}})">
+                        </nz-option>
+                    </ng-container>
+
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16">
+
+            <nz-form-item nz-col>
+                <nz-form-label style="padding: 8px;">Show Variations Only  &nbsp;&nbsp;  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</nz-form-label>
+                <nz-form-control nzHasFeedback>
+                    <nz-switch [nzSize]="size" formControlName="showVariationsOnly"></nz-switch>
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+
+        <div class="mb-16">
+
+            <nz-form-item nz-col>
+                <nz-form-label style="padding: 8px;">Include YTD Absence changes  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </nz-form-label>
+                <nz-form-control nzHasFeedback>
+                    <nz-switch [nzSize]="size" formControlName="includeYTDAbsenceChanges"></nz-switch>
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+        <div class="mb-16">
+            <button nz-button nz-dropdown [nzDropdownMenu]="menu">
+                <i nz-icon nzType="download"></i>Download</button>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu>
+                    <li nz-menu-item (click)="downloadPdf($event, true)">
+                        <i nz-icon nzType="file-pdf" nzTheme="outline"></i> <a>PDF</a>
+                    </li>
+                    <li nz-menu-item (click)="downloadPdf($event, false)">
+                        <i nz-icon nzType="file-text" nzTheme="outline"></i><a>CSV</a>
+                    </li>
+                </ul>
+            </nz-dropdown-menu>
+        </div>
+
+
+
+        <button nz-button nzType="default" *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button>
+
+    </form>
+
+</div>
+<!-- / SIDEBAR CONTENT -->
+
+<!-- SIDEBAR ACTION -->
+<nz-button-group class="filter-action px-24 py-16">
+
+    <button nz-button 
+    (click)="clearFilter($event)" 
+    [disabled]="!filtersForm.valid">Clear</button>
+
+<button nz-button nzType="primary" 
+    [promiseBtn]="buttonLoader"
+    (click)="submitFilter($event)">Filter</button>
+
+</nz-button-group>
+<!-- / SIDEBAR ACTION -->

@@ -1,0 +1,67 @@
+<div 
+    id="balance-adjustments" 
+    class="page-layout simple left-sidebar inner-sidebar inner-scroll" 
+    *canViewAuth
+    [@fadeInOnEnter] 
+    [@fadeOutOnLeave]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+    
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-15px' } }">Opening Balance</h1>
+    
+        <ng-container *hasPermission="['AC1']; belongsTo 'N35'">
+    
+            <button 
+                nz-button 
+                nzType="primary" 
+                (click)="openAddDialog($event)"
+                [nzLoading]="buttonLoader"
+                [@animate]="{ value:'*', params:{ delay: '100ms', x:'15px' } }">
+                <i nz-icon nzType="plus"></i>
+                Reset Balance
+            </button>
+    
+        </ng-container>
+    
+    </div>
+    <!-- / HEADER -->
+
+    <div class="px-24">
+        <nz-alert nzType="info" [nzMessage]="infoMessage" nzShowIcon></nz-alert>
+    </div>
+    
+    <div class="p-24 pt-0">
+        <nz-alert nzType="warning" class="mt-12" [nzMessage]="warnMessage" nzShowIcon></nz-alert>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="balance-adjustments-sidebar" position="left">
+
+            <app-balance-adjustments-left-sidenav 
+                [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }" 
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+                (updateTableScroll)="updateScroll($event)">
+            </app-balance-adjustments-left-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <app-balance-adjustments-list-view 
+            class="center p-24 pt-0" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+            (updateTableScroll)="updateScroll($event)"
+            [@animate]="{ value:'*', params:{ delay: '200ms', x:'15px' } }">
+        </app-balance-adjustments-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

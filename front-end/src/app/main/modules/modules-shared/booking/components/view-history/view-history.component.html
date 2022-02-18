@@ -1,0 +1,173 @@
+<nz-form-item *ngIf="activeBookingHistoryList.length > 0" [@fadeMotion]>
+
+    <nz-form-label>
+        <div fxFlex="1 0 auto" fxLayoutAlign="space-between center">
+            Booking Summary
+            <span class="primary-color font-size-14">{{ children[0].getFullName() }}</span>
+        </div>
+    </nz-form-label>
+
+    <nz-form-control>
+
+        <nz-tabset [nzTabPosition]="'top'">
+    
+            <nz-tab [nzTitle]="active">
+
+                <ng-template nz-tab>
+
+                    <nz-table class="reset-m-h" 
+                        [nzSize]="'small'"
+                        #historyTable 
+                        nzBordered
+                        [nzScroll]="{ y: '200px' }"
+                        [nzShowPagination]="false"
+                        [nzData]="activeBookingHistoryList">
+            
+                        <thead>
+                            <tr>
+                                <th>Room</th>
+                                <th nzWidth="120px">Days</th>
+                                <th nzWidth="80px">Fee</th>
+                                <th>Type</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th nzWidth="50px" *ngIf="showAction"></th>
+                            </tr>
+                        </thead>
+            
+                        <tbody>
+                            <tr *ngFor="let data of activeBookingHistoryList">
+                                
+                                <td>{{ joinArrayProperties(data.rooms, 'title') }}</td>
+                                <td>{{ data.days }}</td>
+                                <td [nzEllipsis]="false" [nzBreakWord]="true">
+                                    <a *ngFor="let item of data.fees" tooltip="{{ item.name }}" display-mobile="false" hide-delay="50">
+                                        {{ getFeeByBooking(data.bookings, item.id) ? (getFeeByBooking(data.bookings, item.id).price | currency: client.currency :'symbol':'1.2-2') : 'N/A' }}
+                                    </a>
+                                    <br>
+                                </td> 
+                                <td>{{ data.isCasual ? 'Casual' : 'Weekly' }}</td>
+                                <td>{{ data.startDate | formatMoment: 'DD-MM-YYYY' }}</td>
+                                <td>{{ data.endDate | formatMoment: 'DD-MM-YYYY' }}</td>
+                                <td *ngIf="showAction">
+            
+                                    <button class="mr-0 blank" [ngStyle]="{ 'display': 'inline-flex' }"
+                                        nz-button nzType="link"
+                                        nz-dropdown 
+                                        [nzDropdownMenu]="menu" 
+                                        [nzBackdrop]="false" 
+                                        [nzTrigger]="'click'">
+                                        <i class="ellipsis vertical icon"></i>
+                                    </button>
+                    
+                                    <nz-dropdown-menu #menu="nzDropdownMenu">
+                                        <ul nz-menu>
+                                            <li nz-menu-item (click)="viewBookingDetails($event, data)">
+                                                <span class="_icon mr-8"><i class="calendar alternate outline icon"></i></span>
+                                                <span class="font-weight-600">View Bookings Details</span>
+                                            </li>
+                                            <li nz-menu-item (click)="toggleAction($event, data, 'edit')">
+                                                <span class="_icon mr-8"><i class="edit outline icon"></i></span>
+                                                <span class="font-weight-600">Edit Booking</span>
+                                            </li>
+                                            <li nz-menu-item (click)="toggleAction($event, data, 'delete')">
+                                                <span class="_icon mr-8"><i class="trash alternate outline icon"></i></span>
+                                                <span class="font-weight-600">Delete Booking</span>
+                                            </li>
+                                        </ul>
+                                    </nz-dropdown-menu>
+                                    
+                                </td>
+                            </tr>
+                        </tbody>
+            
+                    </nz-table>
+
+                </ng-template>
+
+                <ng-template #active>
+                    <i class="check circle outline icon mr-4"></i>
+                    Active
+                </ng-template>
+    
+            </nz-tab>
+    
+            <nz-tab [nzTitle]="trashed" [nzDisabled]="trashedBookingHistoryList.length < 1">
+
+                <ng-template nz-tab>
+
+                    <nz-table class="reset-m-h" 
+                        [nzSize]="'small'"
+                        #historyTrashedTable 
+                        nzBordered
+                        [nzScroll]="{ y: '200px' }"
+                        [nzShowPagination]="false"
+                        [nzData]="trashedBookingHistoryList">
+            
+                        <thead>
+                            <tr>
+                                <th>Room</th>
+                                <th nzWidth="120px">Days</th>
+                                <th nzWidth="80px">Fee</th>
+                                <th>Type</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th nzWidth="50px" *ngIf="showAction"></th>
+                            </tr>
+                        </thead>
+            
+                        <tbody>
+                            <tr *ngFor="let data of trashedBookingHistoryList">
+                                <td>{{ joinArrayProperties(data.rooms, 'title') }}</td>
+                                <td>{{ data.days }}</td>
+                                <td [nzEllipsis]="false" [nzBreakWord]="true">
+                                    <a *ngFor="let item of data.fees" tooltip="{{ item.name }}" display-mobile="false" hide-delay="50">
+                                        {{ getFeeByBooking(data.bookings, item.id) ? (getFeeByBooking(data.bookings, item.id).price | currency: client.currency :'symbol':'1.2-2') : 'N/A' }}
+                                    </a>
+                                    <br>
+                                </td> 
+                                <td>{{ data.isCasual ? 'Casual' : 'Weekly' }}</td>
+                                <td>{{ data.startDate | formatMoment: 'DD-MM-YYYY' }}</td>
+                                <td>{{ data.endDate | formatMoment: 'DD-MM-YYYY' }}</td>
+                                <td *ngIf="showAction">
+            
+                                    <button class="mr-0 blank" [ngStyle]="{ 'display': 'inline-flex' }"
+                                        nz-button nzType="link"
+                                        nz-dropdown 
+                                        [nzDropdownMenu]="menu" 
+                                        [nzBackdrop]="false" 
+                                        [nzTrigger]="'click'">
+                                        <i class="ellipsis vertical icon"></i>
+                                    </button>
+                    
+                                    <nz-dropdown-menu #menu="nzDropdownMenu">
+                                        <ul nz-menu>
+                                            <li nz-menu-item (click)="viewBookingDetails($event, data)">
+                                                <span class="_icon mr-8"><i class="calendar alternate outline icon"></i></span>
+                                                <span class="font-weight-600">View Bookings Details</span>
+                                            </li>
+                                        </ul>
+                                    </nz-dropdown-menu>
+                                    
+                                </td>
+                            </tr>
+                        </tbody>
+            
+                    </nz-table>
+
+                </ng-template>
+
+                <ng-template #trashed>
+                    <i class="trash alternate outline icon mr-4"></i>
+                    Trashed
+                </ng-template>
+    
+            </nz-tab>
+    
+        </nz-tabset>
+
+    </nz-form-control>
+
+</nz-form-item>
+
+

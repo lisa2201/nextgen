@@ -1,0 +1,42 @@
+<div id="organization" class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- HEADER -->
+    <div class="header p-head" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Subscriber Management</h1>
+
+        <ng-container *hasPermission="['AC1']; belongsTo 'N09'">
+
+            <button class="text-uppercase" nz-button nzType="primary" (click)="addDialog($event)"
+                [promiseBtn]="buttonLoader">
+                <i class="plus icon mr-8"></i> Add Subscriber
+            </button>
+
+        </ng-container>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="organization-sidebar" position="left" lockedOpen="gt-md"
+            [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">
+
+            <!-- for side view of bar -->
+            <app-organization-left-sidenav [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">
+            </app-organization-left-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <app-list-view class="center p-24 pt-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" (updateTableScroll)="updateScroll($event)">
+        </app-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

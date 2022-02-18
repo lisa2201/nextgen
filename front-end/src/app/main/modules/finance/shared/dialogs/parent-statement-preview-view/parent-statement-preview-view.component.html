@@ -1,0 +1,380 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Parent Statement Preview</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <div class="main-container" fxLayout="column" fxFlex>
+
+            <div class="center-info-row" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <div class="center-info" fxLayout="row" fxFlex="45" fxLayoutAlign="space-between center">
+
+                    <div class="logo-container">
+                        <img [src]="logoUrl"
+                            alt="Kinder M8 Logo">
+                    </div>
+
+                    <div class="info-wrapper">
+                        <p>{{ organization.companyName | titlecase }} {{ branch.name | titlecase }}</p>
+                        <p>{{ branch.addressLine1 }}</p>
+                        <p>{{ branch.addressLine2 }}</p>
+                        <p>{{ branch.city }} {{ branch.zipCode }}</p>
+                        <p *ngIf="branch.phoneNumber">Phone: {{ branch.phoneNumber }}</p>
+                        <p *ngIf="provider && provider.abn">ABN: {{ provider.abn }}</p>
+                    </div>
+
+                </div>
+
+                <div fxFlex="45">
+                    <h3>Account Statement</h3>
+                </div>
+
+            </div>
+
+            <div class="statement-detail-row mt-32" fxLayout="row" fxLayoutAlign="space-between">
+
+                <div class="parent-info-wrapper" fxFlex="50">
+                    <p class="font-weight-600">{{ parent.getFullName() | titlecase}}</p>
+                    <p>{{ parent.address1 }}</p>
+                    <p>{{ parent.address2 }} {{ parent.city }}</p>
+                    <p>{{ parent.state }} {{ parent.zipCode }}</p>
+                    <p *ngIf="parent.mobileNumber">Mobile: {{ parent.mobileNumber }}</p>
+                </div>
+
+                <div class="statement-detail-wrapper" fxFlex="50">
+
+                    <h3>Statement Details</h3>
+
+                    <nz-list [nzItemLayout]="'horizontal'">
+                        <nz-list-item>
+                            <div fxLayout="row" fxFlex fxLayoutAlign="space-between center">
+                                <p>Statement Period</p>
+                                <p>{{ startDate }} - {{ endDate }}</p>
+                            </div>
+                        </nz-list-item>
+                        <nz-list-item>
+                            <div fxLayout="row" fxFlex fxLayoutAlign="space-between center">
+                                <p>Statement Generated</p>
+                                <p>{{ generatedDate }}</p>
+                            </div>
+                        </nz-list-item>
+                    </nz-list>
+
+                </div>
+
+            </div>
+
+            <div class="account-balance-summary-row mt-32" fxLayout="row" fxFlex>
+
+                <div class="account-balance-container" fxLayout="row" fxLayoutAlign="space-between" fxFlex>
+                    
+                    <div class="balance-summary" fxFlex="48">
+    
+                        <h3>Your Account Balance</h3>
+    
+                        <nz-list [nzItemLayout]="'horizontal'">
+    
+                            <nz-list-item>
+    
+                                <div fxLayout="row" fxFlex fxLayoutAlign="space-between center">
+                                    <p>Opening Balance</p>
+                                    <p><nz-tag [nzColor]="tagColor">{{ openingBalance | currency }}</nz-tag></p>
+                                </div>
+    
+                            </nz-list-item>
+    
+                            <nz-list-item>
+    
+                                <div fxLayout="row" fxFlex fxLayoutAlign="space-between center">
+                                    <p>New fees and charges</p>
+                                    <p><nz-tag [nzColor]="tagColor">{{ debitTotal | currency }}</nz-tag></p>
+                                </div>
+    
+                            </nz-list-item>
+    
+                            <nz-list-item>
+    
+                                <div fxLayout="row" fxFlex fxLayoutAlign="space-between center">
+                                    <p>Payments/Refunds</p>
+                                    <p><nz-tag [nzColor]="tagColor">{{ creditTotal | currency }}</nz-tag></p>
+                                </div>
+    
+                            </nz-list-item>
+    
+                            <!-- <nz-list-item>
+    
+                                <div fxLayout="row" fxFlex fxLayoutAlign="space-between center">
+                                    <p>{{ math.sign(closingBalance) === -1 ? 'In Credit' : 'Due Now'}}</p>
+                                    <p><nz-tag [nzColor]="tagColor">{{ closingBalance | currency }}</nz-tag></p>
+                                </div>
+    
+                            </nz-list-item> -->
+    
+                        </nz-list>
+    
+                    </div>
+    
+                    <div class="payment-summary" fxFlex="48">
+    
+                        <h3>Payment Summary</h3>
+    
+                        <nz-list [nzItemLayout]="'horizontal'">
+    
+                            <nz-list-item *ngIf="paymentDate">
+    
+                                <div fxLayout="row" fxFlex fxLayoutAlign="space-between center">
+                                    <p>Payment Date</p>
+                                    <p>{{ paymentDate }}</p>
+                                </div>
+    
+                            </nz-list-item>
+    
+                            <nz-list-item>
+    
+                                <div fxLayout="row" fxFlex fxLayoutAlign="space-between center">
+                                    <p>{{ math.sign(closingBalance) === -1 ? 'In Credit' : 'Due Now'}}</p>
+                                    <p><nz-tag [nzColor]="tagColor">{{ closingBalance | currency }}</nz-tag></p>
+                                </div>
+    
+                            </nz-list-item>
+    
+                        </nz-list>
+    
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="transactions-row  mt-32 mb-20">
+
+                <h3>Transactions</h3>
+
+                <nz-table #transactionTable nzBordered [nzData]="transactions" [nzShowPagination]="false" [nzFrontPagination]="false">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Debit(+)</th>
+                            <th>Credit(-)</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let transaction of transactionTable.data">
+                            <td>{{transaction.date | date:dateFormatAng}}</td>
+                            <td>
+
+                                <div class="transaction-description">
+                                    <span class="mr-4">{{ getTransactionDescription(transaction) }}</span>
+                                    <span class="mr-4" *ngIf="transaction.child">({{ transaction.child.getFullName() | titlecase }})</span>
+                                </div>
+
+                                <div class="item-description">
+                                    <span class="mr-8" *ngIf="transaction.adjustmentItemName !== waiveFeeTitle">{{ transaction.description }}</span>
+                                    <span class="mr-8" *ngIf="transaction.sessionStart">{{ getHours(transaction) }}</span> 
+                                    <span *ngIf="transaction.roomName">Room: {{ transaction.roomName | titlecase}} </span>
+                                    <span *ngIf="transaction.adjustmentItemName == waiveFeeTitle">
+                                        {{getWaiveDays(transaction)}}
+                                    </span>
+                                </div>
+
+                            </td>
+                            <td>
+                                <span *ngIf="transaction.mode === 'debit'">
+                                    {{ transaction.amount | currency }}
+                                </span>
+                            </td>
+                            <td>
+                                <span *ngIf="transaction.mode === 'credit'">
+                                    {{ transaction.amount | currency }}
+                                </span>
+                            </td>
+                            <td>
+                                {{transaction.runningTotal | currency }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+
+            </div>
+
+            <div class="session-summary-row  mt-32 mb-20" *ngIf="ccsEnabled">
+
+                <h3>Session Summary</h3>
+
+                <nz-table #sessionSummaryTable nzBordered [nzData]="sessionSummaries" [nzShowPagination]="false" [nzFrontPagination]="false">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Child Name</th>
+                            <th>Session Start</th>
+                            <th>Session End</th>
+                            <th>Hours</th>
+                            <th>Hourly Fee</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let session_summary of sessionSummaryTable.data">
+                            <td>{{session_summary.date | date:'mediumDate'}}</td>
+                            <td>{{ session_summary.full_name | titlecase }}</td>
+                            <td>{{ session_summary.session_start }}</td>
+                            <td>{{ session_summary.session_end }}</td>
+                            <td>{{ session_summary.hours }}</td>
+                            <td>{{ session_summary.hourly_fee | currency }}</td>
+                            <td>{{ session_summary.sign_in }}</td>
+                            <td>{{ session_summary.sign_out }}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+
+            </div>
+
+            <div class="entitlement-row  mt-32 mb-20" *ngIf="ccsEnabled">
+
+                <h3>Statement of Entitlement CCS & ACCS</h3>
+
+                <nz-table #entitlementsTable nzBordered [nzData]="entitlements" [nzShowPagination]="false" [nzFrontPagination]="false">
+                    <thead>
+                        <tr>
+                            <th>Week</th>
+                            <th>Child Name</th>
+                            <th>Hours</th>
+                            <th>Fee</th>
+                            <th>CCS</th>
+                            <th>ACCS</th>
+                            <th>CCS Hours</th>
+                            <th>Gap</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let entitlement of entitlementsTable.data">
+                            <td>{{ entitlement.week | date:'mediumDate' }}</td>
+                            <td>{{ entitlement.full_name | titlecase }}</td>
+                            <td>{{ entitlement.hours_total }}</td>
+                            <td>{{ entitlement.fee_total | currency }}</td>
+                            <td>{{ entitlement.ccs_total |currency }}</td>
+                            <td>
+                                {{ entitlement.accs_total | currency }}
+                                <span *ngIf="entitlement.accs_service_total != null" class="service-total">({{ entitlement.accs_service_total | currency }})</span>
+                            </td>
+                            <td>{{ entitlement.ccs_hours_total }}</td>
+                            <td>{{ entitlement.gap | currency }}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+
+                <p class="mt-16 item-description">
+                    <b>Note:</b> It is important to consider the data returned via this service relates to an individual’s entitlement and may not reflect actual amounts paid to the individual or the service due to debts and offsetting. The amount paid to service is shown inside the brackets in red bold letters.
+                </p>
+                <p class="mt-16" *ngIf="limitedSubsidy">* 12 weeks data displayed</p>
+
+            </div>
+
+            <div class="absence-row  mt-32 mb-20" *ngIf="ccsEnabled">
+
+                <h3>Child Summary</h3>
+
+                <nz-table #childSummaryTable nzBordered [nzData]="absences" [nzShowPagination]="false" [nzFrontPagination]="false">
+                    <thead>
+                        <tr>
+                            <th>Child Name</th>
+                            <th>Child Enrolment ID</th>
+                            <th>YTD Absences: Period Ending (30-06-2021)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let absence of childSummaryTable.data">
+                            <td>{{ absence.full_name | titlecase }}</td>
+                            <td>{{ absence.enrolment_id }}</td>
+                            <td>{{ absence.absent_days }}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+
+                <p class="mt-16" *ngIf="limitedSubsidy">* 12 weeks data displayed</p>
+
+            </div>
+
+            <div class="provider-info-row  mt-32 mb-20" *ngIf="provider">
+
+                <h3>CCS Provider Information</h3>
+
+                <nz-table nzBordered [nzData]="[1]" [nzShowPagination]="false" [nzFrontPagination]="false">
+                    <thead>
+                        <tr>
+                            <th>Provider Name</th>
+                            <th>Provider ABN</th>
+                            <th>Provider ID</th>
+                            <th>Service ID</th>
+                            <th>Centre Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ provider.buisnessName | titlecase }}</td>
+                            <td>{{ provider.abn }}</td>
+                            <td>{{ provider.providerId }}</td>
+                            <td>{{ service.serviceid }}</td>
+                            <td>{{ branch.name | titlecase }}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+
+            </div>
+
+            <div class="bpay-info-row  mt-32 mb-20" *ngIf="bpay" fxLayout="column">
+
+                <h3>Method Of Payment</h3>
+
+                <div>
+                    <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="35" class="bpay-container">
+                        <div fxFlex="25">
+                            <img class="bpay-logo" src="assets/images/payment_types/bpay/BPAY_2012_PORT_BLUE.png" alt="BPAY">
+                        </div>
+                        <div fxFlex="75" fxLayout="column" fxLayoutAlign="center" class="bpay-text-container">
+                            <div>Biller Code: {{ bpay.instrument }}</div>
+                            <div>Ref: {{ bpay.reference }}</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span></span>
+
+        <span class="text-right">
+
+            <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                (click)="matDialogRef.close()">
+                Close
+            </button>
+
+        </span>
+
+    </div>
+
+</div>

@@ -1,0 +1,772 @@
+<div id="child-view" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="start center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2" *ngIf="pageType ==='edit'">
+                    Edit Child - {{ child.getFullName() }}
+                </span>
+
+                <span class="h2" *ngIf="pageType ==='new'">
+                    New Child
+                </span>
+
+            </h1>
+
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="text-uppercase go-back-link"
+                    (click)="onBack($event)">
+                    <i class="long arrow alternate left icon"></i>
+                    <span>Go Back</span>
+                </span>
+
+                <span class="text-right">
+
+                    <ng-container *ngIf="pageType === 'new'">
+
+                        <button class="text-uppercase"
+                            *hasPermission="['AC1']; belongsTo 'N07'"
+                            nz-button
+                            nzType="primary"
+                            [disabled]="!childForm.valid"
+                            [promiseBtn]="buttonLoader">
+                            <i class="plus icon b-i mr-8"></i> Save
+                        </button>
+
+                    </ng-container>
+
+                    <ng-container *ngIf="pageType === 'edit'">
+
+                        <button class="text-uppercase"
+                            *hasPermission="['AC2']; belongsTo 'N07'"
+                            nz-button
+                            nzType="primary"
+                            (click)="onFormSubmit($event)"
+                            [disabled]="!childForm.valid || hasWhiteSpace"
+                            [promiseBtn]="buttonLoader">
+                            <i class="save outline icon b-i mr-8"></i> Update
+                        </button>
+
+                    </ng-container>
+
+
+                </span>
+
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24 pt-16"
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <form name="childForm" [nzLayout]="'vertical'" [formGroup]="childForm" nz-form>
+
+                    <nz-tabset
+                        [nzSize]="'large'"
+                        [nzSelectedIndex]="current"
+                        (nzSelectedIndexChange)="updatePosition($event)">
+
+                        <nz-tab [nzTitle]="titleTemplateBasic">
+
+                            <div class="pl-4 pr-4">
+                              
+                                <div nz-row [nzGutter]="24">
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                                        <nz-form-item >
+
+                                        <nz-form-label nzRequired>First Name</nz-form-label>
+
+                                        <nz-form-control nzHasFeedback [nzErrorTip]="firstNameErrorTpl">
+
+                                            <input nz-input formControlName="f_name" placeholder="first name" type="text" />
+
+                                            <ng-template #firstNameErrorTpl let-control>
+                                                <ng-container *ngIf="control.hasError('required')">Please input first name</ng-container>
+                                                <ng-container *ngIf="control.hasError('maxlength')">First name can't be longer than 150 characters</ng-container>
+                                            </ng-template>
+
+                                        </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                        <nz-form-item>
+
+                                            <nz-form-label>Middle Name</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="middleNameErrorTpl">
+
+                                                <input nz-input formControlName="m_name" placeholder="middle name" type="text" />
+
+                                                <ng-template #middleNameErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('maxlength')">Middle name can't be longer than 150 characters</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                        <nz-form-item>
+
+                                            <nz-form-label nzRequired>Last Name</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="lastNameErrorTpl" >
+
+                                                <input nz-input formControlName="l_name" placeholder="last name" type="text" />
+
+                                                <ng-template #lastNameErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('required')">Please input first name</ng-container>
+                                                    <ng-container *ngIf="control.hasError('maxlength')">Last name can't be longer than 150 characters</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+                                    <!-- Legal name for child optional -->
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                        <nz-form-item>
+
+                                            <nz-form-label>Legal First Name</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="legalFirstNameErrorTpl" >
+
+                                                <input nz-input formControlName="legal_first_name" placeholder="legal first name" type="text" />
+
+                                                <ng-template #legalFirstNameErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('maxlength')">Legal first name can't be longer than 150 characters</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                        <nz-form-item>
+
+                                            <nz-form-label>Legal Last Name</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="LegalLastNameErrorTpl" >
+
+                                                <input nz-input formControlName="legal_last_name" placeholder="legal last name" type="text" />
+
+                                                <ng-template #LegalLastNameErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('maxlength')">Legal last name can't be longer than 150 characters</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                        <nz-form-item>
+
+                                            <nz-form-label nzRequired>Date of Birth</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="dobErrorTpl">
+
+                                                <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledDate" formControlName="date_of_birth" nzPlaceHolder="date of birth" class="block"></nz-date-picker>
+
+                                                <ng-template #dobErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('required')">Please input date of birth</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                        <nz-form-item>
+
+                                            <nz-form-label nzRequired>Start Date</nz-form-label>
+
+                                            <nz-form-control [nzErrorTip]="joinErrorTpl">
+
+                                                <nz-date-picker [nzInputReadOnly]="true" formControlName="join" class="block"></nz-date-picker>
+
+                                                <ng-template #joinErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('required')">Please input start date</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                        <nz-form-item *ngIf="showCCSInput">
+
+                                            <nz-form-label>CRN</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="ccsProviderIDErrorTpl">
+
+                                                <input class="color-border {{ hasWhiteSpace? 'has-error' : '' }}" nz-input formControlName="ccs_id" placeholder="child CRN" type="text" />
+
+                                                <ng-template #ccsProviderIDErrorTpl let-control>
+
+                                                    <ng-container *ngIf="control.hasError('maxlength')">Child CRN can't be longer than 10 characters</ng-container>
+                                                </ng-template>
+
+                                                <div *ngIf="hasWhiteSpace" class=" custom-validator-error ng-tns-c292-60 ng-trigger ng-trigger-helpMotion">CRN cannot contain spaces in between</div>
+                                                
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                        <nz-form-item>
+
+                                            <nz-form-label>Important Information About The Child <small>(Max 250 characters)</small></nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="descErrorTpl">
+
+                                                <textarea formControlName="desc" nz-input rows="4" placeholder="description"></textarea>
+
+                                                <ng-template #descErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('maxlength')">Important information can't be longer than 250 characters</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                        <nz-form-item>
+
+                                            <nz-form-label nzRequired>Gender</nz-form-label>
+
+                                            <nz-form-control [nzErrorTip]="genderErrorTpl">
+
+                                                <nz-radio-group formControlName="gender" nzButtonStyle="solid" class="has-img">
+
+                                                    <label nz-radio-button nzValue="0">
+                                                        <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/male.svg" alt="male icon">
+                                                        <span>Male</span>
+                                                    </label>
+
+                                                    <label nz-radio-button nzValue="1">
+                                                        <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/femenine.svg" alt="female icon">
+                                                        <span>Female</span>
+                                                    </label>
+
+                                                </nz-radio-group>
+
+                                                <ng-template #genderErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('required')">Please select an gender</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                                        <nz-form-item >
+
+                                            <nz-form-label nzRequired>Attendance</nz-form-label>
+
+                                            <nz-form-control
+                                                [nzValidateStatus]="attendanceFormStatus"
+                                                [nzErrorTip]="attendanceErrorTpl"
+                                                formArrayName="attendance">
+
+                                                <div class="day-selector">
+
+                                                    <p class="mb-8">
+                                                        <label class="no-select"
+                                                            nz-checkbox
+                                                            [ngModelOptions]="{ standalone: true }"
+                                                            [(ngModel)]="allChecked"
+                                                            (ngModelChange)="updateAllChecked()"
+                                                            [nzIndeterminate]="indeterminate">
+                                                            Select all
+                                                        </label>
+                                                    </p>
+
+                                                    <div class="day-selector-inner">
+
+                                                        <ng-container *ngFor="let item of attendanceList; trackBy trackByFn;">
+
+                                                            <label class="attendance-chk"
+                                                                nz-checkbox
+                                                                [formControlName]="item?.index"
+                                                                [nzDisabled]="!item.enable"
+                                                                tooltip="{{ item?.name }}" placement="top" display-mobile="false" hide-delay="50">
+
+                                                                <span class="attendance-lbl-inner no-select" [ngClass]="{ weekend : item.weekend }">{{ item?.name | shorten: 2: '' }}</span>
+
+                                                            </label>
+
+                                                        </ng-container>
+
+                                                    </div>
+
+                                                </div>
+
+                                                <ng-template #attendanceErrorTpl let-control>
+                                                    <ng-container>Please select at least one option from the list</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                        <nz-form-item>
+
+                                            <nz-form-label>Child's Home Address</nz-form-label>
+
+                                            <nz-form-control>
+
+                                                <input nz-input formControlName="home_address" placeholder="Child's Home Address" type="text" />
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                        <nz-form-item>
+
+                                            <nz-form-label>Child's Suburb</nz-form-label>
+
+                                            <nz-form-control>
+
+                                                <input nz-input formControlName="suburb" placeholder="Child's Suburb" type="text" />
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                        <nz-form-item>
+
+                                            <nz-form-label>Child's State</nz-form-label>
+
+                                            <nz-form-control>
+
+                                                <input nz-input formControlName="state" placeholder="Child's State" type="text" />
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                        <nz-form-item>
+
+                                            <nz-form-label>Child's Postalcode</nz-form-label>
+
+                                            <nz-form-control>
+
+                                                <input nz-input formControlName="postalcode" placeholder="Child's Postalcode" type="text" />
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                        <nz-form-item >
+
+                                            <nz-form-label>Are there any court appointed orders relating to this enrolment?</nz-form-label>
+
+                                            <nz-form-control>
+
+                                                <nz-switch  formControlName="court_orders" nzCheckedChildren="Yes" nzUnCheckedChildren="No"> </nz-switch>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateRoomAndUsers">
+
+                            <ng-template nz-tab>
+
+                                <div class="pl-4 pr-4">
+
+                                    <child-view-rooms-view class="section"
+                                        [selected]="child"
+                                        (updateSelected)="updateSelectedRoom($event)">
+                                    </child-view-rooms-view>
+
+                                    <child-view-users-view class="section"
+                                        [selected]="child"
+                                        (updateSelected)="updateSelectedUser($event)"
+                                        (updatedPrimaryPayer)="updatePayer($event)">
+                                    </child-view-users-view>
+
+                                </div>
+
+                            </ng-template>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateCultural">
+
+                            <div class="pl-4 pr-4">
+
+                                <ng-template nz-tab>
+
+                                    <child-view-cultural-background-view class="section"
+                                        [selected]="child"
+                                        (updateSelected)="updateCulturalDetails($event)">
+                                    </child-view-cultural-background-view>
+
+                                </ng-template>
+
+                            </div>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateImage">
+                            <div nz-row>
+                                <div nz-col nzSpan="8"></div>
+                                <div nz-col nzSpan="8"><img width="500" class="images" src="{{ getChildProfileImage(child) }}"/></div>
+                                <div nz-col nzSpan="8"></div>
+                            </div>
+
+                            <div class="pl-4 pr-4">
+                                <s3-upload [uploadCountLimit]="1" [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'childImage')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                            </div>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateBusList">
+                            <div class="pl-4 pr-4">
+                                <div class="button-align-right">
+                                    <span>
+                                            <button class="text-uppercase"
+                                                    *hasPermission="['AC2']; belongsTo 'N07'"
+                                                    nz-button
+                                                    nzType="primary"
+                                                    (click)="addBus()"
+                                                    [promiseBtn]="buttonLoader">
+                                                <i class="plus outline icon b-i mr-8"></i> Add
+                                            </button>
+                                    </span>
+                                </div>
+                                <div nz-row [nzGutter]="24">
+
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                        <nz-form-item>
+
+                                    <nz-form-label nzRequired>School</nz-form-label><br>
+
+                                    <nz-form-control>
+
+                                        <nz-select [nzAllowClear]="true"  formControlName="school" nzShowSearch nzPlaceHolder="select School"  (ngModelChange)="onSchoolSelect($event)">
+                                            <ng-container *ngFor="let item of schoolList">
+                                                <nz-option *ngIf="item" nzValue="{{ item.id }}"
+                                                           nzLabel=" {{ item.name }}" title="{{ item.name}}">
+                                                </nz-option>
+                                            </ng-container>
+                                        </nz-select>
+
+                                    </nz-form-control>
+
+                                </nz-form-item>
+                                    </div>
+                                    <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="24" [nzXXl]="12">
+                                        <nz-form-item>
+
+                                            <nz-form-label nzRequired>Room</nz-form-label><br>
+
+                                            <nz-form-control>
+
+                                                <nz-select [nzAllowClear]="true" [(ngModel)]="selectedRoom" [ngModelOptions]="{standalone: true}" nzShowSearch nzPlaceHolder="select Room">
+                                                    <ng-container *ngFor="let item of child.rooms">
+                                                        <nz-option *ngIf="item" nzValue="{{ item.id }}"
+                                                                   nzLabel=" {{ item.title }}" title="{{ item.title }}">
+                                                        </nz-option>
+                                                    </ng-container>
+                                                </nz-select>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+                                    <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                        <nz-form-item>
+
+                                            <nz-form-label nzRequired>Bus</nz-form-label><br>
+
+                                            <nz-form-control>
+
+                                                <nz-select [nzAllowClear]="true" [(ngModel)]="selectedBus" [ngModelOptions]="{standalone: true}" nzShowSearch nzPlaceHolder="select Bus">
+                                                    <ng-container *ngFor="let item of busList">
+                                                        <nz-option *ngIf="item" nzValue="{{ item.id }}"
+                                                                   nzLabel=" {{ item.name }}" title="{{ item.name}}">
+                                                        </nz-option>
+                                                    </ng-container>
+                                                </nz-select>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+                                </div>
+
+                                <div class="content p-24 pt-16">
+                                    <ng-container>
+
+
+                                        <nz-table #headerTable [nzLoading]="tableLoading" [nzData]="childBusses" [nzShowPagination]="false" [nzNoResult]="emptyBlock"
+                                                  [nzLoadingIndicator]="indicatorTemplate">
+                                            <thead>
+                                            <tr>
+                                                <th>Bus Name</th>
+                                                <th>School</th>
+                                                <th>Room</th>
+                                                <th>Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr *ngFor="let item of headerTable.data">
+                                                <td>{{ (item.bus) ? item.bus.bus_name : 'N/A'}}</td>
+                                                <td>{{ (item.school) ? item.school.school_name : 'N/A'}}</td>
+                                                <td>{{ (item.room)? item.room.title : 'N/A'}}</td>
+                                                <td>
+                                                    <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="menu">
+                                                        <i class="ellipsis vertical icon"></i>
+                                                    </button>
+
+                                                    <mat-menu #menu="matMenu" backdropClass="tlp-more">
+                                                        <ng-container *hasPermission="['AC3']; belongsTo 'N07'">
+                                                            <button mat-menu-item (click)="deleteBus($event, item)">
+                                                                <i class="trash icon danger-color"></i>
+                                                                <span class="font-weight-600">Delete</span>
+                                                            </button>
+                                                        </ng-container>
+
+                                                    </mat-menu>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </nz-table>
+                                        <!-- / DATA TABLE VIEW -->
+
+                                        <ng-template #iconTemplate>
+                                            <i nz-icon nzType="safety-certificate" nzTheme="fill" class="ant-scroll-number-custom-component administrator"></i>
+                                        </ng-template>
+
+                                        <!-- TOTAL LABEL VIEW -->
+                                        <ng-template #totalTemplate let-range="range" let-total>
+                                            <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ range[0] }} to {{ range[1] }} of {{ total }} entries</span>
+                                            <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} - {{ range[1] }} of {{ total }} entries</span>
+                                        </ng-template>
+                                        <!-- / TOTAL LABEL VIEW -->
+
+                                        <!-- LOADER VIEW -->
+                                        <ng-template #indicatorTemplate>
+                                            <div class="is-loading">
+                                                <span class="btn-spinner card-loader"></span>
+                                            </div>
+                                        </ng-template>
+                                        <!-- / LOADER VIEW -->
+
+                                        <!-- EMPTY VIEW -->
+                                        <ng-template #emptyBlock>
+
+                                            <nz-empty class="pt-24 pb-24 m-0"
+                                                      [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                                                      [nzNotFoundContent]="contentTpl"
+                                                      [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                                                <ng-template #contentTpl>
+                                                    <h4 class="mt-24">No Data Found</h4>
+                                                    <span>Looks like there's no information to display here</span>
+                                                </ng-template>
+
+                                            </nz-empty>
+
+                                        </ng-template>
+                                        <!-- / EMPTY VIEW -->
+
+                                    </ng-container>
+                                </div>
+                            </div>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateMore">
+
+                            <div class="pl-4 pr-4">
+
+                                <div nz-row [nzGutter]="24">
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                                        <nz-form-item>
+
+                                            <nz-form-label>Account Status</nz-form-label>
+
+                                            <nz-form-control [nzErrorTip]="statusErrorTpl">
+
+                                                <nz-radio-group formControlName="status" nzButtonStyle="solid" class="has-img">
+
+                                                    <label nz-radio-button nzValue="1">
+                                                        <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/switch-on.svg" alt="active icon">
+                                                        <span>Active</span>
+                                                    </label>
+
+                                                    <label nz-radio-button nzValue="0">
+                                                        <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/switch-off.svg" alt="inactive icon">
+                                                        <span>Inactive</span>
+                                                    </label>
+
+                                                    <!-- <label nz-radio-button nzValue="2">
+                                                        <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/wait.svg" alt="waitlist icon">
+                                                        <span>Waitlist</span>
+                                                    </label> -->
+
+                                                </nz-radio-group>
+
+                                                <ng-template #statusErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('required')">Please select an status</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                        <nz-form-item>
+
+                                            <nz-form-label>Nappy Change Required</nz-form-label>
+
+                                            <nz-form-control>
+
+                                                <nz-switch formControlName="nappy" nzCheckedChildren="Yes" nzUnCheckedChildren="No"></nz-switch>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                        <nz-form-item>
+
+                                            <nz-form-label>Bottle Feed Required</nz-form-label>
+
+                                            <nz-form-control>
+
+                                                <nz-switch formControlName="bottle_feed" nzCheckedChildren="Yes" nzUnCheckedChildren="No"></nz-switch>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </nz-tab>
+
+                    </nz-tabset>
+
+                    <div class="text-right pl-4 pr-4 mt-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                        <button nz-button nzType="default" (click)="pre()" [disabled]="current < 1">
+                            <i class="arrow alternate circle left outline icon b-i mr-8"></i>
+                            <span>Previous</span>
+                        </button>
+
+                        <button nz-button nzType="default" (click)="next()" [disabled]="current === 5">
+                            <span>Next</span>
+                            <i class="arrow alternate circle right outline icon b-i ml-8"></i>
+                        </button>
+
+                    </div>
+
+                    <ng-template #titleTemplateBasic>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/custom_icons/child/basic.svg" alt="img">
+                            <span>Basic</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateRoomAndUsers>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/custom_icons/child/house.svg" alt="img">
+                            <span>Room & Parents</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateCultural>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/custom_icons/child/cultural.svg" alt="img">
+                            <span>Cultural Background</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateImage>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/custom_icons/child/picture.svg" alt="img">
+                            <span>Image</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateBusList>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/playground/svg/009-bus.svg" alt="img">
+                            <span>Bus List</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateMore>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/custom_icons/more.svg" alt="img">
+                            <span>More</span>
+                        </div>
+                    </ng-template>
+
+                </form>
+
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

@@ -1,0 +1,18 @@
+@import "src/@fuse/scss/fuse";
+
+#debt {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .content{
+        background-color: white;
+        margin: 0 25px;
+    }
+
+}

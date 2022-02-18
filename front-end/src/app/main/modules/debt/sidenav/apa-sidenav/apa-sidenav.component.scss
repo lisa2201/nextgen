@@ -1,0 +1,20 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+apa-left-sidenav {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background: #fff;
+    overflow: hidden;
+    position: relative;
+
+    .filter-action {
+        border-top: 1px solid $layout-border-color;
+
+        button {
+            width: 50%;
+        }
+    }
+
+}

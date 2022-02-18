@@ -1,0 +1,61 @@
+<div 
+    id="center-pincode" 
+    class="page-layout simple left-sidebar inner-sidebar inner-scroll" 
+    [@fadeInOnEnter] 
+    [@fadeOutOnLeave]>
+  
+    <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+        <div class="content p-24 pt-16">
+
+            <form nz-form name="pincodeForm" [nzLayout]="'vertical'" [formGroup]="pincodeForm" (ngSubmit)="onFormSubmit()">
+
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <div></div>
+                    
+                    <ng-container *hasPermission="['AC1']; belongsTo 'N42'">
+            
+                        <button nz-button class="submit_button" nzType="primary" type="submit" [nzLoading]="buttonLoader">
+                            Update
+                        </button>
+                
+                    </ng-container> 
+
+                </div>
+
+                <div class="px-4">
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                            
+                        <nz-form-item>
+
+                            <nz-form-label>Pincode</nz-form-label><br>
+
+                            <nz-form-control nzHasFeedback [nzErrorTip]="pincodeErrorTpl">
+
+                                <input nz-input formControlName="pincode" placeholder="pincode"
+                                    type="text" nzAllowClear />
+
+                                <ng-template #pincodeErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">Pincode can't
+                                        be
+                                        longer than 20 characters</ng-container>
+                                    <ng-container *ngIf="control.hasError('exists')">Pincode already exists</ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>  
+
+</div>

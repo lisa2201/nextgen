@@ -1,0 +1,35 @@
+
+<!-- HEADER -->
+<div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Manage Users</h1>
+
+</div>
+<!-- / HEADER -->
+
+<!-- CONTENT -->
+<div class="content">
+
+    <!-- SIDEBAR -->
+    <fuse-sidebar class="sidebar" 
+        name="users-filter-sidebar"
+        position="left" 
+        lockedOpen="gt-md">
+    
+        <manage-users-left-sidenav 
+            [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">
+        </manage-users-left-sidenav>
+    
+    </fuse-sidebar>
+    <!-- / SIDEBAR -->
+
+    <!-- CENTER -->
+    <users-owner-list-view class="center p-24 pt-0"
+        fusePerfectScrollbar 
+        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+        (updateTableScroll)="updateScroll()">
+    </users-owner-list-view>
+    <!-- / CENTER -->
+
+</div>
+<!-- / CONTENT -->

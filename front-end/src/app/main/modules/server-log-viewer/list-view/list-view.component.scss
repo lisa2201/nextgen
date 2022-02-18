@@ -1,0 +1,37 @@
+@import "src/@fuse/scss/fuse";
+
+server-log-viewer-list-view {
+
+    .log-table {
+
+        .status-lbl {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 3px 8px 4px;
+            border-radius: 16px;
+            color: #fff;
+
+            &.error {
+                background: #e74c3c;
+            }
+
+            &.info {
+                background: #009ee8;
+            }
+
+            &.debug {
+                background: #607D8B;
+            }
+        }
+
+        .ant-table-tbody {
+            > tr {
+                > td {
+                    border-bottom: none;
+                }
+            }
+        }
+    
+    }
+
+}

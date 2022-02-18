@@ -1,0 +1,147 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0" 
+    fusePerfectScrollbar 
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex [formGroup]="childrenFiltersForm">
+
+        <div class="mb-16">
+
+            <label class="filter-label mb-8">Room</label>
+
+            <nz-form-control>
+
+                <nz-select  
+                    formControlName="room"
+                    nzShowSearch
+                    nzAllowClear
+                    nzPlaceHolder="select a room">
+
+                    <nz-option *ngFor="let item of rooms; trackBy: trackByFn;" nzValue="{{ item.id }}" nzLabel="{{ item.title }}"></nz-option>
+                    
+                </nz-select>
+
+            </nz-form-control>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label mb-8">Parent/Guardian</label>
+
+            <nz-form-control>
+
+                <nz-select  
+                    formControlName="user"
+                    nzShowSearch
+                    nzAllowClear
+                    nzPlaceHolder="select a parent or guardian">
+
+                    <nz-option *ngFor="let item of users; trackBy: trackByFn;" nzValue="{{ item.id }}" nzLabel="{{ item.getFullName() }}"></nz-option>
+                    
+                </nz-select>
+
+            </nz-form-control>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label mb-8">Date of Birth</label>
+
+            <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledDate" formControlName="date_of_birth" nzPlaceHolder="date of birth" class="block"></nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label mb-8">CCS Status</label>
+
+            <nz-form-control>
+
+                <nz-select  
+                    formControlName="ccs_filter"
+                    nzShowSearch
+                    nzAllowClear
+                    nzPlaceHolder="select a status">
+
+                    <nz-option *ngFor="let item of ccsFilters | keyvalue; trackBy: trackByFn;" nzValue="{{ item.key }}" nzLabel="{{ item.value }}"></nz-option>
+                    
+                </nz-select>
+
+            </nz-form-control>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label mb-8">Parent Confirmation Status</label>
+
+            <nz-form-control>
+
+                <nz-select  
+                    formControlName="parent_confirmation_ccs_filter"
+                    nzShowSearch
+                    nzAllowClear
+                    nzPlaceHolder="select a status">
+
+                    <nz-option *ngFor="let item of parentCcsFilters" nzValue="{{ item.key }}" nzLabel="{{ item.value }}"></nz-option>
+                    
+                </nz-select>
+
+            </nz-form-control>
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="filter-label">Status</label>
+
+            <nz-radio-group formControlName="status" [nzDisabled]="childrenFiltersForm.controls['status'].disabled">
+
+                <label nz-radio nzValue="" class="_filter">Active</label>
+                <label nz-radio nzValue="0" class="_filter">Inactive</label>
+                <label nz-radio nzValue="2" class="_filter">Waitlist</label>
+
+            </nz-radio-group>
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="filter-label">Gender</label>
+
+            <nz-radio-group formControlName="gender" [nzDisabled]="childrenFiltersForm.controls['gender'].disabled">
+
+                <label nz-radio nzValue="" class="_filter">All</label>
+                <label nz-radio nzValue="0" class="_filter">Male</label>
+                <label nz-radio nzValue="1" class="_filter">Female</label>
+
+            </nz-radio-group>
+
+        </div>
+    
+    </form>
+
+</div>
+<!-- / SIDEBAR CONTENT -->
+
+<!-- SIDEBAR ACTION -->
+<nz-button-group class="filter-action px-24 py-16">
+
+    <button nz-button 
+        (click)="clearFilter($event)" 
+        [disabled]="checkClearFilter()">Clear</button>
+
+    <button nz-button nzType="primary" 
+        [promiseBtn]="buttonLoader"
+        (click)="submitFilter($event)">Filter</button>
+
+</nz-button-group>
+<!-- / SIDEBAR ACTION -->

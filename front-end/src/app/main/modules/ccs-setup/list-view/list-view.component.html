@@ -1,0 +1,139 @@
+<!-- CONTENT CARD -->
+<div class="content" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+    <!-- CONTENT TOOLBAR -->
+    <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span fxLayout="row" fxLayoutAlign="space-between center" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <button class="text-uppercase blank" nz-button nzType="link" (click)="toggleSidebar('ccs-sidebar')">
+                <i class="filter icon"></i>
+            </button>
+
+            <nz-divider nzType="vertical" class="mr-16"></nz-divider>
+        </span>
+
+        <nz-input-group class="search-container" [nzSuffix]="suffixTemplate" [nzPrefix]="prefixTemplate">
+            <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+        </nz-input-group>
+
+        <ng-template #prefixTemplate>
+            <i nz-icon nzType="search" class="search-icon"></i>
+        </ng-template>
+
+        <ng-template #suffixTemplate>
+            <i class="times circle outline icon ant-input-clear-icon" *ngIf="searchInput.value" [@fadeInOnEnter]
+                [@fadeOutOnLeave] (click)="clearSearch($event)">
+            </i>
+        </ng-template>
+
+        <span>
+            <button class="text-uppercase blank" nz-button nzType="link"
+                (click)="reloadTable()">
+                <i class="sync alternate icon"></i>
+            </button>
+
+        </span>
+
+    </div>
+    <ng-container>
+
+        <nz-table 
+            #headerTable 
+            [nzShowSizeChanger]="pageSizeChanger"
+            [nzShowTotal]="totalTemplate"
+            [nzFrontPagination]="false" 
+            [nzTotal]="total"
+            [(nzPageIndex)]="pageIndex" 
+            [(nzPageSize)]="pageSize" 
+            [nzPageSizeOptions]="pageSizeOptions"
+            (nzPageIndexChange)="onTableChange()" 
+            (nzPageSizeChange)="onTableChange(true)"
+            [nzSimple]="mobilePagination"
+            [nzData]="ccsList" 
+            [nzScroll]="{ y: '240px' }"
+            [nzNoResult]="emptyBlock"
+            [nzLoading]="tableLoading"
+            [nzLoadingIndicator]="indicatorTemplate">
+
+            <thead>
+                <tr>
+                    <th>PRODA Org ID</th>
+                    <th>Person ID</th>
+                    <th>Device Name</th>
+                    <th> Code</th>
+                    <th>Expiry Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-template ngFor let-data [ngForOf]="headerTable.data" [ngForTrackBy]="trackByFn">
+                    <tr>
+                        <td>{{ data.PRODAOrgId }}</td>
+                        <td>{{ data.personId }}</td>
+                        <td>{{ data.deviceName }}</td>
+                        <td>{{ data.activationCode }}</td>
+                        <td>{{ data.keyExpire | date:"dd-MM-yyyy" }}</td>
+                        <td [innerHTML]="data.getExpiredLabel()"></td>
+                        <td>
+
+                            <button mat-button *ngIf = "data.expired == 0">
+                                <i nz-icon [nzType]="'sync'" [nzSpin]="true"></i>
+                            </button>
+                            <ng-container *hasPermission="['AC2']; belongsTo 'N22'">
+                                <button mat-button *ngIf="data.expired == 1" 
+                                    (click)="openRefreshModel(data, $event)" 
+                                    [promiseBtn]="data.isLoading">
+                                    <i nz-icon [nzType]="'sync'" [nzSpin]="false"></i>
+                                </button>
+                            </ng-container>
+                            
+                        </td>
+                    </tr>
+                </ng-template>
+            </tbody>
+        </nz-table>
+
+        <!-- TOTAL LABEL VIEW -->
+        <ng-template #totalTemplate let-range="range" let-total>
+            <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ range[0] }}
+                to
+                {{ range[1] }} of {{ total }} entries</span>
+            <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} -
+                {{ range[1] }} of
+                {{ total }} entries</span>
+        </ng-template>
+        <!-- / TOTAL LABEL VIEW -->
+
+        <!-- LOADER VIEW -->
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span fxLayout="row" fxLayoutAlign="space-between center" fxHide.gt-md [@fadeInOnEnter] [@fadeOutOnLeave]>
+                    <span class="btn-spinner card-loader"></span>
+                </span>
+                <!-- <span class="btn-spinner card-loader"></span> -->
+            </div>
+        </ng-template>
+        <!-- / LOADER VIEW -->
+
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+
+    </ng-container>
+
+</div>
+<!-- / CONTENT CARD -->

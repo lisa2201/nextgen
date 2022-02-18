@@ -1,0 +1,96 @@
+<div class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div id="care_provided_vacancy_wrapper" class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Centre Settings</h1>
+
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
+                    <nz-tab nzTitle="Business Info"></nz-tab>
+                    <nz-tab nzTitle="Business Logo"></nz-tab>
+                </nz-tabset>
+
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24 pt-16" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <nz-tabset class="hide-tab-header" [nzSelectedIndex]="selectedTab">
+
+                    <nz-tab>
+
+                        <ng-template nz-tab>
+
+                            <center-settings-business-info></center-settings-business-info>
+
+                        </ng-template>
+                        
+                    </nz-tab>
+
+                    <nz-tab>
+
+                        <div nz-row>
+                            <div nz-col nzSpan="8"></div>
+                            <div nz-col nzSpan="8"><img width="500" class="images" src="{{ getBranchLogo() }}" alt="assets/images/logos/KMLOGO.png" /></div>
+                            <div nz-col nzSpan="8"></div>
+                        </div>
+                        <div class="pl-4 pr-4">
+                            <s3-upload [uploadCountLimit]="1" [bucket]="s3Bucket"
+                                (uploadedFileListChange)="handleUploadChange($event, 'businessLogo')"
+                                [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                        </div>
+                        
+                    </nz-tab>
+
+                </nz-tabset>
+
+                <!-- <mat-tab-group dynamicHeight="true">
+
+                    <mat-tab label="Business Info">
+                        <ng-template matTabContent>
+                            <center-settings-business-info></center-settings-business-info>
+                        </ng-template>
+                    </mat-tab>
+
+                    <mat-tab label="Business Logo">
+                        <ng-template matTabContent>
+                            <div nz-row>
+                                <div nz-col nzSpan="8"></div>
+                                <div nz-col nzSpan="8"><img width="500" class="images" src="{{ getBranchLogo() }}"
+                                        alt="assets/images/logos/KMLOGO.png" /></div>
+                                <div nz-col nzSpan="8"></div>
+                            </div>
+                            <div class="pl-4 pr-4">
+                                <s3-upload [uploadCountLimit]="1" [bucket]="s3Bucket"
+                                    (uploadedFileListChange)="handleUploadChange($event, 'businessLogo')"
+                                    [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                            </div>
+                        </ng-template>
+                    </mat-tab>
+
+                </mat-tab-group> -->
+            
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

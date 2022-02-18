@@ -1,0 +1,21 @@
+@import "src/@fuse/scss/fuse";
+
+.preview-paragraph-form {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 1100px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+}

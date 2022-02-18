@@ -1,0 +1,225 @@
+<div id="booking-master-roll" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+    
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Manage Master Roll</h1>
+    
+            <ng-container *hasPermission="['AC1']; belongsTo 'N25'">
+    
+                <span fxLayout="row" fxLayoutAlign="center center">
+
+                    <button class="mr-8" fxLayoutAlign="center center" 
+                        nz-button [nzType]="!toggleOccupancyView ? 'default' : 'primary'"
+                        (click)="openOccupancyView($event)"
+                        [disabled]="rooms.length < 1">
+                        <i class="users icon"></i>
+                    </button>
+                    
+                    <nz-radio-group class="mr-8"
+                        [(ngModel)]="bookingListView" 
+                        (ngModelChange)="toggleCalenderView($event)"
+                        nzSize="large">
+                        <label nz-radio-button [nzValue]="false"><i class="calendar alternate outline icon"></i></label>
+                        <label nz-radio-button [nzValue]="true"><i class="list icon"></i></label>
+                    </nz-radio-group>
+
+                    <button class="mr-8" fxLayoutAlign="center center" 
+                        nz-button nzType="default"
+                        (click)="openTimeSheet($event)"
+                        tooltip="Print sign-in sheet" placement="bottom" display-mobile="false" hide-delay="50">
+                        <i class="print icon font-size-14"></i>
+                    </button>
+
+                    <!-- <button class="mr-8" fxLayoutAlign="center center" 
+                        nz-button nzType="default"
+                        [routerLink]="['/manage-master-roll/booking-history']"
+                        tooltip="Booking history" placement="bottom" display-mobile="false" hide-delay="50">
+                        <i class="server icon"></i>
+                    </button> -->
+
+                    <button class="text-uppercase" 
+                        nz-button nzType="primary"
+                        nz-dropdown [nzDropdownMenu]="menu"
+                        [promiseBtn]="buttonLoader"
+                        [disabled]="!hasChildrenSelected">
+                        Action <i class="chevron down icon ml-8"></i>
+                    </button>
+    
+                    <nz-dropdown-menu #menu="nzDropdownMenu">
+                        <ul nz-menu>
+                            <li nz-menu-item nzDisabled><span class="font-weight-600">Bookings</span></li>
+                            <li nz-menu-item (click)="addBooking($event)">
+                                <span class="_icon mr-8"><i class="calendar plus outline icon"></i></span>
+                                <span class="font-weight-600">Add</span>
+                            </li>
+                            <li nz-menu-item (click)="manageBooking($event)">
+                                <span class="_icon mr-8"><i class="edit outline icon"></i></span>
+                                <span class="font-weight-600">Manage</span>
+                            </li>
+                            <ng-container *hasPermission="['AC2']; belongsTo 'N25'">
+                                <li nz-menu-item nzDisabled><span class="font-weight-600">Attendance</span></li>
+                                <li nz-menu-item (click)="updateBatchAttendance($event)">
+                                    <i class="_icon copy outline icon mr-8"></i>
+                                    <span class="font-weight-600">Bulk Update</span>
+                                </li>
+                                <li nz-menu-item (click)="attendanceReport($event)">
+                                    <span class="_icon mr-8"><i class="calendar alternate outline icon"></i></span>
+                                    <span class="font-weight-600">Report</span>
+                                </li>
+                            </ng-container>
+                        </ul>
+                    </nz-dropdown-menu>
+
+                </span>
+
+            </ng-container>
+    
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <div class="help-panel"
+            fxLayout="row" fxLayoutAlign="space-between center"
+            [@animate]="{ value:'*', params:{ delay: '100ms', y:'-15px' } }">
+
+            <div class="booking-summary">
+
+                <ul class="__wrapper">
+                    <li>
+                        <span class="label">
+                            <i class="user circle outline icon mr-4"></i>
+                            Children
+                        </span>
+                        <span class="label highlight">{{ summaryReport?.totalChildren || 0 }}</span>
+                    </li>
+                </ul>
+
+                <ul class="__wrapper">
+                    <li>
+                        <span class="label">
+                            <i class="hourglass half icon mr-4"></i>
+                            Sessions
+                        </span>
+                        <span class="label highlight">{{ summaryReport?.totalSessions || 0 }}</span>
+                    </li>
+                </ul>
+
+                <ul class="__wrapper">
+                    <li>
+                        <span class="label">
+                            <i class="clock half icon mr-4"></i>
+                            Hours
+                        </span>
+                        <span class="label highlight">{{ summaryReport?.totalHours | number: '1.1-1' || 0 }}</span>
+                    </li>
+                </ul>
+
+                <ul class="__wrapper">
+                    <li>
+                        <span class="label">
+                            <i class="money bill alternate icon mr-4"></i>
+                            Fee
+                        </span>
+                        <span class="label highlight">{{ summaryReport?.totalFees | currency: client.currency :'symbol':'1.2-2' || 'N/A' }}</span>
+                    </li>
+                </ul>
+
+            </div>
+
+            <ul class="booking-types">
+                <li *ngFor="let item of bookingTypes; trackBy: trackByFn;">
+                    <i class="color-box circle icon color-code mr-8 {{ item.name | lowercase }}"></i>
+                    <span class="label">{{ item.name }}</span>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="occupancy-summary" 
+            *ngIf="toggleOccupancyView && this.OccupancyList.length > 0"
+            [@fadeMotion]>
+
+            <ul class="line master-view">
+
+                <li class="list-header no-select">
+
+                    <span class="title font-size-13 font-weight-600"></span>
+
+                    <span class="row-view">
+
+                        <span class="row-day" *ngFor="let row of OccupancyList[0]?.summary">
+
+                            <div class="row-day-content font-size-13 font-weight-600">
+                                {{ row.day }}
+                            </div>
+                            
+                        </span>
+
+                    </span>
+
+                </li>
+
+                <li *ngFor="let item of OccupancyList; let i = index; trackBy: trackByFn;">
+
+                    <span class="title">
+
+                        <a *ngIf="item?.room else centreBlock"
+                            (click)="filterByRoom($event, item)" 
+                            [ngClass]="{ 'font-weight-600 disabled' : isOccupancyRoomSelected(item) }">
+                            {{ i }}. {{ getOccupancyRoomLabel(item?.room?.title) }}
+                        </a>
+
+                        <ng-template #centreBlock>
+                            <span class="font-weight-600">Centre</span>
+                        </ng-template>
+
+                    </span>
+
+                    <span class="row-view">
+
+                        <span class="row-day" *ngFor="let row of item?.summary">
+
+                            <div class="row-day-content">
+
+                                <nz-progress nzType="dashboard" nzGapPosition="bottom" 
+                                    [nzFormat]="format"
+                                    [nzStrokeWidth]="8"
+                                    [nzWidth]="80"
+                                    [nzPercent]="item?.room ? row?.weekSummary?.percent : ((row?.weekSummary?.capacity < row?.weekSummary?.bookings ? row?.weekSummary?.capacity : row?.weekSummary?.bookings) / row?.weekSummary?.capacity) * 100"
+                                    [nzStatus]="row?.weekSummary?.capacity < row?.weekSummary?.bookings ? 'exception' : 'active'" 
+                                    [nzStrokeColor]=" row?.weekSummary?.capacity <= row?.weekSummary?.bookings ? '#4caf5099' : '#ff950080'">
+                                </nz-progress>
+
+                                <ng-template #format>
+                                    <span class="font-size-14 font-weight-600">
+                                        {{ row?.weekSummary?.bookings }} of {{ row?.weekSummary?.capacity }}
+                                    </span>
+                                </ng-template>
+
+                            </div>
+
+                        </span>
+                        
+                    </span>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- CONTENT CARD -->
+        <div class="content-card ps"
+            [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <router-outlet></router-outlet>
+    
+        </div>
+        <!-- / CONTENT CARD -->
+        
+    </div>
+
+</div>

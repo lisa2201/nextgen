@@ -1,0 +1,15 @@
+@import "src/@fuse/scss/fuse";
+
+
+app-finance-parent-exclusions-settings {
+
+    .ant-table-content { 
+        min-height: 0 !important;
+        overflow-x: auto !important;
+    }
+
+    .add-button {
+        height: 32px;
+    }
+
+}

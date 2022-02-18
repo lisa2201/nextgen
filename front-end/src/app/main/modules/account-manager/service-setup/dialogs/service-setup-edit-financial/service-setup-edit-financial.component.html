@@ -1,0 +1,161 @@
+<div class="dialog-content-wrapper" fxLayout="column">
+    <mat-toolbar class="mat-accent m-0">
+        <mat-toolbar-row
+            fxFlex
+            fxLayout="row"
+            fxLayoutAlign="space-between center"
+        >
+            <span class="title dialog-title">Edit Service Financial</span>
+
+            <button
+                mat-icon-button
+                disableRipple="true"
+                type="button"
+                (click)="matDialogRef.close()"
+                aria-label="Close dialog"
+            >
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+</div>
+
+<form
+    name="servicesetupForm"
+    class="compose-form"
+    fxLayout="column"
+    fxFlex
+    [formGroup]="servicesetupForm"
+    nz-form
+    (ngSubmit)="onFormSubmit($event)"
+>
+    <div
+        mat-dialog-content
+        class="p-24 pt-16 m-0"
+        fusePerfectScrollbar
+        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+    >
+        <nz-form-item>
+            <nz-form-label nzRequired>Date</nz-form-label>
+
+            <nz-date-picker
+                formControlName="date"
+                [nzMode]="dateMode"
+                [nzInputReadOnly]="true"
+                (nzOnOpenChange)="handleDateOpenChange($event)"
+                (nzOnPanelChange)="handleDatePanelChange($event)"
+            >
+            </nz-date-picker>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label nzRequired>Financial BSB</nz-form-label>
+
+            <nz-form-control
+                nzHasFeedback
+                [nzErrorTip]="financialbsbErrorTpl"
+                class="ant-form-flex"
+            >
+                <input
+                    nz-input
+                    formControlName="BSB"
+                    placeholder="BSB"
+                    type="text"
+                />
+
+                <ng-template #financialbsbErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('required')"
+                        >Please input your financialbsb</ng-container
+                    >
+                    <ng-container *ngIf="control.hasError('pattern')"
+                        >Invalid input financialbsb</ng-container
+                    > 
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label nzRequired>Account Number</nz-form-label>
+
+            <nz-form-control
+                nzHasFeedback
+                [nzErrorTip]="accountnumberErrorTpl"
+                class="ant-form-flex"
+            >
+                <input
+                    nz-input
+                    formControlName="accountNumber"
+                    placeholder="accountNumber"
+                    type="text"
+                />
+
+                <ng-template #accountnumberErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('required')"
+                        >Please input your accountnumber</ng-container
+                    >
+                    <ng-container *ngIf="control.hasError('pattern')"
+                        >Invalid input accountnumber</ng-container
+                    >
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label nzRequired>Account Name</nz-form-label>
+
+            <nz-form-control
+                nzHasFeedback
+                [nzErrorTip]="accountnameErrorTpl"
+                class="ant-form-flex"
+            >
+                <input
+                    nz-input
+                    formControlName="accountName"
+                    placeholder="accountName"
+                    type="text"
+                />
+
+                <ng-template #accountnameErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('required')"
+                        >Please input your accountname</ng-container
+                    >
+                    <ng-container *ngIf="control.hasError('pattern')"
+                        >Invalid input accountname</ng-container
+                    >
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+
+    <div
+        mat-dialog-actions
+        class="m-0 p-16 fm-border-top"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+    >
+        <span class="text-right">
+            <ng-container *ngIf="!editMode">
+                <button
+                    class="text-uppercase mr-8"
+                    *hasPermission="['AC2']; belongsTo: 'N20'"
+                    nz-button
+                    nzType="primary"
+                    [disabled]="!servicesetupForm.valid"
+                    [promiseBtn]="buttonLoading"
+                >
+                    <i class="plus icon mr-8"></i> Save
+                </button>
+            </ng-container>
+
+            <button
+                class="text-uppercase mat-close-btn"
+                type="button"
+                nz-button
+                nzType="danger"
+                (click)="matDialogRef.close()"
+            >
+                Close
+            </button>
+        </span>
+    </div>
+</form>

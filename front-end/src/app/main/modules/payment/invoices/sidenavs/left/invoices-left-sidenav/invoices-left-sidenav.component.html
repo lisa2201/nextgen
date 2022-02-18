@@ -1,0 +1,68 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex [formGroup]="invoiceFiltersForm">
+
+        <div class="mb-16">
+
+            <label class="filter-label">Start Date</label>
+
+            <nz-date-picker class="block" nzPlaceHolder="Start Date" nzSize="small" nzAllowClear="true"
+                formControlName="start_date" [nzInputReadOnly]="true">
+            </nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">End Date</label>
+
+            <nz-date-picker class="block" nzPlaceHolder="End Date" nzSize="small" nzAllowClear="true"
+                formControlName="end_date" [nzDisabled]="invoiceFiltersForm.controls['end_date'].disabled" [nzInputReadOnly]="true">
+            </nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Due Date</label>
+
+            <nz-date-picker class="block" nzPlaceHolder="Due Date" nzSize="small" nzAllowClear="true"
+                formControlName="due_date" [nzInputReadOnly]="true">
+            </nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Invoice Status</label>
+
+            <nz-radio-group formControlName="status" [nzDisabled]="invoiceFiltersForm.controls['status'].disabled">
+
+                <label nz-radio nzValue="0" class="_filter">All</label>
+                <label nz-radio nzValue="1" class="_filter">Failed</label>
+                <label nz-radio nzValue="2" class="_filter">Paid</label>
+                <label nz-radio nzValue="3" class="_filter">Past Due</label>
+                <label nz-radio nzValue="4" class="_filter">Pending</label>
+                <label nz-radio nzValue="5" class="_filter">Scheduled</label>
+                <label nz-radio nzValue="6" class="_filter">Submitted</label>
+                <label nz-radio nzValue="7" class="_filter">Rejected Gateway</label>
+
+            </nz-radio-group>
+
+        </div>
+
+        <button nz-button nzType="default" *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button>
+
+    </form>
+
+
+</div>
+<!-- / SIDEBAR CONTENT -->

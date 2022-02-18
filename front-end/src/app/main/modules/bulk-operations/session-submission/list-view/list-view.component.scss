@@ -1,0 +1,91 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+bulk-session-submission-list-view {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .list-summary {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: inline-flex;
+
+        li {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 8px;
+
+            &:last-of-type {
+                margin: 0;
+            }
+
+            .label {
+                font-size: 14px;
+                font-weight: 600;
+            }
+
+            .highlight {
+                height: 28px;
+                width: 28px;
+                font-size: 13px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                margin-left: 8px;
+                border-radius: 100%;
+                background-color: rgba(255, 149, 0, 0.5);
+
+                &.success {
+                    background-color: rgba(76, 175, 80, 0.6) !important;
+                }
+
+                &.error {
+                    background-color: rgba(231, 76, 60, 0.6) !important;
+                }
+            }
+        }
+    }
+
+    .session-list {
+
+        .ant-list-item {
+            padding-left: 8px;
+            padding-right: 16px;
+
+            .ant-table-content {
+                min-height: auto;
+                margin: 0;
+                overflow: hidden;
+            }
+        
+            .status-check {
+                width: 36px;
+                margin-left: 8px;
+                margin-right: -8px;
+                font-size: 28px;
+                display: flex;
+                align-items: self-end;
+                justify-content: center;
+                min-width: 24px;
+            }
+
+            .rotate {
+                transition: transform .3s ease-in-out, opacity .25s ease-in-out .1s;
+                transform: rotate(180deg);
+            }
+
+            .more-btn {
+                text-decoration: none !important;
+            }
+    
+        }
+    }
+}

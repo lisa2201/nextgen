@@ -1,0 +1,253 @@
+
+    <div class="center">
+
+        <div class="content-card pt-24" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+    
+            <ng-container *ngIf="reportType === 'ATT_UR'">
+    
+                <div class="text-right px-4 mt-8 mb-8" fxLayout="row" fxLayoutAlign="space-between center">
+                    <span></span>
+                    <span class="text-right">
+                        <nz-tag nzColor="blue">Total Records : {{bookingCalendar.length}}</nz-tag>
+                    </span>
+                    <!-- <span class="text-right">
+                        <nz-tag nzColor="blue">Room : {{roomName}}</nz-tag>
+                    </span> -->
+                </div>
+                <!-- <div class="text-right px-4 mt-8 mb-8" fxLayout="row" fxLayoutAlign="space-between center">
+                    <span></span>
+                    <span class="text-right">
+                        <nz-tag nzColor="blue">Room : {{roomName}}</nz-tag>
+                    </span>
+                </div> -->
+    
+                <nz-table 
+                #bookingTable 
+                nzBordered
+                [nzData]="bookingCalendar" 
+                [nzShowPagination]="false" 
+                [nzLoading]="tableLoading"
+                [nzNoResult]="emptyBlockBooking" 
+                [nzLoadingIndicator]="indicatorTemplate" 
+                [nzFrontPagination]="false">
+    
+                <thead>
+                    <tr>
+                        <th colspan="7">Weekly Roll Report [Room: {{roomName}}]</th>
+                    </tr>
+                    <tr>
+                        <th>Child</th>
+                        <th>Age</th>
+                        <th *ngFor="let item of bookingCalendarTitle; trackBy: trackByFn;">{{item.day}}({{item.date}})</th>
+                    </tr>
+                </thead>
+    
+                <tbody>
+    
+                    <ng-template ngFor let-data [ngForOf]="bookingTable.data">
+                        <tr>
+                            <td>{{ data.child.getFullName() || 'N/A'}}</td>
+                            <td>{{ getAge(data.child.age) || 'N/A'}}</td>
+                            <ng-container *ngIf="showSessionTime">
+                                <td *ngFor="let item of data.items; trackBy: trackByFn;">
+                                    <span *ngFor="let booking of item.booking; trackBy: trackByFn;">
+                                        {{ booking?.sessionStart | convertTimeString }} - {{ booking?.sessionEnd | convertTimeString }},
+                                    </span>
+                                </td>
+                            </ng-container>
+                            <ng-container *ngIf="!showSessionTime">
+                                <td *ngFor="let item of data.items; trackBy: trackByFn;">
+                                    <span class="custom-tick" *ngIf="item.booking.length > 0 ; else minusTemp">
+                                            <img src="assets/icons/flat/ui_set/custom_icons/child/tick1.svg" alt="Yes">
+                                    </span>
+                                    <ng-template #minusTemp>
+                                        <span class="custom-tick">
+                                            
+                                        </span>
+                                    </ng-template>
+                                </td>
+                            </ng-container>
+                        </tr>
+                        
+                    </ng-template>
+                    <tr>
+                        <td class="text-bold" colspan="2">
+                            Actual
+                        </td>
+                        <td class="text-bold" *ngFor="let day of bookingCalendarTitle; trackBy: trackByFn;">
+                            {{day.weekSummary.attended}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-bold" colspan="2">
+                            Booked
+                        </td>
+                        <td class="text-bold" *ngFor="let day of bookingCalendarTitle; trackBy: trackByFn;">
+                            {{day.weekSummary.bookings}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-bold" colspan="2">
+                            Capacity [{{roomName}}]
+                        </td>
+                        <td class="text-bold" *ngFor="let day of bookingCalendarTitle; trackBy: trackByFn;">
+                            {{day.weekSummary.capacity}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-bold" colspan="2">
+                            Actual Capacity %
+                        </td>
+                        <td class="text-bold" *ngFor="let day of bookingCalendarTitle; trackBy: trackByFn;">
+                            {{getPer(day.weekSummary.attended, day.weekSummary.bookings,day.weekSummary.capacity, true)|| ''}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-bold" colspan="2">
+                            Booked Capacity %
+                        </td>
+                        <td class="text-bold" *ngFor="let day of bookingCalendarTitle; trackBy: trackByFn;">
+                            {{getPer(day.weekSummary.attended, day.weekSummary.bookings, day.weekSummary.capacity, false)|| ''}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-bold" colspan="2">
+                            Total Actual
+                        </td>
+                        <td class="text-bold" colspan="5">
+                            {{getTotal(true)}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-bold" colspan="2">
+                            Total Booked 
+                        </td>
+                        <td class="text-bold" colspan="5">
+                            {{getTotal(false)}}
+                        </td>
+                    </tr>
+
+                    <!-- <tr>
+                        <td class="text-bold" colspan="2">
+                            Average Actual 
+                        </td>
+                        <td class="text-bold" colspan="5">
+                            {{getTotal(true)/5}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-bold" colspan="2">
+                            Average Booked 
+                        </td>
+                        <td class="text-bold" colspan="5">
+                            {{getTotal(false)/5}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-bold" colspan="2">
+                            Average Capacity (Actual) %  
+                        </td>
+                        <td class="text-bold" colspan="5">
+                            {{getTotal(true)/5*100 }}%
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-bold" colspan="2">
+                            Average Capacity (Booked) % 
+                        </td>
+                        <td class="text-bold" colspan="5">
+                            {{getTotal(false)/5*100}}%
+                        </td>
+                    </tr> -->
+                    
+                    <tr>
+                        <td class="text-bold" colspan="2">
+                            Total Children
+                        </td>
+                        <td class="text-bold" colspan="5">
+                            {{bookingCalendar.length}}
+                        </td>
+                    </tr>
+                    
+                </tbody>
+    
+            </nz-table>
+
+            <ng-template #emptyBlockBooking>
+    
+                <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                    [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+    
+                    <ng-template #contentTpl>
+                        <h4 class="mt-24">No Data Found</h4>
+                        <span>Looks like there's no information to display here</span>
+                    </ng-template>
+    
+                </nz-empty>
+    
+            </ng-template>
+    
+            </ng-container>
+
+            <ng-container *ngIf="reportType !== 'ATT_UR'">
+                <div class="text-right px-4 mt-8 mb-8" fxLayout="row" fxLayoutAlign="space-between center">
+                    <span>
+        
+                    </span>
+                    <span class="text-right" *ngIf="totalRecords">
+                        <nz-tag [nzColor]="'cyan'">Total Records : {{totalRecords}}</nz-tag>
+                    </span>
+                </div>
+                <nz-table #reportTable [nzData]="reportList" [nzShowPagination]="false" [nzLoading]="tableLoading"
+                    [nzNoResult]="emptyBlock" [nzLoadingIndicator]="indicatorTemplate" [nzFrontPagination]="false">
+        
+                    <thead>
+                        <tr>
+                            <th *ngFor="let item of field">{{item['name']}}</th>
+                        </tr>
+                    </thead>
+        
+                    <tbody>
+                        <ng-template ngFor let-data [ngForOf]="reportTable.data">
+                            <tr>
+                                <td *ngFor="let item of field">{{data.getValue(item['res']) || 'N/A'}}</td>
+        
+                            </tr>
+                        </ng-template>
+                    </tbody>
+        
+                </nz-table>
+
+                
+            <ng-template #emptyBlock>
+    
+                <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                    [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+    
+                    <ng-template #contentTpl>
+                        <h4 class="mt-24">No Data Found</h4>
+                        <span>Looks like there's no information to display here</span>
+                    </ng-template>
+    
+                </nz-empty>
+    
+            </ng-template>
+            </ng-container>
+    
+            <ng-template #indicatorTemplate>
+                <div class="is-loading">
+                    <span class="btn-spinner card-loader"></span>
+                </div>
+            </ng-template>
+
+        </div>
+    </div>

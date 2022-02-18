@@ -1,0 +1,66 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+widget-booking-utilisation {
+  
+    .go-back-link{
+        padding-left: 8px;
+    }
+
+    #calander-date{
+        font-size: 14px;
+    }
+
+    #week_picker{
+        padding-right: 20px;
+        text-align: right;
+        margin-bottom: 0;
+        padding-right: 3px;
+
+        .week_text{
+            padding-bottom: 5px;
+            padding-right: 6px;
+            font-size: 20px;
+            font-weight: normal;
+        }
+
+        .date-input-wrapper {
+            position: relative;
+            cursor: grab;
+
+            #calander-img{
+                opacity: 0.7;
+                width: 30px;
+            }
+
+            .date-input {
+                position: absolute;
+                z-index: 1;
+                visibility: hidden;
+                width: calc(100% + 40px);
+                left: -20px;
+
+                @media screen and (max-width: 599px) {
+                    width: calc(100% + 72px);
+                    left: -40px;
+                }
+
+            }
+            
+            .ant-calendar-picker {
+                display: block;
+            }
+
+        }
+    }
+
+    .chart-legend .legend-title{
+        @include media-breakpoint('xs'){
+            font-size: 10px!important;
+        }
+    }
+
+    .tooltip{
+        font-size: 12px!important;
+    }
+}

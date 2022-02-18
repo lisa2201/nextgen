@@ -1,0 +1,21 @@
+@import "src/@fuse/scss/fuse";
+.new-or-edit-bond-payment{
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 640px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+}

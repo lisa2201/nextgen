@@ -1,0 +1,25 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.return-fee-reduction-cancel-dialog {
+  @include media-breakpoint("xs") {
+    width: 100%;
+  }
+
+  @include media-breakpoint("gt-xs") {
+    width: 640px;
+  }
+
+  .mat-dialog-container {
+    padding: 0;
+  }
+
+  .dialog-content-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  nz-alert {
+    margin: 0 25px 5px 25px;
+  }
+}

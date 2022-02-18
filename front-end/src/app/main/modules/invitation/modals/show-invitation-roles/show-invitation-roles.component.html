@@ -1,0 +1,21 @@
+<nz-table #branchRoles 
+    [nzSize]="'small'"
+    [nzBordered]="false"
+    [nzShowPagination]="false"
+    [nzData]="list">
+
+    <thead>
+        <tr>
+            <th *ngIf="!invitation.isOwner">Branch</th>
+            <th>Assign Roles</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let data of branchRoles.data">
+            <td *ngIf="!invitation.isOwner">{{ data.branch }}</td>
+            <td>{{ data.roles.join(', ') }}</td>
+        </tr>
+    </tbody>
+
+</nz-table>

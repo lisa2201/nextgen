@@ -1,0 +1,140 @@
+<div class="dialog-content-wrapper" fxLayout="column">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }} <span *ngIf="editMode"> - {{ paymentProvider?.branch?.name | titlecase}}</span></span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form nz-form name="paymentProviderForm" [nzLayout]="'vertical'" [formGroup]="paymentProviderForm" fxLayout="column" (ngSubmit)="onSubmit()" novalidate>
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" *ngIf="!editMode">
+
+                    <nz-form-item>
+    
+    
+                        <nz-form-label nzRequired>Select Branch</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="branchErrorTpl">
+    
+    
+                            <nz-select formControlName="branch" nzShowSearch nzPlaceHolder="Select Branch" [nzAllowClear]="false">
+    
+                                <nz-option *ngFor="let branch of branchList" nzValue="{{ branch.id }}"
+                                    nzLabel="{{ branch.name }}">
+                                </nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #branchErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select branch</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+    
+    
+                        <nz-form-label nzRequired>Select Provider</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="providerErrorTpl">
+    
+    
+                            <nz-select formControlName="provider" [nzDisabled]="!editMode && !paymentProviderForm.get('branch').value" nzShowSearch nzPlaceHolder="Select Provider" [nzAllowClear]="false">
+    
+                                <nz-option *ngFor="let provider of providerList" nzValue="{{ provider.type }}"
+                                    nzLabel="{{ provider.display_name }}">
+                                </nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #providerErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select provider</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" *ngFor="let configControl of configArray.controls; index as i">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>{{ configArrayItems[i]['description'] }}</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback>
+    
+                            <input nz-input [formControl]="configArray.controls[i]" [placeholder]="configArrayItems[i]['description']" type="text" />
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Status</nz-form-label>
+
+                        <nz-form-control>
+
+                            <nz-switch formControlName="status" nzCheckedChildren="Active" nzUnCheckedChildren="Inactive"></nz-switch>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+                <button class="text-uppercase mr-8" type="submit" *hasPermission="['AC1']; belongsTo 'N15'" nz-button
+                    nzType="primary" [disabled]="paymentProviderForm.invalid" [promiseBtn]="buttonLoading">
+                    <i class="plus icon mr-8"></i> Save
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

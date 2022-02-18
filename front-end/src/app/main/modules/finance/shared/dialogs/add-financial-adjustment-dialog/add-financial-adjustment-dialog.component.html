@@ -1,0 +1,288 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Add Financial Adjustment</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="adjustmentForm" fxLayout="column" fxFlex [nzLayout]="'vertical'"
+        [formGroup]="adjustmentForm" nz-form (ngSubmit)="onSubmit()">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" *ngIf="!singleParentMode">
+
+                    <nz-form-item>
+    
+                        <div fxLayout="row" fxLayoutAlign="space-between center">
+                        
+                            <nz-form-label nzRequired fxFlex="60">Rooms</nz-form-label>
+                        
+                            <div fxFlex="40" fxLayoutAlign="end center" class="select-actions">
+                                <button nz-button nzType="link" class="pr-4 pl-0" [disabled]="loadingChildren"
+                                    (click)="toggleSelectAllRooms(true)">Select All</button>
+                                <span>|</span>
+                                <button nz-button nzType="link" class="pl-4 pr-0" [disabled]="loadingChildren"
+                                    (click)="toggleSelectAllRooms(false)">Select None</button>
+                            </div>
+                        
+                        </div>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="roomsErrorTpl">
+    
+    
+                            <nz-select formControlName="rooms" nzMode="multiple" nzShowSearch nzPlaceHolder="Select Rooms"
+                                [nzAllowClear]="true">
+    
+                                <nz-option *ngFor="let room of rooms" nzValue="{{ room.id }}" nzLabel="{{ room.title }}">
+                                </nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #roomsErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select atleast 1 room
+                                </ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" fxFlex fxLayoutAlign="start center">
+
+                    <nz-form-item>
+
+                        <nz-form-control>
+
+                            <label [nzDisabled]="!singleParentMode ? (adjustmentForm.get('rooms').value ? false : true) : false" nz-checkbox formControlName="inactive_children">
+                                Load Inactive Children
+                            </label>
+
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+    
+                        <div fxLayout="row" fxLayoutAlign="space-between center">
+    
+                            <nz-form-label nzRequired fxFlex="60">Children</nz-form-label>
+    
+                            <div fxFlex="40" fxLayoutAlign="end center" class="select-actions">
+                                <button nz-button nzType="link" class="pr-4 pl-0" [disabled]="children.length === 0" (click)="toggleSelectAllChildren(true)">Select All</button>
+                                <span>|</span>
+                                <button nz-button nzType="link" class="pl-4 pr-0" [disabled]="children.length === 0" (click)="toggleSelectAllChildren(false)">Select None</button>
+                            </div>
+    
+                        </div>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="childrenErrorTpl">
+    
+                            <nz-select 
+                                [nzMaxTagCount]="2" 
+                                [nzMaxTagPlaceholder]="tagPlaceHolder" 
+                                [nzLoading]="loadingChildren" 
+                                nzShowSearch 
+                                [nzAllowClear]="true"
+                                [nzDisabled]="children.length === 0" 
+                                formControlName="children" 
+                                nzMode="multiple"
+                                nzPlaceHolder="Select Children">
+    
+                                <nz-option *ngFor="let child of children" nzValue="{{ child.id }}"
+                                    nzLabel="{{ child.getFullName() }}">
+                                </nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #tagPlaceHolder let-selectedList> and {{ adjustmentForm.get('children').value.length - 2 }} more selected </ng-template>
+    
+                            <ng-template #childrenErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select atleast 1 child
+                                </ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Type of Adjustment</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="typeErrorTpl">
+    
+                            <nz-select formControlName="type" nzPlaceHolder="Adjustment Type">
+    
+                                <nz-option nzValue="credit" nzLabel="Credit"></nz-option>
+                                <nz-option nzValue="debit" nzLabel="Debit"></nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #typeErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select type of adjustment
+                                </ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Adjustment Item</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="itemErrorTpl">
+    
+                            <nz-select formControlName="item" nzPlaceHolder="Select Items">
+    
+                                <nz-option *ngFor="let item of items" nzValue="{{ item.id }}" nzLabel="{{ item.name }}">
+                                </nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #itemErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please an adjustment item</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Date</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="dateErrorTpl">
+    
+                            <nz-date-picker [nzInputReadOnly]="true" nzAllowClear="false" formControlName="date" nzPlaceHolder="Date" class="block"></nz-date-picker>
+    
+                            <ng-template #dateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input date</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" fxFlex fxLayoutAlign="start center">
+
+                    <nz-form-item class="m-0">
+
+                        <nz-form-control>
+
+                            <label [nzDisabled]="adjustmentForm.get('scheduled').disabled" nz-checkbox formControlName="scheduled">
+                                Scheduled Adjustment
+
+                                <i nz-tooltip nzTooltipTitle="If this is checked, the adjustment will be scheduled to process on the selected date, otherwise adjustment will be processed today with the date set to selected date." class="question circle outline right icon ml-8 primary-color schedule-help"></i>
+                            </label>
+
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" class="mt-4 mb-20" *ngIf="showInfoAlert">
+
+                    <nz-alert nzType="info" nzMessage="The transaction date will be today's date with the adjustment date set to the date selected." nzShowIcon></nz-alert>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Amount</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="amountErrorTpl">
+    
+                            <input nz-input formControlName="amount" placeholder="Amount" type="number" />
+    
+                            <ng-template #amountErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input amount</ng-container>
+                                <ng-container *ngIf="control.hasError('min')">Please input valid amount</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label>Comments</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback>
+    
+                            <input nz-input formControlName="comments" placeholder="Comments" type="text" />
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+                <!-- [disabled]="!adjustmentForm.valid" -->
+                <button class="text-uppercase mr-8" type="submit" *hasPermission="['AC1']; belongsTo 'N27'" nz-button
+                    nzType="primary"  [promiseBtn]="buttonLoading" [disabled]="!adjustmentForm.valid">
+                    <i class="plus icon mr-8"></i> Save
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

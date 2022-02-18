@@ -1,0 +1,321 @@
+<div class="dialog-content-wrapper ps">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">
+                {{ dialogTitle }}
+            </span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="bookingForm" class="compose-form" 
+        fxLayout="column" fxFlex 
+        [formGroup]="bookingForm" 
+        nz-form [nzLayout]="'vertical'">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24" *ngIf="!preview" [@fadeInOnEnter]>
+                
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Type</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="typeError">
+
+                            <nz-select  
+                                formControlName="type"
+                                nzPlaceHolder="select a type">
+        
+                                <nz-option *ngFor="let item of batchTypeOptions; trackBy: trackByFn;" nzValue="{{ item.value }}" nzLabel="{{ item.name }}"></nz-option>
+                                
+                            </nz-select>
+        
+                            <ng-template #typeError let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select an option</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12" 
+                    *ngIf="bookingForm.get('type').value === '0'" [@fadeInOnEnter]>
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Date</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="dateError">
+
+                            <nz-date-picker class="block"
+                                formControlName="date" 
+                                [nzInputReadOnly]="true"
+                                nzPlaceHolder="select date"></nz-date-picker>
+        
+                            <ng-template #dateError let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a date</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12"
+                    *ngIf="bookingForm.get('type').value === '1'" [@fadeInOnEnter]>
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Week</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="weekError">
+
+                            <nz-week-picker class="block"
+                                formControlName="week"
+                                [nzFormat]="'ww of yyyy'"
+                                nzPlaceHolder="select date"
+                                [nzInputReadOnly]="true"></nz-week-picker>
+        
+                            <ng-template #weekError let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a week</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12"
+                    *ngIf="bookingForm.get('type').value === '2'" [@fadeInOnEnter]>
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Custom Selection</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="customSelectionError">
+
+                            <nz-range-picker 
+                                formControlName="range"
+                                [nzRanges]="dateRanges"></nz-range-picker>
+    
+                            <ng-template #customSelectionError let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select date/dates</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Selected Children</nz-form-label>
+
+                        <ul class="child-list" fxLayout="row" fxLayoutAlign="center center">
+
+                            <li *ngFor="let item of children">{{ item.getFullName() }}</li>
+
+                        </ul>
+
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+            <div *ngIf="preview" [@fadeInOnEnter]>
+
+                <p class="mb-8 text-center">
+
+                    <span [ngSwitch]="bookingForm.get('type').value">
+
+                        <ng-container *ngSwitchCase="'0'">
+                            Selected Date <span class="font-weight-600">{{ getPreviewLabel().start }}</span>
+                        </ng-container>
+
+                        <ng-container *ngSwitchCase="'1'">
+                            Selected Week <span class="font-weight-600">{{ getPreviewLabel().start }}</span> to <span class="font-weight-600">{{ getPreviewLabel().end }}</span>
+                        </ng-container>
+
+                        <ng-container *ngSwitchDefault>
+                            Selected Date Range <span class="font-weight-600">{{ getPreviewLabel().start }}</span> to <span class="font-weight-600">{{ getPreviewLabel().end }}</span>
+                        </ng-container>
+
+                    </span>
+
+                </p>
+
+                <nz-form-item>
+
+                    <nz-form-control
+                        [nzValidateStatus]="previewBookingSlotErrorStatus"
+                        [nzErrorTip]="previewBookingSelectionErrorTpl">
+
+                        <nz-table class="mt-4"
+                            [nzScroll]="{ x: '1180px' }"
+                            [nzData]="previewData"
+                            [nzShowPagination]="false"
+                            [nzSize]="'small'">
+
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Child</th>
+                                    <th>Sign In User</th>
+                                    <th>Sign In Time</th>
+                                    <th>Sign In Notes</th>
+                                    <th>Sign In Signature</th>
+                                    <th>Sign Out User</th>
+                                    <th>Sign Out Time</th>
+                                    <th>Sign Out Notes</th>
+                                    <th>Sign Out Signature</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+                                <tr *ngFor="let data of previewData | orderBy: ['date', 'child.firstName']; trackBy: trackByFn">
+
+                                    <td>{{ data.date }}</td>
+                                    <td>{{ data.child.getShortName() }}</td>
+                                    <td>{{ (data.type === '1')? 'Absent': ((data.checkInParent) ? (data.checkInParent.getFullName()) : ((data.checkInUser)? (data.checkInUser.getFullName()) : 'N/A')) }}</td>
+                                    <td>{{ (data.type === '1')? 'Absent': ((data.parentCheckInTime) ? (data.parentCheckInTime | convertTimeString) : ((data.checkInTime)? (data.checkInTime | convertTimeString) : 'N/A')) }}</td>
+                                    <td>{{ (data.type === '1')? 'Absent': (data.checkInNote || 'N/A') }}</td>
+                                   
+                                    <td *ngIf="data.type === '1'">
+                                        Absent                                     
+                                    </td>
+                                    <td *ngIf="data.type !== '1'">
+                                        <img *ngIf="data.checkInSignature else noImage" [src]="getBase64Image(data.checkInSignature)" alt="check in signature" class="sign-img">                                        
+                                    </td>
+                                    <td>{{ (data.type === '1')? 'Absent': ((data.checkOutParent) ? (data.checkOutParent.getFullName()) : ((data.checkOutUser)? (data.checkOutUser.getFullName()) : 'N/A')) }}</td>
+                                    <td>{{ (data.type === '1')? 'Absent': ((data.parentCheckOutTime)? (data.parentCheckOutTime | convertTimeString) : ((data.checkOutTime) ? (data.checkOutTime | convertTimeString) : 'N/A')) }}</td>
+                                    <td>{{ (data.type === '1')? 'Absent': (data.checkOutNote || 'N/A') }}</td>
+                                    
+                                    <td *ngIf="data.type === '1'">
+                                        Absent                                     
+                                    </td>
+                                    <td *ngIf="data.type !== '1'">
+                                        <img *ngIf="data.checkOutSignature else noImage" [src]="getBase64Image(data.checkOutSignature)" alt="check out signature" class="sign-img">
+                                    </td>
+                                </tr>
+                            </tbody>
+                                                
+                        </nz-table>
+
+                        <ng-template #previewBookingSelectionErrorTpl let-control>
+                            <ng-container>Please select at least one option</ng-container>
+                        </ng-template>
+
+                        <ng-template #noImage>N/A</ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span>
+
+                <ng-container *ngIf="preview">
+
+                    <button class="text-uppercase mr-8" 
+                        type="button"
+                        nz-button 
+                        nzType="default"
+                        (click)="closePreview($event)">
+                        <i class="long arrow alternate left icon mr-8"></i> Back
+                    </button>
+
+                </ng-container>
+
+            </span>
+
+            <span class="text-right">
+
+                <ng-container *ngIf="!preview">
+
+                    <button class="text-uppercase mr-8"
+                        *hasPermission="['AC1']; belongsTo 'N25'"
+                        type="button"
+                        nz-button 
+                        nzType="primary" 
+                        (click)="previewSlots($event)"
+                        [disabled]="!bookingForm.valid"
+                        [promiseBtn]="buttonLoader">
+                        Preview <i class="long arrow alternate right icon ml-8"></i>
+                    </button>
+
+                </ng-container>
+                
+                <ng-container *ngIf="preview">
+
+                    <button class="text-uppercase mr-8"
+                        *hasPermission="['AC1']; belongsTo 'N25'"
+                        nz-button nzType="primary" 
+                        nz-button nz-dropdown [nzDropdownMenu]="menu"
+                        [disabled]="!bookingForm.valid"
+                        [promiseBtn]="buttonLoader">
+                        Action <i class="chevron down icon ml-8"></i>
+                    </button>
+
+                    <nz-dropdown-menu #menu="nzDropdownMenu">
+                        <ul nz-menu>
+                            <li nz-menu-item (click)="print($event, 'download')">
+                                <span class="_icon mr-8"><i class="download icon"></i></span>
+                                <span class="font-weight-600">Download</span>
+                            </li>
+                            <li nz-menu-item (click)="print($event, 'open')">
+                                <span class="_icon mr-8"><i class="print icon"></i></span>
+                                <span class="font-weight-600">Print</span>
+                            </li>
+                        </ul>
+                    </nz-dropdown-menu>
+
+                </ng-container>
+                
+                <button class="text-uppercase mr-8" 
+                    type="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+    
+                <button class="text-uppercase mat-close-btn" 
+                    type="button"
+                    nz-button 
+                    nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

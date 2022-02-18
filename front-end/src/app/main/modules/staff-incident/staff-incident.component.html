@@ -1,0 +1,37 @@
+<div class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Staff Incident Forms</h1>
+
+        <ng-container *hasPermission="['AC1']; belongsTo 'N71'" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <button nz-button
+                nzType="primary"
+                class="text-uppercase" 
+                [nzDropdownMenu]="menu"
+                [promiseBtn]="buttonLoader"
+                (click)="addForm($event)">
+                Create Form
+            </button>
+
+        </ng-container>
+
+    </div>
+
+    <div class="content">
+
+        <fuse-sidebar class="sidebar" name="table-sidebar" position="left">        
+            <app-sidenav [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">    
+            </app-sidenav>  
+        </fuse-sidebar>
+    
+        <staff-incident-list-view 
+            class="center p-24 pt-0" 
+            fusePerfectScrollbar 
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+        </staff-incident-list-view>
+
+    </div>
+
+</div>

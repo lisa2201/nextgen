@@ -1,0 +1,442 @@
+<div class="dialog-content-wrapper" fxLayout="column">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Create Payment Method</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form nz-form name="paymentForm" fxLayout="column" [nzLayout]="'vertical'" [formGroup]="paymentForm" (ngSubmit)="onSubmit()" novalidate>
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <nz-divider nzText="Billing Contact Details"></nz-divider>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+                
+                        <nz-form-control>
+                
+                            <label nz-checkbox formControlName="orgContact">
+                                <span>Use organisation contact details</span>
+                            </label>
+                
+                        </nz-form-control>
+                
+                    </nz-form-item>
+
+                </div>
+            
+                <ng-container formGroupName="contactDetails">
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                        <nz-form-item>
+            
+                            <nz-form-label [nzRequired]="paymentForm.get('contactDetails.firstName').enabled">First Name
+                            </nz-form-label>
+            
+                            <nz-form-control nzHasFeedback [nzErrorTip]="fnameErrorTpl">
+            
+                                <input nz-input formControlName="firstName" placeholder="First Name" type="text" />
+            
+                                <ng-template #fnameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your first name
+                                    </ng-container>
+                                </ng-template>
+            
+                            </nz-form-control>
+            
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                        <nz-form-item>
+            
+                            <nz-form-label [nzRequired]="paymentForm.get('contactDetails.lastName').enabled">Last Name
+                            </nz-form-label>
+            
+                            <nz-form-control nzHasFeedback [nzErrorTip]="lnameErrorTpl">
+            
+                                <input nz-input formControlName="lastName" placeholder="Last Name" type="text" />
+            
+                                <ng-template #lnameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your last name
+                                    </ng-container>
+                                </ng-template>
+            
+                            </nz-form-control>
+            
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                        <nz-form-item>
+                
+                            <nz-form-label [nzRequired]="paymentForm.get('contactDetails.address1').enabled">Address Line 1
+                            </nz-form-label>
+                
+                            <nz-form-control nzHasFeedback [nzErrorTip]="address1ErrorTpl">
+                
+                                <input nz-input formControlName="address1" placeholder="Street address, P.O box, C/O" type="text" />
+                
+                                <ng-template #address1ErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your address
+                                    </ng-container>
+                                </ng-template>
+                
+                            </nz-form-control>
+                
+                        </nz-form-item>
+
+                    </div>
+            
+            
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                        <nz-form-item>
+                
+                            <nz-form-label>Address Line 2</nz-form-label>
+                
+                            <nz-form-control nzHasFeedback>
+                
+                                <input nz-input formControlName="address2" placeholder="Apartment, Suite, Unit, Building, Floor, Etc"
+                                    type="text" />
+                
+                            </nz-form-control>
+                
+                        </nz-form-item>
+            
+                        
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+            
+                        <nz-form-item>
+            
+                            <nz-form-label [nzRequired]="paymentForm.get('contactDetails.city').enabled">City
+                            </nz-form-label>
+            
+                            <nz-form-control nzHasFeedback [nzErrorTip]="cityErrorTpl">
+            
+                                <input nz-input formControlName="city" placeholder="City" type="text" />
+            
+                                <ng-template #cityErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your city
+                                    </ng-container>
+                                </ng-template>
+            
+                            </nz-form-control>
+            
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                        <nz-form-item>
+            
+                            <nz-form-label [nzRequired]="paymentForm.get('contactDetails.zip').enabled">State
+                            </nz-form-label>
+            
+                            <nz-form-control nzHasFeedback [nzErrorTip]="stateErrorTpl">
+            
+                                <input nz-input formControlName="state" placeholder="State" type="text" />
+            
+                                <ng-template #stateErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your state name
+                                    </ng-container>
+                                </ng-template>
+            
+                            </nz-form-control>
+            
+                        </nz-form-item>
+
+                    </div>
+            
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                        <nz-form-item>
+            
+                            <nz-form-label [nzRequired]="paymentForm.get('contactDetails.zip').enabled">Postal Code
+                            </nz-form-label>
+            
+                            <nz-form-control nzHasFeedback [nzErrorTip]="zipErrorTpl">
+            
+                                <input nz-input formControlName="zip" placeholder="Zip Code" type="text" />
+            
+                                <ng-template #zipErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your zip code
+                                    </ng-container>
+                                </ng-template>
+            
+                            </nz-form-control>
+            
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                        <nz-form-item>
+            
+                            <nz-form-label [nzRequired]="paymentForm.get('contactDetails.country').enabled">Country
+                            </nz-form-label>
+            
+                            <nz-form-control nzHasFeedback [nzErrorTip]="countryErrorTpl">
+            
+                                <nz-select formControlName="country" nzAllowClear nzShowSearch nzPlaceHolder="Select a country">
+            
+                                    <nz-option *ngFor="let item of countries" nzValue="{{ item.code }}"
+                                        nzLabel="{{ item.name }}">
+                                    </nz-option>
+            
+                                </nz-select>
+            
+                                <ng-template #countryErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your country
+                                    </ng-container>
+                                </ng-template>
+            
+                            </nz-form-control>
+            
+                        </nz-form-item>
+
+                    </div>
+            
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                        <nz-form-item>
+                
+                            <nz-form-label [nzRequired]="paymentForm.get('contactDetails.phone').enabled">Phone
+                            </nz-form-label>
+                
+                            <nz-form-control nzHasFeedback [nzErrorTip]="phoneErrorTpl">
+                
+                                <input nz-input formControlName="phone" placeholder="Phone" type="number" />
+                
+                                <ng-template #phoneErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your phone number
+                                    </ng-container>
+                                </ng-template>
+                
+                            </nz-form-control>
+                
+                        </nz-form-item>
+
+                    </div>
+            
+                </ng-container>
+            
+                <ng-container formGroupName="paymentDetails">
+            
+                    <nz-divider nzText="Payment Details"></nz-divider>
+            
+                    <ng-container formGroupName="stripeDetails" *ngIf="stripe">
+            
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                            <nz-form-item>
+            
+                                <nz-form-label nzRequired>Name on card</nz-form-label>
+            
+                                <nz-form-control nzHasFeedback [nzErrorTip]="cardNameErrorTpl">
+            
+                                    <input nz-input formControlName="cardName" placeholder="Name" type="text" />
+            
+                                    <ng-template #cardNameErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please input your name on
+                                            card
+                                        </ng-container>
+                                    </ng-template>
+            
+                                </nz-form-control>
+            
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                            <nz-form-item>
+            
+                                <nz-form-label nzRequired>Card Number</nz-form-label>
+            
+                                <nz-form-control [nzErrorTip]="cardNumberErrorTpl">
+            
+                                    <input nz-input formControlName="cardNumber" placeholder="Card Number" type="tel" ccNumber />
+            
+                                    <ng-template #cardNumberErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please input your card number
+                                        </ng-container>
+                                        <ng-container *ngIf="!control.hasError('required') && control.hasError('ccNumber')">Please
+                                            input a valid card number
+                                        </ng-container>
+                                    </ng-template>
+            
+                                </nz-form-control>
+            
+                            </nz-form-item>
+                            
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                            <nz-form-item>
+            
+                                <nz-form-label nzRequired>Expiry Date</nz-form-label>
+            
+                                <nz-form-control nzHasFeedback [nzErrorTip]="cardExpiryErrorTpl">
+            
+                                    <input nz-input formControlName="cardExpiry" placeholder="MM/YYYY" type="tel" ccExp />
+            
+                                    <ng-template #cardExpiryErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please input your card expiry
+                                            date
+                                        </ng-container>
+                                        <ng-container *ngIf="!control.hasError('required') && control.hasError('expDate')">Please
+                                            input a valid expiry date
+                                        </ng-container>
+                                    </ng-template>
+            
+                                </nz-form-control>
+            
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                            <nz-form-item>
+            
+                                <nz-form-label nzRequired>CVC</nz-form-label>
+            
+                                <nz-form-control nzHasFeedback [nzErrorTip]="cardCvcErrorTpl">
+            
+                                    <input nz-input formControlName="cardCvc" placeholder="Card Number" type="password" ccCVC
+                                        minlength="3" maxlength="4" />
+            
+                                    <ng-template #cardCvcErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please input your card cvc
+                                        </ng-container>
+                                        <ng-container *ngIf="!control.hasError('required') && control.hasError('minlength')">
+                                            Please input a valid cvc number
+                                        </ng-container>
+                                        <ng-container *ngIf="!control.hasError('required') && control.hasError('maxlength')">
+                                            Please input a valid cvc number
+                                        </ng-container>
+                                    </ng-template>
+            
+                                </nz-form-control>
+            
+                            </nz-form-item>
+
+                        </div>
+            
+                    </ng-container>
+            
+                    <ng-container formGroupName="ezidebitDetails" *ngIf="!stripe">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                            <nz-radio-group (ngModelChange)="onRadioChange($event)" formControlName="ezidebitMode">
+                                <label nz-radio [ngStyle]="radioStyle" nzValue="0">I am new to Ezidebit eDDR
+                                    registration</label>
+                                <label nz-radio [ngStyle]="radioStyle" nzValue="1">I have already filled the eDDR
+                                    form</label>
+                            </nz-radio-group>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                            <div *ngIf="newEzidebit" class="ezidebit-instruction mt-12 mb-12" [@expandCollapse]>
+                
+                                <p>Please fill the Ezidebit Direct Debit Request (eDDR) form by clicking the link below.</p>
+                
+                                <div fxLayout="row" fxLayoutAlign="center center">
+                                    <button nz-button nzType="primary" type="button" (click)="goToEddrForm()">Go to
+                                        form</button>
+                                </div>
+                
+                                <div fxLayout="row" fxLayoutAlign="center center" class="mt-12">
+                                    <nz-form-item>
+                                        <nz-form-control>
+                                            <label nz-checkbox formControlName="ezidebitAgree">I have filled the eDDR
+                                                Form.</label>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                
+                            </div>
+
+                        </div>
+            
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                            <nz-form-item class="mt-12" *ngIf="!newEzidebit" [@expandCollapse]>
+                
+                                <nz-form-label nzRequired>Ezidebit Reference Number</nz-form-label>
+                
+                                <nz-form-control nzHasFeedback [nzErrorTip]="ezidebitRefErrorTpl">
+                
+                                    <input nz-input formControlName="ezidebitRef" placeholder="..." type="text" />
+                
+                                    <ng-template #ezidebitRefErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please input the ezidebit
+                                            reference number
+                                        </ng-container>
+                                    </ng-template>
+                
+                                </nz-form-control>
+                
+                            </nz-form-item>
+                            
+                        </div>
+            
+                    </ng-container>
+            
+                </ng-container>
+
+            </div>
+
+        </div>
+    
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+            
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8" type="submit" *hasPermission="['AC1']; belongsTo 'N15'" nz-button nzType="primary"
+                    [disabled]="!paymentForm.valid" [promiseBtn]="buttonLoading">
+                    <i class="plus icon mr-8"></i> Save
+                </button>
+            
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger" (click)="matDialogRef.close()">
+                    Close
+                </button>
+            
+            </span>
+
+        </div>
+    
+    </form>
+
+</div>

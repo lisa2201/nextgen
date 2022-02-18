@@ -1,0 +1,327 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{dialogTitle}}</span>
+                <!-- <nz-alert 
+                    nzType="info" 
+                    [nzCloseable]="true" 
+                    nzMessage="Informational Notes" 
+                    nzShowIcon
+                    [nzBanner] = "true">
+                </nz-alert> -->
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form 
+        name="invitationForm" 
+        class="compose-form" 
+        fxLayout="column" fxFlex
+        [nzLayout]="'vertical'" [formGroup]="roomForm"
+        nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Title</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="titleErrorTpl">
+
+                    <input nz-input formControlName="title" placeholder="Title" type="text" />
+
+                    <ng-template #titleErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input your room title</ng-container>
+                        <!-- <ng-container *ngIf="control.hasError('pattern')">Invalid input name</ng-container> -->
+                        <ng-container *ngIf="control.hasError('exists')">Title already exists</ng-container>
+                        <ng-container *ngIf="control.hasError('minlength')">Title can't be less than 3 characters</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <nz-form-item>
+            
+                <nz-form-label nzRequired>Description <small>(Max 250 characters)</small></nz-form-label>
+            
+                <nz-form-control nzHasFeedback [nzErrorTip]="descErrorTpl">
+            
+                    <textarea formControlName="desc" nz-input rows="4" placeholder="description"></textarea>
+            
+                   <ng-template #descErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('maxlength')">Description can't be longer than 250 characters</ng-container>
+                        <ng-container *ngIf="control.hasError('minlength')">Description can't be less than 4 characters</ng-container>
+                        <ng-container *ngIf="control.hasError('required')">Please input your room description</ng-container>
+                    </ng-template>
+            
+                </nz-form-control>
+            
+            </nz-form-item>
+
+                <nz-form-item *ngIf="editMode">
+                        
+                    <nz-form-label>Room Status</nz-form-label>
+                        
+                    <nz-form-control>
+                        
+                        <nz-switch 
+                            formControlName="status" 
+                            nzCheckedChildren="Active" 
+                            nzUnCheckedChildren="Inactive">
+                        </nz-switch>
+                        
+                    </nz-form-control>
+                        
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label nzRequired>Select staff</nz-form-label>
+                        <nz-form-control [ngClass]="{ 'has-error' : isStaffSelected() }">
+                            <nz-select 
+                            formControlName="staff"
+                            [nzMaxTagCount]="3" 
+                            [nzMaxTagPlaceholder]="tagPlaceHolder" 
+                            nzMode="multiple"
+                            [nzSize]="size"
+                            nzPlaceHolder="Please select">
+                                <nz-option *ngFor="let option of staffList" 
+                                    [nzLabel]="option.getFullName()"
+                                    [nzValue]="option.id">
+                                </nz-option>
+                            </nz-select>
+
+                            <ng-template #tagPlaceHolder let-selectedList> and {{ selectedList.length }} more selected </ng-template>
+                            
+                            <div class="ant-form-explain" *ngIf="isStaffSelected()" [@helpMotion]>
+                                <div>Please select at least one staff from the list</div>
+                            </div>
+                           
+                        </nz-form-control>   
+                </nz-form-item>
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+                <div  nz-col [nzMd]="12" [nzLg]="12">
+                    <nz-form-item>
+                        <nz-form-label>Admin Only Room  &nbsp;&nbsp; <i style="cursor: pointer" class="question circle vertical icon" nz-tooltip nzTooltipTitle="Children cannot be assigned, Will not show up in Child Profile, Fees, Master Roll, Bookings, or Dashboard"></i></nz-form-label>
+
+                        <nz-form-control>
+                            <nz-switch
+                                    formControlName="adminOnly"
+                                    (ngModelChange)="adminOnlyToggle($event)"
+                                    nzCheckedChildren="Yes" nzUnCheckedChildren="No">
+                            </nz-switch>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                </div>
+            </div>
+            <ng-container *ngIf="!roomAdminOnly">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+                    <div  nz-col [nzMd]="12" [nzLg]="12">
+                        <nz-form-item>
+                            <nz-form-label>Start Time </nz-form-label>
+                            <nz-form-control nzHasFeedback [nzErrorTip]="startTimeErrorTpl">
+                                <nz-time-picker  [nzSize]="size" formControlName="startTime"
+                                                 nzPlaceHolder="Select start Time" [nzUse12Hours]="true" nzFormat="h:mm a"></nz-time-picker>
+                            </nz-form-control>
+                            <ng-template #startTimeErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')"> Start Time Required
+                                </ng-container>
+                            </ng-template>
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzMd]="12" [nzLg]="12">
+                        <nz-form-item>
+                            <nz-form-label>End Time</nz-form-label>
+                            <nz-form-control nzHasFeedback [nzErrorTip]="endTimeErrorTpl">
+                                <nz-time-picker [nzSize]="size" formControlName="endTime"
+                                                nzPlaceHolder="Select end Time" [nzUse12Hours]="true" nzFormat="h:mm a"></nz-time-picker>
+                            </nz-form-control>
+                            <ng-template #endTimeErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')"> End Time Required
+                                </ng-container>
+                            </ng-template>
+                        </nz-form-item>
+                    </div>
+
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+                    <div nz-col [nzMd]="24" [nzLg]="32">
+                        <nz-form-item>
+                            <nz-form-label>Children Per Educator (per Staff ratio)</nz-form-label>
+                            <nz-form-control nzHasFeedback [nzErrorTip]="childrenPerEducatorErrorTpl">
+                                <nz-input-number formControlName="childrenPerEducator" [nzSize]="'large'" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                            </nz-form-control>
+                            <ng-template #childrenPerEducatorErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Value Required
+                                </ng-container>
+                            </ng-template>
+                        </nz-form-item>
+                    </div>
+                </div>
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+                    <div nz-col [nzMd]="24" [nzLg]="32">
+                        <nz-divider nzText="Add Capacity"></nz-divider>
+                    </div>
+                    <div nz-col [nzMd]="8" [nzLg]="8">
+                        <nz-form-item>
+                            <nz-form-label nzRequired>Capacity</nz-form-label>
+                            <nz-form-control nzHasFeedback [nzErrorTip]="capacityErrorTpl">
+                                <nz-input-number formControlName="capacity" [nzSize]="'large'" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                            </nz-form-control>
+                            <ng-template #capacityErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Value Required
+                                </ng-container>
+                            </ng-template>
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzMd]="8" [nzLg]="8">
+                        <nz-form-item>
+                            <nz-form-label>Effective Date</nz-form-label>
+                            <nz-form-control nzHasFeedback [nzErrorTip]="effectiveDateErrorTpl">
+                                <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledPastDates" formControlName="effectiveDate"
+                                                class="block"></nz-date-picker>
+                            </nz-form-control>
+                            <ng-template #effectiveDateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Value Required
+                                </ng-container>
+                            </ng-template>
+                        </nz-form-item>
+                    </div>
+                    <div nz-col [nzMd]="8" [nzLg]="8">
+                        <nz-form-item *ngIf="editMode">
+                            <br>
+                            <button
+                                    class="text-uppercase mr-8"
+                                    type="button"
+                                    [disabled]="!roomForm.valid"
+                                    nz-button nzType="default"
+                                    (click)="addCapacity($event)">
+                                Add
+                            </button>
+                        </nz-form-item>
+                    </div>
+
+
+                </div>
+                <ng-container *ngIf="editMode">
+                    <nz-table #headerTable
+                              [nzFrontPagination]="false"
+                              [nzData]="Capacity"
+                              [nzLoading]="tableLoading"
+                              [nzTotal]="total"
+                              [nzNoResult]="emptyBlock"
+                              [nzLoadingIndicator]="indicatorTemplate">
+
+                        <thead>
+                        <tr>
+                            <th colspan="5"><h4>Capacity History</h4></th>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <th>Capacity</th>
+                            <th>Effective Date</th>
+                            <th>Created Date</th>
+                            <th>Created By</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let item of headerTable.data">
+                            <td nzWidth="80px"> {{ (item.status)? 'Active' : 'Inactive' }}
+                            </td>
+                            <td nzWidth="80px">{{ item.capacity }}</td>
+                            <td nzWidth="80px">{{ item.effectiveDate }}</td>
+                            <td nzWidth="80px">{{ item.created }}</td>
+                            <td *ngIf="item.author" nzWidth="80px">  {{ item.author.getFullName() }}</td>
+                            <td *ngIf="!item.author" nzWidth="80px">  N/A</td>
+                        </tr>
+                        </tbody>
+                    </nz-table>
+
+                    <ng-template #indicatorTemplate>
+                        <div class="is-loading">
+                            <span class="btn-spinner card-loader"></span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #emptyBlock>
+
+                        <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                                  [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                            <ng-template #contentTpl>
+                                <h4 class="mt-24">No Data Found</h4>
+                                <span>Looks like there's no information to display here</span>
+                            </ng-template>
+
+                        </nz-empty>
+
+                    </ng-template>
+
+                </ng-container>
+            </ng-container>
+        </div>
+
+
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+                <ng-container *ngIf="!editMode">
+                    <button 
+                        class="text-uppercase mr-8" 
+                        *hasPermission="['AC1']; belongsTo 'N21'" 
+                        nz-button
+                        nzType="primary"
+                        [disabled]="!roomForm.valid"
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Save
+                    </button>
+                </ng-container>
+
+                <ng-container *ngIf="editMode">
+                    <button 
+                        class="text-uppercase mr-8" 
+                        *hasPermission="['AC2']; belongsTo 'N21'" 
+                        nz-button 
+                        nzType="primary"
+                        [disabled]="!roomForm.valid"
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Update
+                    </button>
+                </ng-container>
+
+                <button 
+                    class="text-uppercase mr-8" 
+                    type="button" 
+                    nz-button nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+
+                <button 
+                    class="text-uppercase mat-close-btn" 
+                    type="button" 
+                    nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

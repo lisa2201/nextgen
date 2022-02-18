@@ -1,0 +1,101 @@
+<nz-spin [nzSpinning]="listViewLoading" [nzIndicator]="indicatorTemplate">
+
+    <nz-list class="booking-list"
+        [nzBordered]="false"
+        [nzDataSource]="getFilteredSource()"
+        [nzNoResult]="emptyBlock"
+        [nzPagination]="pagination"
+        [nzRenderItem]="item">
+    
+        <ng-template #item let-item>
+
+            <nz-list-item [nzContent]="nzContent">
+
+                <ng-template #nzContent>
+
+                    <nz-list-item-meta
+                        [nzAvatar]="nzAvatar"
+                        [nzTitle]="nzTitle"
+                        [nzDescription]="nzDescription">
+
+                        <ng-template #nzAvatar>
+
+                            <div class="status-check">
+                                <i class="check circle outline icon success-color" *ngIf="!item.hasError else unchecked"></i>
+                                <ng-template #unchecked><i class="exclamation circle icon danger-color"></i></ng-template>
+                            </div>
+                            
+                        </ng-template>
+
+                        <ng-template #nzTitle>
+
+                            <h4 [ngClass]="{ 'danger-color' : !item.child }">{{ item.childLabel }} ({{ item.response.crn }})</h4>
+
+                        </ng-template>
+
+                        <ng-template #nzDescription>
+
+                            <p class="mb-0">
+                                <span class="font-weight-600">Room</span> : 
+                                <span [ngClass]="{ 'danger-color' : !item.room }">{{ item.room ? item.room.title : 'Conflict' }}</span>
+                            </p>
+                    
+                            <p class="mb-0">
+                                <span class="font-weight-600">Fee</span> : 
+                                <span [ngClass]="{ 'danger-color' : !item.fee }">{{ item.fee ? item.fee.name : 'Conflict' }}</span>
+                            </p>
+                    
+                            <p class="mb-0">
+                                <span class="font-weight-600">Booking Schedule</span> : 
+                                <span [ngClass]="{ 'danger-color' : item.schedule.length < 1 }">{{ item.schedule.length > 0 ? item.schedule.join(', ') : 'Conflict' }}</span>
+                            </p>
+
+                        </ng-template>
+
+                    </nz-list-item-meta>
+
+                    <ul nz-list-item-actions>
+                        <nz-list-item-action><a (click)="viewBookingDates($event, item)">View Booking Dates</a></nz-list-item-action>
+                    </ul>
+
+                </ng-template>
+
+            </nz-list-item>
+
+        </ng-template>
+    
+    </nz-list>
+
+</nz-spin>
+
+<ng-template #pagination>
+    <nz-pagination 
+        [nzPageIndex]="pageNumber" 
+        [nzPageSize]="pageSize"
+        [nzTotal]="bookingList.length" 
+        (nzPageIndexChange)="onPaginateChange($event)"></nz-pagination>
+</ng-template>
+
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+
+<!-- EMPTY VIEW -->
+<ng-template #emptyBlock>
+
+    <nz-empty class="pt-24 pb-24 m-0"
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+        [nzNotFoundContent]="contentTpl"
+        [@fadeInOnEnter]>
+
+        <ng-template #contentTpl>
+            <h4 class="mt-24">No Data Found</h4>
+            <span>Looks like there's no information to display here</span>
+        </ng-template>
+
+    </nz-empty>
+
+</ng-template>
+<!-- / EMPTY VIEW -->

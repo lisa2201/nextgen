@@ -1,0 +1,229 @@
+<div class="dialog-content-wrapper ps">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">
+                {{ dialogTitle }}
+                <span class="updates-found" 
+                    *ngIf="sessionUpdatesFound" 
+                    [@slideMotion]="'bottom'">
+                    Session updates found
+                </span>
+            </span>
+
+            <ng-container *ngIf="!buttonLoader else showFormLoading">
+                <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </ng-container>
+
+            <ng-template #showFormLoading>
+                <span class="modal-close-loader is-loading">
+                    <span class="btn-spinner"></span>
+                </span>
+            </ng-template>
+            
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="submissionForm" class="compose-form" fxLayout="column" fxFlex nz-form [nzLayout]="'vertical'">
+    
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <p class="mb-8 text-center" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24">
+                    Session Week <span class="font-weight-600">{{ getPreviewTitle().start }}</span> to <span class="font-weight-600">{{ getPreviewTitle().end }}</span>
+                </p>
+
+                <nz-alert class="my-8" nzType="warning" [nzMessage]="warningMsg" 
+                    nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24"
+                    *ngIf="sessionHasConflicts()" [@fadeMotion]>
+    
+                    <ng-template #warningMsg>
+                        <div fxLayout="row" fxLayoutAlign="start center">
+                            <img src="assets/icons/flat/ui_set/custom_icons/child/warning_sign.svg" alt="img">
+                            <p class="mb-0">There are few issues in the sessions submission report</p>
+                        </div>
+                    </ng-template>
+    
+                </nz-alert>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-control>
+        
+                            <ng-container *ngFor="let data of sessionPreviewList; let row_idx = index; trackBy: trackByFn">
+
+                                <div class="preview-list" [@slideMotion]="'bottom'">
+        
+                                    <p class="title">
+                                        {{ data.date }} <span class="small">({{ data.day }})</span>
+                                    </p>
+        
+                                    <nz-table
+                                        [nzData]="data.bookings"
+                                        [nzShowPagination]="false"
+                                        [nzNoResult]="emptyDay"
+                                        [nzSize]="'small'"
+                                        [ngClass]="{ 'ant-table-empty-h-b' : data.bookings.length < 1 }">
+                
+                                        <thead>
+                                            <tr>
+                                                <th [nzWidth]="'100px'">Status</th>
+                                                <th [nzWidth]="'20px'"> </th>
+                                                <th [nzWidth]="'140px'">Fee</th>
+                                                <th>Session Time</th>
+                                                <th>Check In/Out Time</th>
+                                                <th>Type</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        
+                                        <tbody>
+                                            <tr *ngFor="let booking of data.bookings; let booking_idx = index; trackBy: trackByFn">
+
+                                                <td>
+                                                    <ng-container [ngSwitch]="booking.statusCode">
+
+                                                        <ng-container *ngSwitchCase="'2'">
+                                                            <span class="status-lbl absence">Absence</span>
+                                                        </ng-container>
+
+                                                        <ng-container *ngSwitchCase="'3'">
+                                                            <span class="status-lbl holiday">Holiday</span>
+                                                        </ng-container>
+
+                                                        <ng-container *ngSwitchDefault>
+
+                                                            <ng-container *ngIf="booking.attendance; else noAttendanceStatus">
+
+                                                                <span class="status-lbl success" 
+                                                                    *ngIf="booking.attendance && booking.attendance.isCompleted(); else incompleteAttendance">Completed</span>
+            
+                                                                <ng-template #incompleteAttendance>
+                                                                    <span class="status-lbl warning">Incomplete</span>
+                                                                </ng-template>
+
+                                                            </ng-container>
+            
+                                                            <ng-template #noAttendanceStatus>
+                                                                <span class="status-lbl danger">Conflict</span>
+                                                            </ng-template>
+
+                                                        </ng-container>
+
+                                                    </ng-container>
+
+                                                </td>
+                                                <td [nzAlign]="'center'">
+
+                                                    <i class="calendar check icon updated-note"
+                                                        *ngIf="booking.sessionUpdated"
+                                                        tooltip="Session updated" placement="bottom" display-mobile="false" hide-delay="50"></i>
+
+                                                    <ng-container *ngIf="!booking.isHoliday()">
+                                                        
+                                                        <ng-container *ngIf="booking.hasSessionRoutine && !booking.attendance; else noSessionBlock">
+                                                            <i class="calendar times icon error-note"
+                                                                *ngIf="!booking.attendance"
+                                                                tooltip="{{ booking.isAbsent() ? 'Missing record! (update again)' : 'Booking available (missing attendance)' }}"
+                                                                placement="bottom" display-mobile="false" hide-delay="50"></i>
+                                                        </ng-container>
+    
+                                                        <ng-template #noSessionBlock>
+                                                            <i class="calendar icon no-session-note"
+                                                                *ngIf="!booking.hasSessionRoutine"
+                                                                tooltip="Session routine not available" placement="bottom"
+                                                                display-mobile="false" hide-delay="50"></i>
+                                                        </ng-template>
+
+                                                    </ng-container>
+
+                                                </td>
+                                                <td>
+                                                    {{ booking.fee.name }} ({{ booking?.price | currency: client.currency :'symbol':'1.2-2' }})
+                                                </td>
+                                                <td>
+                                                    <span>{{ booking.sessionStart | convertTimeString }} - {{ booking.sessionEnd | convertTimeString }}</span>
+                                                </td>
+                                                <td>
+                                                    <ng-container *ngIf="booking.attendance && booking.attendance.type === '0'; else naBlock">
+                                                        
+                                                        {{ booking.attendance.checkInTime | convertTimeString }} - 
+                                                        <ng-container *ngIf="booking.attendance.checkOutTime; else naBlock">
+                                                            {{ booking.attendance.checkOutTime | convertTimeString }}
+                                                        </ng-container>
+                                                        
+                                                    </ng-container>
+
+                                                    <!-- <ng-template #noAttendance>
+                                                        <ng-container *ngIf="!booking.isHoliday() && booking.hasSessionRoutine && !booking.attendance else naBlock">
+                                                            <a (click)="updateSessionSlot($event, booking, row_idx, booking_idx)">Update</a>
+                                                        </ng-container>
+                                                        <ng-template #naBlock>N/A</ng-template>
+                                                    </ng-template> -->
+
+                                                    <ng-template #naBlock>N/A</ng-template>
+
+                                                </td>
+                                                <td>
+                                                    {{ booking.isCasual ? 'Casual' : 'Standard' }}
+                                                </td>
+                                                <td>
+                                                    <a (click)="updateSessionSlot($event, booking, row_idx, booking_idx)"><i class="edit outline icon"></i></a>
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                                            
+                                    </nz-table>
+        
+                                </div>
+
+                            </ng-container>
+                            
+                            <ng-template #emptyDay>
+                                <span>Looks like there's no information to display here.</span>
+                            </ng-template>
+                            
+                        </nz-form-control>
+        
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span>
+                <i class="check circle icon status-icon success-color" *ngIf="!sessionHasConflicts() else errorIcon" [@slideMotion]="'bottom'"></i>
+                <ng-template #errorIcon>
+                    <i class="exclamation circle icon status-icon danger-color"></i>
+                </ng-template>
+            </span>
+
+            <span>
+
+                <button class="text-uppercase mat-close-btn" 
+                    type="button"
+                    nz-button 
+                    nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+        </div>
+    
+    </form>
+
+</div>

@@ -1,0 +1,31 @@
+<div id="invoices" class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Manage Invoices</h1>
+
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="invoices-sidebar" position="left" lockedOpen="gt-md">
+
+            <app-invoices-left-sidenav [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }"></app-invoices-left-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <app-invoices-list-view class="center p-24 pt-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" (updateTableScroll)="updateScroll($event)">
+        </app-invoices-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

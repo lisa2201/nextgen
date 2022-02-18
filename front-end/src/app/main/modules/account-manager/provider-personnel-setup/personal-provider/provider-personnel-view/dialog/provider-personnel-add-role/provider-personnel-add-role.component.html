@@ -1,0 +1,410 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{title}}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+    <ng-container *ngIf="type === 'ROLE' ">
+        <form name="roleForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="roleForm"
+            nz-form (ngSubmit)="onFormSubmitRole($event)">
+        
+            <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+        
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+        
+                    <div nz-col [nzMd]="24" [nzLg]="24">
+        
+                        <ng-container formArrayName="roles"
+                            *ngFor="let control of roleForm.get('roles')['controls']; let i = index;">
+                            <ng-container [formGroupName]="i">
+                                <nz-table class="mt-4" #roleSelectData [nzData]="roleForm.get('roles')['controls']"
+                                    [nzShowPagination]="false" [nzSize]="'small'">
+                                    <thead>
+                                        <tr>
+                                            <th nzWidth="160px">Role</th>
+                                            <th nzWidth="160px">
+        
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="ant-table-selection-column">
+                                                <nz-form-label> Date</nz-form-label>
+                                            </td>
+                                            <td>
+                                                <nz-form-control>
+        
+                                                    <nz-date-picker [nzInputReadOnly]="true" formControlName="roleDate" nzPlaceHolder="date"
+                                                        class="block">
+                                                    </nz-date-picker>
+                                                </nz-form-control>
+                                            </td>
+                                        </tr>
+        
+                                        <tr>
+                                            <td class="ant-table-selection-column">
+                                                <nz-form-label> Role type
+                                                    <span class="help-text" tooltip="{{roleTypeHelp}}" display-mobile="false"
+                                                        hide-delay="50">
+                                                        <img class="mr-8"
+                                                            src="assets/icons/flat/ui_set/custom_icons/question2.svg"
+                                                            alt="female icon">
+                                                    </span>
+                                                </nz-form-label>
+                                            </td>
+                                            <td>
+                                                <nz-form-control>
+                                                    <nz-select formControlName="roleType" nzShowSearch nzAllowClear
+                                                        nzPlaceHolder="select a role">
+        
+                                                        <nz-option *ngFor="let item of roleType; trackBy: trackByFn;"
+                                                            nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                                                        </nz-option>
+        
+                                                    </nz-select>
+                                                </nz-form-control>
+                                            </td>
+                                        </tr>
+        
+                                        <tr>
+                                            <td class="ant-table-selection-column">
+                                                <nz-form-label> Position</nz-form-label>
+                                            </td>
+                                            <td>
+                                                <nz-form-control>
+                                                    <nz-select formControlName="rolePosition" nzShowSearch nzAllowClear
+                                                        nzPlaceHolder="select a position">
+        
+                                                        <nz-option *ngFor="let item of PositionsList; trackBy: trackByFn;"
+                                                            nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                                                        </nz-option>
+        
+                                                    </nz-select>
+                                                </nz-form-control>
+                                            </td>
+                                        </tr>
+        
+                                    </tbody>
+        
+                                </nz-table>
+                            </ng-container>
+        
+                        </ng-container>
+                    </div>
+        
+                </div>
+            </div>
+            <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+        
+                <span></span>
+        
+                <span class="text-right">
+        
+                    <button class="text-uppercase mr-8" nz-button nzType="primary" [promiseBtn]="buttonLoader"
+                        [disabled]="!roleForm.valid">
+                        <i class="plus icon mr-8"></i>
+                        Save
+                    </button>
+        
+                    <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                        (click)="matDialogRef.close()">
+                        Close
+                    </button>
+        
+                </span>
+        
+            </div>
+        
+        </form>
+
+    </ng-container>
+
+    <ng-container *ngIf="type === 'NAME'">
+        <form name="nameForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="nameForm"
+        nz-form (ngSubmit)="onFormSubmitName($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzMd]="24" [nzLg]="24">
+
+                    <nz-form-item nz-col [nzMd]="12" [nzLg]="12">
+
+                        <nz-form-label nzRequired>First Name</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="fnameErrorTpl">
+    
+                            <input nz-input formControlName="fname" placeholder="first name" type="text" />
+    
+                            <ng-template #fnameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your first name
+                                </ng-container>
+    
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                    <nz-form-item nz-col [nzMd]="12" [nzLg]="12">
+
+                        <nz-form-label nzRequired>First Name</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="lnameErrorTpl">
+    
+                            <input nz-input formControlName="lname" placeholder="first name" type="text" />
+    
+                            <ng-template #lnameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your first name
+                                </ng-container>
+    
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                    <nz-form-item nz-col [nzMd]="12" [nzLg]="12">
+
+                        <nz-form-label nzRequired>Phone Number</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="phoneErrorTpl">
+    
+                            <input nz-input formControlName="phone" placeholder="first name" type="text" />
+    
+                            <ng-template #phoneErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your first name
+                                </ng-container>
+    
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+                   
+                </div>
+
+            </div>
+        </div>
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8" nz-button nzType="primary" [promiseBtn]="buttonLoader"
+                    [disabled]="!nameForm.valid">
+                    <i class="plus icon mr-8"></i>
+                    Save
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+    </ng-container>
+
+    <ng-container *ngIf="type === 'WWCC'">
+        <form name="wwccForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="wwccForm"
+            nz-form (ngSubmit)="onFormSubmitWWCC($event)">
+        
+            <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+        
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+        
+                    <div nz-col [nzMd]="24" [nzLg]="24" class="pt-24">
+                        <ng-container formArrayName="wwccInput"
+                            *ngFor="let control of wwccForm.get('wwccInput')['controls']; let idx = index;">
+                            <ng-container [formGroupName]="idx">
+                                <nz-table class="mt-4" #roleSelectData
+                                    [nzData]="wwccForm.get('wwccInput')['controls']"
+                                    [nzShowPagination]="false" [nzSize]="'small'">
+                                    <thead>
+                                        <tr>
+                                            <th nzWidth="160px">WWCC</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="ant-table-selection-column">
+                                                <nz-form-label> Card number</nz-form-label>
+                                            </td>
+                                            <td>
+                                                <nz-form-control>
+                                                    <input nz-input formControlName="cardNumber" placeholder="card number"
+                                                        type="text" />
+                                                </nz-form-control>
+                                            </td>
+                                        </tr>
+    
+                                        <tr>
+                                            <td class="ant-table-selection-column">
+                                                <nz-form-label> Issuing State</nz-form-label>
+                                            </td>
+                                            <td>
+                                                <nz-form-control>
+    
+                                                    <nz-select formControlName="issuingState" nzShowSearch nzAllowClear
+                                                        nzPlaceHolder="select a state">
+    
+                                                        <nz-option
+                                                            *ngFor="let item of IssuingStateList; trackBy: trackByFn;"
+                                                            nzValue="{{ item.value}}" nzLabel="{{ item.name }}">
+                                                        </nz-option>
+    
+                                                    </nz-select>
+                                                </nz-form-control>
+                                            </td>
+                                        </tr>
+    
+                                        <tr>
+    
+                                            <td class="ant-table-selection-column">
+                                                <nz-form-label> Expiry date</nz-form-label>
+                                            </td>
+                                            <td>
+                                                <nz-form-control>
+                                                    <nz-date-picker [nzInputReadOnly]="true" formControlName="expiryDate" nzPlaceHolder="date"
+                                                        class="block">
+                                                    </nz-date-picker>
+                                                </nz-form-control>
+    
+                                            </td>
+                                        </tr>
+    
+                                    </tbody>
+    
+                                </nz-table>
+                            </ng-container>
+    
+                        </ng-container>
+                    </div>
+        
+                </div>
+            </div>
+            <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+        
+                <span></span>
+        
+                <span class="text-right">
+        
+                    <button class="text-uppercase mr-8" nz-button nzType="primary" [promiseBtn]="buttonLoader"
+                        [disabled]="!wwccForm.valid">
+                        <i class="plus icon mr-8"></i>
+                        Save
+                    </button>
+        
+                    <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                        (click)="matDialogRef.close()">
+                        Close
+                    </button>
+        
+                </span>
+        
+            </div>
+        
+        </form>
+    </ng-container>
+
+    <ng-container *ngIf="type === 'DOC'">
+
+        <form name="docForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="docForm"
+            nz-form (ngSubmit)="onFormSubmitDoc($event)">
+        
+            <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+        
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+        
+                <div nz-col [nzMd]="24" [nzLg]="24" class="pt-24">
+                    <nz-table class="mt-4" #supportingDocData [nzData]="supportingDoc" [nzShowPagination]="false"
+                        [nzSize]="'small'" formArrayName="documentCheck">
+                        <thead>
+                            <tr>
+                                <th>Supporting Documents</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of supportingDocData.data; trackBy: trackByFn;">
+                             
+                                <td class="ant-table-selection-column">
+                                    <nz-form-label>
+                                        {{item.name}}
+                                    </nz-form-label>
+                                </td>
+                                <td>
+                                    <div class="image-upload">
+                                        <input name="imageUrl" type="file" accept=".pdf"
+                                            (change)="handleInputChange($event, item)" class="inputfile inputfile-2" />
+                                        <span>
+                                            <nz-progress *ngIf="item.showBar" [nzPercent]="item.progress"
+                                                nzSize="small"></nz-progress>
+                                        </span>
+
+                                        <span class="text-right">
+                                            <a class="action-btn remove" *ngIf="item.progress === 100"
+                                                style="color: #e90000;" (click)="romoveFile(item)">
+                                                <i class="trash alternate outline icon mr-4"
+                                                    style="color: #e90000;"></i>
+                                                remove
+                                            </a>
+                                        </span>
+                                        
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </nz-table>
+                </div>
+        
+                </div>
+            </div>
+            <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+        
+                <span></span>
+        
+                <span class="text-right">
+        
+                    <button class="text-uppercase mr-8" nz-button nzType="primary" [promiseBtn]="buttonLoader"
+                        [disabled]="!docForm.valid">
+                        <i class="plus icon mr-8"></i>
+                        Save
+                    </button>
+        
+                    <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                        (click)="matDialogRef.close()">
+                        Close
+                    </button>
+        
+                </span>
+        
+            </div>
+        
+        </form>
+    </ng-container>
+   
+</div>

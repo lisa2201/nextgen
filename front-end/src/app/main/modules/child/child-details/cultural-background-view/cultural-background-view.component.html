@@ -1,0 +1,30 @@
+<div class="section">
+
+    <h3 class="header">Cultural information</h3>
+
+    <p>
+        <span class="lbl font-weight-600">Aboriginal or Torres Strait Islander descent?</span>
+        {{ child.cultural.ab_or_tsi || 'N/A' }}
+    </p>
+
+    <p>
+        <span class="lbl font-weight-600">Child's cultural background?</span>
+        {{ child.cultural.cultural_background || 'N/A' }}
+    </p>
+
+    <p>
+        <span class="lbl font-weight-600">What language is spoken at home?</span>
+        {{ child.cultural.language || 'N/A' }}
+    </p>
+
+    <p>
+        <span class="lbl font-weight-600">Does the child have any cultural requirements?</span>
+        {{ ((child.cultural.cultural_requirements == '' || child.cultural.cultural_requirements == null) && child.cultural.cultural_requirements_chk == '1') ? 'Yes' : (child.cultural.cultural_requirements_chk == '0') ? 'No' : child.cultural.cultural_requirements  }}
+    </p>
+
+    <p>
+        <span class="lbl font-weight-600">Does the child have any religious requirements?</span>
+        {{ ((child.cultural.religious_requirements == '' || child.cultural.religious_requirements == null) && child.cultural.religious_requirements_chk == '1') ? 'Yes' : (child.cultural.religious_requirements_chk == '0') ? 'No' : child.cultural.religious_requirements }}
+    </p>
+
+</div>

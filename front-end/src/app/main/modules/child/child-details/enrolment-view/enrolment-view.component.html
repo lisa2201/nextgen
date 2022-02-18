@@ -1,0 +1,211 @@
+<div class="s-title mb-16" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <h3 class="header mb-0">Enrolment information</h3>
+
+    <ng-container *hasPermission="['AC1']; belongsTo 'N23'" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <button class="text-uppercase blank py-0"
+            type="button"
+            nz-button 
+            nzType="link"
+            *ngIf="showNewEnrolmentButton" [@slideMotion]="'bottom'"
+            nz-dropdown [nzDropdownMenu]="enrolmentMenu"
+            [disabled]="disableView()"
+            [promiseBtn]="buttonLoader">
+            Action <i class="chevron down icon ml-8"></i>
+        </button>
+
+        <nz-dropdown-menu #enrolmentMenu="nzDropdownMenu">
+            <ul nz-menu>
+                <li nz-menu-item (click)="goToEnrolment($event)">
+                    <span class="_icon mr-8"><i class="plus icon"></i></span>
+                    <span class="font-weight-600">Add New</span>
+                </li>
+                <li nz-menu-item (click)="addExistingEnrolment($event)">
+                    <span class="_icon mr-8"><i class="edit outline icon"></i></span>
+                    <span class="font-weight-600">Add Existing</span>
+                </li>
+            </ul>
+        </nz-dropdown-menu>
+        
+    </ng-container>
+
+</div>
+
+<nz-list class="enrolment-list"
+    [nzBordered]="getFilteredSource().length > 0"
+    [nzNoResult]="emptyEnrolmentBlock"
+    [nzDataSource]="getFilteredSource()"
+    [nzPagination]="pagination"
+    [nzRenderItem]="item">
+
+    <ng-template #item let-item>
+
+        <nz-list-item 
+            [nzContent]="nzContent">
+
+            <ng-template #nzContent>
+
+                <nz-skeleton 
+                    [nzAvatar]="true" 
+                    [nzActive]="true" 
+                    [nzTitle]="false" 
+                    [nzParagraph]="{ rows: 3 }"
+                    [nzLoading]="item.isLoading">
+
+                    <nz-list-item-meta 
+                        [nzTitle]="nzTitle"
+                        [nzAvatar]="nzAvatar"
+                        [nzDescription]="nzDescription">
+
+                        <ng-template #nzTitle>
+
+                            {{ item.enrolId }} ({{ item.enrolStart }} | {{ item.arrangementType }} | {{ item.sessionTypeLabel }})
+                            
+                        </ng-template>
+
+                        <ng-template #nzAvatar>
+
+                            <img class="status-icon" [src]="'assets/icons/flat/ui_set/custom_icons/child/execution.svg'" alt="icon">
+
+                        </ng-template>
+
+                        <ng-template #nzDescription>
+
+                            <p class="lbl" fxLayout="row" fxLayoutAlign="start center">
+
+                                <span class="status" [ngClass]="{ 'error': item.isEnrolmentCeased() }">
+                                    {{ item.statusLabel }}
+                                </span>
+
+                                <ng-container *ngIf="item.showParentApproveStatus()">
+                                    <span class="status ml-8 approved" *ngIf="item.isApproved; else notApprovedBlock">Parent Approved</span>
+                                    <ng-template #notApprovedBlock>
+                                        <span class="status ml-8 pending">Pending Parent Approval</span>
+                                    </ng-template>
+                                </ng-container>
+
+                                <span class="error-status ml-12" *ngIf="item.hasError()"
+                                    nz-popover
+                                    nzPopoverTrigger="click"
+                                    [nzPopoverContent]="ccsErrorContentTemplate"
+                                    [nzPopoverPlacement]="'top'">
+                                    <img [src]="'assets/icons/flat/ui_set/custom_icons/child/ccs-error.svg'" alt="icon" title="error found">
+                                </span>
+
+                                <ng-template #ccsErrorContentTemplate>
+                                    <nz-badge *ngFor="let error of item.syncErrors; trackBy: trackByFn;" nzStatus="error" [nzText]="(error.message | lowercase) || 'Unknown error'"></nz-badge> <br>
+                                </ng-template>
+
+                            </p>
+
+                            <ng-container *ngIf="item.isEnrolmentEditable(); else reEnrol">
+
+                                <a class="action-btn ml-8"
+                                    *hasPermission="['AC2']; belongsTo 'N23'"
+                                    (click)="goToEnrolment($event, item)">
+                                    <i class="edit outline icon text-dec-none mr-4"></i>
+                                    Edit
+                                </a>
+
+                            </ng-container>
+
+                            <ng-template #reEnrol>
+
+                                <a class="action-btn"
+                                    *hasPermission="['AC2']; belongsTo 'N23'"
+                                    (click)="goToEnrolment($event, item)">
+                                    <i class="random icon text-dec-none mr-4"></i>
+                                    Re-enrol
+                                </a>
+
+                            </ng-template>
+
+                            <ng-container *ngIf="!item.isEnrolmentApproved() && !item.enrolmentClosed()">
+
+                                <a class="action-btn ml-8"
+                                    *hasPermission="['AC2']; belongsTo 'N23'"
+                                    (click)="goToCWA($event, item)">
+                                    <i class="hand point right outline icon text-dec-none mr-4"></i>
+                                    Parent Confirmation
+                                </a>
+
+                                <a class="action-btn ml-8"
+                                    *hasPermission="['AC2']; belongsTo 'N23'"
+                                    (click)="sendEmail($event, item)">
+                                    <i class="mail outline icon text-dec-none mr-4"></i>
+                                    Send Parent Confirmation Email
+                                </a>
+
+                            </ng-container>
+
+                            <ng-container *ngIf="item.hasEnrolmentId()">
+                                
+                                <a class="action-btn ml-8"
+                                    *hasPermission="['AC1']; belongsTo 'N23'"
+                                    (click)="checkEnrolmentStatus($event, item)">
+                                    <i class="exchange icon text-dec-none mr-4"></i>
+                                    Check Status
+                                </a>
+
+                                <ng-container *hasPermission="['AC0']; belongsTo 'N23'">
+
+                                    <a class="action-btn ml-8"
+                                        (click)="viewEntitlement($event, item)"
+                                        *ngIf="!item.enrolmentClosed()">
+                                        <i class="dot circle outline icon text-dec-none mr-4"></i>
+                                        View Entitlement
+                                    </a>
+
+                                </ng-container>
+
+                            </ng-container>
+
+                            <a class="action-btn danger-color ml-8"
+                                *hasPermission="['AC3']; belongsTo 'N23'"
+                                (click)="delete($event, item)">
+                                <i class="trash alternate outline icon text-dec-none mr-4 danger-color"></i>
+                                Delete
+                            </a>
+                            
+                        </ng-template>
+                        
+                    </nz-list-item-meta>
+
+                </nz-skeleton>
+
+            </ng-template>
+        
+        </nz-list-item>
+
+    </ng-template>
+
+    <ng-template #pagination>
+        <nz-pagination 
+            [nzPageIndex]="pageNumber" 
+            [nzPageSize]="pageSize"
+            [nzTotal]="child?.enrollments.length" 
+            [nzDisabled]="disableView()"
+            (nzPageIndexChange)="onPaginateChange($event)"></nz-pagination>
+    </ng-template>
+
+</nz-list>
+
+<!-- EMPTY VIEW -->
+<ng-template #emptyEnrolmentBlock>
+
+    <nz-empty 
+        class="m-0" 
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+        [nzNotFoundContent]="contentTpl" 
+        [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <ng-template #contentTpl>
+            <h4 class="mt-24">No Data Found</h4>
+            <span>Please click on add button to add enrolment</span>
+        </ng-template>
+
+    </nz-empty>
+
+</ng-template>
+<!-- / EMPTY VIEW -->

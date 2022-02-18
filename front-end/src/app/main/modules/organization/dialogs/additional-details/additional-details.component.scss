@@ -1,0 +1,102 @@
+@import "src/@fuse/scss/fuse";
+
+app-additional-details {
+    @include media-breakpoint("xs") {
+        width: 100%;
+    }
+
+    @include media-breakpoint("gt-xs") {
+        width: 640px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+        .compose-form {
+            .mat-form-field {
+                width: 100%;
+            }
+
+            .show-hide-extra-fields {
+                text-align: right;
+                cursor: pointer;
+                font-size: 12px;
+            }
+
+            .attachment-list {
+                font-size: 13px;
+
+                .attachment {
+                    border: 1px solid;
+                    border-radius: 20px;
+                    padding-left: 16px;
+                    margin-top: 8px;
+
+                    .filename {
+                        font-weight: 600;
+                    }
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+           
+        }
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ant-btn-primary-disabled, .ant-btn-primary-disabled.active, .ant-btn-primary-disabled:active, .ant-btn-primary-disabled:focus, .ant-btn-primary-disabled:hover, .ant-btn-primary.disabled, .ant-btn-primary.disabled.active, .ant-btn-primary.disabled:active, .ant-btn-primary.disabled:focus, .ant-btn-primary.disabled:hover, .ant-btn-primary[disabled], .ant-btn-primary[disabled].active, .ant-btn-primary[disabled]:active, .ant-btn-primary[disabled]:focus, .ant-btn-primary[disabled]:hover {
+        color: rgba(0,0,0,.25);
+        background-color: #f5f5f5;
+        border-color: #d9d9d9;
+        text-shadow: none;
+        box-shadow: none;
+        margin-left: 2%;
+    }
+
+    
+}
+
+.mat-toolbar-row,
+.mat-toolbar-single-row {
+    height: 64px;
+    color: black;
+}
+
+.add-sub-button{
+    top:30px;
+}
+
+// .ant-btn.ant-btn-loading:not(.ant-btn-circle):not(.ant-btn-circle-outline):not(.ant-btn-icon-only) {
+//     padding-left: 10px;
+//     width: 200px;
+  
+// }
+
+
+
+// .text-right {
+//     text-align: right;
+//     width: 50%;
+// }
+
+.ant-collapse-content {
+    overflow: hidden;
+    color: rgba(0,0,0,.65);
+    background-color: rgba(255, 255, 255, 0.5);
+    border-top: 1px solid #d9d9d9;
+}
+
+.ant-form-item {
+   display:block !important; 
+   max-width: 32%;
+}
+
+.collapse-panel{
+    width: 100%;
+}

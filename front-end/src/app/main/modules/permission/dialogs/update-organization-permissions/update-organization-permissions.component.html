@@ -1,0 +1,127 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="permissionForm" class="compose-form" fxLayout="column" fxFlex [formGroup]="permissionForm" 
+        nz-form 
+        [nzLayout]="'vertical'" 
+        (ngSubmit)="onFormSubmit($event)">
+    
+        <div mat-dialog-content class="p-24 pt-16 m-0" 
+            fusePerfectScrollbar 
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Select Permissions</nz-form-label>
+
+                <nz-form-control 
+                    [nzValidateStatus]="permissionFormStatus"
+                    [nzErrorTip]="rolePermissionErrorTpl"
+                    *ngIf="permissions.length > 0;"
+                    [@fadeInOnEnter]>
+
+                    <p class="mb-8">
+                        <label class="no-select"
+                            nz-checkbox
+                            [ngModelOptions]="{ standalone: true }"
+                            [(ngModel)]="allChecked"
+                            (ngModelChange)="updateAllChecked()"
+                            [nzIndeterminate]="indeterminate">
+                            Check all
+                        </label>
+                    </p>
+
+                    <nz-collapse nzAccordion>
+
+                        <nz-collapse-panel *ngFor="let permGroup of permissions | groupBy : 'type' | values; let i = index; trackBy: i;" 
+                            [nzHeader]="permGroup[0].type"
+                            [nzActive]="i === 0"
+                            (nzActiveChange)="onPermissionTabCollapsed($event)"
+                            formArrayName="perms">
+
+                            <ng-container *ngFor="let item of permGroup; let j = index; trackBy: item?.index;">
+
+                                <p [ngClass]="(j === (permGroup.length - 1)) ? 'mb-0' : 'mb-4'">
+                                    
+                                    <label class="no-select" 
+                                        nz-checkbox 
+                                        [formControlName]="item.index"
+                                        (ngModelChange)="onCheckboxChange($event, permGroup, item)"
+                                        [nzDisabled]="checkCheckboxStatus(permGroup, j)">
+
+                                        <span class="lbl-inner">
+                                            {{ item?.name }}
+                                            <small *ngIf="item.isParent" class="required-hint">(Required)</small>
+                                        </span>
+
+                                    </label>
+                                
+                                </p>
+
+                            </ng-container>
+
+                            <ng-template #accordionHeader>
+                                <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+                                    <span>{{ permGroup[0].type }}</span>
+                                    <nz-switch></nz-switch>
+                                </div>
+                            </ng-template>
+                            
+                        </nz-collapse-panel>
+
+                    </nz-collapse>
+
+                    <ng-template #rolePermissionErrorTpl let-control>
+                        <ng-container>Please select at least one option from the list</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+        
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8"
+                    *hasPermission="['AC2']; belongsTo 'N05'"
+                    nz-button 
+                    nzType="primary" 
+                    [disabled]="!permissionForm.valid"
+                    [promiseBtn]="buttonLoader">
+                    <i class="save outline icon mr-8"></i> Update
+                </button>
+
+                <button class="text-uppercase mat-close-btn" 
+                    type="button"
+                    nz-button 
+                    nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+    
+    </form>
+
+
+</div>

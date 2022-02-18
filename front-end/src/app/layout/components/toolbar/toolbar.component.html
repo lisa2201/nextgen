@@ -1,0 +1,289 @@
+<mat-toolbar class="p-0 mat-elevation-z1">
+
+    <div fxFlex fxFill fxLayout="row" fxLayoutAlign="start center">
+
+        <div fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
+
+            <button mat-icon-button class="navbar-toggle-button" *ngIf="!hiddenNavbar && !rightNavbar"
+                (click)="toggleSidebarOpen('navbar')" fxHide.gt-md>
+                <mat-icon class="secondary-text">menu</mat-icon>
+            </button>
+
+            <div class="toolbar-separator" *ngIf="!hiddenNavbar && !rightNavbar" fxHide.gt-md></div>
+
+            <div fxLayout="row" fxLayoutAlign="start center" *ngIf="horizontalNavbar">
+                <div class="logo ml-16">
+                    <img class="logo-icon" src="{{ getBranchLogo() }}" alt="{{ logo }}">
+                </div>
+            </div>
+
+            <div class="px-8 px-md-16" *ngIf="false">
+                <fuse-shortcuts [navigation]="navigation"></fuse-shortcuts>
+            </div>
+
+        </div>
+
+        <div fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
+
+            <!-- <fuse-search-bar (input)="search($event)"></fuse-search-bar>
+
+            <div class="toolbar-separator"></div>
+
+            <button mat-button fxHide fxShow.gt-xs class="language-button" nz-dropdown nzTrigger="click"
+                [nzBackdrop]="false" [nzDropdownMenu]="languageMenu">
+
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <img class="flag mr-8" [src]="'assets/icons/flags/'+selectedLanguage.flag+'.png'">
+                    <span class="iso text-uppercase">{{selectedLanguage.id}}</span>
+                </div>
+
+            </button>
+
+            <nz-dropdown-menu #languageMenu="nzDropdownMenu">
+                <ul class="top-bar-menu" nz-menu>
+                    <li nz-menu-item *ngFor="let lang of languages" (click)="setLanguage(lang)">
+                        <span fxLayout="row" fxLayoutAlign="start center">
+                            <img class="flag mr-16" [src]="'assets/icons/flags/'+lang.flag+'.png'">
+                            <span class="iso">{{lang.title}}</span>
+                        </span>
+                    </li>
+                </ul>
+            </nz-dropdown-menu>
+
+            <div class="toolbar-separator" fxHide fxShow.gt-xs></div>
+
+            <button mat-icon-button class="quick-panel-toggle-button" (click)="toggleSidebarOpen('quickPanel')"
+                aria-label="Toggle quick panel">
+                <mat-icon class="secondary-text">format_list_bulleted</mat-icon>
+            </button>
+
+            <div class="toolbar-separator" *ngIf="!hiddenNavbar && rightNavbar" fxHide fxShow.gt-xs></div>
+
+            <button mat-icon-button class="navbar-toggle-button" *ngIf="!hiddenNavbar && rightNavbar"
+                (click)="toggleSidebarOpen('navbar')" fxHide.gt-md>
+                <mat-icon class="secondary-text">menu</mat-icon>
+            </button>
+
+            <div class="toolbar-separator"></div> -->
+
+            <ng-container *ngIf="isAdministrative && childrenList.length > 0">
+
+                <div class="toolbar-separator"></div>
+    
+                <button 
+                    class="user-button" 
+                    nz-tooltip 
+                    nzTooltipTitle="Primary payer not assigned for listed children" 
+                    nzTooltipTrigger="hover"
+                    mat-button 
+                    nz-dropdown 
+                    nzTrigger="click" 
+                    [matMenuTriggerFor]="childListMenu"
+                    [@fadeMotion]>
+    
+                    <nz-badge nzOverflowCount="100" [nzCount]="childrenList.length">
+                        <mat-icon class="secondary-text">supervised_user_circle</mat-icon>
+                    </nz-badge>
+                </button>
+    
+                <mat-menu #childListMenu="matMenu">
+                
+                    <ng-container>
+                
+                        <button mat-menu-item *ngFor="let child of childrenList" [routerLink]="['manage-children', 'child', child.id]">
+                            {{ child.getFullName() }}
+                        </button>
+                
+                    </ng-container>
+                
+                </mat-menu>
+
+            </ng-container>
+            
+            <ng-container *hasPermission="['AC0']; belongsTo: 'N60'">
+
+                <div *ngIf="isAdministrative && immunisationTable.length > 0" [@fadeMotion]>
+
+                    <div class="toolbar-separator" ></div>
+                
+                    <button class="user-button immunisation" nz-tooltip nzTooltipTitle="Immunisation Reminder"
+                        nzTooltipTrigger="hover" mat-button nz-dropdown nzTrigger="click" [matMenuTriggerFor]="reminderMenu"
+                        (click)="updateExpand($event)">
+                        <nz-badge nzOverflowCount="99" [nzCount]="immunisationTable.length">
+                            <span class="material-icons secondary-text font-size-26">
+                                local_hospital
+                            </span>
+                        </nz-badge>
+                    </button>
+                    
+                    <mat-menu #reminderMenu="matMenu">
+        
+                        <ng-container *ngFor="let immunisation of immunisationTable">
+                            <ul nz-list nzSize="small">
+                                <nz-list-header class="pl-8 pr-4 header" style="padding-bottom: 0px!important">
+                                    <p (click) = "openChildImmunisation($event,immunisation.child)" style="cursor: pointer;font-weight: 700;padding-bottom: 0px!important">
+                                        {{immunisation.child.getShortName()}}
+                                    </p>
+                                    <!-- <a class="more-btn pl-8" (click)="toggleMoreDetails($event, immunisation)">
+                                        <i class="angle down icon mr-4" [ngClass]="{ 'rotate' : immunisation.expand }"></i>
+                                        {{ immunisation.expand ? 'Hide' : 'Show' }}
+                                    </a> -->
+                                </nz-list-header>
+                                    <ng-container *ngFor="let item of immunisation.reminderDataFirst">
+                                        <li (click) = "openChildImmunisation($event,immunisation.child)" nz-list-item *ngIf="item.past > 0 || item.near > 0" class="no-boarder-bottom"
+                                            style="border-bottom: 1px solid #f0f0f0!important; padding-bottom: 0px!important; cursor: pointer; ">
+                                            <ul nz-list-item-actions>
+        
+                                                <nz-list-item-action>
+                                                    <span *ngIf="item.near > 0" nz-tooltip nzTooltipTitle="Nearing Due" nzTooltipTrigger="hover">
+                                                        <i class="color-box circle icon color-code mr-4"
+                                                            style="border-color: transparent;-webkit-text-fill-color: rgba(232, 172, 18, 0.66);">
+                                                        </i>
+                                                        <span class="label mr-8"> {{ item.near}}</span>
+                                                    </span>
+                                                    <span *ngIf="item.past > 0" nz-tooltip nzTooltipTitle="Past Due" nzTooltipTrigger="hover">
+                                                        <i class="color-box circle icon color-code mr-4"
+                                                            style="border-color: transparent;-webkit-text-fill-color: rgba(202, 22, 22, 0.623);">
+                                                        </i>
+                                                        <span class="label"> {{ item.past}}</span>
+                                                    </span>
+                                                </nz-list-item-action>
+                                            </ul>
+                                            <span *ngIf="item.past > 0 || item.near > 0">
+                                                {{item.immunisation.getShortName()}}
+                                            </span>
+                                        </li>
+                                    </ng-container>
+        
+                                    <ng-container *ngIf="immunisation.expand">
+                                        <ng-container *ngFor="let item of immunisation.reminderDataMore">
+                                            <li nz-list-item *ngIf="item.past > 0 || item.near > 0" class="no-boarder-bottom"
+                                                style="border-bottom: 1px solid #f0f0f0!important; padding-bottom: 0px!important; cursor: pointer; ">
+                                                <ul nz-list-item-actions>
+            
+                                                    <nz-list-item-action>
+                                                        <span *ngIf="item.near > 0" nz-tooltip nzTooltipTitle="Nearing Due" nzTooltipTrigger="hover">
+                                                            <i class="color-box circle icon color-code mr-4"
+                                                                style="border-color: transparent;-webkit-text-fill-color: rgba(232, 172, 18, 0.66);">
+                                                            </i>
+                                                            <span class="label mr-8"> {{ item.near}}</span>
+                                                        </span>
+                                                        <span *ngIf="item.past > 0" nz-tooltip nzTooltipTitle="Past Due" nzTooltipTrigger="hover">
+                                                            <i class="color-box circle icon color-code mr-4"
+                                                                style="border-color: transparent;-webkit-text-fill-color: rgba(202, 22, 22, 0.623);">
+                                                            </i>
+                                                            <span class="label"> {{ item.past}}</span>
+                                                        </span>
+                                                    </nz-list-item-action>
+                                                </ul>
+                                                <span *ngIf="item.past > 0 || item.near > 0">
+                                                    {{item.immunisation.getShortName()}}
+                                                </span>
+                                
+                                            </li>
+                                
+                                        </ng-container>
+                                    </ng-container>
+                                     <a *ngIf="immunisation.reminderDataMore.length >0" class="more-btn pl-8" (click)="toggleMoreDetails($event, immunisation)">
+                                        <i class="angle down icon mr-4" [ngClass]="{ 'rotate' : immunisation.expand }"></i>
+                                        {{ immunisation.expand ? 'Hide' : immunisation.reminderDataMore.length + ' More'}} 
+                                    </a>
+                            </ul>
+                        </ng-container>
+                    </mat-menu>
+
+                </div>
+
+            </ng-container>
+
+            <booking-request-notification fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="center center" *ngIf="isAdministrative"></booking-request-notification>
+
+            <ng-container *ngIf="client && client.hasKinderConnect">
+
+                <div class="toolbar-separator"></div>
+
+                <button class="navbar-button" 
+                    nz-button nzShape="circle" nzType="default"
+                    (click)="processKinderConnect($event)"
+                    [disabled]="kinderConnectLoading">
+                    <img src="assets/icons/flat/ui_set/custom_icons/kindergarten.svg" [ngStyle]="{ 'height': '30px', 'width': '30px', 'margin': '0', 'opacity': '0.85' }">
+                </button>
+    
+            </ng-container>
+
+            <ng-container *ngIf="isSiteManager && branchLinks.length > 0">
+
+                <div class="toolbar-separator"></div>
+    
+                <button class="user-button" mat-button nz-dropdown nzTrigger="click" 
+                    [nzDropdownMenu]="branchLink" [nzBackdrop]="false" 
+                    *ngIf="isSiteManager && branchLinks.length > 0" [@fadeMotion]
+                    [disabled]="branchLinks.length < 1"
+                    [promiseBtn]="branchAccessLoader">
+                    <mat-icon class="secondary-text">format_list_bulleted</mat-icon>
+                </button>
+    
+                <nz-dropdown-menu #branchLink="nzDropdownMenu">
+                    <ul class="top-bar-menu" nz-menu>
+                        <li nz-menu-item nzDisabled><span class="font-weight-600">Branches</span></li>
+                        <li nz-menu-item *ngFor="let user of branchLinks" (click)="accessBranch($event, user)">
+                            {{ user.branch.name }}
+                        </li>
+                    </ul>
+                </nz-dropdown-menu>
+
+            </ng-container>
+            
+            <div class="toolbar-separator"></div>
+
+            <button class="user-button" 
+                mat-button 
+                nz-dropdown nzTrigger="click" 
+                [nzDropdownMenu]="user_menu"
+                [nzOverlayClassName]="'__topBarMenu'">
+
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <div class="mr-12 text-right" fxHide fxShow.gt-sm>
+                        <div class="hint">Welcome,</div>
+                        <div class="username ">{{ userObj?.name || '' }}</div>
+                    </div>
+                    <!--<img class="avatar mr-0" src="{{ userObj?.image || callBackImage }}">-->
+                    <img class="avatar mr-0" src="{{ getStaffProfileImage(userObj) }}">
+                </div>
+
+            </button>
+
+            <nz-dropdown-menu #user_menu="nzDropdownMenu">
+                <ul class="top-bar-menu" nz-menu>
+
+                    <li nz-menu-item [routerLink]="['/profile-setting']" routerLinkActive="router-link-active">
+                        <i class="user circle icon"></i>
+                        <span>My Profile</span>
+                    </li>
+
+                     <li nz-menu-item *ngIf="client && client.hasKinderConnect" (click)="processKinderConnect($event)">
+                        <i class="universal access icon" [ngStyle]="{ 'font-size': '18px' }"></i>
+                        <span>KinderConnect</span>
+                    </li> 
+
+                    <!-- <li nz-menu-item [routerLink]="['/profile-setting']"
+                            routerLinkActive="router-link-active">
+                            <i class="cogs icon"></i>
+                            <span>Profile Settings</span>
+                    </li> -->
+
+                    <li nz-menu-divider></li>
+
+                    <li nz-menu-item (click)="doLogout($event)">
+                        <i class="sign out alternate icon"></i>
+                        <span>Logout</span>
+                    </li>
+
+                </ul>
+            </nz-dropdown-menu>
+            
+        </div>
+
+    </div>
+
+</mat-toolbar>

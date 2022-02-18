@@ -1,0 +1,25 @@
+<div class="page-layout simple tabbed">
+
+    <div class="header p-24">
+        <h1 [@animate]="{value:'*',params:{delay:'100ms', x:'-25px'}}">Service Settings</h1>
+    </div>
+    
+
+    <div class="content" [@animate]="{ value: '*', params: { delay: '200ms', y: '15px' } }">
+
+        <nav mat-tab-nav-bar>
+            <a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
+                [active]="rla.isActive">
+                {{link.label}}
+            </a>
+        </nav>
+
+        <div class="content p-24">
+
+            <router-outlet></router-outlet>
+
+        </div>
+
+    </div>
+
+</div>

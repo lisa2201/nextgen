@@ -1,0 +1,35 @@
+@import "src/@fuse/scss/fuse";
+
+services-list-view {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .content {
+
+        .action-icon {
+            :hover {
+                cursor: pointer;
+            }
+        }
+
+        .ant-table-thead {
+
+            tr {
+    
+                th {
+                    background-color:#ececec;
+                }
+    
+            }
+    
+        }
+
+    }
+
+}

@@ -1,0 +1,83 @@
+<form name="timeSheetForm" 
+    fxLayout="column" fxFlex 
+    nz-form [nzLayout]="'vertical'" 
+    [formGroup]="timeSheetForm" >
+
+    <nz-form-item>
+
+        <nz-form-label nzRequired>Date</nz-form-label>
+
+        <nz-form-control nzHasFeedback [nzErrorTip]="dateErrorTpl">
+
+            <nz-date-picker class="block" 
+                formControlName="date"
+                nzPlaceHolder="select date"
+                [nzInputReadOnly]="true"></nz-date-picker>
+
+            <ng-template #dateErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">Please select a date</ng-container>
+            </ng-template>
+        
+        </nz-form-control>
+
+    </nz-form-item>
+
+    <nz-form-item>
+
+        <nz-form-label class="block" nzRequired>
+            <span fxFlex="1 0 auto" fxLayoutAlign="space-between center">
+                Rooms
+                <a (click)="selectAllRooms($event)" *ngIf="rooms.length > 0">Select all</a>
+            </span>
+        </nz-form-label>
+
+        <nz-form-control nzHasFeedback [nzErrorTip]="roomErrorTpl">
+
+            <nz-select [nzDisabled]="centerWiseTickBox"
+                formControlName="rooms"
+                nzMode="multiple"
+                nzAllowClear
+                nzPlaceHolder="Please select">
+    
+                <nz-option *ngFor="let item of rooms" 
+                    [nzLabel]="item.title" 
+                    [nzValue]="item.id" 
+                    [nzHide]="!isNotSelected(item)"></nz-option>
+    
+            </nz-select>
+
+            <ng-template #roomErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">Please select at least one room</ng-container>
+            </ng-template>
+
+        </nz-form-control>
+
+    </nz-form-item>
+
+    <nz-form-item class="mb-0">
+
+        <nz-form-control>
+            
+            <label nz-checkbox
+                [ngModel]="centerWiseTickBox"
+                [ngModelOptions]="{standalone: true}"
+                (nzCheckedChange)="centerWise($event)">Center wise sheet (All Rooms)</label>
+
+        </nz-form-control>
+
+    </nz-form-item>
+
+    <nz-form-item class="mb-0">
+
+        <nz-form-control>
+
+            <label nz-checkbox
+                [ngModel]="securityClearanceTickBox"
+                [ngModelOptions]="{standalone: true}"
+                (nzCheckedChange)="securityClearance($event)">Include Security Clearance</label>
+
+        </nz-form-control>
+
+    </nz-form-item>
+
+</form>

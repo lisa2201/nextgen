@@ -1,0 +1,52 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+session-summary-view-sidebar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background: #fff;
+    overflow: hidden;
+
+    a {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        margin-top: 8px;
+
+        li {
+            flex-direction: column;
+            flex: 1 0 auto;
+            align-items: center;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+
+            &:hover, &.active {
+                background-color: $gray-bg;
+            }
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+
+            label {
+                font-size: 14px;
+                font-weight: 600;
+                margin-bottom: 4px;
+            }
+
+            .ant-badge {
+                display: block;
+            }
+        }
+    }
+}

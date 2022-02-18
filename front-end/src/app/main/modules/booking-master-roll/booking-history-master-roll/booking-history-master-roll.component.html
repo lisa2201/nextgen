@@ -1,0 +1,39 @@
+<div id="booking-history" class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Booking History</h1>
+
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar"
+            name="invitation-filter-sidebar"
+            position="left"
+            lockedOpen="gt-md">
+
+            <booking-history-filters
+                [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">
+            </booking-history-filters>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <booking-history-list-view class="center p-24 pt-0"
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+            (updateTableScroll)="updateScroll($event)">
+        </booking-history-list-view>
+        <!-- / CENTER -->
+
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

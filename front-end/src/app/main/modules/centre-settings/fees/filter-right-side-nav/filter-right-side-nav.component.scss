@@ -1,0 +1,13 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+fees-filter-right-side-nav{
+
+    .ant-radio-group.has-img{
+
+        display: inline-grid!important;
+    }
+    .mr-10-custom{
+        margin: 10px!important;
+    }
+}

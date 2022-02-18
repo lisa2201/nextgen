@@ -1,0 +1,89 @@
+@import "src/@fuse/scss/fuse";
+
+.parent-statement-preview-view {
+
+    // width: 595px;
+    width: 23cm;
+
+    p {
+        margin-bottom: 0px !important;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .main-container {
+
+        .ant-tag {
+            color: #676767;
+            border-radius: 10px;
+        }
+
+        .ant-table-content { 
+            min-height: 0 !important;
+            overflow-x: auto !important;
+        }
+
+        .center-info-row {
+
+            .logo-container {
+                width: 100px;
+                height: 70px;
+            }
+
+        }
+
+        .account-balance-summary-row {
+
+            .account-balance-container {
+
+                border-radius: 10px;
+                background-color: #f5f5f59c;
+                padding: 20px;
+
+            }
+
+        }
+
+        .item-description {
+            font-size: 12px;
+            color: rgba(0,0,0,0.65);
+        }
+
+        .service-total {
+            color: red;
+        }
+
+        .bpay-info-row {
+            
+            .bpay-container {
+                
+                border: 2px solid #0b2e68;
+                color: #0b2e68;
+
+                .bpay-text-container {
+                    font-weight: 700;
+                    font-size: 16px;
+                    line-height: 20px;
+                }
+                
+                .bpay-logo {
+                    height: 80px;
+                }
+
+            }
+
+        }
+
+    }
+
+    
+
+
+}

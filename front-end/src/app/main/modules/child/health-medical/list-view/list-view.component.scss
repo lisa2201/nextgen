@@ -1,0 +1,32 @@
+@import "src/@fuse/scss/fuse";
+
+allergy-list-view {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    #allergy{
+        background: white;
+    }
+
+    .ant-table-placeholder {
+        border-bottom: none !important;
+    }
+
+    .image-view{
+        height: 25px;
+        width: 25px;
+        margin-bottom: 4px;
+
+    }
+
+    .header{
+ 
+    border-bottom: 1px solid #e5e8eb ;
+    }
+}

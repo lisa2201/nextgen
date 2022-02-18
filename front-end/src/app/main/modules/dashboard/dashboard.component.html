@@ -1,0 +1,141 @@
+<div id="dashboard" class="page-layout simple" fxLayout="row" *canViewAuth>
+
+    <div class="center" fusePerfectScrollbar fxFlex fxLayout="column">
+
+        <!-- HEADER -->
+        <div class="header p-20">
+
+            <div nz-row [nzGutter]="24" fxLayout="row" fxLayoutAlign="space-between start">
+
+                <div nz-col [nzMd]="16" [nzXs]="20">
+                    <span class="mat-display-1 my-0 my-sm-24 welcome-message"
+                        [@animate]="{ value: '*', params: { x: '50px' } }">Welcome back, {{ user.name | titlecase }}!
+                    </span>
+                </div>
+
+                <div *ngIf="!isSiteManager && client && client.hasKinderConnect">
+                    <button nz-button 
+                        nzType="default" type="button" 
+                        [promiseBtn]="buttonLoader" 
+                        (click)="processKinderConnect($event)">
+                        <i class="universal access icon mr-8"></i>KinderConnect
+                    </button>
+                </div>
+
+                <div *ngIf="isSiteManager">
+                    <nz-select  class="branch_select" 
+                        [(ngModel)]="selectedBranch" 
+                        (ngModelChange)="selectBranch($event)" 
+                        nzPlaceHolder="Select a Branch">
+
+                        <nz-option *ngFor="let branch of branches"
+                            nzValue="{{ branch.id }}" nzLabel="{{ branch.name }}">
+                        </nz-option>
+
+                    </nz-select>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT -->
+        <div class="content" fxLayout="row">
+
+            <div fxFlex class="widget-group p-12" *ngIf="!hideWidgets"> 
+
+                <div nz-row [nzGutter]="24">
+
+                    <div class="px-0" nz-col [nzMd]="6" [nzSm]="11" [nzXs]="22" *hasPermission="['AC13']; belongsTo 'N01'">
+
+                        <app-parent-payment-summary-widget [selectedBranch]="selectedBranch"></app-parent-payment-summary-widget>
+
+                    </div>
+
+                    <!-- <div nz-col [nzMd]="6" [nzSm]="8" [nzXs]="12" *hasPermission="['AC0']; belongsTo 'N34'">
+
+                        <app-parent-payment-overdue-widget [selectedBranch]="selectedBranch"></app-parent-payment-overdue-widget>
+
+                    </div> -->
+                    
+                    <!-- <ng-container *ngIf="user.hasSiteManagerAccess">
+
+                        <div class="px-0" nz-col [nzMd]="6" [nzSm]="11" [nzXs]="22">
+
+                            <widget-booking-fees [selectedBranch]="selectedBranch"></widget-booking-fees>
+    
+                        </div>
+
+                    </ng-container>
+                        
+                    <ng-container *ngIf="!user.hasSiteManagerAccess">
+                        <div class="px-0" nz-col [nzMd]="6" [nzSm]="11" [nzXs]="22" *hasPermission="['AC12']; belongsTo 'N01'">
+
+                            <widget-booking-fees [selectedBranch]="selectedBranch"></widget-booking-fees>
+    
+                        </div>
+                    </ng-container> -->
+
+                    <div class="px-0" nz-col [nzMd]="6" [nzSm]="11" [nzXs]="22" *hasPermission="['AC12']; belongsTo 'N01'">
+
+                        <widget-booking-fees [selectedBranch]="selectedBranch"></widget-booking-fees>
+
+                    </div>
+
+                    
+
+                    <div class="px-0" nz-col [nzMd]="6" [nzSm]="11" [nzXs]="22" *hasPermission="['AC0']; belongsTo 'N22'">
+
+                        <ccs-notifications-dashboard-summary [selectedBranch]="selectedBranch"></ccs-notifications-dashboard-summary>
+
+                    </div>
+
+                    <div class="px-0" nz-col [nzMd]="6" [nzSm]="11" [nzXs]="22" *hasPermission="['AC0']; belongsTo 'N33'">
+
+                        <session-submissions-widget [selectedBranch]="selectedBranch"></session-submissions-widget>
+
+                    </div>
+
+                    <div class="px-0" nz-col [nzMd]="6" [nzSm]="11" [nzXs]="22" *hasPermission="['AC0']; belongsTo 'N26'">
+
+                        <widget-waitlist-summary [selectedBranch]="selectedBranch"></widget-waitlist-summary>
+
+                    </div>
+
+                    <div class="px-0" nz-col [nzMd]="6" [nzSm]="11" [nzXs]="22" *hasPermission="['AC0']; belongsTo 'N28'">
+
+                        <center-wise-ratio [selectedBranch]="selectedBranch"></center-wise-ratio>
+
+                    </div>
+
+                    <div class="px-0" nz-col [nzMd]="12" [nzSm]="11" [nzXs]="22" *hasPermission="['AC0']; belongsTo 'N28'">
+                        <widget-attendance-summary [selectedBranch]="selectedBranch"></widget-attendance-summary>
+                    </div>
+
+                </div>
+
+                <div nz-row nzAlign="top" [nzGutter]="24">
+
+                    <div class="px-0" nz-col [nzMd]="12" [nzSm]="12" [nzXs]="22" *hasPermission="['AC0']; belongsTo 'N25'">
+                         
+                        <widget-booking-utilisation [selectedBranch]="selectedBranch"></widget-booking-utilisation>
+
+                    </div>
+
+                    <div class="px-0" nz-col [nzMd]="12" [nzSm]="12" [nzXs]="22" *hasPermission="['AC0']; belongsTo 'N28'">
+
+                            <widget-live-ratio [selectedBranch]="selectedBranch"></widget-live-ratio>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- / CONTENT -->
+
+    </div>
+
+</div>

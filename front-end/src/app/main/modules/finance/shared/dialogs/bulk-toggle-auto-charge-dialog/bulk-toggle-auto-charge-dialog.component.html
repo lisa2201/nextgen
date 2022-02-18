@@ -1,0 +1,130 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Update Auto Charge</span>
+
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="autoChargeForm" fxLayout="column" fxFlex [nzLayout]="'vertical'"
+        [formGroup]="autoChargeForm" nz-form>
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }" [@fadeInOnEnter]>
+
+                
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+    
+                        <div fxLayout="row" fxLayoutAlign="space-between center">
+    
+                            <nz-form-label nzRequired fxFlex="60">Parent</nz-form-label>
+    
+                            <div fxFlex="40" fxLayoutAlign="end center" class="select-actions">
+                                <button nz-button nzType="link" class="pr-4 pl-0" [disabled]="parents.length === 0" (click)="toggleSelectAllParents(true)">Select All</button>
+                                <span>|</span>
+                                <button nz-button nzType="link" class="pl-4 pr-0" [disabled]="parents.length === 0" (click)="toggleSelectAllParents(false)">Select None</button>
+                            </div>
+    
+                        </div>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="parentsErrorTpl">
+    
+                            <nz-select 
+                                [nzMaxTagCount]="2" 
+                                [nzMaxTagPlaceholder]="tagPlaceHolder"
+                                nzShowSearch
+                                formControlName="parents" 
+                                nzMode="multiple"
+                                nzPlaceHolder="Select Parents">
+    
+                                <nz-option *ngFor="let parent of parents" nzValue="{{ parent.id }}"
+                                    nzLabel="{{ parent.getFullName() }}">
+                                </nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #tagPlaceHolder let-selectedList> and {{ autoChargeForm.get('parents').value.length - 2 }} more selected </ng-template>
+    
+                            <ng-template #parentsErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select atleast 1 parent
+                                </ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label>
+                            Auto Charge
+                            <i nz-tooltip nzTooltipTitle="Auto charge will be turned on or off for the active payment plans of the selected parents" class="question circle outline right icon ml-8 primary-color"></i>
+                        </nz-form-label>
+
+                        <nz-form-control>
+
+                            <nz-switch formControlName="auto_charge" nzCheckedChildren="On" nzUnCheckedChildren="Off"></nz-switch>
+
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <ng-container>
+
+                    <button 
+                        class="text-uppercase mr-8" 
+                        type="button" 
+                        nz-button
+                        nzType="primary"  
+                        [promiseBtn]="buttonLoading"
+                        (click)="submit($event)"
+                        [disabled]="autoChargeForm.invalid"
+                        >
+                        <i class="check icon mr-8"></i> 
+                        Submit
+                    </button>
+
+                </ng-container>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

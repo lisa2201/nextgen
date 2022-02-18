@@ -1,0 +1,559 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <ng-container *ngIf="!isHealth">
+        <form name="childForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="childForm"
+            nz-form (ngSubmit)="onFormSubmit($event, false)">
+    
+            <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+    
+                <div nz-row [nzGutter]="24">
+    
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                        <nz-form-item>
+    
+                            <nz-form-label nzRequired>First Name</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="firstNameErrorTpl">
+    
+                                <input nz-input formControlName="f_name" placeholder="first name" type="text" />
+    
+                                <ng-template #firstNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input first name
+                                    </ng-container>
+                                    <ng-container *ngIf="control.hasError('maxlength')">First name can't be longer than 150
+                                        characters</ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+    
+                    </div>
+    
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                        <nz-form-item>
+    
+                            <nz-form-label nzRequired>Last Name</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="lastNameErrorTpl">
+    
+                                <input nz-input formControlName="l_name" placeholder="last name" type="text" />
+    
+                                <ng-template #lastNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input last name</ng-container>
+                                    <ng-container *ngIf="control.hasError('maxlength')">Last name can't be longer than 150
+                                        characters</ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+    
+                    </div>
+    
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                        <nz-form-item>
+    
+                            <nz-form-label>Middle Name</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="lastNameErrorTpl">
+    
+                                <input nz-input formControlName="m_name" placeholder="middle name" type="text" />
+    
+                                <ng-template #lastNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input middle name
+                                    </ng-container>
+                                    <ng-container *ngIf="control.hasError('maxlength')">Last name can't be longer than 150
+                                        characters</ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+    
+                    </div>
+    
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                        <nz-form-item>
+    
+                            <nz-form-label>Legal First Name</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="lastNameErrorTpl">
+    
+                                <input nz-input formControlName="legal_f_name" placeholder="legal first name" type="text" />
+    
+                                <ng-template #lastNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input legal first name
+                                    </ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+    
+                    </div>
+    
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                        <nz-form-item>
+    
+                            <nz-form-label>Legal Last Name</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="lastNameErrorTpl">
+    
+                                <input nz-input formControlName="legal_l_name" placeholder="legal last name" type="text" />
+    
+                                <ng-template #lastNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please legal last name</ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+    
+                    </div>
+    
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                        <nz-form-item>
+    
+                            <nz-form-label>CRN</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="lastNameErrorTpl">
+    
+                                <input nz-input formControlName="crn" placeholder="CRN" type="text" />
+    
+                                <ng-template #lastNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input CRN</ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+    
+                    </div>
+    
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                        <nz-form-item>
+    
+                            <nz-form-label>State</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="lastNameErrorTpl">
+    
+                                <input nz-input formControlName="state" placeholder="state" type="text" />
+    
+                                <ng-template #lastNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input state</ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+    
+                    </div>
+    
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                        <nz-form-item>
+    
+                            <nz-form-label>Suburb</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="lastNameErrorTpl">
+    
+                                <input nz-input formControlName="suburb" placeholder="suburb" type="text" />
+    
+                                <ng-template #lastNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input first name
+                                    </ng-container>
+                                    <ng-container *ngIf="control.hasError('maxlength')">Last name can't be longer than 150
+                                        characters</ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+    
+                    </div>
+    
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                        <nz-form-item>
+    
+                            <nz-form-label>Postalcode</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="lastNameErrorTpl">
+    
+                                <input nz-input formControlName="postalcode" placeholder="postalcode" type="text" />
+    
+                                <ng-template #lastNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input first name
+                                    </ng-container>
+                                    <ng-container *ngIf="control.hasError('maxlength')">Last name can't be longer than 150
+                                        characters</ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+    
+                    </div>
+    
+                    <!-- cultural data -->
+                    <nz-collapse nzAccordion>
+    
+                        <nz-collapse-panel [nzHeader]="header" [nzActive]="false" (nzActiveChange)="onTabCollapsed($event)">
+    
+                            <ng-template #header>
+                                <div fxLayout="row" fxLayoutAlign="space-between center">
+    
+                                    <span fxLayout="row" fxLayoutAlign="space-between center">
+                                        Cultural Background
+                                    </span>
+    
+                                </div>
+                            </ng-template>
+                            <div>
+                                <nz-form-item>
+    
+                                    <nz-form-control>
+    
+                                        <nz-form-label>Aboriginal or Torres Strait Islander descent?</nz-form-label>
+    
+                                        <nz-select formControlName="ab_or_tsi" nzShowSearch nzAllowClear
+                                            nzPlaceHolder="Select...">
+    
+                                            <nz-option *ngFor="let items of aboriginals" nzValue="{{ items }}"
+                                                nzLabel="{{ items }}" title="{{items}}">
+                                            </nz-option>
+    
+                                        </nz-select>
+    
+                                    </nz-form-control>
+    
+                                </nz-form-item>
+                            </div>
+    
+                            <div>
+                                <nz-form-item>
+    
+                                    <nz-form-label>Child's cultural background?</nz-form-label>
+    
+                                    <nz-form-control nzHasFeedback>
+    
+                                        <input nz-input formControlName="cultural_background"
+                                            placeholder="Child's cultural background" type="text" />
+    
+                                    </nz-form-control>
+    
+                                </nz-form-item>
+                            </div>
+                            <div>
+                                <nz-form-item>
+    
+                                    <nz-form-label>What language is spoken at home?</nz-form-label>
+    
+                                    <nz-form-control nzHasFeedback>
+    
+                                        <input nz-input formControlName="language"
+                                            placeholder="What language is spoken at home" type="text" />
+    
+                                    </nz-form-control>
+    
+                                </nz-form-item>
+                            </div>
+    
+                            <div>
+                                <nz-form-item>
+    
+                                    <nz-form-control>
+                                        <nz-form-label>Does the child have any cultural requirements?</nz-form-label>
+    
+                                        <nz-switch style="padding-left: 20px"
+                                            (ngModelChange)="onCulturalRequirement($event)"
+                                            formControlName="cultural_requirements_chk" nzCheckedChildren="Yes"
+                                            nzUnCheckedChildren="No"></nz-switch>
+    
+                                    </nz-form-control>
+    
+                                </nz-form-item>
+                            </div>
+    
+                            <div>
+    
+                                <nz-form-item>
+    
+                                    <nz-form-control>
+    
+                                        <input *ngIf="culturalrequirementschecked" nz-input
+                                            formControlName="cultural_requirements" placeholder="Cultural requirements"
+                                            type="text" />
+                                    </nz-form-control>
+    
+                                </nz-form-item>
+    
+                            </div>
+    
+    
+                            <div>
+    
+                                <nz-form-item>
+    
+                                    <nz-form-control>
+                                        <nz-form-label>Does the child have any religious requirements?</nz-form-label>
+    
+                                        <nz-switch style="padding-left: 20px"
+                                            (ngModelChange)="onReligiousRequirementsChange($event)"
+                                            formControlName="religious_requirements_chk" nzCheckedChildren="Yes"
+                                            nzUnCheckedChildren="No">
+                                        </nz-switch>
+                                    </nz-form-control>
+    
+                                </nz-form-item>
+                            </div>
+                            <div>
+                                <nz-form-item>
+    
+                                    <nz-form-control>
+                                        <input *ngIf="religiousrequirementschecked" nz-input
+                                            formControlName="religious_requirements" placeholder="Religious requirements"
+                                            type="text" />
+                                    </nz-form-control>
+    
+                                </nz-form-item>
+                            </div>
+    
+                        </nz-collapse-panel>
+                    </nz-collapse>
+                </div>
+    
+            </div>
+    
+            <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row"
+                fxLayoutAlign="space-between center">
+    
+                <span>
+    
+                </span>
+    
+                <span class="text-right">
+    
+                    <button class="text-uppercase mr-8" *hasPermission="['AC0']; belongsTo 'N11'" nz-button nzType="primary"
+                        [disabled]="!childForm.valid" [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Save
+                    </button>
+    
+                    <button class="text-uppercase mr-8" type="button" nz-button nzType="default"
+                        (click)="resetForm($event, false)">
+                        Reset
+                    </button>
+    
+                    <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                        (click)="matDialogRef.close()">
+                        Close
+                    </button>
+    
+                </span>
+    
+            </div>
+    
+        </form>
+    </ng-container>
+
+    <ng-container *ngIf="isHealth">
+        <form name="healthMedicalForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="healthMedicalForm"
+        nz-form (ngSubmit)="onFormSubmit($event, true)">
+
+            <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+                
+                <div nz-row [nzGutter]="24">
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+
+                            <nz-form-label>Child's Medicare Number/Reference No.</nz-form-label>
+
+                            <nz-form-control >
+
+                                <input nz-input formControlName="child_medical_number"
+                                    placeholder="Child's Medicare Number/Reference No." type="text" />
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+
+                            <nz-form-label>Child's Medicare Expiry Date</nz-form-label>
+
+                            <nz-form-control >
+
+                                <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledPastDates"
+                                    formControlName="child_medicalexpiry_date" class="block"></nz-date-picker>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+
+                            <nz-form-label>Ambulance Cover Number</nz-form-label>
+
+                            <nz-form-control [nzErrorTip]="AmbulanceError">
+
+                                <input nz-input formControlName="ambulance_cover_no"
+                                    placeholder="Ambulance Cover Number" type="text" />
+                                <ng-template #AmbulanceError let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">Ambulance Cover No. can't be more than 150 characters</ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+
+                            <nz-form-label>Maternal & Child Health Centre</nz-form-label>
+
+                            <nz-form-control [nzErrorTip]="CenterError">
+
+                                <input nz-input formControlName="child_heallth_center"
+                                    placeholder="Maternal & Child Health Centre" type="text" />
+                                <ng-template #CenterError let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">Center name can't be more than 150 characters</ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+
+                            <nz-form-label>Medical Personnel/Service Name</nz-form-label>
+
+                            <nz-form-control [nzErrorTip]="NameError">
+
+                                <input nz-input formControlName="practitioner_name"
+                                    placeholder="Medical Practitioner/Service Name" type="text" />
+
+                                <ng-template #NameError let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">Name can't be more than 150 characters</ng-container>
+                                </ng-template>
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+
+                            <nz-form-label>Medical Personnel/Service Phone Number</nz-form-label>
+
+                            <nz-form-control [nzErrorTip]="PhoneError">
+
+                                <input nz-input formControlName="practitioner_phoneNo"
+                                    placeholder="Medical Practitioner/Service Phone Number" type="text" />
+                                <ng-template #PhoneError let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">Phone Number can't be more than 150 characters</ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+
+                            <nz-form-label>Medical Personnel/Service Address</nz-form-label>
+
+                            <nz-form-control [nzErrorTip]="AddressError">
+
+                                <input nz-input formControlName="practitioner_address"
+                                    placeholder="Medical Practitioner/Service Address" type="text" />
+                                <ng-template #AddressError let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">Address can't be more than 150 characters</ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row"
+                fxLayoutAlign="space-between center">
+    
+                <span>
+    
+                </span>
+    
+                <span class="text-right">
+    
+                    <button class="text-uppercase mr-8" *hasPermission="['AC0']; belongsTo 'N11'" nz-button nzType="primary"
+                        [disabled]="!healthMedicalForm.valid" [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Save
+                    </button>
+    
+                    <button class="text-uppercase mr-8" type="button" nz-button nzType="default"
+                        (click)="resetForm($event, true)">
+                        Reset
+                    </button>
+    
+                    <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                        (click)="matDialogRef.close()">
+                        Close
+                    </button>
+    
+                </span>
+    
+            </div>
+
+        </form>
+    </ng-container>
+</div>

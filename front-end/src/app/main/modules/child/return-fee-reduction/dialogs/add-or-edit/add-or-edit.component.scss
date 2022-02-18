@@ -1,0 +1,35 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.return-fee-reduction-new-or-edit-dialog {
+  @include media-breakpoint("xs") {
+    width: 100%;
+  }
+
+  @include media-breakpoint("gt-xs") {
+    width: 640px;
+  }
+
+  .mat-dialog-container {
+    padding: 0;
+  }
+
+  .dialog-content-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  form {
+    width: 100%;
+    text-align: left;
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+  }
+  nz-alert {
+    margin: 0 25px 5px 25px;
+  }
+}

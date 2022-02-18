@@ -1,0 +1,158 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="invitationForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="invitationForm" nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Email</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl">
+
+                    <input nz-input formControlName="email" placeholder="email" type="email" />
+
+                    <ng-template #emailErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input your email</ng-container>
+                        <ng-container *ngIf="control.hasError('email')">Please enter a valid email address</ng-container>
+                        <ng-container *ngIf="control.hasError('exists')">Email already exists</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <nz-form-item *ngIf="displayLevelSelection()">
+
+                <nz-form-label nzRequired>Type</nz-form-label>
+
+                <nz-form-control [nzErrorTip]="typeErrorTpl">
+
+                    <nz-radio-group formControlName="type" nzButtonStyle="solid" class="has-img">
+
+                        <label nz-radio-button *ngFor="let item of levels | keyvalue; trackBy: trackByFn;" nzValue="{{ item.key }}">
+                            {{ item.value | replace: '-' : ' ' }}
+                        </label>
+
+                    </nz-radio-group>
+
+                    <ng-template #typeErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input your type</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <nz-form-item *ngIf="showRolesControl">
+
+                <nz-form-label nzRequired>Select Roles</nz-form-label>
+
+                <nz-form-control 
+                    formArrayName="roles"
+                    [nzValidateStatus]="rolesFormStatus"
+                    [nzErrorTip]="rolesErrorTpl">
+
+                    <ng-container *ngIf="selectedRoles.length > 0; else typeEmpty">
+
+                        <ng-container *ngFor="let item of selectedRoles; trackBy: item?.index">
+
+                            <div>
+                                <label nz-checkbox 
+                                    [formControlName]="item?.index" 
+                                    (ngModelChange)="onCheckboxChange($event)">{{ item?.display }}</label>
+                            </div>
+
+                        </ng-container>
+
+                    </ng-container>
+                    
+                    <ng-template #typeEmpty>
+                    
+                        <nz-empty
+                            class="e-sm-img"
+                            [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                            [nzNotFoundContent]="contentTpl">
+                        </nz-empty>
+
+                        <ng-template #contentTpl>
+                            <div class="mt-16">Roles not available! Please select different role type</div>
+                        </ng-template>
+
+                    </ng-template>
+
+                    <ng-template #rolesErrorTpl let-control>
+                        <ng-container>Please select at least one option from the list</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <ng-container *ngIf="!editMode">
+                    <button class="text-uppercase mr-8"
+                        *hasPermission="['AC1']; belongsTo 'N09'"
+                        nz-button 
+                        nzType="primary" 
+                        [disabled]="!invitationForm.valid"
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Save
+                    </button>
+                </ng-container>
+                
+                <ng-container *ngIf="editMode">
+                    <button class="text-uppercase mr-8"
+                        *hasPermission="['AC2']; belongsTo 'N09'"
+                        nz-button 
+                        nzType="primary" 
+                        [disabled]="!invitationForm.valid"
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Update
+                    </button>
+                </ng-container>
+    
+                <button class="text-uppercase mr-8" 
+                    type="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+    
+                <button class="text-uppercase mat-close-btn" 
+                    type="button"
+                    nz-button 
+                    nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

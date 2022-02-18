@@ -1,0 +1,142 @@
+<!-- <p>
+  provider-message works!
+</p> -->
+<!-- HEADER -->
+<div class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" style="width: 380px; max-width: 380px;" name="table-sidebar2" position="left">
+
+            <ccs-entitlement-history-sidenav [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">
+            </ccs-entitlement-history-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- LIST VIEW -->
+        <div id="ccs" class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+        <span class="text-left">
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Entitlement History</h1>
+        </span>
+
+    </div>
+
+    <!-- FILTER -->
+    <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+        <span fxLayout="row" fxLayoutAlign="space-between center">
+
+            <button *ngIf="enableSideNav" class="text-uppercase blank" nz-button nzType="link" (click)="toggleSidebar('table-sidebar2')">
+                <i class="filter icon custom-icon"></i>
+            </button>
+
+            <nz-divider nzType="vertical" class="mr-16"></nz-divider>
+
+        </span>
+
+    </div>
+    <!--/ FILTER -->
+    <div class="content p-24" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+
+
+
+        <ng-container>
+            <nz-table #headerTable [nzScroll]="{ y: '340px' }" style=" width: 100% !important;"
+
+                    [nzShowSizeChanger]="pageSizeChanger"
+                    [nzFrontPagination]="false"
+                    [nzData]="messageData"
+                    [nzLoading]="tableLoading"
+                    [nzTotal]="total"
+                    [(nzPageIndex)]="pageIndex"
+                    [(nzPageSize)]="pageSize"
+                    [nzPageSizeOptions]="pageSizeOptions"
+                    (nzPageIndexChange)="onTableChange()"
+                    (nzPageSizeChange)="onTableChange(true)"
+                    [nzNoResult]="emptyBlock"
+                    [nzLoadingIndicator]="indicatorTemplate"
+                    [nzSimple]="mobilePagination"
+
+            >
+                <thead>
+                    <tr>
+                        <th nzWidth="150px">Child</th>
+                        <th nzWidth="150px">Enrolment ID</th>
+                        <th nzWidth="150px">Date of Entitlement</th>
+                        <th nzWidth="150px">CCS Percentage</th>
+                        <th nzWidth="150px">CCS Withholding Percentage</th>
+                        <th nzWidth="150px">CCS Hours</th>
+                        <th nzWidth="150px">Old CCS Percentage</th>
+                        <th nzWidth="150px">Old CCS Hours</th>
+                        <th nzWidth="150px">Apportioned Hours</th>
+                        <th nzWidth="150px">ACCS Hourly Rate Cap Increase</th>
+                        <th nzWidth="150px">Annual Cap Reached</th>
+                        <th nzWidth="150px">Absence Count</th>
+                        <th nzWidth="150px">Pre School Excemption</th>
+                        <th nzWidth="150px">Paid Absences</th>
+                        <th nzWidth="150px">Unpaid Absences</th>
+                        <th nzWidth="150px">Absences Available No Evidence</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                </tr>
+                    <tr *ngFor="let item of headerTable.data">
+                        <td>{{ (item.child) ? item.child.first_name : null }} {{ (item.child)? item.child.last_name : null}}</td>
+                        <td>{{ item.enrolmentId }}</td>
+                        <td>{{ item.date }}</td>
+                        <td>{{ item.ccsPercentage }}</td>
+                        <td>{{ item.ccsWithholdingPercentage }}</td>
+                        <td>{{ item.ccsTotalHours }}</td>
+                        <td>{{ (item.previous)? item.oldCCSPercentage : 'N/A'}}</td>
+                        <td>{{ (item.previous)? item.oldCCSHours : 'N/A' }}</td>
+                        <td>{{ item.apportionedHours }}</td>
+                        <td>{{ item.accsHourlyRateCapIncrease }}</td>
+                        <td>{{ item.annualCapReached }}</td>
+                        <td>{{ item.absenceCount }}</td>
+                        <td>{{ item.preSchoolExcemption }}</td>
+                        <td>{{ item.paidAbsences }}</td>
+                        <td>{{ item.unpaidAbsences }}</td>
+                        <td>{{ item.absencesAvailableNoEvidence }}</td>
+
+                        <!--<td>{{item.dateTime | date:"dd-MM-yyyy"}}</td>-->
+                    </tr>
+                </tbody>
+            </nz-table>
+
+            <ng-template #indicatorTemplate>
+                <div class="is-loading">
+                    <span class="btn-spinner card-loader"></span>
+                </div>
+            </ng-template>
+
+            <ng-template #emptyBlock>
+
+                <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                    [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                    <ng-template #contentTpl>
+                        <h4 class="mt-24">No Data Found</h4>
+                        <span>Looks like there's no information to display here</span>
+                    </ng-template>
+
+                </nz-empty>
+
+            </ng-template>
+
+        </ng-container>
+
+    </div>
+</div>
+        <!-- / LIST VIEW -->
+
+    </div>
+</div>
+
+<!-- / CONTENT -->

@@ -1,0 +1,394 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{title}}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                    aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="newInputForm"
+          nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+             [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Type</nz-form-label>
+
+                        <nz-form-control nzHasFeedback>
+
+                            <nz-select formControlName="type"
+                                       (ngModelChange)="formChange($event)"
+                                       [(ngModel)]="selectedInputType"
+                                       [nzDisabled]="!forNewField"
+                                       nzPlaceHolder="Please Select" nzShowSearch nzAllowClear>
+
+                                <nz-option *ngFor="let item of inputTypesList" nzValue="{{ item.value }}"
+                                           nzLabel="{{ item.label }}" title="{{item.label}}">
+                                </nz-option>
+
+                            </nz-select>
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <nz-form-item class="ck-editor-container">
+
+                        <nz-form-label
+                            nzRequired>{{(paragraph !== '' && selectedInputType == 'richTextBox') ? 'Paragraph' : (selectedInputType == 'hyperlink') ? 'Text' : 'Question'}}</nz-form-label>
+
+                        <nz-form-control nzHasFeedback>
+                            <nz-form-label
+                                *ngIf="paragraph=='' && newInputForm.controls.question.value == ''"
+                                (click)="previewParagraphBox()">
+                                Click here to add text
+                            </nz-form-label>
+                            <ckeditor
+                                [hidden]="paragraph=='' && newInputForm.controls.question.value == ''"
+                                id="editor"
+                                [(ngModel)]="paragraph"
+                                [editor]="Editor"
+                                [disabled]="true"
+                                (click)="previewParagraphBox()"
+                                formControlName="question"
+                            >
+                            </ckeditor>
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div *ngIf="selectedInputType=='select'|| multi" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12"
+                     [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Add Options</nz-form-label>
+
+                        <nz-form-control nzHasFeedback>
+                            <nz-select nzMode="tags" formControlName="selectOptions" nzPlaceHolder="Type Options"
+                                       [(ngModel)]="listOfTagOptions">
+                                <nz-option *ngFor="let option of listOfOption" [nzLabel]="option"
+                                           [nzValue]="option"></nz-option>
+                            </nz-select>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div *ngIf="placeholder" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12"
+                     [nzXl]="12"
+                     [nzXXl]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Placeholder</nz-form-label>
+
+                        <nz-form-control nzHasFeedback>
+
+                            <input nz-input formControlName="placeholder" placeholder="Placeholder" type="text"/>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div *ngIf="selectedInputType=='hyperlink'" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12"
+                     [nzXl]="12"
+                     [nzXXl]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Hyperlink</nz-form-label>
+
+                        <nz-form-control [nzErrorTip]="hyperlink" nzHasFeedback>
+
+                            <input nz-input formControlName="hyperlink" placeholder="https://..." type="text"/>
+
+                            <ng-template #hyperlink let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please
+                                    input hyperlink
+                                </ng-container>
+                                <ng-container *ngIf="control.hasError('pattern')">Please enter Valid URL Only
+                                </ng-container>
+                            </ng-template>
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Column Layout</nz-form-label>
+
+                        <nz-form-control nzHasFeedback>
+
+                            <nz-select formControlName="size"
+                                       nzPlaceHolder="Please Select"
+                                       [nzDisabled]="sizeDisable"
+                                       nzShowSearch
+                                       nzAllowClear>
+
+                                <nz-option *ngFor="let item of sizes" nzValue="{{ item.value }}"
+                                           nzLabel="{{ item.label }}" title="{{item.label}}">
+                                </nz-option>
+
+                            </nz-select>
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div
+                    [hidden]="selectedInputType=='richTextBox'|| selectedInputType=='hyperlink'"
+                    nz-col [nzXs]="24"
+                    [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Required</nz-form-label>
+
+                        <nz-form-control>
+
+                            <nz-switch formControlName="required" nzCheckedChildren="Yes" [(ngModel)]="required"
+                                       [nzDisabled]="hidden || (!forNewField && !forNewFieldAndMandory)"
+                                       nzUnCheckedChildren="No">
+                            </nz-switch>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div
+                    *ngIf="selectedInputType=='upload-switch'"
+                    nz-col [nzXs]="24"
+                    [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label>File Upload Required ( If toggle: Yes )</nz-form-label>
+
+                        <nz-form-control>
+
+                            <nz-switch formControlName="fileUploadRequired"
+                                       nzCheckedChildren="Yes"
+                                       [(ngModel)]="fileUploadRequired"
+                                       nzUnCheckedChildren="No">
+                            </nz-switch>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div *ngIf="title=='Edit'" nz-col
+                     [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Hidden</nz-form-label>
+
+                        <nz-form-control>
+                            <!--                            [(ngModel)]="(required)?false:true"-->
+                            <!--                            [nzDisabled]="required"-->
+                            <nz-switch formControlName="hidden" nzCheckedChildren="Yes"
+                                       nzUnCheckedChildren="No"
+                                       [(ngModel)]="hidden"
+                                       [nzDisabled]="required"
+                            ></nz-switch>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+                </div>
+
+                <!--multiple option checkbox-->
+
+                <div *ngIf="selectedInputType=='checkbox' || selectedInputType=='select'" nz-col [nzXs]="24"
+                     [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    <nz-form-item>
+                        <nz-form-control>
+                            <label (nzCheckedChange)="multiChange()" nz-checkbox [(ngModel)]="multi"
+                                   formControlName="multiple">
+                                <span>Multiple</span>
+                            </label>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <!--traferable checkbox-->
+
+                <div *ngIf="settingsMaster=='enquiry'" nz-col [nzXs]="24"
+                     [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <nz-form-item>
+
+
+                        <nz-form-control>
+
+                            <label [(ngModel)]="transferableToWaitlist" nz-checkbox
+                                   formControlName="transferableToWaitlist"
+                                   (nzCheckedChange)="transferableActionWaitlist()"
+                                   [nzDisabled]="title =='Edit' &&  !((settingsMaster=='enquiry' && inputEdit.access_for == 'enquiry') ||(settingsMaster=='waitlist'&& inputEdit.access_for == 'both') || (settingsMaster=='enquiry'&& inputEdit.access_for == 'enq-wait') || (settingsMaster=='enquiry'&& inputEdit.access_for == 'enq-enr')|| (settingsMaster=='enquiry'&& inputEdit.access_for == 'triple'))"
+                            >
+                                <span>Use in waitlist form</span>
+                            </label>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+                </div>
+
+                <!-- transferable sections - waitlist-->
+                <div *ngIf="transferableActiveWait && settingsMaster=='enquiry'" nz-col [nzXs]="24" [nzSm]="24"
+                     [nzMd]="24" [nzLg]="24" [nzXl]="24"
+                     [nzXXl]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Under which section you want to place the new field in waitlist
+                            form
+                        </nz-form-label>
+
+                        <nz-form-control nzHasFeedback>
+
+                            <nz-select formControlName="relevantSectionWaitlist"
+                                       nzPlaceHolder="Please Select" nzShowSearch nzAllowClear>
+
+                                <nz-option *ngFor="let item of sectionslistWaitlist" nzValue="{{ item.value }}"
+                                           nzLabel="{{ item.label }}" title="{{item.label}}"
+                                           [nzDisabled]="title =='Edit' &&  !((settingsMaster=='enquiry' && inputEdit.access_for == 'enquiry') || (settingsMaster=='waitlist' && inputEdit.access_for == 'waitlist') || (settingsMaster=='enquiry' && inputEdit.access_for == 'enquiry') || (settingsMaster=='waitlist' && inputEdit.access_for == 'both') || (settingsMaster=='enquiry'&& inputEdit.access_for == 'enq-wait') || (settingsMaster=='enquiry'&& inputEdit.access_for == 'enq-enr')|| (settingsMaster=='enquiry'&& inputEdit.access_for == 'triple'))"
+                                >
+                                </nz-option>
+
+                            </nz-select>
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+                <!--traferable checkbox-->
+
+                <div *ngIf="settingsMaster=='waitlist'|| settingsMaster=='enquiry'" nz-col [nzXs]="24"
+                     [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <nz-form-item>
+
+
+                        <nz-form-control>
+
+                            <label [(ngModel)]="transferable" nz-checkbox formControlName="transferable"
+                                   (nzCheckedChange)="transferableAction()"
+                                   [nzDisabled]="title =='Edit' &&  !((settingsMaster=='waitlist' && inputEdit.access_for == 'waitlist') || (settingsMaster=='enquiry' && inputEdit.access_for == 'enquiry') || (settingsMaster=='waitlist' && inputEdit.access_for == 'both') || (settingsMaster=='enquiry'&& inputEdit.access_for == 'enq-wait') || (settingsMaster=='enquiry'&& inputEdit.access_for == 'enq-enr')|| (settingsMaster=='enquiry'&& inputEdit.access_for == 'triple'))"
+                            >
+                                <span>Use in enrolment form</span>
+                            </label>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+                </div>
+
+
+                <!-- transferable sections - enrolment -->
+                <div *ngIf="transferableActive && (settingsMaster=='waitlist' || settingsMaster=='enquiry')" nz-col
+                     [nzXs]="24" [nzSm]="24"
+                     [nzMd]="24" [nzLg]="24" [nzXl]="24"
+                     [nzXXl]="24"
+                >
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Under which section you want to place the new field in enrolment
+                            form
+                        </nz-form-label>
+
+                        <nz-form-control nzHasFeedback>
+
+                            <nz-select formControlName="relevantSection"
+                                       nzPlaceHolder="Please Select" nzShowSearch nzAllowClear>
+
+                                <nz-option *ngFor="let item of sectionslist" nzValue="{{ item.value }}"
+                                           nzLabel="{{ item.label }}" title="{{item.label}}"
+                                           [nzDisabled]="title =='Edit' &&  !((settingsMaster=='waitlist' && inputEdit.access_for == 'waitlist') || (settingsMaster=='enquiry' && inputEdit.access_for == 'enquiry') || (settingsMaster=='waitlist' && inputEdit.access_for == 'both') || (settingsMaster=='enquiry'&& inputEdit.access_for == 'enq-wait') || (settingsMaster=='enquiry'&& inputEdit.access_for == 'enq-enr')|| (settingsMaster=='enquiry'&& inputEdit.access_for == 'triple'))"
+                                >
+                                </nz-option>
+
+                            </nz-select>
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row"
+             fxLayoutAlign="space-between center">
+
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8"
+                        *hasPermission="['AC1']; belongsTo 'N57'"
+                        nz-button
+                        nzType="primary"
+                        [disabled]="!newInputForm.valid"
+                        [promiseBtn]="buttonLoader">
+                    <i class="plus icon mr-8"></i> {{(title == 'Edit') ? 'Update To Form' : 'Save To Form'}}
+                </button>
+
+                <button class="text-uppercase mr-8"
+                        type="button"
+                        nz-button
+                        nzType="default"
+                        [disabled]="!forNewField"
+                        (click)="resetForm($event)">
+                    Reset
+                </button>
+
+                <button class="text-uppercase mat-close-btn"
+                        type="button"
+                        nz-button
+                        nzType="danger"
+                        (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

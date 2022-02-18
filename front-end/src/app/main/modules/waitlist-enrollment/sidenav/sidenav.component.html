@@ -1,0 +1,212 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex [formGroup]="filtersForm">
+
+        <div class="mb-16" [hidden]="!siteManager">
+
+            <ng-container *hasPermission="['AC2']; belongsTo 'N26'">
+
+                <label class="filter-label">Branch</label>
+
+                <nz-select formControlName="branch" nzShowSearch nzAllowClear nzPlaceHolder="Select">
+
+                    <nz-option *ngFor="let item of branches" nzValue="{{ item.id }}" nzLabel="{{ item.name }}">
+                    </nz-option>
+
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16">
+
+            <ng-container *hasPermission="['AC2']; belongsTo 'N26'">
+
+                <label class="type-label">Type</label>
+
+                <nz-select formControlName="type" nzPlaceHolder="Select Type" (ngModelChange)="selectfields($event)">
+
+                    <nz-option *ngFor="let item of type" nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                    </nz-option>
+
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16" *ngIf="this.currenttype == '2'">
+
+            <ng-container *hasPermission="['AC2']; belongsTo 'N26'">
+
+                <label class="filter-label">Status</label>
+
+                <nz-select formControlName="status" nzShowSearch nzAllowClear nzPlaceHolder="Select Status">
+
+                    <nz-option *ngFor="let item of status" nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                    </nz-option>
+
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16" class="mb-16" *ngIf="this.currenttype == '2'">
+
+            <ng-container *hasPermission="['AC2']; belongsTo 'N26'">
+
+                <label class="filter-label">Priority</label>
+
+                <nz-select formControlName="priority" nzShowSearch nzAllowClear nzPlaceHolder="Select Priority">
+
+                    <nz-option *ngFor="let value of priority" nzValue="{{ value }}" nzLabel="{{ value }}">
+                    </nz-option>
+
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16">
+
+            <ng-container *hasPermission="['AC2']; belongsTo 'N26'">
+
+                <label *ngIf="this.currenttype == '2'" class="filter-label">Application Date</label>
+                <label *ngIf="this.currenttype == '1'" class="filter-label">Submitted Date</label>
+
+                <nz-range-picker formControlName="application_date" class="block"></nz-range-picker>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16" *ngIf="this.currenttype == '2'">
+
+            <ng-container *hasPermission="['AC2']; belongsTo 'N26'">
+
+                <label class="filter-label">Expected Start Date</label>
+
+                <nz-range-picker formControlName="expected_start_date" class="block"></nz-range-picker>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16">
+
+            <ng-container *hasPermission="['AC2']; belongsTo 'N26'">
+
+                <label class="filter-label">Age</label>
+
+                <nz-select formControlName="age" nzShowSearch nzAllowClear nzPlaceHolder="Select Age">
+
+                    <nz-option *ngFor="let item of age" nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                    </nz-option>
+
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16" *ngIf="this.currenttype == '2'">
+
+            <ng-container *hasPermission="['AC2']; belongsTo 'N26'">
+
+                <label class="filter-label">Gender</label>
+
+                <nz-select formControlName="gender" nzShowSearch nzAllowClear nzPlaceHolder="Select Gender">
+
+                    <nz-option *ngFor="let item of gender" nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                    </nz-option>
+
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16">
+
+            <ng-container *hasPermission="['AC2']; belongsTo 'N26'">
+
+                <label class="filter-label">#Days Waiting</label>
+
+                <nz-select formControlName="days_waiting" nzShowSearch nzAllowClear nzPlaceHolder="Select Days">
+
+                    <nz-option *ngFor="let item of number_of_days" nzValue="{{ item }}" nzLabel="{{ item }}">
+                    </nz-option>
+
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16" *ngIf="this.currenttype == '2'">
+
+            <ng-container *hasPermission="['AC2']; belongsTo 'N26'">
+
+                <label class="filter-label">Sibilings</label>
+
+                <nz-select formControlName="sibilings" nzShowSearch nzAllowClear nzPlaceHolder="Select">
+
+                    <nz-option *ngFor="let item of number_of_sibilings" nzValue="{{ item }}" nzLabel="{{ item }}">
+                    </nz-option>
+
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+
+        <button nz-button nzType="default" *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+                (click)="clearFilter($event)">Reset
+        </button>
+
+    </form>
+
+</div>
+<!-- / SIDEBAR CONTENT -->
+
+<!-- SIDEBAR ACTION -->
+<nz-button-group fxLayoutAlign="space-between center" class="filter-action px-24 py-16">
+    <span>
+         <button nz-button
+                 (click)="clearFilter($event)"
+                 [disabled]="checkClearFilter()">Clear
+        </button>
+
+        <button nz-button nzType="primary"
+                [promiseBtn]="buttonLoader"
+                (click)="submitFilter($event)">Filter
+        </button>
+    </span>
+
+    <span hidden>
+        <button nz-button nz-dropdown [nzDropdownMenu]="menu">
+                        <i nz-icon nzType="download"></i>Print</button>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu>
+                    <li nz-menu-item (click)="downloadPdf($event,true)">
+                        <i nz-icon nzType="file-pdf" nzTheme="outline"></i>PDF
+                    </li>
+                    <li nz-menu-item (click)="downloadPdf($event, false)">
+                        <i nz-icon nzType="file-text" nzTheme="outline"></i>CSV
+                    </li>
+                </ul>
+            </nz-dropdown-menu>
+    </span>
+</nz-button-group>
+<!-- / SIDEBAR ACTION -->

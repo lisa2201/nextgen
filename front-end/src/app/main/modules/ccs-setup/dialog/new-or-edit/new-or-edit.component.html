@@ -1,0 +1,141 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{dialogTitle}} </span>
+
+            <button mat-icon-button disableRipple="true"
+                aria-label="Close dialog"
+                (click)="matDialogRef.close()">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="ccsForm" class="compose-form" fxLayout="column" [nzLayout]="'vertical'" [formGroup]="ccsForm" (ngSubmit)="onFormSubmit($event)" fxFlex nz-form>
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Your Device Activation Code</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="codeErrorTpl">
+
+                    <input nz-input formControlName="activation_code" placeholder="Your Device Activation Code" type="text" />
+
+                    <ng-template #codeErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input your activation code</ng-container>
+                        <ng-container *ngIf="control.hasError('maxlength')">Activation code can't be longer than 20 characters</ng-container>
+                        <ng-container *ngIf="control.hasError('exists')">Code already exists</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Device Name</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="deviceErrorTpl">
+
+                    <input nz-input formControlName="device_name" placeholder="Device Name" type="text" />
+
+                    <ng-template #deviceErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('maxlength')">device name can't be longer than 40 characters</ng-container>
+                        <ng-container *ngIf="control.hasError('required')">Please input your device name</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <nz-form-item>
+            
+                <nz-form-label nzRequired>PRODA Org ID</nz-form-label>
+            
+                <nz-form-control nzHasFeedback [nzErrorTip]="prodaErrorTpl">
+            
+                    <input nz-input formControlName="proda_org_id" placeholder="PRODA Org ID" type="text" />
+            
+                    <ng-template #prodaErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('maxlength')">PRODA Org ID code can't be longer than 40 characters</ng-container>
+                        <ng-container *ngIf="control.hasError('required')">Please input your PRODA Org ID</ng-container>
+                        <!-- <ng-container *ngIf="control.hasError('email')">Please enter a valid email address
+                        </ng-container> -->
+                    </ng-template>
+            
+                </nz-form-control>
+            
+            </nz-form-item>
+
+            <nz-form-item>
+            
+                <nz-form-label nzRequired>Person ID</nz-form-label>
+            
+                <nz-form-control nzHasFeedback [nzErrorTip]="personErrorTpl">
+            
+                    <input nz-input formControlName="person_id" placeholder="Person ID" type="text" />
+            
+                    <ng-template #personErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('maxlength')">Person ID can't be longer than 40 characters</ng-container>
+                        <ng-container *ngIf="control.hasError('required')">Please input your person ID</ng-container>
+                        <!-- <ng-container *ngIf="control.hasError('email')">Please enter a valid email address
+                        </ng-container> -->
+                    </ng-template>
+            
+                </nz-form-control>
+            
+            </nz-form-item>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <ng-container *ngIf="editMode">
+                    <button class="text-uppercase mr-8" 
+                            *hasPermission="['AC1']; belongsTo 'N22'" 
+                            nz-button nzType="primary"
+                            [disabled]="!ccsForm.valid" 
+                            [promiseBtn]="buttonLoader">
+                            <i class="plus icon mr-8"></i> Refresh
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="!editMode">
+                    <button class="text-uppercase mr-8" 
+                        *hasPermission="['AC1']; belongsTo 'N22'" 
+                        nz-button nzType="primary"
+                        [disabled]="!ccsForm.valid" 
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Activate
+                    </button>
+                </ng-container>
+            
+                <button class="text-uppercase mr-8" type="button" nz-button nzType="default"
+                    (click)="resetForm($event)"
+                    *ngIf="!editMode">
+                    Reset
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

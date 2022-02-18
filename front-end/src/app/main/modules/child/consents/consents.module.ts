@@ -1,0 +1,118 @@
+import {NgModule} from '@angular/core';
+import {ChildConsentsComponent} from './child-consents.component';
+import {AuthGuard} from 'app/shared/guard/auth.guard';
+import {RouterModule} from '@angular/router';
+import {TranslateModule} from '@ngx-translate/core';
+import {FuseSharedModule} from '@fuse/shared.module';
+import {KM8SharedModule} from 'app/shared/shared.module';
+import {RyTimePickerModule, S3UploadModule} from 'app/shared/components';
+import {MatButtonModule} from '@angular/material/button';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatIconModule} from '@angular/material/icon';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {
+    NzFormModule,
+    NzSelectModule,
+    NzSpinModule,
+    NzEmptyModule,
+    NzButtonModule,
+    NzIconModule,
+    NzRadioModule,
+    NzInputModule,
+    NzCheckboxModule,
+    NzDropDownModule,
+    NzTabsModule,
+    NzGridModule,
+    NzSwitchModule,
+    NzTableModule,
+    NzDatePickerModule,
+    NzModalModule,
+    NzAlertModule,
+    NzSkeletonModule,
+    NzListModule,
+    NzCardModule,
+    NzDividerModule,
+    NzAvatarModule
+} from 'ng-zorro-antd';
+import {FuseSidebarModule} from '@fuse/components';
+import {TooltipModule} from 'ng2-tooltip-directive';
+import {ChildConsentsService} from './services/child-consents.service';
+import {MatExpansionModule} from '@angular/material/expansion';
+
+
+const routes = [
+    {
+        path: 'consents',
+        component: ChildConsentsComponent,
+        canActivate: [
+            AuthGuard
+        ],
+        data:
+            {
+                belongsTo: 'N07',
+                permissions: ['AC0'],
+                title: 'Child - Consents'
+            },
+        resolve:
+            {
+                consentsData: ChildConsentsService
+            }
+    }
+];
+
+@NgModule({
+    declarations: [ChildConsentsComponent],
+    imports: [
+        RouterModule.forChild(routes),
+
+        TranslateModule,
+
+        FuseSharedModule,
+        KM8SharedModule,
+
+        MatDialogModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatMenuModule,
+
+        RyTimePickerModule,
+
+        NzFormModule,
+        NzSelectModule,
+        NzSpinModule,
+        NzEmptyModule,
+        NzButtonModule,
+        NzIconModule,
+        NzRadioModule,
+        NzInputModule,
+        NzCheckboxModule,
+        NzDropDownModule,
+        NzTabsModule,
+        NzGridModule,
+        NzSwitchModule,
+        NzTableModule,
+        NzDatePickerModule,
+        NzModalModule,
+        NzAlertModule,
+        NzSkeletonModule,
+        NzListModule,
+        NzCardModule,
+        NzDividerModule,
+
+        FuseSidebarModule,
+
+        TooltipModule,
+        S3UploadModule,
+        NzAvatarModule,
+        MatExpansionModule
+    ],
+    providers: [
+        ChildConsentsService
+    ]
+})
+export class ConsentsModule {
+}

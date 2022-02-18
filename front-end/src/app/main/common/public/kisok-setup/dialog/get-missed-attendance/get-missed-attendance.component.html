@@ -1,0 +1,168 @@
+<div class="loading-bar" *ngIf="viewLoading" [@fadeMotion]>
+    <div class="__inner">
+        <img src="assets/loading/gears_c1.svg">
+        <span>Loading! Please Wait...</span>
+    </div>
+</div>
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title"></span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="signForm" class="compose-form" fxLayout="column" fxFlex nz-form [nzLayout]="'vertical'"
+        [formGroup]="signForm" (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+    
+            <div class="header p-8 mb-16 text-center">
+    
+                <h2>Missed Attendance!</h2>
+
+                <h3>There is an attendance which requires your attention.</h3>
+
+                <p>
+                    Please review the missed attendance information below and update as required.
+                </p>
+
+                <p>
+                    <b>Note: </b> Except for child attendance you can alter the time on the missed attendance by tapping on it.
+                </p>
+
+
+                <span>
+                    IN <i class="arrow alternate circle down outline icon m-8 " style="font-size: 18px;color: #ff9800;"></i>
+                </span>
+
+                <span>
+                    OUT <i class="arrow alternate circle up outline icon m-8" style="color: #03a9f4;font-size: 18px;"></i>
+                </span>
+    
+            </div>
+    
+            <div nz-row [nzGutter]="24">
+    
+                <div class="box"> 
+
+                    <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                        <span>
+                            {{currentData.child.full_name}} <br>
+                            <small>{{getRoom()}}</small>
+                        </span>
+                    </div>
+                    <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                        <span>
+                            {{getDate(currentData)}}
+                        </span>
+                    </div>
+
+                </div>
+               
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+    
+                    <nz-form-item>
+
+                        <nz-form-label class="mt-24">
+                            <i class="arrow alternate circle down outline icon m-8 " style="font-size: 18px;color: #ff9800;"></i> IN <br>
+                            <ng-container *ngIf="currentData.drop_time">
+                              <p style="padding-top: 12px;"> <small class="m-8">by {{currentData.dropper?.full_name}} </small></p>  
+                            </ng-container>
+                         </nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="sStartErrorTpl">
+
+                            <ry-time-picker 
+                                #timePicker
+                                formControlName="drop_time"
+                                ryFormat="h:mm A"
+                                [ryType]="'single'"
+                                [ryMinuteStep]="5"
+                                [ryPlaceHolder]="'drop time'">
+                            </ry-time-picker>
+
+                            <ng-template #sStartErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your drop time
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+    
+                    <nz-form-item>
+
+                        <nz-form-label>
+                             <i class="arrow alternate circle up outline icon m-8" style="color: #03a9f4;font-size: 18px;"></i> OUT <br>
+                            <ng-container *ngIf="currentData.pick_time">
+                                <p  style="padding-top: 12px;"> <small  class="m-8">by {{currentData.picker?.full_name}} </small></p>  
+                            </ng-container>
+                         </nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="StartErrorTpl">
+
+                            <ry-time-picker 
+                                #timePicker
+                                formControlName="pick_time"
+                                ryFormat="h:mm A"
+                                [ryType]="'single'"
+                                [ryMinuteStep]="5"
+                                [ryPlaceHolder]="'pick time'">
+                            </ry-time-picker>
+
+                            <ng-template #StartErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your pick time
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+            </div>
+    
+        </div>
+    
+
+    <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span>
+            <button class="text-uppercase mat-close-btn " 
+                type="button"
+                nz-button 
+                nzType="danger"
+                (click)="matDialogRef.close()">
+                Close
+            </button>
+        </span>
+
+        <span class="text-right">
+            <button class="text-uppercase mr-8"
+            nz-button 
+            nzType="primary" 
+            [disabled]="!signForm.valid"
+            [promiseBtn]="buttonLoader">
+            Confirm & Next
+        </button>
+
+        </span>
+
+    </div>
+</form>
+
+</div>

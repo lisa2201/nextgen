@@ -1,0 +1,205 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+child-enrolment {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    [nz-radio]:not(.inline) {
+        display: flex;
+    }
+
+    .header-hint {
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .hint {
+        font-size: 19px !important;
+        color: rgba(0, 0, 0, 0.65);
+        cursor: pointer;
+    }
+
+    .lbl {
+        display: block !important;
+        text-align: left !important;
+    }
+
+    .hide-sm {
+        @include media-breakpoint('sm') {
+            display: none;
+        }
+    }
+
+    .status-bar {
+        font-size: 14px;
+        font-weight: 600;
+
+        .label {
+            color: rgba(34, 34, 34, 0.4);
+            font-size: 12px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        img {
+            height: 30px;
+            width: 30px;
+            margin-left: 8px;
+        }
+    }
+
+    .more-btn, 
+    .update-btn {
+        font-size: 13px;
+        font-weight: 600;
+        color: $primary-color;
+
+        i {
+            color: $primary-color !important;
+            text-decoration: none;
+        }
+    }
+
+    .date-input {
+        position: absolute;
+        z-index: 1;
+        visibility: hidden;
+        top: 0;
+        width: calc(100% + 20px);
+        left: -10px;
+        pointer-events: none;
+
+        .ant-calendar-picker {
+            display: block;
+        }
+
+        @media screen and (max-width: 599px) {
+            width: calc(100% + 72px);
+            left: -20px;
+        }
+    }
+
+    .session-routine {
+        margin: 0;
+        padding: 8px;
+        padding-top: 16px;
+        margin-bottom: -18px;
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        border: 2px solid $input-border-color;
+        border-radius: 4px;
+        
+        .session-row {
+            min-width: 14.28571%;
+            flex-basis: 14.28571%;
+
+            &.hide-week {
+                min-width: 20%;
+                flex-basis: 20%;
+            }
+
+            @include media-breakpoint('xs') {
+                flex-basis: 100% !important;
+                min-width: 100% !important;
+                margin: 0 0 4px;
+            }
+
+            .session-content {
+                flex: 1;
+
+                .session-label {
+                    font-size: 14px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    color: rgba(34, 34, 34, 0.4);
+                    text-align: center;
+                }
+    
+                .session-inner {
+                    padding: 4px;
+
+                    .session-item {
+                        overflow: hidden;
+                        text-align: center;
+                        padding: 2px 0;
+                        border: 2px solid $input-border-color;
+                        box-shadow: $custom-box-shadow;
+                        border-radius: 4px;
+                        margin-bottom: 4px;
+                        font-size: 12px;
+                        font-weight: 600;
+                        background-color: rgba(255, 149, 0, 0.5);
+                        cursor: pointer;
+
+                        &:last-of-type {
+                            margin-bottom: 0;
+                        }
+
+                        &.extra {
+                            background-color: rgba(96, 125, 139, 0.55);
+                        }
+
+                        &.add {
+                            border-color: transparent;
+                            box-shadow: none;
+                            background-color: transparent;
+                        }
+
+                        .fee {
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 11px;
+                            background: rgba(0, 0, 0, 0.085);
+                            padding: 2px 8px;
+                            border-radius: 16px;
+                            margin-top: 3px;
+                            margin-bottom: 3px;
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+
+        .session-row-space {
+            min-width: 100%;
+            height: 8px;
+        }
+
+        .session-row-label {
+            min-width: 100%;
+            margin-bottom: 16px;
+            text-align: center;
+
+            span {
+                display: inline-block;
+                font-size: 14px;
+                font-weight: 600;
+                background: $layout-border-color;
+                padding: 4px 12px;
+                border-radius: 20px;
+                box-shadow: $custom-box-shadow-high;
+            }
+        }
+
+    }
+
+    nz-divider {
+        .ant-divider-inner-text {
+            font-size: 14px;
+            color: rgba(34, 34, 34, 0.4);
+        }
+    }
+
+}

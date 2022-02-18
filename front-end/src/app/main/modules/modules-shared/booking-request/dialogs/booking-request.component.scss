@@ -1,0 +1,105 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.booking-request-view {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 867px;
+    }
+
+    .mat-dialog-content {
+        // max-height: 100%;       
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+        .sidebar {
+            width: 340px;
+            min-width: 340px;
+            max-width: 340px;
+            overflow: hidden;
+            z-index: 100001;
+        }
+
+        .filter-section {
+            position: relative;
+            overflow: hidden;
+            // border-bottom: 1px solid $layout-border-color;
+
+            .ant-form-item {
+                margin: 0;
+            }
+        }
+
+        .content-section {
+
+            .ant-tabs-tab {
+                transition: background-color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+            }
+
+            .ant-tabs-tab-active {
+                background-color: $gray-bg;
+                border-top-left-radius: 4px;
+                border-bottom-left-radius: 4px;
+            }
+            
+            .tab-inner-view {
+                min-height: 350px;
+                height: 350px;
+
+                .list-view {
+
+                    .ant-list-item {
+                        margin-bottom: 8px;
+                        border: 1px solid $layout-border-color;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        padding: 16px 12px;
+    
+                        &:last-of-type {
+                            // margin-bottom: 0;
+                        }
+    
+                        &:hover {
+                            background-color: $default-background-color;
+                            transition: background-color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+                        }
+    
+                        .ant-list-item-action {
+                            margin: 0;
+                            display: flex;
+                            justify-content: flex-end;
+                            align-items: center;
+                        }
+
+                        .label-high-light {
+                            font-size: 14px;
+                            font-weight: 600;
+                        }
+
+                        .ant-avatar {
+                            border: 1px solid $layout-border-color;
+                            // box-shadow: $custom-box-inner-shadow-high;
+                        }
+
+                        .ant-list-item-meta-title {
+                            font-size: 16px;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+}

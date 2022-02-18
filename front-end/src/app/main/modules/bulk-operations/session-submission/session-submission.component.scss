@@ -1,0 +1,32 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+#bulk-session-submission {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .toolbar {
+
+        .date-input {
+            min-width: 165px;
+        }
+    
+        .child-selector {
+            min-width: 200px;
+        }
+    }
+
+    .sidebar {
+        width: 320px;
+        min-width: 320px;
+        max-width: 320px;
+        overflow: hidden;
+    }
+    
+}

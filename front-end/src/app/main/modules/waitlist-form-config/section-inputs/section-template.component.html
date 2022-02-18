@@ -1,0 +1,697 @@
+<!-- CONTENT CARD -->
+<div class="content">
+    <!-- CONTENT TOOLBAR -->
+    <div
+        class="toolbar px-8 py-8"
+        fxLayout="column"
+        fxLayoutAlign=""
+        [@fadeInOnEnter]
+        [@fadeOutOnLeave]
+    >
+
+        <span fxLayout="column">
+
+            <nz-alert class="mb-8" nzType="info" [nzMessage]="siteManagerURLMessage"></nz-alert>
+            <nz-alert nzType="info" [nzMessage]="branchUrlMessage"
+                      *ngIf="isSiteManager"></nz-alert>
+
+            <ng-template #siteManagerURLMessage>
+                <div class="m-0" fxLayout="row" fxLayoutAlign="space-between">
+                    <div fxLayout="row" fxLayoutAlign="start center" class="external-links">
+                        Organisation URL:
+                        <nz-button-group class="ml-8">
+                            <button nzSize="small" nz-button nzType="default"
+                                    (click)="openLink($event, siteManagerUrl)">Open Link <i nz-icon nzType="export"></i></button>
+                            <button nzSize="small" nz-button nzType="default"
+                                    (click)="copyToClipBoard($event, siteManagerUrl)">Copy to clipboard <i nz-icon
+                                                                                                           nzType="copy"></i></button>
+                        </nz-button-group>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template #branchUrlMessage>
+                <div class="m-0" fxLayout="row" fxLayoutAlign="space-between">
+                    <div fxLayout="row" fxLayoutAlign="start center" class="external-links">
+                        Centre URL:
+                        <nz-button-group class="ml-8">
+                            <button nzSize="small" nz-button nzType="default" (click)="openLink($event, branchUrl)">Open Link <i
+                                nz-icon nzType="export"></i></button>
+                            <button nzSize="small" nz-button nzType="default"
+                                    (click)="copyToClipBoard($event, branchUrl)">Copy to clipboard <i nz-icon
+                                                                                                      nzType="copy"></i></button>
+                        </nz-button-group>
+                    </div>
+                </div>
+            </ng-template>
+
+        </span>
+
+
+    </div>
+    <mat-card *ngIf="selectedSection.inputs.length>1">
+        <div class="title">
+            <span>Drag and Drop for re-arrange fields</span>
+        </div>
+        <div cdkDropList cdkDropListOrientation="horizontal" class="elements-list-horizontal"
+             (cdkDropListDropped)="drop($event)">
+            <div class="element-box-horizontal" *ngFor="let input of selectedSection.inputs"
+                 (dblclick)="goToField(input.input_name)"
+                 nzTooltipTitle="{{(htmlTagRemover(input.question).length > 20) ? (htmlTagRemover(input.question) | slice:0:20) + ' ...' :htmlTagRemover(input.question)}}"
+                 nzTooltipPlacement="bottom"
+                 nz-tooltip
+                 cdkDrag>
+                {{input.column_order}}</div>
+        </div>
+    </mat-card>
+    <!-- / CONTENT TOOLBAR -->
+
+    <ng-container>
+
+        <nz-spin [nzIndicator]="indicatorTemplate" [nzSpinning]="inputsLoading">
+            <form *ngIf="selectedSection?.inputs?.length>0">
+                <div nz-row [nzGutter]="5" fxLayoutAlign="center center" cdkDropList
+                     (cdkDropListDropped)="drop($event)"
+                     [@animate]="{ value:'*', params:{ delay: '1500ms', y:'15px' } }">
+                    <fuse-widget cdkDrag
+                                 *ngFor="let input of selectedSection.inputs;" fxLayout="row"
+                                 fxLayoutAlign="center center"
+                                 fxFlex="100"
+                                 fxFlex.gt-xs="{{input.column_width}}"
+                                 fxFlex.gt-md="{{input.column_height}}"
+                                 [formGroup]="formGroup.get(selectedSection.section_code)"
+                    >
+
+                        <!----------------------------------------  textbox    ------------------------------------->
+                        <div formGroupName="{{input.input_name}}" *ngIf="input.input_type=='textbox'"
+                             [id]="input.input_name"
+                             class="fuse-widget-front mat-elevation-z2">
+                            <div class="pl-16 pr-8 py-8 h-5" fxLayout="row" fxLayoutAlign="space-between center">
+                                <span>
+                                     <nz-tag
+                                         [nzColor]="(activeEle==input.input_name)?'red':'blue'">{{input.column_order}}</nz-tag>
+                                </span>
+                                <span fxLayout="row" fxLayoutAlign="space-between center">
+                                    <i *ngIf="input.input_mandatory_changeable" (click)="deleteField($event,input)"
+                                       class="trash alternate outline icon mr-4" nz-tooltip nzTooltipTitle="Delete"></i>
+                                   <i
+                                       (click)="editInput($event,input)" nz-tooltip nzTooltipTitle="Edit"
+                                       class="edit outline icon text-dec-none mr-4"></i>
+                                </span>
+                            </div>
+                            <div class="pl-16 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <div fxLayout="row">
+                                    <nz-form-label
+                                        [nzRequired]="input.input_mandatory">
+                                    </nz-form-label>
+                                    <span [innerHTML]="input.question | keepHtml"></span>
+                                </div>
+                            </div>
+
+                            <div class="pt-8 pb-5" fxLayout="column" fxLayoutAlign="space-around stretch">
+                                <div nz-col>
+                                    <nz-form-item>
+                                        <nz-form-control nzHasFeedback>
+                                            <input nz-input formControlName="{{input.input_name}}" [readOnly]="true"
+                                                   placeholder="{{input.input_placeholder}}" type="text"/>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!----------------------  richTextBox ---------------------->
+                        <div formGroupName="{{input.input_name}}" *ngIf="input.input_type=='richTextBox'"
+                             [id]="input.input_name"
+                             class="fuse-widget-front mat-elevation-z2">
+                            <div class="pl-16 pr-8 py-8 h-5" fxLayout="row" fxLayoutAlign="space-between center">
+                               <span>
+                                        <nz-tag
+                                            [nzColor]="(activeEle==input.input_name)?'red':'blue'">{{input.column_order}}</nz-tag>
+                               </span>
+                                <span fxLayout="row" fxLayoutAlign="space-between center">
+                                    <i *ngIf="input.input_mandatory_changeable" (click)="deleteField($event,input)"
+                                       class="trash alternate outline icon mr-4" nz-tooltip nzTooltipTitle="Delete"></i>
+                                   <i
+                                       (click)="editInput($event,input)" nz-tooltip nzTooltipTitle="Edit"
+                                       class="edit outline icon text-dec-none mr-4"></i>
+                            </span>
+                            </div>
+                            <div class="pl-16 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <div fxLayout="row">
+
+                                    <nz-form-label
+                                        [nzRequired]="input.input_mandatory"
+                                    >Paragraph
+                                    </nz-form-label>
+                                </div>
+                            </div>
+
+
+                            <div class="pl-20 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <div nz-col>
+
+                                    <nz-form-item>
+                                        <nz-form-control nzHasFeedback>
+                                            <span [innerHTML]="input.question | keepHtml"></span>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!----------------------  hyperlink ---------------------->
+                        <div formGroupName="{{input.input_name}}" *ngIf="input.input_type=='hyperlink'"
+                             [id]="input.input_name"
+                             class="fuse-widget-front mat-elevation-z2">
+                            <div class="pl-16 pr-8 py-8 h-5" fxLayout="row" fxLayoutAlign="space-between center">
+                                <span>
+                                    <nz-tag
+                                        [nzColor]="(activeEle==input.input_name)?'red':'blue'">{{input.column_order}}</nz-tag>
+                                </span>
+                                <span fxLayout="row" fxLayoutAlign="space-between center">
+                                    <i *ngIf="input.input_mandatory_changeable" (click)="deleteField($event,input)"
+                                       class="trash alternate outline icon mr-4" nz-tooltip nzTooltipTitle="Delete"></i>
+                                   <i
+                                       (click)="editInput($event,input)" nz-tooltip nzTooltipTitle="Edit"
+                                       class="edit outline icon text-dec-none mr-4"></i>
+                            </span>
+                            </div>
+                            <div class="pl-16 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <div fxLayout="row">
+                                    <nz-form-label
+                                        [nzRequired]="input.input_mandatory"
+                                    >Hyperlink
+                                    </nz-form-label>
+                                </div>
+                            </div>
+
+                            <div class="pl-20 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <div nz-col>
+
+                                    <nz-form-item>
+                                        <nz-form-control nzHasFeedback>
+                                            <span [innerHTML]="input.question | keepHtml"></span>
+                                        </nz-form-control>
+
+                                    </nz-form-item>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--------------------- email ---------------------------->
+                        <div formGroupName="{{input.input_name}}" *ngIf="input.input_type=='email'"
+                             [id]="input.input_name"
+                             class="fuse-widget-front mat-elevation-z2">
+                            <div class="pl-16 pr-8 py-8 h-5" fxLayout="row" fxLayoutAlign="space-between center">
+                                <span>
+                                      <nz-tag
+                                          [nzColor]="(activeEle==input.input_name)?'red':'blue'">{{input.column_order}}</nz-tag>
+                                </span>
+                                <span fxLayout="row" fxLayoutAlign="space-between center">
+                                    <i *ngIf="input.input_mandatory_changeable" (click)="deleteField($event,input)"
+                                       class="trash alternate outline icon mr-4" nz-tooltip nzTooltipTitle="Delete"></i>
+                                   <i
+                                       (click)="editInput($event,input)" nz-tooltip nzTooltipTitle="Edit"
+                                       class="edit outline icon text-dec-none mr-4"></i>
+                                </span>
+                            </div>
+                            <div class="pl-16 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <div fxLayout="row">
+                                    <nz-form-label
+                                        [nzRequired]="input.input_mandatory">
+                                    </nz-form-label>
+                                    <span [innerHTML]="input.question | keepHtml"></span>
+                                </div>
+                            </div>
+
+                            <div class="pt-8 pb-5" fxLayout="column" fxLayoutAlign="space-around stretch">
+                                <div nz-col>
+                                    <nz-form-item>
+                                        <nz-form-control nzHasFeedback>
+                                            <input nz-input formControlName="{{input.input_name}}" [readOnly]="true"
+                                                   placeholder="{{input.input_placeholder}}" type="text"/>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-----------------------------   radio-group ------------------------------------>
+                        <div formGroupName="{{input.input_name}}" *ngIf="input.input_type=='radio-group'"
+                             [id]="input.input_name"
+                             class="fuse-widget-front mat-elevation-z2">
+                            <div class="pl-16 pr-8 py-8 h-5" fxLayout="row" fxLayoutAlign="space-between center">
+                              <span>
+                                  <nz-tag
+                                      [nzColor]="(activeEle==input.input_name)?'red':'blue'">{{input.column_order}}</nz-tag>
+                              </span>
+                                <span fxLayout="row" fxLayoutAlign="space-between center">
+                                <button mat-icon-button fuseWidgetToggle aria-label="more">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                          </span>
+                            </div>
+
+                            <div class="pl-16 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <div fxLayout="row">
+                                    <nz-form-label
+                                        [nzRequired]="input.input_mandatory">
+                                        {{  input.question }}
+                                    </nz-form-label>
+                                </div>
+                            </div>
+
+
+                            <div class="pt-8 pb-5" fxLayout="column" fxLayoutAlign="space-around center">
+                                <div nz-col>
+                                    <nz-form-item>
+                                        <nz-form-control nzHasFeedback>
+
+                                            <nz-radio-group formControlName="{{input.input_name}}"
+                                                            nzButtonStyle="solid" [nzDisabled]="true"
+                                                            class="has-img">
+                                                <label *ngFor="let type of input.types" nz-radio-button
+                                                       nzValue="{{type.value}}">
+                                                    <span>{{type.name}}</span>
+                                                </label>
+                                            </nz-radio-group>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+                        <div formGroupName="{{input.input_name}}" *ngIf="input.input_type=='radio-group'"
+                             class="fuse-widget-back p-16 pt-32 mat-elevation-z2">
+                            <button mat-icon-button fuseWidgetToggle class="fuse-widget-flip-button"
+                                    aria-label="Flip widget">
+                                <mat-icon class="s-16">close</mat-icon>
+                            </button>
+
+                            <div>
+                                <nz-form-item>
+                                    <nz-form-label>Required&nbsp;
+                                        <nz-form-control>
+                                            <nz-switch [(ngModel)]="input.input_mandatory"
+                                                       [nzDisabled]="!input.input_mandatory_changeable"
+                                                       formControlName="{{input.input_required}}"
+                                                       nzCheckedChildren="Yes"
+                                                       nzUnCheckedChildren="No">
+                                            </nz-switch>
+                                        </nz-form-control>
+                                        &nbsp;&nbsp;Hidden&nbsp;
+                                        <nz-form-control>
+                                            <nz-switch [(ngModel)]="(input.input_mandatory)?false:input.hidden"
+                                                       [nzDisabled]="!input.input_mandatory_changeable || input.input_mandatory"
+                                                       formControlName="{{input.input_hiddenfield_name}}"
+                                                       nzCheckedChildren="Yes"
+                                                       nzUnCheckedChildren="No">
+                                            </nz-switch>
+                                        </nz-form-control>
+                                    </nz-form-label>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                        <!-----------------------------   date-picker ------------------------------------>
+                        <div formGroupName="{{input.input_name}}" *ngIf="input.input_type=='date-picker'"
+                             [id]="input.input_name"
+                             class="fuse-widget-front mat-elevation-z2">
+                            <div class="pl-16 pr-8 py-8 h-5" fxLayout="row" fxLayoutAlign="space-between center">
+                                <span>
+                                     <nz-tag
+                                         [nzColor]="(activeEle==input.input_name)?'red':'blue'">{{input.column_order}}</nz-tag>
+                                </span>
+                                <span fxLayout="row" fxLayoutAlign="space-between center">
+                                    <i *ngIf="input.input_mandatory_changeable" (click)="deleteField($event,input)"
+                                       class="trash alternate outline icon mr-4" nz-tooltip nzTooltipTitle="Delete"></i>
+                                   <i
+                                       (click)="editInput($event,input)" nz-tooltip nzTooltipTitle="Edit"
+                                       class="edit outline icon text-dec-none mr-4"></i>
+                                </span>
+                            </div>
+                            <div class="pl-16 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <div fxLayout="row">
+                                    <nz-form-label
+                                        [nzRequired]="input.input_mandatory">
+                                    </nz-form-label>
+                                    <span [innerHTML]="input.question | keepHtml"></span>
+                                </div>
+                            </div>
+                            <div class="pt-8 pb-5" fxLayout="column" fxLayoutAlign="space-around stretch">
+                                <div nz-col>
+                                    <nz-form-item>
+                                        <nz-form-control nzHasFeedback>
+                                            <nz-date-picker formControlName="{{input.input_name}}" nzDisabled
+                                                            class="block"></nz-date-picker>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-----------------------------   switch ------------------------------------>
+                        <div formGroupName="{{input.input_name}}"
+                             *ngIf="input.input_type=='switch' || input.input_type=='upload-switch'|| input.input_type=='textbox-switch'|| input.input_type=='select-switch'"
+                             [id]="input.input_name"
+                             class="fuse-widget-front mat-elevation-z2">
+                            <div class="pl-16 pr-8 py-8 h-5" fxLayout="row" fxLayoutAlign="space-between center">
+                                 <span>
+                                     <nz-tag
+                                         [nzColor]="(activeEle==input.input_name)?'red':'blue'">{{input.column_order}}</nz-tag>
+                                </span>
+                                <span fxLayout="row" fxLayoutAlign="space-between center">
+                                    <i *ngIf="input.input_mandatory_changeable" (click)="deleteField($event,input)"
+                                       class="trash alternate outline icon mr-4" nz-tooltip nzTooltipTitle="Delete"></i>
+                                   <i
+                                       (click)="editInput($event,input)" nz-tooltip nzTooltipTitle="Edit"
+                                       class="edit outline icon text-dec-none mr-4"></i>
+                                </span>
+                            </div>
+                            <div class="pl-16 pr-8 py-20" fxLayout="row" fxLayoutAlign="space-between center">
+                                 <span fxLayout="row" fxLayoutAlign="space-between start">
+                                   <nz-form-label class="pr-8" style="float: top"
+                                                  [nzRequired]="input.input_mandatory">
+                                    </nz-form-label>
+                                    <span [innerHTML]="input.question | keepHtml"></span>
+                                </span>
+                                <span>
+                                        <nz-form-control nzHasFeedback>
+                                            <nz-switch [nzDisabled]="true"
+                                                       formControlName="{{input.input_name}}"
+                                                       nzCheckedChildren="Yes"
+                                                       nzUnCheckedChildren="No"
+                                            >
+                                            </nz-switch>
+                                        </nz-form-control>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-----------------------------   text-area' ------------------------------------>
+                        <div formGroupName="{{input.input_name}}" *ngIf="input.input_type=='text-area'"
+                             [id]="input.input_name"
+                             class="fuse-widget-front mat-elevation-z2">
+                            <div class="pl-16 pr-8 py-8 h-5" fxLayout="row" fxLayoutAlign="space-between center">
+                                <span>
+                                    <nz-tag
+                                        [nzColor]="(activeEle==input.input_name)?'red':'blue'">{{input.column_order}}</nz-tag>
+                                </span>
+                                <span fxLayout="row" fxLayoutAlign="space-between center">
+                                    <i *ngIf="input.input_mandatory_changeable" (click)="deleteField($event,input)"
+                                       class="trash alternate outline icon mr-4" nz-tooltip nzTooltipTitle="Delete"></i>
+                                   <i
+                                       (click)="editInput($event,input)" nz-tooltip nzTooltipTitle="Edit"
+                                       class="edit outline icon text-dec-none mr-4"></i>
+                            </span>
+                            </div>
+
+                            <div class="pl-16 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <span fxLayout="row" fxLayoutAlign="space-between start">
+                                   <nz-form-label class="pr-8" style="float: top"
+                                                  [nzRequired]="input.input_mandatory">
+                                    </nz-form-label>
+                                    <span [innerHTML]="input.question | keepHtml"></span>
+                                </span>
+                            </div>
+
+                            <div class="pt-8 pb-5" fxLayout="column" fxLayoutAlign="space-around stretch">
+                                <div nz-col>
+                                    <nz-form-item>
+                                        <nz-form-control nzHasFeedback>
+                                          <textarea formControlName="{{input.input_name}}" nz-input rows="4"
+                                                    [disabled]="true"
+                                                    placeholder="{{input.input_placeholder}}"></textarea>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-----------------------------   select-multiple ------------------------------------>
+                        <div formGroupName="{{input.input_name}}"
+                             [id]="input.input_name"
+                             *ngIf="input.input_type=='select'||input.input_type=='select-multiple'"
+                             class="fuse-widget-front mat-elevation-z2">
+                            <div class="pl-16 pr-8 py-8 h-5" fxLayout="row" fxLayoutAlign="space-between center">
+                              <span>
+                                 <nz-tag
+                                     [nzColor]="(activeEle==input.input_name)?'red':'blue'">{{input.column_order}}</nz-tag>
+                                </span>
+                                <span fxLayout="row" fxLayoutAlign="space-between center">
+                                    <i *ngIf="input.input_mandatory_changeable" (click)="deleteField($event,input)"
+                                       class="trash alternate outline icon mr-4" nz-tooltip nzTooltipTitle="Delete"></i>
+                                   <i
+                                       (click)="editInput($event,input)" nz-tooltip nzTooltipTitle="Edit"
+                                       class="edit outline icon text-dec-none mr-4"></i>
+                            </span>
+                            </div>
+                            <div class="pl-16 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <span fxLayout="row" fxLayoutAlign="space-between start">
+                                   <nz-form-label class="pr-8" style="float: top"
+                                                  [nzRequired]="input.input_mandatory">
+                                    </nz-form-label>
+                                    <span [innerHTML]="input.question | keepHtml"></span>
+                                </span>
+                            </div>
+
+                            <div class="pt-8 pb-5" fxLayout="column" fxLayoutAlign="space-around stretch">
+                                <div nz-col>
+                                    <nz-form-item>
+                                        <nz-form-control nzHasFeedback>
+                                            <nz-select formControlName="{{input.input_name}}" [nzDisabled]="true"
+                                                       nzPlaceHolder="{{input.input_placeholder}}">
+                                                <nz-option *ngFor="let item of input.types.options"
+                                                           nzValue="{{ item }}"
+                                                           nzLabel="{{ item }}" title="{{item}}">
+                                                </nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!------------------------------------- checkbox --------------------------------------------->
+                        <div formGroupName="{{input.input_name}}" *ngIf="input.input_type=='checkbox'"
+                             [id]="input.input_name"
+                             class="fuse-widget-front mat-elevation-z2">
+                            <div class="pl-16 pr-8 py-8 h-5" fxLayout="row" fxLayoutAlign="space-between center">
+                               <span>
+                                     <nz-tag
+                                         [nzColor]="(activeEle==input.input_name)?'red':'blue'">{{input.column_order}}</nz-tag>
+                               </span>
+                                <span fxLayout="row" fxLayoutAlign="space-between center">
+                                    <i *ngIf="input.input_mandatory_changeable" (click)="deleteField($event,input)"
+                                       class="trash alternate outline icon mr-4" nz-tooltip nzTooltipTitle="Delete"></i>
+                                   <i
+                                       (click)="editInput($event,input)" nz-tooltip nzTooltipTitle="Edit"
+                                       class="edit outline icon text-dec-none mr-4"></i>
+                            </span>
+                            </div>
+                            <div class="pl-16 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <span fxLayout="row" fxLayoutAlign="space-between start">
+                                   <nz-form-label class="pr-8" style="float: top"
+                                                  [nzRequired]="input.input_mandatory">
+                                    </nz-form-label>
+                                    <span [innerHTML]="input.question | keepHtml"></span>
+                                </span>
+                            </div>
+
+                            <div class="pl-16 pt-8 pb-5" fxLayout="column" fxLayoutAlign="space-around stretch">
+                                <div nz-col>
+                                    <nz-form-item>
+                                        <nz-form-control nzHasFeedback *ngIf="input.types?.multiple">
+                                            <!--                                        <nz-form-label>{{input.question}}</nz-form-label>-->
+                                            <label nz-checkbox nzDisabled
+                                                   *ngFor="let option of input.types.options">
+                                                <span>{{option}}</span>
+                                            </label>
+                                        </nz-form-control>
+                                        <nz-form-control nzHasFeedback *ngIf="!input.types?.multiple">
+                                            <label nz-checkbox nzDisabled formControlName="{{input.input_name}}"
+                                                   [nzDisabled]="true">
+                                                <span>{{input.question}}</span>
+                                            </label>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--select checkbox-->
+                        <div formGroupName="{{input.input_name}}" *ngIf="input.input_type=='select-checkbox'"
+                             [id]="input.input_name"
+                             class="fuse-widget-front mat-elevation-z2">
+                            <div class="pl-16 pr-8 py-8 h-5" fxLayout="row" fxLayoutAlign="space-between center">
+                              <span>
+                                 <nz-tag
+                                     [nzColor]="(activeEle==input.input_name)?'red':'blue'">{{input.column_order}}</nz-tag>
+                                </span>
+                                <span fxLayout="row" fxLayoutAlign="space-between center">
+                                   <i
+                                       (click)="editInput($event,input)" nz-tooltip nzTooltipTitle="Edit"
+                                       class="edit outline icon text-dec-none mr-4"></i>
+                            </span>
+                            </div>
+                            <div class="pl-16 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <span fxLayout="row" fxLayoutAlign="space-between start">
+                                   <nz-form-label class="pr-8" style="float: top"
+                                                  [nzRequired]="input.input_mandatory">
+                                    </nz-form-label>
+                                    <span [innerHTML]="input.question | keepHtml"></span>
+                                </span>
+                            </div>
+
+                            <div class="pt-8 pb-5" fxLayout="column" fxLayoutAlign="space-around stretch">
+                                <div nz-col>
+                                    <nz-form-item>
+                                        <nz-form-control nzHasFeedback>
+                                            <nz-select formControlName="{{input.input_name}}" [nzDisabled]="true"
+                                                       nzPlaceHolder="{{input.input_placeholder}}">
+                                                <nz-option *ngFor="let item of time"
+                                                           nzValue="{{ item }}"
+                                                           nzLabel="{{ item }}" title="{{item}}">
+                                                </nz-option>
+                                            </nz-select>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                    <nz-form-item>
+                                        <nz-form-control>
+                                            <label nz-checkbox [nzDisabled]="true">
+                                                <span>Monday</span>
+                                            </label>
+                                            <label nz-checkbox [nzDisabled]="true">
+                                                <span>Tuesday</span>
+                                            </label>
+                                            <label nz-checkbox [nzDisabled]="true">
+                                                <span>Wednesday</span>
+                                            </label>
+                                            <label nz-checkbox [nzDisabled]="true">
+                                                <span>Thursday</span>
+                                            </label>
+                                            <label nz-checkbox [nzDisabled]="true">
+                                                <span>Friday</span>
+                                            </label>
+                                            <label nz-checkbox [nzDisabled]="true">
+                                                <span>I am fully flexible on days</span>
+                                            </label>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div formGroupName="{{input.input_name}}" *ngIf="input.input_type=='select-checkbox'"
+                             class="fuse-widget-back p-16 pt-32 mat-elevation-z2">
+                            <button mat-icon-button fuseWidgetToggle class="fuse-widget-flip-button"
+                                    aria-label="Flip widget">
+                                <mat-icon class="s-16">close</mat-icon>
+                            </button>
+                            <div>
+                                <nz-form-item>
+                                    <nz-form-label>Required&nbsp;
+                                        <nz-form-control>
+                                            <nz-switch [(ngModel)]="input.input_mandatory"
+                                                       [nzDisabled]="!input.input_mandatory_changeable"
+                                                       formControlName="{{input.input_required}}"
+                                                       nzCheckedChildren="Yes"
+                                                       nzUnCheckedChildren="No">
+                                            </nz-switch>
+                                        </nz-form-control>
+                                        &nbsp;&nbsp;Hidden&nbsp;
+                                        <nz-form-control>
+                                            <nz-switch [(ngModel)]="(input.input_mandatory)?false:input.hidden"
+                                                       [nzDisabled]="!input.input_mandatory_changeable || input.input_mandatory"
+                                                       formControlName="{{input.input_hiddenfield_name}}"
+                                                       nzCheckedChildren="Yes"
+                                                       nzUnCheckedChildren="No">
+                                            </nz-switch>
+                                        </nz-form-control>
+                                    </nz-form-label>
+                                </nz-form-item>
+                                <nz-form-item>
+                                    <nz-form-control>
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+
+                        <!----------------------------    signature     ------------------------------->
+
+                        <div formGroupName="{{input.input_name}}" *ngIf="input.input_type=='signature'"
+                             [id]="input.input_name"
+                             class="fuse-widget-front mat-elevation-z2">
+                            <div class="pl-16 pr-8 py-8 h-5" fxLayout="row" fxLayoutAlign="space-between center">
+                               <span>
+                                        <nz-tag
+                                            [nzColor]="(activeEle==input.input_name)?'red':'blue'">{{input.column_order}}</nz-tag>
+                               </span>
+                                <span fxLayout="row" fxLayoutAlign="space-between center">
+                                    <i *ngIf="input.input_mandatory_changeable" (click)="deleteField($event,input)"
+                                       class="trash alternate outline icon mr-4" nz-tooltip nzTooltipTitle="Delete"></i>
+                                   <i
+                                       (click)="editInput($event,input)" nz-tooltip nzTooltipTitle="Edit"
+                                       class="edit outline icon text-dec-none mr-4"></i>
+                            </span>
+                            </div>
+                            <div class="pl-16 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <div fxLayout="row">
+
+                                    <nz-form-label
+                                        [nzRequired]="input.input_mandatory"
+                                    >Signature
+                                    </nz-form-label>
+                                </div>
+                            </div>
+
+
+                            <div class="pl-20 pr-8 py-2" fxLayout="row" fxLayoutAlign="start center">
+                                <div nz-col>
+
+                                    <nz-form-item>
+                                        <nz-form-control nzHasFeedback>
+                                            <span [innerHTML]="input.question | keepHtml"></span>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </fuse-widget>
+                </div>
+            </form>
+        </nz-spin>
+
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+
+        <!--        {{selectedSection|json}}-->
+        <div *ngIf="selectedSection?.inputs?.length==0"
+             nz-row [nzGutter]="5" fxLayoutAlign="center center"
+             [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } } "
+        >
+            <!-- EMPTY VIEW -->
+            <div class="pt-24 pb-24 m-0" style="text-align: center"
+            >
+                <h4 class="mt-24">No Fields Found</h4>
+                <span>Please add new fields</span>
+            </div>
+            <!-- / EMPTY VIEW -->
+        </div>
+
+    </ng-container>
+
+</div>
+<!-- / CONTENT CARD -->
+
+
+
+
+

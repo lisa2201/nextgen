@@ -1,0 +1,142 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.time-picker-dialog {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 540px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+        h4  {
+            font-size: 16px;
+            padding-left: 16px;
+            line-height: 30px;
+            margin-left: 8px;
+            font-weight: 400;
+            position: relative;
+            margin-bottom: 16px;
+
+            &::before {
+                content: "";
+                position: absolute;
+                height: 26px;
+                width: 5px;
+                background: #009ee8 !important;
+                background-image: -webkit-linear-gradient(242deg, #377FEA 1%, #009fe9 65%) !important;
+                background-image: linear-gradient(-152deg, #377FEA 1%, #009fe9 65%) !important;
+                left: 0;
+                top: 3px;
+                border-radius: 15px;
+            }
+        }
+
+        .time-picker-inner {
+            position: relative;
+
+            .clock {
+
+                .time {
+                    font-size: 32px;
+                    font-weight: 600;
+                    height: 80px;
+                    width: 80px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 3px solid $input-border-color;
+                    border-radius: 10px;
+                    box-shadow: $custom-box-shadow-high;
+
+                    -webkit-transition: all 0.3s cubic-bezier(0.6, 0, 0.4, 1);
+                    transition: all 0.3s cubic-bezier(0.6, 0, 0.4, 1);
+                }
+
+                .separator {
+                    padding: 0 8px;
+                    font-size: 42px;
+                    font-weight: 600;
+                    color: $input-border-color;
+                }
+
+                .mandarin {
+                    font-size: 19px;
+                    min-width: 40px;
+                    margin-right: -6px;
+                    text-align: center;
+                }
+
+            }
+
+            .clock-range {
+
+                font-size: 32px;
+                font-weight: 600;
+                padding: 4px 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 3px solid $input-border-color;
+                border-radius: 10px;
+                box-shadow: $custom-box-shadow-high;
+
+                -webkit-transition: all 0.3s cubic-bezier(0.6, 0, 0.4, 1);
+                transition: all 0.3s cubic-bezier(0.6, 0, 0.4, 1);
+
+                .time {
+                    max-width: 38px;
+                    min-width: 38px;
+                }
+
+                .separator {
+                    padding: 0 4px;
+                    font-size: 21px;
+                }
+
+                .mandarin {
+                    font-size: 19px;
+                    min-width: 40px;
+                    margin-right: -6px;
+                    text-align: center;
+                }
+            }
+
+            nz-slider {
+                display: block;
+                margin-top: -8px;
+            }
+
+            .slider-action-bar {
+                position: relative;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 24px;
+
+                .button {
+                    font-size: 16px !important;
+                    height: 44px !important;
+                    line-height: 40px !important;
+                    border-width: 2px !important;
+
+                    img {
+                        height: 18px;
+                        width: 18px;
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }   
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+}

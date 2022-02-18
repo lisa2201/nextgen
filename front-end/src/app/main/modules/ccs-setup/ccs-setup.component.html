@@ -1,0 +1,51 @@
+<div id="ccs" class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]> 
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Manage CCS-setup</h1>
+
+        <ng-container *hasPermission="['AC1']; belongsTo 'N22'">
+
+            <button class="text-uppercase"
+                nz-button nzType="primary"
+                (click)="addDialog($event)">
+                <i class="plus icon mr-8"></i> New Device
+            </button>
+
+        </ng-container>
+
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="ccs-sidebar" position="left">
+
+            <ccs-left-side-nav 
+                [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }"
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+                (updateTableScroll)="updateScroll($event)">
+            </ccs-left-side-nav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <ccs-list-view 
+            class="center p-24 pt-0" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+            (updateTableScroll)="updateScroll($event)"
+            [@animate]="{ value:'*', params:{ delay: '200ms', x:'15px' } }">
+
+        </ccs-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

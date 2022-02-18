@@ -1,0 +1,231 @@
+
+<div class="center">
+
+    <div class="content-card pt-24" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+    
+        <div class="calender-week-view" 
+        *ngIf="immunisationTable.length > 0; else emptyBlock">
+
+        <ul class="master-view mt-24">
+            <li class="no-select">
+                <span class="child-view ml-8">
+
+                    <nz-list-item-meta 
+                        [nzTitle]="nzTitle">
+
+
+                        <ng-template #nzTitle>
+                            
+                                <h2 class="child-list-title text-truncate pl-6 text-align-center font-weight-700">Name</h2>
+
+                        </ng-template>
+
+                    </nz-list-item-meta>
+
+                </span>
+
+                <span class="week-view">
+
+                    <span class="calendar-day" 
+                        *ngFor="let title of heading; trackBy: trackByFn;">
+
+                        <div class="calendar-day-content">
+
+                            <div class="calendar-day-inner">
+                
+                                <ng-container>
+                
+                                    <ng-container>
+                
+                                        <div class=""
+                                            [@fadeMotion]>
+                
+                                            <div class="inner">
+                
+                                                <p class="mb-0 pl-6 text-truncate time text-uppercase text-align-center font-weight-700">
+                                                    <span>
+                                                        {{ title}}
+                                                    </span>
+                                                </p>
+                    
+                                            </div>
+                                            
+                
+                                        </div>
+                
+                                    </ng-container>
+
+                                </ng-container>
+                
+                            </div>
+                
+                        </div>
+
+                    </span>
+
+                </span>
+
+            </li>
+
+            <li class="no-select"
+                *ngFor="let immunisationType of immunisationTable; let i = index; trackBy: trackByFn;">
+                <span class="child-view ml-8">
+
+                    <nz-list-item-meta 
+                        [nzAvatar]="nzAvatar"
+                        [nzTitle]="nzTitle"
+                        [nzDescription]="nzDescription">
+
+                        <ng-template #nzAvatar>
+
+                            <nz-avatar 
+                                [nzSize]="56" 
+                                nzSrc="{{ immunisationType.child.getImage()}}"
+                                class="child-list-img img-bg"></nz-avatar>
+                            
+                        </ng-template>
+
+                        <ng-template #nzTitle>
+                            
+                            <a (click)="openChildProfile($event, immunisationType.child.id)">
+                                <h4 class="child-list-title text-truncate">{{ immunisationType.child.getShortName()}}</h4>
+                            </a>
+
+                        </ng-template>
+
+                        <ng-template #nzDescription>
+
+                            <p class="m-0">
+                                <span class="font-weight-600">Age</span>: 
+                                {{ immunisationType.child.age}}
+                            </p>   
+ 
+                        </ng-template>
+
+                    </nz-list-item-meta>
+
+                </span>
+
+                <span class="week-view">
+
+                    <span class="calendar-day">
+
+                        <div class="calendar-day-content">
+                            <ng-container *ngIf="!immunisationType.isAllChecked">
+                                <div class="calendar-day-inner text-align-center"
+                                    style="margin-top: 30px;"
+                                    (click)="markAll($event, immunisationType.immunisationData, immunisationType.isAllChecked)">
+                                    <nz-tag nzColor="success" class="cursor-pointer">
+                                        <i nz-icon nzType="check-circle"></i>
+                                        <span>Mark All</span>
+                                    </nz-tag>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="immunisationType.isAllChecked">
+                                <div class="calendar-day-inner text-align-center"
+                                     style="margin-top: 30px;">
+                                    <nz-tag nzColor="default" class="cursor-not-allowed">
+                                        <i nz-icon nzType="check-circle"></i>
+                                        <span>Mark All</span>
+                                    </nz-tag>
+                                </div>
+                            </ng-container>
+                        
+                        </div>
+
+                    </span>
+
+                    <span class="calendar-day" 
+                        *ngFor="let slot of immunisationType.immunisationData; trackBy: trackByFn;">
+
+                        <div class="calendar-day-content">
+
+                            <div class="calendar-day-inner">
+                
+                                <ng-container>
+                
+                                    <ng-container>
+                
+                                        <div class="slot {{getSlotColor(slot.schedule[0])}}"
+                                            (click)="editSlot($event, slot.schedule[0], slot, immunisationType.child)"
+                                            [@fadeMotion]
+                                            tooltip="{{getHelperText(slot.schedule[0])}}" display-mobile="false" hide-delay="50">
+                
+                                            <div class="inner">
+                
+                                                <p class="mb-0 text-truncate time">
+                                                    <span>
+                                                        {{ slot.schedule[0]?.number}} - {{getPeriodTitle(slot.schedule[0].period)}}
+                                                    </span>
+                                                </p>
+                    
+                                                <div class="py-4 px-8 min-height-50">
+                    
+                                                    <p class="mb-0 text-truncate">
+                                                        <i class="calendar alternate icon mr-4"></i>
+                                                        <span>{{getFormatedDate(slot.schedule[0].trackingDate)}}</span>
+                                                    </p>
+                
+                                                    <p class="mb-0 text-truncate" *ngIf="slot.schedule[0].tracker">
+                                                        <i class="calendar check outline icon mr-4"></i>
+                                                        <span>{{getFormatedDate(slot.schedule[0].tracker.date) || 'N/A'}}</span>
+                                                    </p>
+                
+                                                </div>
+                                                <!-- <p class="mb-0 text-truncate action">
+                                                    <span (click)="editSlot($event, slot.schedule[0], slot, immunisationType.child)">
+                                                        <a class="action-btn ml-8">
+                                                            <i class="edit outline icon text-dec-none mr-4"></i>
+                                                        </a>
+                                                    </span>
+                                                    <span class="ml-8" *ngIf="slot.schedule[0].tracker" (click)="deleteSlot($event, slot.schedule[0])">
+                                                        <a class="action-btn danger-color ml-12">
+                                                            <i class="trash alternate outline icon text-dec-none mr-4 danger-color"></i>
+                                                        </a>
+                                                    </span>
+                                                </p> -->
+                
+                                            </div>
+                                            
+                
+                                        </div>
+                
+                                    </ng-container>
+
+                                </ng-container>
+                
+                            </div>
+                
+                        </div>
+
+                    </span>
+
+                </span>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+    </div>
+</div>
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+
+<ng-template #emptyBlock>
+
+    <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+        [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <ng-template #contentTpl>
+            <h4 class="mt-24">No Data Found</h4>
+            <span>Looks like there's no information to display here</span>
+        </ng-template>
+
+    </nz-empty>
+
+</ng-template>

@@ -1,0 +1,1021 @@
+<div class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2">
+                    {{ formTitle }} - {{ child.getFullName() }}
+                </span>
+                
+            </h1>
+
+            <span class="status-bar" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="enrolment">
+                <span class="text-right">
+                    <p class="label">Status</p>
+                    <p class="mb-0">{{ enrolment?.statusLabel }} {{ enrolment?.getConfirmedDateTimeLabel() }}</p>
+                </span>
+                <img src="assets/icons/flat/ui_set/custom_icons/child/ccs_status.svg" alt="status">
+            </span>
+
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="text-uppercase go-back-link" 
+                    (click)="onBack($event)">
+                    <i class="long arrow alternate left icon"></i> 
+                    <span>Go Back</span>
+                </span>
+
+                <span fxLayout="row" fxLayoutAlign="center center">
+
+                    <ng-container *ngIf="!tabViewItem">
+
+                        <ng-container *ngIf="!enrolment; else enrolmentFound">
+    
+                            <button class="text-uppercase"
+                                *hasPermission="['AC1']; belongsTo 'N23'"
+                                nz-button 
+                                nzType="primary" 
+                                (click)="onFormSaveOrUpdate($event)"
+                                [disabled]="!childEnrolmentForm.valid || canSaveOrUpdateForm()"
+                                [promiseBtn]="buttonLoader">
+                                <i class="save outline icon b-i mr-8"></i> Save
+                            </button>
+    
+                        </ng-container>
+    
+                        <ng-template #enrolmentFound>
+
+                            <button class="text-uppercase blank" type="button" 
+                                nz-button nzType="link" 
+                                (click)="updateEnrolmentDetails($event)"
+                                [promiseBtn]="buttonLoaderSubmit"
+                                tooltip="get enrolment details from centre link" placement="bottom" display-mobile="false" hide-delay="50">
+                                <i class="sync alternate icon"></i>
+                            </button>
+    
+                            <ng-container *ngIf="!enrolment.isEnrolmentCeased() && !enrolment.isEnrolmentReEnrolled(); else enrolmentCeased">
+    
+                                <ng-container *ngIf="enrolment.isEnrolmentNew() && !enrolment.hasEnrolmentId(); else updateBlock">
+    
+                                    <button class="text-uppercase"
+                                        *hasPermission="['AC2']; belongsTo 'N23'"
+                                        nz-button 
+                                        nzType="primary" 
+                                        (click)="onFormSaveOrUpdate($event)"
+                                        [disabled]="!childEnrolmentForm.valid || canSaveOrUpdateForm()"
+                                        [promiseBtn]="buttonLoader">
+                                        <i class="save outline icon b-i mr-8"></i> Update
+                                    </button>
+    
+                                    <button class="text-uppercase ml-8"
+                                        *hasPermission="['AC7']; belongsTo 'N23'"
+                                        nz-button 
+                                        nzType="success" 
+                                        (click)="onFormSubmit($event)"
+                                        [disabled]="!childEnrolmentForm.valid || canSubmitForm()"
+                                        [promiseBtn]="buttonLoaderSubmit">
+                                        <i class="save icon b-i mr-8"></i> Save & Submit
+                                    </button>
+    
+                                </ng-container>
+    
+                                <ng-template #updateBlock>
+
+                                    <span *ngIf="enrolment.isEnrolmentConfirmed()">
+
+                                        <button class="text-uppercase mr-8"
+                                            *hasPermission="['AC7']; belongsTo 'N23'"
+                                            nz-button 
+                                            nzType="success" 
+                                            (click)="closeEnrolment($event)"
+                                            [promiseBtn]="buttonLoaderSubmit">
+                                            <i class="window close outline icon b-i mr-8"></i> End Enrolment
+                                        </button>
+
+                                    </span>
+    
+                                    <button class="text-uppercase"
+                                        *hasPermission="['AC7']; belongsTo 'N23'"
+                                        nz-button 
+                                        nzType="success" 
+                                        (click)="onFormReSubmit($event)"
+                                        [disabled]="!childEnrolmentForm.valid || canReSubmitForm()"
+                                        [promiseBtn]="buttonLoaderSubmit">
+                                        <i class="save icon b-i mr-8"></i> Update & Submit
+                                    </button>
+    
+                                </ng-template>
+    
+                            </ng-container>
+
+                            <ng-template #enrolmentCeased>
+
+                                <button class="text-uppercase ml-8"
+                                    *hasPermission="['AC7']; belongsTo 'N23'"
+                                    nz-button 
+                                    nzType="success" 
+                                    (click)="onFormReactivate($event)"
+                                    [disabled]="!childEnrolmentForm.valid || canReSubmitForm()"
+                                    [promiseBtn]="buttonLoaderSubmit">
+                                    <i class="save icon b-i mr-8"></i> Resubmit (200A)
+                                </button>
+                                
+                            </ng-template>
+                        
+                        </ng-template>
+
+                    </ng-container>
+                
+                </span>
+
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24 pt-16" 
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <form name="childEnrolmentForm" [nzLayout]="'vertical'" [formGroup]="childEnrolmentForm" nz-form>
+
+                    <nz-tabset 
+                        [nzSize]="'large'"
+                        [nzSelectedIndex]="current"
+                        (nzSelectedIndexChange)="updatePosition($event)">
+
+                        <nz-tab [nzTitle]="titleTemplateBasic" [nzDisabled]="enrolment && tabViewItem">
+
+                            <ng-template nz-tab>
+
+                                <div class="px-4">
+
+                                    <nz-alert class="mb-16" nzType="warning" [nzMessage]="childCrnAlert" *ngIf="child.CRN === ''" [@fadeMotion]>
+    
+                                        <ng-template #childCrnAlert>
+                                            <div fxLayout="row" fxLayoutAlign="start center">
+                                                <img src="assets/icons/flat/ui_set/custom_icons/child/warning_sign.svg" alt="img">
+                                                <p class="mb-0">Child <span class="font-weight-600">CRN</span> not available. <a (click)="setCRN($event, 'child')">Click</a> to set it.</p>
+                                            </div>
+                                        </ng-template>
+    
+                                    </nz-alert>
+    
+                                    <nz-alert class="mb-16" nzType="warning" [nzMessage]="parentCrnAlert" *ngIf="checkIndividualHasCRN()" [@fadeMotion]>
+    
+                                        <ng-template #parentCrnAlert>
+                                            <div fxLayout="row" fxLayoutAlign="start center">
+                                                <img src="assets/icons/flat/ui_set/custom_icons/child/warning_sign.svg" alt="img">
+                                                <p class="mb-0">Individual (Parent/Guardian) <span class="font-weight-600">CRN</span> not available. <a (click)="setCRN($event, 'individual')">Click</a> to set it.</p>
+                                            </div>
+                                        </ng-template>
+    
+                                    </nz-alert>
+
+                                    <nz-alert class="mb-16" nzType="warning" [nzMessage]="parentApprovalAlert" *ngIf="enrolment && enrolment.signingParty === '0' && !enrolment.isApproved" [@fadeMotion]>
+    
+                                        <ng-template #parentApprovalAlert>
+                                            <div fxLayout="row" fxLayoutAlign="start center">
+                                                <img src="assets/icons/flat/ui_set/custom_icons/child/warning_sign.svg" alt="img">
+                                                <p class="mb-0">Pending parent approval.</p>
+                                            </div>
+                                        </ng-template>
+    
+                                    </nz-alert>
+
+                                    <ng-container *ngIf="enrolment && enrolment.hasError()">
+
+                                        <nz-alert class="mb-16" nzType="error" [nzMessage]="syncError" *ngFor="let error of enrolment.syncErrors; trackBy: trackByFn;" [@fadeMotion]>
+
+                                            <ng-template #syncError>
+                                                <div fxLayout="row" fxLayoutAlign="start center">
+                                                    <img src="assets/icons/flat/ui_set/custom_icons/child/enrolment-error.svg" alt="img">
+                                                    <p class="mb-0 font-weight-600">{{ error.message || 'Unknown error' }}</p>
+                                                </div>
+                                            </ng-template>
+
+                                        </nz-alert>
+
+                                    </ng-container>
+                                    
+                                    <div nz-row [nzGutter]="24">
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+    
+                                            <nz-form-item>
+        
+                                                <nz-form-label>Child CRN</nz-form-label>
+        
+                                                <nz-form-control class="input-overlay">
+        
+                                                    <input nz-input formControlName="child_crn" placeholder="N/A" type="text" readonly/>
+        
+                                                    <div class="overlay"></div>
+        
+                                                    <a class="over-btn" 
+                                                        *ngIf="child.CRN !== ''" [@fadeInOnEnter] [@fadeOutOnLeave]
+                                                        (click)="setCRN($event, 'child')">
+                                                        <i class="edit outline icon"></i>
+                                                    </a>
+        
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+    
+                                            <nz-form-item>
+        
+                                                <nz-form-label [nzRequired]="hasValidator('individual', 'required')">Parent/Guardian</nz-form-label>
+        
+                                                <nz-form-control nzHasFeedback [nzErrorTip]="individualErrorTpl">
+        
+                                                    <nz-select formControlName="individual"
+                                                        nzShowSearch 
+                                                        nzAllowClear 
+                                                        nzPlaceHolder="select a individual"
+                                                        [nzCustomTemplate]="custom"
+                                                        [nzOptionHeightPx]="child.parents.length < 4 ? 56 : 32">
+        
+                                                        <nz-option *ngFor="let item of child.parents" 
+                                                            nzCustomContent 
+                                                            nzLabel="{{ item.getFullName() }} ({{ item.ccsId || 'N/A' }})"
+                                                            nzValue="{{ item.id }}">
+        
+                                                            <div class="font-weight-600">{{ item.getFullName() }}</div>
+        
+                                                            <div><small>CRN: {{ item.ccsId || 'N/A'}}</small></div>
+        
+                                                        </nz-option>
+        
+                                                    </nz-select>
+        
+                                                    <ng-template #custom let-selected>
+                                                        <span>{{ selected.nzLabel }}</span>
+                                                    </ng-template>
+        
+                                                    <ng-template #individualErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please select an individual</ng-container>
+                                                    </ng-template>
+        
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+        
+                                            <nz-form-item>
+        
+                                                <nz-form-label [nzRequired]="hasValidator('individual_crn', 'required')">Parent/Guardian CRN</nz-form-label>
+        
+                                                <nz-form-control class="input-overlay">
+        
+                                                    <input nz-input formControlName="individual_crn" placeholder="N/A" type="text" readonly/>
+        
+                                                    <div class="overlay"></div> 
+        
+                                                    <a class="over-btn" 
+                                                        *ngIf="childEnrolmentForm.get('individual').value" [@fadeInOnEnter] [@fadeOutOnLeave]
+                                                        (click)="setCRN($event, 'individual')">
+                                                        <i class="edit outline icon"></i>
+                                                    </a>
+        
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+    
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24"></div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+    
+                                            <nz-form-item>
+        
+                                                <nz-form-label>Enrolment Id<small class="ml-4">(CCS ID)</small></nz-form-label>
+        
+                                                <nz-form-control class="input-overlay">
+        
+                                                    <div class="overlay"></div>
+        
+                                                    <input nz-input formControlName="ccs_id" placeholder="N/A" type="text" readonly/>
+                                                    
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+    
+                                            <nz-form-item>
+        
+                                                <nz-form-label nzRequired>Enrolment Start Date</nz-form-label>
+        
+                                                <nz-form-control nzHasFeedback [nzErrorTip]="enrollmentStartErrorTpl">
+        
+                                                    <nz-date-picker 
+                                                        formControlName="enrollment_start" 
+                                                        nzPlaceHolder="Enrolment start date"
+                                                        class="block" 
+                                                        [nzInputReadOnly]="true"
+                                                        (ngModelChange)="checkEndDateVisibility($event)"></nz-date-picker>
+        
+                                                    <ng-template #enrollmentStartErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please input enrolment start date</ng-container>
+                                                    </ng-template>
+        
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+    
+                                            <nz-form-item>
+        
+                                                <nz-form-label [nzRequired]="hasValidator('enrollment_end', 'required')">Enrolment End Date <i class="info circle icon ml-8 hint" tooltip="Please set the end date to be on the Sunday after their last day." display-mobile="false" hide-delay="50"></i></nz-form-label>
+        
+                                                <nz-form-control nzHasFeedback [nzErrorTip]="enrollmentEndErrorTpl">
+        
+                                                    <nz-date-picker 
+                                                        formControlName="enrollment_end" 
+                                                        nzPlaceHolder="Enrolment end date"
+                                                        class="block"
+                                                        [nzInputReadOnly]="true"
+                                                        [nzDisabledDate]="disabledEndDate"></nz-date-picker>
+        
+                                                    <ng-template #enrollmentEndErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please input enrolment end date</ng-container>
+                                                    </ng-template>
+        
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+    
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24"></div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                                            <nz-form-item>
+        
+                                                <nz-form-label nzRequired>Arrangement Type</nz-form-label>
+        
+                                                <nz-form-control [nzErrorTip]="arrangementTypeErrorTpl">
+        
+                                                    <nz-radio-group formControlName="arrangement_type">
+
+                                                        <ng-container *ngFor="let item of arrangementTypes | keyvalue; trackBy: trackByFn;">
+
+                                                            <label nz-radio nzValue="{{ item.key }}" *ngIf="item.key !== 'ACCS'">{{ item.value }}</label>
+
+                                                        </ng-container>
+
+                                                    </nz-radio-group>
+        
+                                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" class="mt-8" 
+                                                        *ngIf="childEnrolmentForm.get('arrangement_type').value == 'OA'" [@fadeInOnEnter]>
+    
+                                                        <nz-form-item class="mb-0">
+        
+                                                            <nz-form-control nzHasFeedback [nzErrorTip]="arrangementTypeNoteErrorTpl">
+                                                                    
+                                                                <input type="text" nz-input formControlName="arrangement_type_note" placeholder="..."/>
+        
+                                                            </nz-form-control>
+        
+                                                            <ng-template #arrangementTypeNoteErrorTpl let-control>
+                                                                <ng-container *ngIf="control.hasError('required')">This field is required</ng-container>
+                                                                <ng-container *ngIf="control.hasError('maxlength')">This field can't be longer than 50 characters</ng-container>
+                                                            </ng-template>
+        
+                                                        </nz-form-item>
+
+                                                    </div>
+
+                                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" class="mt-24" 
+                                                        *ngIf="childEnrolmentForm.get('arrangement_type').value == 'PEA'" [@fadeInOnEnter]>
+        
+                                                        <nz-form-item class="mb-0">
+
+                                                            <nz-form-label nzRequired>Reason for PEA</nz-form-label>
+        
+                                                            <nz-form-control [nzErrorTip]="reasonForPeaErrorTpl">
+                                                                    
+                                                                <nz-radio-group formControlName="reason_for_pea">
+                                                                    
+                                                                    <ng-container *ngFor="let item of reasonForPea | keyvalue; trackBy: trackByFn;">
+
+                                                                        <label nz-radio nzValue="{{ item.key }}" *ngIf="item.key !== 'NONE'">{{ item.value }}</label>
+
+                                                                    </ng-container>
+                                                                    
+                                                                </nz-radio-group>
+        
+                                                            </nz-form-control>
+        
+                                                            <ng-template #reasonForPeaErrorTpl let-control>
+                                                                <ng-container *ngIf="control.hasError('required')">This field is required</ng-container>
+                                                            </ng-template>
+        
+                                                        </nz-form-item>
+
+                                                    </div>
+        
+                                                    <ng-template #arrangementTypeErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please select an options</ng-container>
+                                                    </ng-template>
+        
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                                            <nz-form-item class="mb-8">
+        
+                                                <nz-form-label nzRequired>Session Type</nz-form-label>
+        
+                                                <nz-form-control [nzErrorTip]="sessionTypeErrorTpl">
+        
+                                                    <nz-radio-group formControlName="session_type">
+        
+                                                        <label nz-radio nzValue="R">Routine Session</label>
+        
+                                                        <label nz-radio nzValue="C">Casual Session</label>
+        
+                                                        <label nz-radio nzValue="B">Routine and Casual session</label>
+        
+                                                    </nz-radio-group>
+        
+                                                    <ng-template #sessionTypeErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please select an options</ng-container>
+                                                    </ng-template>
+        
+                                                </nz-form-control>
+        
+                                                <p class="mt-8 mb-0" fxLayout="row" fxLayoutAlign="start center">
+                                                    <label nz-checkbox formControlName="session_is_case">In state care</label>
+                                                    <i class="question circle icon hint" tooltip="Indicates whether the child being enrolled with the service is under the care of State/Territory child welfare law." display-mobile="false" hide-delay="50"></i>
+                                                </p>
+        
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" 
+                                            *ngIf="enrolment && enrolment.initialRoutines.length > 0" [@fadeMotion]>
+
+                                            <nz-form-item class="mb-8">
+        
+                                                <nz-form-label class="block">
+                                                    <div fxFlex="1 0 auto" fxLayoutAlign="space-between center">
+                                                        Initial Session Routines
+                                                        <a (click)="autoFillSessionRoutine($event)" class="ps">Autofill session routine</a>
+                                                    </div>
+                                                </nz-form-label>
+        
+                                                <nz-table #initialSessionTable 
+                                                    [nzSize]="'small'"
+                                                    [nzBordered]="false"
+                                                    [nzShowPagination]="false"
+                                                    [nzData]="enrolment.initialRoutines">
+
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Session Type</th>
+                                                            <th>Session Unit Of Measure</th>
+                                                            <th>Standard Amount</th>
+                                                            <th>Date</th>
+                                                            <th>Day</th>
+                                                            <th>Time</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr *ngFor="let data of initialSessionTable.data">
+                                                            <td>{{ data.session_type_label }}</td>
+                                                            <td>{{ data.session_measure_label }}</td>
+                                                            <td>{{ data.standardAmount | currency }}</td>
+                                                            <td>{{ data.date || 'N/A' }}</td>
+                                                            <td>{{ data.sessionDay === '' ? 'N/A' : (getDay(data.sessionDay) || 'N/A') }}</td>
+                                                            <td>
+                                                                {{ data.startTime | convert24StringTime }} - {{ data.endTime | convert24StringTime }}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </nz-table>
+
+                                            </nz-form-item>
+
+                                        </div>
+    
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                            <nz-divider nzText="Routine" nzOrientation="left" 
+                                                *ngIf="childEnrolmentForm.get('session_type').value && childEnrolmentForm.get('session_type').value !== 'C'" [@fadeInOnEnter]>
+                                            </nz-divider>
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" 
+                                            *ngIf="childEnrolmentForm.get('session_type').value && childEnrolmentForm.get('session_type').value !== 'C'" [@fadeInOnEnter]>
+    
+                                            <nz-form-item>
+        
+                                                <nz-form-label class="block" nzRequired>
+                                                    
+                                                    <div fxFlex="1 0 auto" fxLayoutAlign="space-between center">
+                                                        Session Routine
+                                                        <a (click)="pickSessionFromBooking($event)" class="ps" *ngIf="childEnrolmentForm.get('session_routine_type').value" [@fadeInOnEnter]>
+                                                            Pick from master roll
+                                                            <span #weekPicker>
+                                                                <nz-week-picker class="date-input"
+                                                                    formControlName="calendarWeek"
+                                                                    [nzInputReadOnly]="true">
+                                                                    nzPlaceHolder="select week"></nz-week-picker>
+                                                            </span>
+                                                        </a>
+                                                    </div>
+
+                                                </nz-form-label>
+                                                
+                                                <nz-form-control [nzErrorTip]="sessionRoutineTypeErrorTpl">
+        
+                                                    <nz-radio-group class="pl-4"
+                                                        formControlName="session_routine_type">
+
+                                                        <!-- [nzDisabled]="checkSessionTypeVisibility()" -->
+        
+                                                        <label nz-radio nzValue="0" class="inline">Weekly</label>
+        
+                                                        <label nz-radio nzValue="1" class="inline">Fortnightly</label>
+        
+                                                    </nz-radio-group>
+        
+                                                    <ng-template #sessionRoutineTypeErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please select an options</ng-container>
+                                                    </ng-template>
+        
+                                                </nz-form-control>
+
+                                                <!-- <nz-alert nzType="info" class="mb-16" [nzMessage]="sessionEmpty" *ngIf="enrolment && hasBookingUpdate" [@slideMotion]="'bottom'">
+                                                    <ng-template #sessionEmpty>
+                                                        <div fxLayout="row" fxLayoutAlign="start center">
+                                                            <img src="assets/icons/flat/ui_set/custom_icons/child/warning_sign.svg" alt="img">
+                                                            <p class="mb-0"> Booking updates available for selected week. Please <a (click)="updateSessionRoutine($event)">click</a> here to update.</p>
+                                                        </div>
+                                                    </ng-template>
+                                                </nz-alert> -->
+
+                                                <nz-spin
+                                                    [nzIndicator]="indicatorTemplate" 
+                                                    [nzSpinning]="sessionViewLoading">
+                                                
+                                                    <ul class="session-routine" 
+                                                        *ngIf="sessionRoutines.length > 0" [@fadeMotion]>
+        
+                                                        <ng-container *ngFor="let item of sessionRoutines; let i = index; trackBy: trackByFn;">
+        
+                                                            <li class="session-row-space"
+                                                                *ngIf="!hideWeekEnd ? (sessionRoutines.length > 7 && i == 7) : (sessionRoutines.length > 5 && i == 5)"></li>
+        
+                                                            <li class="session-row-label"
+                                                                *ngIf="!hideWeekEnd ? (sessionRoutines.length > 7 && i == 0) : (sessionRoutines.length > 5 && i == 0)"><span>Week 1</span></li>
+        
+                                                            <li class="session-row-label"
+                                                                *ngIf="!hideWeekEnd ? (sessionRoutines.length > 7 && i == 7) : (sessionRoutines.length > 5 && i == 5)"><span>Week 2</span></li>
+                                                        
+                                                            <li class="session-row"
+                                                                [ngClass]="{ 'hide-week' : hideWeekEnd }">
+            
+                                                                <div class="session-content">
+            
+                                                                    <div class="session-label">
+                                                                        {{ item.day }}
+                                                                    </div>
+            
+                                                                    <div class="session-inner">
+            
+                                                                        <div class="session-item no-select" 
+                                                                            *ngFor="let slot of item.sessions; let idx = index; trackBy: trackByFn;"
+                                                                            (click)="editSession($event, slot, item, idx)">
+
+                                                                            <div>{{ slot.session?.start | convertTimeString }} - {{ slot.session?.end | convertTimeString }}</div>
+                                                                            
+                                                                            <div class="fee">{{ slot.standardAmount | currency: client.currency :'symbol':'1.2-2' }}</div>
+            
+                                                                        </div>
+        
+                                                                        <div class="session-item add"
+                                                                            (click)="addSession($event, item)">
+                                                                            <i class="plus icon"></i>
+                                                                        </div>
+            
+                                                                    </div>
+            
+                                                                </div>
+            
+                                                            </li>
+                                                        
+                                                        </ng-container>
+        
+                                                    </ul>
+    
+                                                </nz-spin>                                            
+    
+                                                <ng-template #emptySessionMessage>
+                                                    <nz-alert nzType="info" [nzMessage]="sessionEmpty" [@fadeInOnEnter]>
+                                                        <ng-template #sessionEmpty>
+                                                            <div fxLayout="row" fxLayoutAlign="start center">
+                                                                <img src="assets/icons/flat/ui_set/custom_icons/child/warning_sign.svg" alt="img">
+                                                                <p class="mb-0">Please select enrolment start date and session routine.</p>
+                                                            </div>
+                                                        </ng-template>
+                                                    </nz-alert>
+                                                </ng-template>
+                                                
+                                                <ng-template #sessionRoutineErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('required')">Please select a session</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-item>
+
+                                        </div>
+                                        
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                            <nz-divider nzText="Casual" nzOrientation="left" 
+                                                *ngIf="childEnrolmentForm.get('session_type').value === 'C' || childEnrolmentForm.get('session_type').value === 'B'" [@fadeInOnEnter]>
+                                            </nz-divider>
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12"
+                                            *ngIf="childEnrolmentForm.get('session_type').value === 'C' || childEnrolmentForm.get('session_type').value === 'B'" [@fadeInOnEnter]>  
+    
+                                            <nz-form-item>
+        
+                                                <nz-form-label nzRequired>Session</nz-form-label>
+        
+                                                <nz-form-control nzHasFeedback [nzErrorTip]="feesErrorTpl">
+                                                
+                                                    <nz-select  
+                                                        formControlName="casual_fee"
+                                                        nzShowSearch
+                                                        nzAllowClear
+                                                        nzPlaceHolder="select a session">
+                                
+                                                        <nz-option *ngFor="let item of fees | filterBy: ['type']: '1'; trackBy: trackByFn;"
+                                                            nzValue="{{ item.id }}" 
+                                                            nzLabel="{{ item.name }} ({{ item.netAmount | currency: client.currency :'symbol':'1.2-2' }})"></nz-option>
+            
+                                                    </nz-select>
+        
+                                                    <ng-template #feesErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please select a session</ng-container>
+                                                    </ng-template>
+        
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12"
+                                            *ngIf="childEnrolmentForm.get('session_type').value === 'C' || childEnrolmentForm.get('session_type').value === 'B'" [@fadeInOnEnter]>
+    
+                                            <nz-form-item>
+        
+                                                <nz-form-label>Number of Hours</nz-form-label>
+        
+                                                <nz-form-control nzHasFeedback [nzErrorTip]="casualHoursErrorTpl">
+                                                    
+                                                    <input type="text" nz-input formControlName="casual_hours" placeholder="number of hours"/>
+        
+                                                    <ng-template #casualHoursErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please input number of hours</ng-container>
+                                                        <ng-container *ngIf="control.hasError('pattern')">Invalid input number of hours</ng-container>
+                                                    </ng-template>
+        
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24"
+                                            *ngIf="childEnrolmentForm.get('session_type').value === 'C' || childEnrolmentForm.get('session_type').value === 'B'" [@fadeInOnEnter]>
+    
+                                            <nz-form-item>
+        
+                                                <nz-form-label nzRequired>Casual Description</nz-form-label>
+        
+                                                <nz-form-control nzHasFeedback [nzErrorTip]="casualDescriptionErrorTpl">
+                                                    
+                                                    <textarea formControlName="casual_description" nz-input rows="5" placeholder="casual description"></textarea>
+        
+                                                    <ng-template #casualDescriptionErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please input casual description</ng-container>
+                                                        <ng-container *ngIf="control.hasError('maxlength')">Casual description can't be longer than 1000 characters</ng-container>
+                                                    </ng-template>
+        
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+    
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24"></div>
+
+                                        <p class="mb-0" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24"
+                                            *ngIf="!(enrolment && enrolment.lateSubmission)"
+                                            [ngClass]="{ 'mb-16': !viewLateSubmissionReason }">
+
+                                            <a class="more-btn" (click)="toggleLateSubmissionReason($event)">
+                                                <i class="angle down icon mr-4" [ngClass]="{ 'rotate' : viewLateSubmissionReason }"></i>
+                                                {{ viewLateSubmissionReason ? 'Hide' : 'Show' }} Late Submission Reason
+                                            </a>
+
+                                        </p>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24"
+                                            *ngIf="viewLateSubmissionReason || (enrolment && enrolment.lateSubmission)" [@fadeInOnEnter]>
+    
+                                            <nz-form-item>
+        
+                                                <nz-form-label>Late Submission Reason <small>(Max 1000 characters)</small></nz-form-label>
+        
+                                                <nz-form-control nzHasFeedback [nzErrorTip]="lateSubmissionErrorTpl">
+        
+                                                    <textarea formControlName="late_submission" nz-input rows="5" placeholder="late submission reason"></textarea>
+        
+                                                    <ng-template #lateSubmissionErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please input late submission reason</ng-container>
+                                                        <ng-container *ngIf="control.hasError('maxlength')">Late submission reason can't be longer than 1000 characters</ng-container>
+                                                    </ng-template>
+        
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+    
+                                            <nz-form-item class="mb-12">
+        
+                                                <nz-form-label>Signing Party</nz-form-label>
+        
+                                                <nz-form-control [nzErrorTip]="signingPartyErrorTpl">
+        
+                                                    <nz-radio-group formControlName="signing_party">
+                                                    
+                                                        <label nz-radio nzValue="0">Parent/Guardian</label>
+                                                    
+                                                        <label nz-radio nzValue="1">Others</label>
+                                                    
+                                                    </nz-radio-group>
+        
+                                                    <ng-template #signingPartyErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please select an options</ng-container>
+                                                    </ng-template>
+        
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12"
+                                            *ngIf="childEnrolmentForm.get('signing_party').value == '1'" [@fadeInOnEnter]>
+        
+                                            <nz-form-item>
+        
+                                                <nz-form-label nzRequired>Individual First Name</nz-form-label>
+        
+                                                <nz-form-control nzHasFeedback [nzErrorTip]="individualFirstNameErrorTpl">
+                                                    
+                                                    <input type="text" nz-input formControlName="signing_party_first_name" placeholder="individual first name"/>
+        
+                                                    <ng-template #individualFirstNameErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please input individual first name</ng-container>
+                                                        <ng-container *ngIf="control.hasError('maxlength')">Individual first name can't be longer than 40 characters</ng-container>
+                                                    </ng-template>
+                                                    
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12"
+                                            *ngIf="childEnrolmentForm.get('signing_party').value == '1'" [@fadeInOnEnter]>
+    
+                                            <nz-form-item>
+        
+                                                <nz-form-label nzRequired>Individual Last Name</nz-form-label>
+        
+                                                <nz-form-control nzHasFeedback [nzErrorTip]="individualLastNameErrorTpl">
+        
+                                                    <input type="text" nz-input formControlName="signing_party_last_name" placeholder="individual last name"/>
+        
+                                                    <ng-template #individualLastNameErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please input individual last name</ng-container>
+                                                        <ng-container *ngIf="control.hasError('maxlength')">Individual last name can't be longer than 40 characters</ng-container>
+                                                    </ng-template>
+        
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                                            <nz-form-item>
+        
+                                                <nz-form-label>IS Case Details</nz-form-label>
+        
+                                                <nz-form-control>
+        
+                                                    <textarea formControlName="is_case_details" nz-input rows="4" placeholder="is case details"></textarea>
+        
+                                                </nz-form-control>
+        
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                                            <nz-form-item>
+                                            
+                                                <nz-form-label>Notes</nz-form-label>
+                                            
+                                                <nz-form-control>
+                                            
+                                                    <textarea formControlName="notes" nz-input rows="4" placeholder="notes"></textarea>
+                                            
+                                                </nz-form-control>
+                                            
+                                            </nz-form-item>
+
+                                        </div>
+    
+                                    </div>
+
+                                </div>
+
+                            </ng-template>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateChangeLog" [nzDisabled]="!enrolment || tabViewItem">
+
+                            <ng-template nz-tab>
+
+                                <enrolment-change-log [selected]="enrolment"></enrolment-change-log>
+
+                            </ng-template>
+                            
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateStatusHistory" [nzDisabled]="!enrolment || (enrolment && enrolment.statusHistory.length < 1) ||tabViewItem">
+
+                            <ng-template nz-tab>
+
+                                <enrolment-status-history [selected]="enrolment"></enrolment-status-history>
+
+                            </ng-template>
+                            
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateEnrolmentHistory" [nzDisabled]="!enrolment || !(enrolment && enrolment.hasEnrolmentId()) || tabViewItem">
+
+                            <ng-template nz-tab>
+
+                                <child-enrolment-history [selected]="child"></child-enrolment-history>
+
+                            </ng-template>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateEntitlement" [nzDisabled]="!enrolment || !(enrolment && enrolment.hasEnrolmentId()) || tabViewItem">
+                            
+                            <ng-template nz-tab>
+
+                                <child-enrolment-entitlement [selected]="enrolment"></child-enrolment-entitlement>
+                                
+                            </ng-template>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateEntitlementHistory" [nzDisabled]="!enrolment || !(enrolment && enrolment.hasEnrolmentId()) || tabViewItem">
+
+                            <ng-template nz-tab>
+                                <child-entitlement-history-view [selected]="enrolment"></child-entitlement-history-view>
+
+                            </ng-template>
+
+                        </nz-tab>
+
+                    </nz-tabset>
+
+                    <div class="text-right pl-4 pr-4 mt-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                        <button nz-button nzType="default" 
+                            (click)="pre()" 
+                            [disabled]="current < 1 || tabViewItem">
+                            <i class="arrow alternate circle left outline icon b-i mr-8"></i>
+                            <span>Previous</span>
+                        </button>
+
+                        <button nz-button nzType="default" 
+                            (click)="next()" 
+                            [disabled]="current === 5 || !enrolment || tabViewItem || (current === 1 && enrolment && enrolment.statusHistory.length < 1)">
+                            <span>Next</span>
+                            <i class="arrow alternate circle right outline icon b-i ml-8"></i>
+                        </button>
+
+                    </div>
+
+                    <ng-template #titleTemplateBasic>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/custom_icons/child/basic.svg" alt="img">
+                            <span>Basic</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateStatusHistory>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/custom_icons/child/status_history.svg" alt="img">
+                            <span>Status History</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateChangeLog>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/custom_icons/child/log.svg" alt="img">
+                            <span>Change Log</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateEnrolmentHistory>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img [src]="(tabViewItem && tabViewItem === 2) ? 'assets/loading/dual-ring.svg' : 'assets/icons/flat/ui_set/custom_icons/child/enrol-details.svg'" alt="img">
+                            <span>Enrolment History</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateEntitlement>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img [src]="(tabViewItem && tabViewItem === 3) ? 'assets/loading/dual-ring.svg' : 'assets/icons/flat/ui_set/custom_icons/child/look.svg'" alt="img">
+                            <span>Entitlement Details</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateEntitlementHistory>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img [src]="(tabViewItem && tabViewItem === 4) ? 'assets/loading/dual-ring.svg' : 'assets/icons/flat/ui_set/custom_icons/child/look.svg'" alt="img">
+                            <span>Entitlement History</span>
+                        </div>
+                    </ng-template>
+
+                </form>
+
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+    <!-- LOADER VIEW -->
+    <ng-template #indicatorTemplate>
+        <div class="is-loading">
+            <span class="btn-spinner card-loader"></span>
+        </div>
+    </ng-template>
+    <!-- / LOADER VIEW -->
+
+</div>

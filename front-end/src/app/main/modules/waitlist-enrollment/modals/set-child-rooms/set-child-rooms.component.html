@@ -1,0 +1,79 @@
+<form name="ChildSetRoomForm" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="ChildSetRoomForm" nz-form>
+
+    <nz-input-group class="search-container"
+                    [nzSuffix]="suffixTemplate"
+                    [nzPrefix]="prefixTemplate">
+        <input type="text" nz-input placeholder="Search ..." formControlName="search" />
+    </nz-input-group>
+
+    <ng-template #prefixTemplate>
+        <i nz-icon nzType="search" class="search-icon"></i>
+    </ng-template>
+
+    <ng-template #suffixTemplate>
+        <i class="times circle outline icon ant-input-clear-icon"
+           *ngIf="ChildSetRoomForm.get('search').value"
+           [@fadeInOnEnter] [@fadeOutOnLeave]
+           (click)="clear($event)">
+        </i>
+    </ng-template>
+
+    <div class="list-item-view"
+         fusePerfectScrollbar
+         [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <nz-radio-group formControlName="room">
+
+            <div *ngIf="(rooms | filterByImpure: searchProperties: ChildSetRoomForm.get('search').value).length > 0; else typeEmpty" [@animate]="{ value:'*', params:{ delay: '100ms', y:'10px' } }">
+
+                <ng-container *ngFor="let item of rooms | filterByImpure: searchProperties: ChildSetRoomForm.get('search').value; trackBy: item?.index;">
+
+                    <label nz-radio
+                           nzValue="{{ item.id }}"
+                           [ngStyle]="{ 'display': 'block' }"
+                           fxLayout="row" fxLayoutAlign="start center"
+                           class="list-item">
+
+                        <img src="{{ item.image }}" alt="{{ item.title }}" class="img-bg mr-16">
+
+                        <span class="text-truncate">
+                            <p class="m-0">{{ item.title }}</p>
+                            <p class="m-0"><small>{{ item.desc | shorten: 50: '...' }}</small></p>
+                        </span>
+
+                    </label>
+
+                </ng-container>
+
+            </div>
+
+            <ng-template #typeEmpty>
+
+                <div [@animate]="{ value:'*', params:{ delay: '100ms', y:'-10px' } }">
+
+                    <nz-empty
+                        class="e-sm-img"
+                        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                        [nzNotFoundContent]="contentTpl">
+                    </nz-empty>
+
+                    <ng-template #contentTpl>
+                        <span>No Data</span>
+                    </ng-template>
+
+                </div>
+
+            </ng-template>
+
+        </nz-radio-group>
+
+        <label class="mt-16" nz-checkbox formControlName="send_ezidebit_mail">
+            Email ezidebit form to primary parent
+            <span *ngIf="item?.waitlist_info?.parent_firstname">
+                ({{ item?.waitlist_info?.parent_firstname}} {{ item?.waitlist_info?.parent_lastname }})
+            </span>
+        </label>
+
+    </div>
+
+</form>

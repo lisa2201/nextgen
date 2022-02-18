@@ -1,0 +1,52 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32" style="padding-top: 32px !important;">
+    <span class="title">User Filter</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0">
+
+    <form fxLayout="column" fxFlex [formGroup]="filterForm">
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Parent Status</label>
+        
+            <nz-radio-group formControlName="parent_status">
+        
+                <label nz-radio nzValue="all" class="_filter">All</label>
+                <label nz-radio nzValue="0" class="_filter">Active</label>
+                <label nz-radio nzValue="1" class="_filter">Inactive</label>
+        
+            </nz-radio-group>
+        
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Primary Payer</label>
+        
+            <nz-radio-group formControlName="primary_payer">
+        
+                <label nz-radio nzValue="all" class="_filter">All</label>
+                <label nz-radio nzValue="yes" class="_filter">Yes</label>
+                <label nz-radio nzValue="no" class="_filter">No</label>
+        
+            </nz-radio-group>
+        
+        </div>
+
+
+        <button 
+            nz-button 
+            nzType="default" 
+            (click)="filter($event)"
+            [disabled]="loading"
+        > <i class="filter icon mr-8"></i> Load Parents</button>
+
+    </form>
+
+
+</div>
+<!-- / SIDEBAR CONTENT -->

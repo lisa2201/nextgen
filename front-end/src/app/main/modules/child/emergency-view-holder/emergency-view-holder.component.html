@@ -1,0 +1,223 @@
+<div class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2">
+                    Emergency Contacts
+                </span>
+
+            </h1>
+
+            <ng-container *hasPermission="['AC1']; belongsTo 'N30'">
+
+                <button class="text-uppercase"
+                        nz-button
+                        nzType="primary"
+                        (click)="createEmergencyContact($event)"
+                >
+                    <i class="plus icon mr-8"></i> Create New
+                </button>
+
+            </ng-container>
+
+
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+               <span class="child-info">
+
+                <nz-avatar [nzSize]="56" nzSrc="{{ getChildProfileImage(child) }}" class="child-img img-bg"></nz-avatar>
+
+                <span class="child-name text-truncate">{{ child.getFullName() }}</span>
+
+                </span>
+
+            </div>
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="text-uppercase go-back-link"
+                      (click)="onBack($event)">
+                    <i class="long arrow alternate left icon"></i>
+                    <span>Go Back</span>
+                </span>
+
+                <span fxLayout="row" fxLayoutAlign="center center">
+
+
+
+                </span>
+
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+            <div class="content p-24 pt-16"
+                 fusePerfectScrollbar
+                 [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <div class="content p-24">
+                    <nz-spin [nzTip]="'Loading...'" [nzSpinning]="isLoadingData" [nzIndicator]="indicatorTpl">
+
+
+                        <nz-list [nzNoResult]="emptyBlock" [nzDataSource]="emergencyData" [nzRenderItem]="item"
+                                 [nzGrid]="{ gutter: 16, xs: 24, sm: 12, md: 8, lg: 8, xl: 6, xxl: 5 }"
+                                 [nzLoading]="tableLoading">
+
+                            <ng-template #item let-item let-index="index">
+
+                                <nz-list-item [nzContent]="nzContent">
+
+                                    <ng-template #nzContent>
+
+                                        <nz-spin [nzSpinning]="item.isLoading" [nzIndicator]="indicatorTemplate">
+
+                                            <nz-card
+                                                [nzBordered]="true"
+                                                [nzActions]="hasActionButton ? [actionEdit,actionDelete ] : []"
+                                                [@animate]="{ value:'*', params:{ delay: (100) + 'ms', x: '-25px' } }">
+
+                                                <div class="color-bar active">
+                                                    <span nz-tooltip nzTooltipTitle="Priority of the emergency contact">
+                                                        <nz-badge style="cursor: pointer;" [nzCount]="item.callOrder" [nzOffset]="[0,-20]">
+                                                            <a class="head-example"></a>
+                                                        </nz-badge>
+                                                    </span>
+
+                                                </div>
+
+                                                <p class="text-truncate"><span class="font-weight-600">Name: </span>
+                                                    {{ item.getFullName() }}
+                                                </p>
+                                                <p class="text-truncate"><span class="font-weight-600">Email: </span>
+                                                    {{ item.email || 'N/A' }}
+                                                </p>
+                                                <p class="text-truncate"><span class="font-weight-600">Mobile: </span>
+                                                    {{ item.phone || 'N/A' }}
+                                                </p>
+                                                <p class="text-truncate"><span class="font-weight-600">Address: </span>
+                                                    {{ item.address1 || 'N/A' }}
+                                                </p>
+                                                <p class="text-truncate"><span
+                                                    class="font-weight-600">Relationship: </span>
+                                                    {{ item.relationship || 'N/A' }}
+                                                </p>
+                                                <b class="text-truncate"><span class="font-weight-600">Types: </span>
+                                                    <br>
+                                                    <div style="padding: 10px;"
+                                                         *ngIf="item.consents.consent_drop_off_and_pick_up_child">
+                                                        <p class="m-0" style="font-size: smaller;">
+                                                            {{ (item.consents.consent_drop_off_and_pick_up_child) ? 'Drop off and Pick up child' : '' }}
+                                                        </p>
+                                                    </div>
+                                                    <div style="padding: 10px;"
+                                                         *ngIf="item.consents.consent_emergency_contact">
+                                                        <p class="m-0" style="font-size: smaller;">
+                                                            {{ (item.consents.consent_emergency_contact) ? 'Emergency contact' : '' }}
+                                                        </p>
+                                                    </div>
+                                                    <div style="padding: 10px;"
+                                                         *ngIf="item.consents.consent_collect_child">
+                                                        <p class="m-0" style="font-size: smaller;">
+                                                            {{ (item.consents.consent_collect_child) ? 'Collect the child' : '' }}
+                                                        </p>
+                                                    </div>
+                                                    <div style="padding: 10px;"
+                                                         *ngIf="item.consents.consent_make_medical_decision">
+                                                        <p class="m-0" style="font-size: smaller;">
+                                                            {{ (item.consents.consent_make_medical_decision) ? 'Medical decisions on behalf of this child' : '' }}
+                                                        </p>
+                                                    </div>
+                                                    <div style="padding: 10px;" *ngIf="item.consents.consent_incursion">
+                                                        <p class="m-0" style="font-size: smaller;">
+                                                            {{ (item.consents.consent_incursion) ? 'Incursions and excursions' : '' }}
+                                                        </p>
+                                                    </div>
+                                                    <div style="padding: 10px;"
+                                                         *ngIf="item.consents.consent_transportation">
+                                                        <p class="m-0" style="font-size: smaller;">
+                                                            {{ (item.consents.consent_transportation) ? 'Authorise child transportation' : '' }}
+                                                        </p>
+                                                    </div>
+                                                </b>
+                                            </nz-card>
+
+                                            <ng-template #actionEdit>
+                                                <span class="pr-8 pl-8"
+                                                      *hasPermission="['AC2']; belongsTo 'N30'"
+                                                      (click)="editDialog(item, $event)">
+                                                    <i class="edit outline icon primary-color"></i>
+                                                </span>
+                                            </ng-template>
+
+                                            <ng-template #actionDelete>
+                                                <span class="pr-8 pl-8"
+                                                      *hasPermission="['AC3']; belongsTo 'N30'"
+                                                      (click)="delete(item, $event)">
+                                                    <i class="trash alternate outline icon danger-color"></i>
+                                                </span>
+                                            </ng-template>
+                                        </nz-spin>
+
+                                        <ng-template #indicatorTemplate>
+                                            <div class="is-loading">
+                                                <span class="btn-spinner card-loader"></span>
+                                            </div>
+                                        </ng-template>
+
+                                    </ng-template>
+
+                                </nz-list-item>
+
+                            </ng-template>
+
+                        </nz-list>
+
+                    </nz-spin>
+
+                    <ng-template #indicatorTpl>
+                        <div class="is-loading">
+                            <span class="btn-spinner card-loader"></span>
+                        </div>
+                    </ng-template>
+                    <!-- EMPTY VIEW -->
+                    <ng-template #emptyBlock>
+
+                        <nz-empty class="pt-24 pb-24 m-0"
+                                  [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                                  [nzNotFoundContent]="contentTpl" [nzNotFoundFooter]="footerTpl" [@fadeInOnEnter]
+                                  [@fadeOutOnLeave]>
+
+                            <ng-template #contentTpl>
+                                <h4 class="mt-24">No Data Found</h4>
+                                <span>Looks like there's no information to display here</span>
+                            </ng-template>
+                            <ng-template #footerTpl>
+                                <!-- <button *hasPermission="['AC0']; belongsTo 'N21'" class="text-uppercase" nz-button nzType="primary"
+                                    (click)="addDialog($event)" [promiseBtn]="buttonLoader">
+                                    <i class="plus icon mr-8"></i> Create Now
+                                </button> -->
+                            </ng-template>
+
+                        </nz-empty>
+
+                    </ng-template>
+                    <!-- / EMPTY VIEW -->
+
+                </div>
+            </div>
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+</div>

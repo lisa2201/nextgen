@@ -1,0 +1,68 @@
+
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.children-attendance-report {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 749px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+        .compose-form {
+
+            .child-list {
+                position: relative;
+                background-color: $ant-bg-gray;
+                border: 1px solid $input-border-color;
+                border-radius: 4px;
+                padding: 12px 16px 8px;
+                padding-right: 12px;
+                margin: 0;
+                list-style: none;
+                flex-wrap: wrap;
+
+                li {
+                    display: inline-flex;
+                    flex-basis: 32.7%;
+                    padding: 8px 12px;
+                    border-radius: 4px;
+                    background: #fff;
+                    margin-right: 4px;
+                    margin-bottom: 4px;
+                    border: 1px solid $form-border-color;
+                    box-shadow: $custom-box-shadow;
+                    
+                    @media only screen and (max-width: 887px) {
+                        flex-basis: 49%;
+                    }
+    
+                    @include media-breakpoint('xs') {
+                        flex-basis: 100%;
+                    }
+
+                    
+                }
+
+            }
+
+            .sign-img {
+                border-radius: 4px;
+                border: 1px solid $form-border-color;
+                width: 100px;
+            }
+        }
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+}

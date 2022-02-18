@@ -1,0 +1,69 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0" 
+    fusePerfectScrollbar 
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex [formGroup]="messageFiltersForm">
+
+        <!-- <ng-container *ngIf="isOwner">
+
+            <div class="mb-16">
+
+                <label class="filter-label mb-8">Branch</label>
+    
+                <nz-form-control>
+    
+                    <nz-select  
+                        formControlName="branch"
+                        nzShowSearch
+                        nzAllowClear
+                        nzPlaceHolder="select a branch">
+    
+                        <nz-option *ngFor="let item of branches; trackBy: trackByFn;" nzValue="{{ item.id }}" nzLabel="{{ item.name }}"></nz-option>
+                        
+                    </nz-select>
+    
+                </nz-form-control>
+    
+            </div>
+        </ng-container>         -->
+
+        <div class="mb-16">
+
+            <label class="filter-label mb-8">Start Date</label>
+
+            <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledDate" formControlName="sDate" nzPlaceHolder="start date" class="block"></nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label mb-8">End Date</label>
+
+            <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledDate" formControlName="eDate" nzPlaceHolder="end date" class="block"></nz-date-picker>
+
+        </div>
+        <div class="mb-16">
+            <label class="attendance-chk" nz-checkbox formControlName="new"
+                tooltip="Only New Messages" placement="top" display-mobile="false" hide-delay="50">
+            
+                <span class="attendance-lbl-inner no-select">Only New Messages</span>
+            
+            </label>
+
+        </div>
+
+        <button nz-button nzType="default" 
+        [disabled]="buttonLoader"
+        (click)="submitFilter($event)" [disabled]="!messageFiltersForm.valid"><i class="sync left icon pr-8"></i>Query Messages</button>
+    
+    </form>
+
+</div>
+<!-- / SIDEBAR CONTENT -->

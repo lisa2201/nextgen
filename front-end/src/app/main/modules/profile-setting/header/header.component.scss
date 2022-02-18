@@ -1,0 +1,81 @@
+@import "src/@fuse/scss/fuse";
+user-profile-header{
+    .header {
+        height: 220px;
+        min-height: 220px;
+        max-height: 220px;
+        background: #1BB0B4;
+        background-size: cover;
+
+        .profile-image {
+            margin-right: 24px;
+
+            @include media-breakpoint('sm') {
+                margin: 0 0 0 0;
+            }
+        }
+        .user-info{
+
+            @include media-breakpoint('gt-md') {
+                margin-bottom: 44px;
+            }
+        }
+
+        .name {
+            font-size: 34px;
+            color: #FFFFFF;
+            font-family: 'Montserrat', sans-serif;
+
+            @include media-breakpoint('sm') {
+                margin-bottom: 32px;
+            }
+
+            .room {
+            font-size: 18px;
+            color: #FFFFFF;
+            font-family: 'Montserrat', sans-serif;
+
+            @include media-breakpoint('sm') {
+                margin-bottom: 22px;
+                // padding-left:60px!important;
+            }
+        }
+        .attendance {
+            font-size: 14px;
+            color: #FFFFFF;
+            font-family: 'Montserrat', sans-serif;
+
+            @include media-breakpoint('sm') {
+                margin-bottom: 18px;
+            }
+        }
+        }
+
+        
+
+        .actions {
+
+            button {
+                text-transform: none;
+                padding: 0 16px;
+                margin: 0 0 0 8px;
+                @include media-breakpoint('lt-md') {
+                padding: 0 8px;
+                margin: 0 0 0 4px;
+            }
+            }
+        }
+    }
+
+    .content {
+        flex: 1;
+
+        mat-tab-group {
+            height: 100%;
+
+            .mat-tab-body-wrapper {
+                flex-grow: 1;
+            }
+        }
+    }
+}

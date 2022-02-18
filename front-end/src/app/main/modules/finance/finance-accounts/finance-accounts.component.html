@@ -1,0 +1,64 @@
+<div 
+    id="finance-accounts" 
+    class="page-layout simple left-sidebar inner-sidebar inner-scroll" 
+    *canViewAuth
+    [@fadeInOnEnter] 
+    [@fadeOutOnLeave]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+    
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-15px' } }">Parent Accounts</h1>
+    
+        <ng-container>
+
+            <button
+                nz-button 
+                nzType="primary" 
+                (click)="updateTransactions($event)"
+                [nzLoading]="buttonLoader"
+                [disabled]="disableTransactionButton"
+                [@animate]="{ value:'*', params:{ delay: '100ms', x:'15px' } }">
+                <i nz-icon nzType="sync"></i>
+                Recalculate Account Balance
+            </button>
+    
+        </ng-container>
+    
+    </div>
+    <!-- / HEADER -->
+
+    <div class="p-24 pt-0">
+        <nz-alert nzType="info" [nzMessage]="infoMessage" nzShowIcon></nz-alert>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="finance-accounts-sidebar" position="left">
+
+            <app-finance-accounts-left-sidenav 
+                [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }" 
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+                (updateTableScroll)="updateScroll($event)">
+            </app-finance-accounts-left-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <app-finance-accounts-list-view 
+            class="center p-24 pt-0" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: false }" 
+            (updateTableScroll)="updateScroll($event)"
+            [@animate]="{ value:'*', params:{ delay: '200ms', x:'15px' } }">
+        </app-finance-accounts-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

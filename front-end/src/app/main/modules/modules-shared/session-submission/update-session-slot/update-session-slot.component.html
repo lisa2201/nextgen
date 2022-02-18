@@ -1,0 +1,157 @@
+<form name="updateSessionSlotForm" 
+    fxLayout="column" fxFlex 
+    nz-form [nzLayout]="'vertical'" 
+    [formGroup]="updateSessionSlotForm">
+
+    <div nz-row [nzGutter]="24">
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+            <nz-form-item>
+        
+                <nz-form-label nzRequired>Booking Type</nz-form-label>
+        
+                <nz-form-control nzHasFeedback [nzErrorTip]="typeErrorTpl">
+        
+                    <nz-select  
+                        formControlName="type"
+                        nzAllowClear
+                        nzPlaceHolder="select a type"
+                        [nzCustomTemplate]="customBook">
+        
+                        <nz-option *ngFor="let item of bookingTypes; trackBy: trackByFn;" nzCustomContent nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                            <i class="circle icon color-code mr-8 {{ item.name | lowercase }}"></i>
+                            <span>{{ item.name }}</span>
+                        </nz-option>
+        
+                        <ng-template #customBook let-selected>
+                            <i class="circle icon color-code mr-8 {{ selected.nzLabel | lowercase }}"></i>
+                            <span>{{ selected.nzLabel }}</span>
+                        </ng-template>
+        
+                    </nz-select>
+        
+                    <ng-template #typeErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please select a booking type</ng-container>
+                    </ng-template>
+        
+                </nz-form-control>
+        
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="24" [nzXXl]="24" *ngIf="showAbsReasonInput" [@fadeInOnEnter]>
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>CCS Absence Reason</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="ccsAbsErrorTpl">
+
+                    <nz-select  
+                        formControlName="absence"
+                        nzAllowClear
+                        nzPlaceHolder="select a absence reason">
+
+                        <nz-option *ngFor="let item of absReasons | keyvalue; trackBy: trackByFn;" nzValue="{{ item.key }}" nzLabel="{{ item.value }}"></nz-option>
+                        
+                    </nz-select>
+
+                    <ng-template #ccsAbsErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please select a absence reason (CCS)</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12" *ngIf="showAbsReasonInput" [@fadeInOnEnter]>
+
+            <nz-form-item>
+
+                <nz-form-label>Absence Document Held</nz-form-label>
+
+                <nz-form-control>
+
+                    <nz-switch formControlName="absent_document_held" nzCheckedChildren="Yes" nzUnCheckedChildren="No"></nz-switch>
+        
+                </nz-form-control>
+
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12" *ngIf="showAttendanceInput" [@fadeInOnEnter]>
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Start Time</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="sessionStartTimeErrorTpl">
+
+                    <ry-time-picker 
+                        #timePickerStart
+                        formControlName="session_start"
+                        ryFormat="h:mm A"
+                        [ryType]="'single'"
+                        [ryMinuteStep]="1"
+                        [ryPlaceHolder]="'select ...'"
+                        [ryValidateValue]="updateSessionSlotForm.get('session_end').value"
+                        [ryValidateType]="ryValidatorValues.LESS_THAN_VALUE">
+                    </ry-time-picker>
+
+                    <ng-template #sessionStartTimeErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please enter start time</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12" *ngIf="showAttendanceInput" [@fadeInOnEnter]>
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>End Time</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="sessionEndTimeErrorTpl">
+
+                    <ry-time-picker 
+                        #timePickerEnd
+                        formControlName="session_end"
+                        ryFormat="h:mm A"
+                        [ryType]="'single'"
+                        [ryMinuteStep]="1"
+                        [ryPlaceHolder]="'select ...'"
+                        [ryValidateValue]="updateSessionSlotForm.get('session_start').value"
+                        [ryValidateType]="ryValidatorValues.GREATER_THAN_VALUE">
+                    </ry-time-picker>
+
+                    <ng-template #sessionEndTimeErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please enter end time</ng-container>
+                    </ng-template>
+                
+                </nz-form-control>
+
+            </nz-form-item>
+
+        </div>
+
+    </div>
+
+    <nz-alert nzType="warning" [nzMessage]="syncError" *ngIf="updateSessionSlotForm.get('type').value === '3'" [@fadeInOnEnter]>
+    
+        <ng-template #syncError>
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <p class="mb-0 font-weight-600">Holidays are not submitted in session reports, Holiday bookings allow you to mark known holidays in advance and keep track of vacancies and to accept other children in lieu</p>
+            </div>
+        </ng-template>
+
+    </nz-alert>
+
+</form>

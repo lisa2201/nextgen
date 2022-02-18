@@ -1,0 +1,293 @@
+<form name="form" 
+    fxLayout="column" fxFlex 
+    nz-form [nzLayout]="'vertical'" 
+    [formGroup]="form">
+
+    <div nz-row [nzGutter]="24">
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Organisation</nz-form-label>
+        
+                <nz-form-control nzHasFeedback [nzErrorTip]="orgErrorTpl">
+        
+                    <nz-select  
+                        formControlName="org"
+                        nzPlaceHolder="select organisation">
+        
+                        <nz-option 
+                            *ngFor="let org of organizations; trackBy: trackByFn;" 
+                            nzValue="{{ org.id }}" 
+                            nzLabel="{{ org.companyName }}"></nz-option>
+                        
+                    </nz-select>
+        
+                    <ng-template #orgErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please select a organisation</ng-container>
+                    </ng-template>
+        
+                </nz-form-control>
+        
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+            <nz-form-item>
+        
+                <nz-form-label nzRequired>Branch</nz-form-label>
+        
+                <nz-form-control nzHasFeedback [nzErrorTip]="branchErrorTpl">
+        
+                    <nz-select  
+                        formControlName="branch"
+                        nzPlaceHolder="select branch"
+                        [nzDisabled]="!form.get('org').value || branches.length < 1">
+        
+                        <nz-option 
+                            *ngFor="let item of branches; trackBy: trackByFn;" 
+                            nzValue="{{ item.id }}" 
+                            nzLabel="{{ item.name }}"></nz-option>
+                        
+                    </nz-select>
+        
+                    <ng-template #branchErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please select a branch</ng-container>
+                    </ng-template>
+        
+                </nz-form-control>
+        
+            </nz-form-item>
+
+        </div>
+
+    </div>
+
+    <nz-form-item>
+
+        <nz-form-label nzRequired>Source</nz-form-label>
+
+        <nz-form-control nzHasFeedback [nzErrorTip]="sourceErrorTpl">
+
+            <input formControlName="file" type="file" accept=".csv"
+                nz-input placeholder="select file" 
+                (change)="fileInputListener($event)">
+
+            <ng-template #sourceErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">Please select a file</ng-container>
+            </ng-template>
+        
+        </nz-form-control>
+
+    </nz-form-item>
+
+    <div nz-row [nzGutter]="24">
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Column - Child CRN</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="requiredErrorTpl">
+        
+                    <nz-select  
+                        formControlName="column_child_crn"
+                        nzPlaceHolder="select a column"
+                        [nzDisabled]="!form.get('file').value">
+        
+                        <nz-option 
+                            *ngFor="let item of fileHeaders | keyvalue; trackBy: trackByFn;" 
+                            nzValue="{{ item.key }}" 
+                            nzLabel="{{ item.value }}"></nz-option>
+                        
+                    </nz-select>
+        
+                </nz-form-control>
+        
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Column - Child Date of Birth</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="requiredErrorTpl">
+        
+                    <nz-select  
+                        formControlName="column_child_dob"
+                        nzPlaceHolder="select a column"
+                        [nzDisabled]="!form.get('file').value">
+        
+                        <nz-option 
+                            *ngFor="let item of fileHeaders | keyvalue; trackBy: trackByFn;" 
+                            nzValue="{{ item.key }}" 
+                            nzLabel="{{ item.value }}"></nz-option>
+                        
+                    </nz-select>
+        
+                </nz-form-control>
+        
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Column - Week Schedule</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="requiredErrorTpl">
+        
+                    <nz-select  
+                        formControlName="column_week_schedule"
+                        nzPlaceHolder="select a column"
+                        [nzDisabled]="!form.get('file').value">
+        
+                        <nz-option 
+                            *ngFor="let item of fileHeaders | keyvalue; trackBy: trackByFn;" 
+                            nzValue="{{ item.key }}" 
+                            nzLabel="{{ item.value }}"></nz-option>
+                        
+                    </nz-select>
+        
+                </nz-form-control>
+        
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Column - Enrolment Start Date</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="requiredErrorTpl">
+        
+                    <nz-select  
+                        formControlName="column_enrolment_start"
+                        nzPlaceHolder="select a column"
+                        [nzDisabled]="!form.get('file').value">
+        
+                        <nz-option 
+                            *ngFor="let item of fileHeaders | keyvalue; trackBy: trackByFn;" 
+                            nzValue="{{ item.key }}" 
+                            nzLabel="{{ item.value }}"></nz-option>
+                        
+                    </nz-select>
+        
+                </nz-form-control>
+        
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Column - Enrolment End Date</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="requiredErrorTpl">
+        
+                    <nz-select  
+                        formControlName="column_enrolment_end"
+                        nzPlaceHolder="select a column"
+                        [nzDisabled]="!form.get('file').value">
+        
+                        <nz-option 
+                            *ngFor="let item of fileHeaders | keyvalue; trackBy: trackByFn;" 
+                            nzValue="{{ item.key }}" 
+                            nzLabel="{{ item.value }}"></nz-option>
+                        
+                    </nz-select>
+        
+                </nz-form-control>
+        
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Column - Fee</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="requiredErrorTpl">
+        
+                    <nz-select  
+                        formControlName="column_fee"
+                        nzPlaceHolder="select a column"
+                        [nzDisabled]="!form.get('file').value">
+        
+                        <nz-option 
+                            *ngFor="let item of fileHeaders | keyvalue; trackBy: trackByFn;" 
+                            nzValue="{{ item.key }}" 
+                            nzLabel="{{ item.value }}"></nz-option>
+                        
+                    </nz-select>
+        
+                </nz-form-control>
+        
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Column - Room</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="requiredErrorTpl">
+        
+                    <nz-select  
+                        formControlName="column_room"
+                        nzPlaceHolder="select a column"
+                        [nzDisabled]="!form.get('file').value">
+        
+                        <nz-option 
+                            *ngFor="let item of fileHeaders | keyvalue; trackBy: trackByFn;" 
+                            nzValue="{{ item.key }}" 
+                            nzLabel="{{ item.value }}"></nz-option>
+                        
+                    </nz-select>
+        
+                </nz-form-control>
+        
+            </nz-form-item>
+
+        </div>
+
+        <nz-divider class="mt-0 mb-8" nzText="Optional" nzOrientation="center"></nz-divider>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+            <nz-form-item class="mb-0">
+
+                <nz-form-control>
+
+                    <label nz-checkbox formControlName="include_history" class="l-h-auto">Include booking history <small>(bookings will be added until enrolment end date)</small></label>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+        </div>
+
+    </div>
+
+    <ng-template #requiredErrorTpl let-control>
+        <ng-container *ngIf="control.hasError('required')">This field is required</ng-container>
+    </ng-template>
+
+</form>

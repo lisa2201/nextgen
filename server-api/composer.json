@@ -1,0 +1,137 @@
+{
+    "name": "laravel/laravel",
+    "type": "project",
+    "description": "The Laravel Framework.",
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^7.1.3",
+        "ext-bcmath": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "artisaninweb/laravel-soap": "0.3.0.9",
+        "aws/aws-sdk-php": "^3.107",
+        "bensampo/laravel-enum": "^1.37",
+        "doctrine/dbal": "^2.9",
+        "fideloper/proxy": "^4.0",
+        "fruitcake/laravel-cors": "^2.0",
+        "geoip2/geoip2": "^2.9",
+        "goldspecdigital/laravel-eloquent-uuid": "^6.2.0",
+        "guzzlehttp/guzzle": "^6.5",
+        "haruncpi/laravel-log-reader": "^1.0",
+        "jaybizzle/crawler-detect": "1.*",
+        "jenssegers/agent": "^2.6",
+        "jeremykendall/php-domain-parser": "^5.5",
+        "laravel/cashier": "^9.3",
+        "laravel/framework": "6.*",
+        "laravel/helpers": "^1.2",
+        "laravel/passport": "^8.4.0",
+        "laravel/tinker": "^1.0",
+        "lcobucci/jwt": "^3.3",
+        "league/flysystem-aws-s3-v3": "~1.0",
+        "lodash-php/lodash-php": "^0.0.6",
+        "nahid/jsonq": "^6.0",
+        "paragonie/sodium_compat": "^1.13",
+        "rennokki/laravel-eloquent-query-cache": "^2.0",
+        "spatie/laravel-activitylog": "^3.7",
+        "spatie/laravel-permission": "^3.11",
+        "spatie/laravel-query-builder": "^3.3",
+        "staudenmeir/eloquent-eager-limit": "^1.0",
+        "stripe/stripe-php": "^6.40",
+        "tuupola/branca": "^1.0",
+        "ua-parser/uap-php": "^3.9",
+        "vinkla/hashids": "^7.0",
+        "watson/rememberable": "^3.0",
+        "ext-curl": "*",
+        "ext-libxml": "*",
+        "ext-dom": "*",
+        "ext-zlib": "*",
+        "ext-fileinfo": "*"
+    },
+    "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.6",
+        "beyondcode/laravel-dump-server": "^1.0",
+        "filp/whoops": "^2.0",
+        "fzaninotto/faker": "^1.4",
+        "mockery/mockery": "^1.0",
+        "nunomaduro/collision": "^3.0",
+        "phpunit/phpunit": "^7.5"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Kinderm8\\": "app/"
+        },
+        "classmap": [
+            "database/seeds",
+            "database/factories",
+            "helper-class/Helpers.php",
+            "helper-class/PaymentHelpers.php",
+            "helper-class/PathHelper.php",
+            "helper-class/Minutes.php",
+            "helper-class/QueueHelper.php",
+            "helper-class/StaticUrls.php",
+            "helper-class/CrawlerDetector.php",
+            "helper-class/DateTimeHelper.php",
+            "helper-class/LanguageDetect.php",
+            "helper-class/MobileDetectHelper.php",
+            "helper-class/CouponCodeGenerator.php",
+            "helper-class/UserAgentParser.php",
+            "helper-class/EmailHelper.php",
+            "helper-class/ImageHelper.php",
+            "helper-class/RoleHelpers.php",
+            "helper-class/DateTimeHelper.php",
+            "helper-class/LocalizationHelper.php",
+            "helper-class/RequestHelper.php",
+            "helper-class/UserHelpers.php",
+            "helper-class/ErrorHandler.php",
+            "helper-class/FileHelper.php",
+            "helper-class/DBHelper.php",
+            "helper-class/MediaHelper.php",
+            "helper-class/NavigationHelper.php",
+            "helper-class/CacheHelper.php",
+            "helper-class/ValidationHelper.php",
+            "helper-class/CCSHelpers.php",
+            "helper-class/SqlFormatter.php",
+            "helper-class/CCMSHelper.php",
+            "helper-class/ACCSHelpers.php",
+            "helper-class/CurlHelper.php",
+            "helper-class/WaitlistHelper.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi",
+            "php artisan ide-helper:generate",
+            "php artisan ide-helper:meta"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ]
+    }
+}

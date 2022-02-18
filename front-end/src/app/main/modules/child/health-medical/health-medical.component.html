@@ -1,0 +1,444 @@
+
+<div class="loading-bar" *ngIf="viewLoading" [@fadeMotion]>
+    <div class="__inner">
+        <img src="assets/loading/gears_c1.svg">
+        <span>Loading! Please Wait...</span>
+    </div>
+</div>
+
+<div class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2">
+                    Health & Medical
+                </span>
+
+            </h1>
+
+            <ng-container *hasPermission="['AC1']; belongsTo 'N29'">
+
+                <button class="text-uppercase" nz-button nzType="primary" (click)="addDialog($event)"
+                    [promiseBtn]="buttonLoader1"
+                    tooltip="Add Allergy/Special Dietary Needs" display-mobile="false" hide-delay="50">
+                   <i class="plus icon mr-8"></i> Create New
+                </button>
+
+            </ng-container>
+
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+               <span class="child-info">
+
+                <nz-avatar [nzSize]="56" nzSrc="{{ getChildProfileImage(child) }}" class="child-img img-bg"></nz-avatar>
+
+                <span class="child-name text-truncate">{{ child.getFullName() }}</span>
+
+                </span>
+
+            </div>
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="text-uppercase go-back-link" (click)="onBack($event)">
+                    <i class="long arrow alternate left icon"></i>
+                    <span>Go Back</span>
+                </span>
+
+                <span class="text-right">
+
+                    <ng-container>
+
+                        <button class="text-uppercase"
+                            *hasPermission="['AC2']; belongsTo 'N29'"
+                            nz-button 
+                            nzType="primary" 
+                            (click)="onFormSubmit($event)"
+                                [disabled]="!healthMedicalForm.valid"
+                            
+                            [promiseBtn]="buttonLoader">
+                            <i class="save outline icon b-i mr-8"></i> Update
+                        </button>
+
+                    </ng-container>
+
+
+                </span>
+
+            </div>
+            <!--/ CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24 pt-16" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <form name="healthMedicalForm" [nzLayout]="'vertical'" [formGroup]="healthMedicalForm" nz-form>
+
+                    <div class="pl-4 pr-4">
+                        
+                        <div nz-row [nzGutter]="24">
+
+                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                                <nz-form-item>
+
+                                    <nz-form-label>Child's Medicare Number/Reference No.</nz-form-label>
+
+                                    <nz-form-control >
+
+                                        <input nz-input formControlName="child_medical_number"
+                                            placeholder="Child's Medicare Number/Reference No." type="text" />
+
+                                    </nz-form-control>
+
+                                </nz-form-item>
+
+                            </div>
+
+                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                                <nz-form-item>
+
+                                    <nz-form-label>Child's Medicare Expiry Date</nz-form-label>
+
+                                    <nz-form-control >
+
+                                        <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledPastDates"
+                                            formControlName="child_medicalexpiry_date" class="block"></nz-date-picker>
+
+                                    </nz-form-control>
+
+                                </nz-form-item>
+
+                            </div>
+
+                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                                <nz-form-item>
+
+                                    <nz-form-label>Ambulance Cover Number</nz-form-label>
+
+                                    <nz-form-control [nzErrorTip]="AmbulanceError">
+
+                                        <input nz-input formControlName="ambulance_cover_no"
+                                            placeholder="Ambulance Cover Number" type="text" />
+                                        <ng-template #AmbulanceError let-control>
+                                            <ng-container *ngIf="control.hasError('maxlength')">Ambulance Cover No. can't be more than 150 characters</ng-container>
+                                        </ng-template>
+
+                                    </nz-form-control>
+
+                                </nz-form-item>
+
+                            </div>
+
+                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                                <nz-form-item>
+
+                                    <nz-form-label>Maternal & Child Health Centre</nz-form-label>
+
+                                    <nz-form-control [nzErrorTip]="CenterError">
+
+                                        <input nz-input formControlName="child_heallth_center"
+                                            placeholder="Maternal & Child Health Centre" type="text" />
+                                        <ng-template #CenterError let-control>
+                                            <ng-container *ngIf="control.hasError('maxlength')">Center name can't be more than 150 characters</ng-container>
+                                        </ng-template>
+
+                                    </nz-form-control>
+
+                                </nz-form-item>
+
+                            </div>
+
+                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                                <nz-form-item>
+
+                                    <nz-form-label>Medical Personnel/Service Name</nz-form-label>
+
+                                    <nz-form-control [nzErrorTip]="NameError">
+
+                                        <input nz-input formControlName="practitioner_name"
+                                            placeholder="Medical Practitioner/Service Name" type="text" />
+
+                                        <ng-template #NameError let-control>
+                                            <ng-container *ngIf="control.hasError('maxlength')">Name can't be more than 150 characters</ng-container>
+                                        </ng-template>
+                                    </nz-form-control>
+
+                                </nz-form-item>
+
+                            </div>
+
+                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                                <nz-form-item>
+
+                                    <nz-form-label>Medical Personnel/Service Phone Number</nz-form-label>
+
+                                    <nz-form-control [nzErrorTip]="PhoneError">
+
+                                        <input nz-input formControlName="practitioner_phoneNo"
+                                            placeholder="Medical Practitioner/Service Phone Number" type="text" />
+                                        <ng-template #PhoneError let-control>
+                                            <ng-container *ngIf="control.hasError('maxlength')">Phone Number can't be more than 150 characters</ng-container>
+                                        </ng-template>
+
+                                    </nz-form-control>
+
+                                </nz-form-item>
+
+                            </div>
+
+                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                                <nz-form-item>
+
+                                    <nz-form-label>Medical Personnel/Service Address</nz-form-label>
+
+                                    <nz-form-control [nzErrorTip]="AddressError">
+
+                                        <textarea formControlName="practitioner_address" nz-input rows="4" placeholder="Medical Practitioner/Service Address"></textarea>
+                                        <ng-template #AddressError let-control>
+                                            <ng-container *ngIf="control.hasError('maxlength')">Address can't be more than 150 characters</ng-container>
+                                        </ng-template>
+
+                                    </nz-form-control>
+
+                                </nz-form-item>
+
+                            </div>
+
+                            <div class="pb-24" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                                <nz-alert nzType="info" [nzMessage]="alertTem" nzShowIcon></nz-alert>
+
+                            </div>
+                            
+                            <ng-template #alertTem>
+                                You can manage all the document <a (click) = "openChildDoc($event)">here</a>
+                            </ng-template>
+                            
+
+                            <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                <nz-form-item>
+                                    <div nz-row nzJustify="space-between" nzAlign="middle">
+                                        <nz-form-label>Does your child have a Health Record?</nz-form-label>
+                                        <nz-switch class="upload-switch"
+                                                   formControlName="healthRecord"
+                                                   nzCheckedChildren="Yes"
+                                                   nzUnCheckedChildren="No"
+                                                   (click)="clickSwitch($event,'healthRecord')">
+                                        </nz-switch>
+                                    </div>
+
+                                </nz-form-item>
+                            </div>
+                            
+                            <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                                <nz-form-item>
+                                    <div nz-row nzJustify="space-between" nzAlign="middle">
+                                        <nz-form-label>Has your child been immunised?</nz-form-label>
+                                        <nz-switch class="upload-switch"
+                                                   formControlName="childImmunised"
+                                                   nzCheckedChildren="Yes"
+                                                   nzUnCheckedChildren="No"
+                                                   (click)="clickSwitch($event,'childImmunised')">
+                                        </nz-switch>
+                                    </div>
+
+                                </nz-form-item>
+                            </div>
+                            <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                                <nz-form-item>
+                                    <div nz-row nzJustify="space-between" nzAlign="middle">
+                                        <nz-form-label>Is your child receiving regular prescribed medicine?
+                                        </nz-form-label>
+                                        <nz-switch class="upload-switch"
+                                                   formControlName="prescribedMedicine"
+                                                   nzCheckedChildren="Yes"
+                                                   nzUnCheckedChildren="No"
+                                                   (click)="clickSwitch($event,'prescribedMedicine')">
+                                        </nz-switch>
+                                    </div>
+
+                                </nz-form-item>
+                            </div>
+                            <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                                <nz-form-item>
+                                    <div nz-row nzJustify="space-between" nzAlign="middle">
+                                        <nz-form-label>Has your child be diagnosed or at risk of anaphylaxis?
+                                        </nz-form-label>
+                                        <nz-switch class="upload-switch"
+                                                   formControlName="anaphylaxis"
+                                                   nzCheckedChildren="Yes"
+                                                   nzUnCheckedChildren="No"
+                                                   (click)="clickSwitch($event,'anaphylaxis')">
+                                        </nz-switch>
+                                    </div>
+
+                                </nz-form-item>
+                            </div>
+                            <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                                <nz-form-item>
+                                    <div nz-row nzJustify="space-between" nzAlign="middle">
+                                        <nz-form-label>Does your child have an epipen or anipen?</nz-form-label>
+                                        <nz-switch class="upload-switch"
+                                                   formControlName="epipenOrAnipen"
+                                                   nzCheckedChildren="Yes"
+                                                   nzUnCheckedChildren="No"
+                                                   (click)="clickSwitch($event,'epipenOrAnipen')">
+                                        </nz-switch>
+                                    </div>
+
+                                </nz-form-item>
+                            </div>
+                            <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                                <nz-form-item>
+                                    <div nz-row nzJustify="space-between" nzAlign="middle">
+                                        <nz-form-label>Does your child have any other health conditions?</nz-form-label>
+                                        <nz-switch class="upload-switch"
+                                                   formControlName="healthConditions"
+                                                   nzCheckedChildren="Yes"
+                                                   nzUnCheckedChildren="No"
+                                                   (click)="clickSwitch($event,'healthConditions')">
+                                        </nz-switch>
+                                    </div>
+
+                                </nz-form-item>
+                            </div>
+                            <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                                <nz-form-item>
+                                    <div nz-row nzJustify="space-between" nzAlign="middle">
+                                        <nz-form-label>Does your child have asthma?</nz-form-label>
+                                        <nz-switch class="upload-switch"
+                                                   formControlName="asthma"
+                                                   nzCheckedChildren="Yes"
+                                                   nzUnCheckedChildren="No"
+                                                   (click)="clickSwitch($event,'asthma')">
+                                        </nz-switch>
+                                    </div>
+
+                                </nz-form-item>
+                            </div>
+                            <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                                <nz-form-item>
+                                    <div nz-row nzJustify="space-between" nzAlign="middle">
+                                        <nz-form-label>Does your child have a birth certificate</nz-form-label>
+                                        <nz-switch class="upload-switch"
+                                                   formControlName="birthCertificate"
+                                                   nzCheckedChildren="Yes"
+                                                   nzUnCheckedChildren="No"
+                                                   (click)="clickSwitch($event,'birthCertificate')">
+                                        </nz-switch>
+                                    </div>
+
+                                </nz-form-item>
+                            </div>
+                        </div>
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24"
+                             fxLayout="column" fxLayoutAlign="space-evenly end">
+                            <div>
+                                <div
+                                    *ngIf="child.documents['created_by']"><b>Created By</b>
+                                    : {{child.documents['created_by']['full_name']}}
+                                    <span style="color: #039BE5"> | </span> <b>Created At</b>
+                                    : {{child.documents['created_by']['created_at'] | date:'dd-MM-yyyy h:mm a' }}
+                                    <span style="color: #039BE5"> | </span> <b>Email</b>
+                                    : {{child.documents['created_by']['email']}}
+                                </div>
+                                <div
+                                    *ngIf="child.documents['updated_by']"><b>Updated By</b>
+                                    : {{child.documents['updated_by']['full_name']}}
+                                    <span style="color: #039BE5"> | </span> <b>Updated At</b>
+                                    : {{child.documents['updated_by']['updated_at']| date:'dd-MM-yyyy h:mm a' }}
+                                    <span style="color: #039BE5"> | </span> <b>Email</b>
+                                    : {{child.documents['updated_by']['email']}}
+                                </div>
+                            </div>
+                            <!-- <mat-accordion>
+                                 <mat-expansion-panel *ngIf="child.documents['created_by']"
+                                                      (opened)="panelOpenState = true"
+                                                      (closed)="panelOpenState = false"
+                                 >
+                                     <mat-expansion-panel-header>
+                                         <mat-panel-title>
+                                             <mat-icon class="mr-12 s-20 secondary-text">help</mat-icon>
+                                             Created By
+                                         </mat-panel-title>
+                                         <mat-panel-description>
+                                             {{child.documents['created_by']['full_name']}}
+                                         </mat-panel-description>
+                                     </mat-expansion-panel-header>
+                                     <div fxLayout="row wrap">
+                                         <div fxFlex="30">Created At :</div>
+                                         <div fxFlex="auto"
+                                              class="secondary-text">{{child.documents['created_by']['created_at']| date:'dd-MM-yyyy h:mm a' }}</div>
+                                     </div>
+                                     <div fxLayout="row wrap">
+                                         <div fxFlex="30">Email :</div>
+                                         <div fxFlex="auto"
+                                              class="secondary-text">{{child.documents['created_by']['email']}}</div>
+                                     </div>
+                                 </mat-expansion-panel>
+                                 <mat-expansion-panel *ngIf="child.documents['updated_by']"
+                                                      (opened)="panelOpenState = true"
+                                                      (closed)="panelOpenState = false"
+                                 >
+                                     <mat-expansion-panel-header>
+                                         <mat-panel-title>
+                                             <mat-icon class="mr-12 s-20 secondary-text">all_inclusive</mat-icon>
+                                             Updated By
+                                         </mat-panel-title>
+                                         <mat-panel-description>
+                                             {{child.documents['updated_by']['full_name']}}
+                                         </mat-panel-description>
+                                     </mat-expansion-panel-header>
+                                     <div fxLayout="row wrap">
+                                         <div fxFlex="30">Updated At :</div>
+                                         <div fxFlex="auto"
+                                              class="secondary-text">{{child.documents['updated_by']['updated_at']| date:'dd-MM-yyyy h:mm a' }}</div>
+                                     </div>
+                                     <div fxLayout="row wrap">
+                                         <div fxFlex="30">Email :</div>
+                                         <div fxFlex="auto"
+                                              class="secondary-text">{{child.documents['updated_by']['email']}}</div>
+                                     </div>
+                                 </mat-expansion-panel>
+                             </mat-accordion>-->
+                        </div>
+
+                    </div>
+
+                </form>
+
+                <div >
+                    <allergy-list-view class="center p-24 pt-0"></allergy-list-view>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

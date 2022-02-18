@@ -1,0 +1,27 @@
+<div class="page-layout simple tabbed"  [@fadeInOnEnter]>
+    <div class="content" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <mat-tab-group dynamicHeight="true">
+
+            <mat-tab label="View Session Reports">
+                <ng-template matTabContent>
+                    <view-session-reports></view-session-reports>
+                </ng-template>
+
+
+            </mat-tab>
+
+            <mat-tab label="Submit Session Reports">
+                <ng-template matTabContent>
+                    <h1>Tab 2</h1>
+                </ng-template>
+
+            </mat-tab>
+
+        </mat-tab-group>
+        <!--<h1>Time</h1>-->
+        <!--<view-entitlement></view-entitlement>-->
+    </div>
+
+</div>
+

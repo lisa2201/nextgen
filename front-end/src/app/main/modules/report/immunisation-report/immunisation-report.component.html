@@ -1,0 +1,44 @@
+
+<div class="loading-bar" *ngIf="viewLoading" [@fadeMotion]>
+    <div class="__inner">
+        <img src="assets/loading/gears_c1.svg">
+        <span>Loading! Please Wait...</span>
+    </div>
+</div>
+
+<div class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <div class="center">
+
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2">
+                    Immunisation Reports
+                </span>
+
+            </h1>
+                <button class="text-uppercase"
+                    [disabled]="immunisationTable.length < 1 || buttonValidator"
+                    nz-button 
+                    nzType="primary"
+                    (debounceClick)="bulkUpdate($event)">
+                    <i class="plus icon mr-8"></i>Mark all as immunised
+                </button>
+
+        </div>
+
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <div class="content p-24 pt-16" fxLayout="column" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+               
+                <immunisation-report-filter></immunisation-report-filter>
+                <immunisation-report-list-view></immunisation-report-list-view>
+    
+            </div>
+
+        </div>
+    </div>
+</div>

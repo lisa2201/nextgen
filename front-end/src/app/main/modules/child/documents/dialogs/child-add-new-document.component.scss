@@ -1,0 +1,26 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+child-add-new-document {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 640px;
+    }
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+    h2{
+        float: left;
+    }
+    h4{
+        float: left;
+    }
+    .form-item-start{
+        padding-right: 10px !important;
+    }
+}

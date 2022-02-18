@@ -1,0 +1,47 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+child-detail-navigation-sidebar {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background: #fff;
+
+    .nav-links {
+        position: relative;
+        padding: 0;
+        margin: 0;
+
+        li {
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            min-height: 64px;
+            border-bottom: 1px solid $layout-border-color;
+            cursor: pointer;
+            transition: all 0.3s;
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.04);
+            }
+
+            &:last-of-type {
+                border-bottom: none;
+            }
+
+            img {
+                height: 30px;
+                width: 30px;
+                margin-right: 8px;
+            }
+
+            span {
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+            
+        }
+    }
+    
+}

@@ -1,0 +1,68 @@
+<nz-spin [nzSpinning]="listViewLoading" [nzIndicator]="indicatorTemplate">
+
+    <nz-tabset class="px-24" 
+        [nzSelectedIndex]="tabSelected"
+        (nzSelectedIndexChange)="onTabChange($event)"
+        [nzTabBarExtraContent]="extraTemplate"
+        *ngIf="calendarWeek || (this.sessions && this.sessions.sessionList && this.sessions.sessionList.length > 0) else emptyInitialBlock" [@fadeMotion]>
+    
+        <nz-tab [nzTitle]="submittedLabel">
+
+            <ng-template nz-tab>
+
+                <bulk-session-submitted-tab [calendarWeek]="calendarWeek"></bulk-session-submitted-tab>
+
+            </ng-template>
+
+        </nz-tab>
+    
+        <nz-tab [nzTitle]="waitingLabel">
+
+            <ng-template nz-tab>
+
+                <bulk-session-waiting-tab [calendarWeek]="calendarWeek"></bulk-session-waiting-tab>
+
+            </ng-template>
+
+        </nz-tab>
+
+        <ng-template #submittedLabel>
+            Submitted <ng-container *ngIf="submissions.length > 0">({{ submissions.length }})</ng-container>
+        </ng-template>
+
+        <ng-template #waitingLabel>
+            Waiting
+        </ng-template>
+    
+    </nz-tabset>
+
+    <ng-template #extraTemplate>
+        <ng-container *ngIf="getSelectedWeek()">
+            <span class="font-weight-600">{{ getSelectedWeek().start }}</span> to <span class="font-weight-600">{{ getSelectedWeek().end }}</span>
+        </ng-container>
+    </ng-template>
+
+</nz-spin>
+
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+
+<!-- EMPTY VIEW -->
+<ng-template #emptyInitialBlock>
+
+    <nz-empty class="pt-24 pb-24 m-0"
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+        [nzNotFoundContent]="contentTpl"
+        [@fadeInOnEnter]>
+
+        <ng-template #contentTpl>
+            <h4 class="mt-24">Select a week</h4>
+            <span class="hint-txt">Looks like there's no information to display here</span>
+        </ng-template>
+
+    </nz-empty>
+
+</ng-template>

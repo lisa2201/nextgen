@@ -1,0 +1,55 @@
+
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.batch-update-attendance {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 749px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+        .compose-form {
+
+            .preview-list {
+                margin-bottom: 16px;
+
+                &:last-of-type {
+                    margin-bottom: 0;
+                }
+
+                .title {
+                    font-size: 18px;
+                    margin-bottom: 4px;
+
+                    .small {
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: rgba(34, 34, 34, 0.4);
+                    }
+                }
+
+                .hide-picker {
+                    display: none;
+                }
+
+                .clear-picker {
+                    cursor: pointer;
+                    font-size: 16px;
+                }
+            }
+        }
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+}

@@ -1,0 +1,20 @@
+
+app-is-case-claim-detail {
+
+    .toolbar {
+        .go-back-link {
+            flex: none;
+        }
+    }
+    
+    .ant-table-placeholder {
+        background-color: #f3f3f3;
+    }
+
+    .ant-table-content { 
+        min-height: 0 !important;
+        overflow-x: auto !important;
+    }
+
+    
+}

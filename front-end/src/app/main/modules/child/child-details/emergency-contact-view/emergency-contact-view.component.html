@@ -1,0 +1,121 @@
+<div class="s-title mb-16" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <h3 class="header">Emergency Contacts</h3>
+
+    <ng-container *hasPermission="['AC2']; belongsTo 'N07'" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <button class="text-uppercase blank py-0"
+                type="button"
+                nz-button
+                nzType="link"
+                (click)="createEmergencyContact($event)"
+                [promiseBtn]="buttonLoader">
+            <i class="plus icon mr-8"></i>
+            Add
+        </button>
+
+    </ng-container>
+
+</div>
+
+<nz-list class="child-item-list"
+         [nzNoResult]="emptyUserBlock"
+         [nzDataSource]="child?.emergency"
+         [nzRenderItem]="item"
+         [nzGrid]="{ gutter: 16, xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 8 }">
+
+    <ng-template #item let-item>
+
+        <nz-list-item
+            [nzContent]="item.isLoading ? '' : nzContent">
+
+            <nz-skeleton [nzAvatar]="true" [nzActive]="true" [nzTitle]="false" [nzParagraph]="{ rows: 5 }"
+                         [nzLoading]="item.isLoading">
+
+                <ng-template #nzContent>
+
+                    <nz-card>
+                        <div>
+                            <span nz-tooltip nzTooltipTitle="Priority of the emergency contact">
+                                    <nz-badge style="cursor: pointer;" [nzCount]="item.callOrder" [nzOffset]="[-10,-30]">
+                                        <a class="head-example"></a>
+                                    </nz-badge>
+                                </span>
+                        </div>
+
+                        <nz-list-item-meta
+                            [nzAvatar]="nzAvatar"
+                            [nzTitle]="nzTitle"
+                            [nzDescription]="nzDescription">
+
+                            <ng-template #nzAvatar>
+
+                                <nz-avatar
+                                    [nzSize]="48"
+                                    nzSrc="assets/icons/flat/ui_set/custom_icons/family.svg"
+                                    class="item-img img-bg">
+                                </nz-avatar>
+
+                            </ng-template>
+
+                            <ng-template #nzTitle>
+
+                                <h4 class="text-truncate mb-4">{{ item.getFullName() }}</h4>
+
+                            </ng-template>
+
+                            <ng-template #nzDescription>
+
+                                <p class="m-0 text-truncate">
+                                    <i class="mobile alternate icon"></i>
+                                    <!--                                    Mobile:-->
+                                    {{ item.phone || 'N/A' }}
+                                </p>
+                                <p class="m-0 text-truncate">
+                                    <i class="tty icon"></i>
+                                    <!--                                    phone:-->
+                                    {{ item.phone2 || 'N/A' }}
+                                </p>
+
+                                <p class="m-0">
+                                    Relationship: {{ item.relationship || 'N/A' }}
+                                </p>
+
+                                <p class="m-0">
+                                    Pincode: {{ item.pincode || 'N/A' }}
+                                </p>
+
+                            </ng-template>
+
+                        </nz-list-item-meta>
+
+                    </nz-card>
+
+                </ng-template>
+
+            </nz-skeleton>
+
+        </nz-list-item>
+
+    </ng-template>
+
+</nz-list>
+
+<!-- EMPTY VIEW -->
+<ng-template #emptyUserBlock>
+
+    <nz-empty
+        class="m-0"
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+        [nzNotFoundContent]="contentTpl"
+        [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <ng-template #contentTpl>
+            <h4 class="mt-24">No Data Found</h4>
+            <span>Please click on add button to attach emergency contacts to this child</span>
+        </ng-template>
+
+    </nz-empty>
+
+</ng-template>
+<!-- / EMPTY VIEW -->

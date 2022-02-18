@@ -1,0 +1,145 @@
+
+<div class="s-title mb-16" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <h3 class="header mb-0">Branch List</h3>
+
+    <ng-container *hasPermission="['AC2']; belongsTo 'N03'" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <button class="text-uppercase blank py-0 "
+            type="button"
+            nz-button 
+            nzType="link"
+            *ngIf="showLinkAllButton()" [@fadeInOnEnter]
+            (click)="linkBranch($event)"
+            [promiseBtn]="buttonLoader">
+            <i class="linkify icon mr-8"></i>
+            Link All
+        </button>
+
+        <button class="text-uppercase blank py-0 "
+            type="button"
+            nz-button 
+            nzType="link"
+            *ngIf="!showLinkAllButton()" [@fadeInOnEnter]
+            (click)="linkBranch($event, '1')"
+            [promiseBtn]="buttonLoader">
+            <i class="unlink icon mr-8"></i>
+            Unlink All
+        </button>
+        
+    </ng-container>
+
+</div>
+
+<nz-list class="branch-item-list"
+    [nzNoResult]="emptyBlock"
+    [nzDataSource]="selected?.branch" 
+    [nzRenderItem]="item" 
+    [nzGrid]="{ gutter: 16, xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 8 }">
+
+    <ng-template #item let-item>
+
+        <nz-list-item 
+            [nzContent]="item.isLoading ? '' : nzContent">
+
+            <nz-skeleton [nzAvatar]="true" [nzActive]="true" [nzTitle]="false" [nzParagraph]="{ rows: 3 }" [nzLoading]="item.isLoading">
+
+                <ng-template #nzContent>
+
+                    <nz-card>
+
+                        <nz-list-item-meta 
+                            [nzAvatar]="nzAvatar" 
+                            [nzTitle]="nzTitle"
+                            [nzDescription]="nzDescription">
+
+                            <ng-template #nzAvatar>
+
+                                <nz-badge [nzCount]="item.status ? iconTemplateActive : iconTemplateInActive">
+
+                                    <nz-avatar 
+                                        [nzSize]="48" 
+                                        [nzSrc]="'assets/icons/flat/ui_set/custom_icons/branch/company2.svg'"
+                                        class="item-img img-bg">
+                                    </nz-avatar>
+
+                                </nz-badge>
+
+                                <ng-template #iconTemplateActive>
+                                    <i nz-icon nzType="check-circle" nzTheme="fill" class="ant-scroll-number-custom-component active badge"></i>
+                                </ng-template>
+
+                                <ng-template #iconTemplateInActive>
+                                    <i nz-icon nzType="exclamation-circle" nzTheme="fill" class="ant-scroll-number-custom-component badge"></i>
+                                </ng-template>
+
+                            </ng-template>
+
+                            <ng-template #nzTitle>
+
+                                <h4 class="text-truncate mb-4">{{ item.name }}</h4>
+
+                            </ng-template>
+
+                            <ng-template #nzDescription>
+
+                                <p class="m-0 text-truncate">
+                                    <span class="font-weight-600">Url</span>:
+                                    <a target="_blank" [ngClass]="{ 'disabled': !item.status || !item.disabled }" (click)="openLinkInTab($event, item)">{{ item.link }}</a>
+                                </p>
+
+                                <p class="m-0 text-truncate">
+                                    <span class="font-weight-600">Email</span>:
+                                    {{ item.email || 'N/A' }}
+                                </p>
+
+                                <p class="mb-8">
+                                    <span class="font-weight-600">Status</span>:
+                                    {{ item.status ? 'Active' : 'Inactive' }}
+                                </p>
+
+                                <nz-switch
+                                    [(ngModel)]="item.disabled"
+                                    [nzControl]="true"
+                                    [nzCheckedChildren]="checkedTemplate"
+                                    [nzUnCheckedChildren]="unCheckedTemplate"
+                                    [nzLoading]="item.statusLoading"
+                                    (click)="toggleAccess($event, item)"></nz-switch>
+
+                                <ng-template #checkedTemplate><i nz-icon nzType="check"></i> Linked</ng-template>
+                                <ng-template #unCheckedTemplate><i nz-icon nzType="close"></i> Not Linked</ng-template>
+
+                            </ng-template>
+
+                        </nz-list-item-meta>
+
+                    </nz-card>
+
+                </ng-template>
+
+            </nz-skeleton>
+
+        </nz-list-item>
+
+    </ng-template>
+
+</nz-list>
+
+<!-- EMPTY VIEW -->
+<ng-template #emptyBlock>
+
+    <nz-empty 
+        class="m-0" 
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+        [nzNotFoundContent]="contentTpl" 
+        [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <ng-template #contentTpl>
+            <h4 class="mt-24">No Data Found</h4>
+            <span>Looks like there's no information to display here</span>
+        </ng-template>
+
+    </nz-empty>
+
+</ng-template>
+<!-- / EMPTY VIEW -->

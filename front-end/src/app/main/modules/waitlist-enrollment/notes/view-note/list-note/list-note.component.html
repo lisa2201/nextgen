@@ -1,0 +1,51 @@
+<nz-list [nzNoResult]="emptyUserBlock"
+         [nzDataSource]="noteList"
+         [nzGrid]="{ gutter: 16, xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 12 }">
+    <nz-spin [nzIndicator]="indicatorTemplate" [nzSpinning]="inputsLoading">
+        <div fxLayout="column" fxLayoutAlign="center stretch" class="fuse-card mat-elevation-z2"
+             *ngFor="let note  of noteList">
+            <div class="p-16" fxLayout="row" fxLayoutAlign="space-between center">
+                <div class="secondary-text">{{note.created_at | date:'dd-MM-yyyy h:mm a' }} by
+                    <nz-avatar [nzSize]="26"
+                               nzSrc="{{ getUserProfileImage(note) }}"
+                               class="child-img img-bg"></nz-avatar>
+                    <span
+                        class="accent-500-fg">{{note.created_by|titlecase}}</span></div>
+                <div>
+            <span class="accessButton" *ngIf="note.accessibility">
+                  <i (click)="edit(note)" nz-tooltip nzTooltipTitle="Edit"
+                     class="edit outline icon text-dec-none mr-4"></i>
+        <i (click)="delete(note)" class="trash alternate outline icon mr-4" nz-tooltip nzTooltipTitle="Delete"></i>
+
+            </span>
+                </div>
+            </div>
+            <div class="p-16 pt-0 line-height-1.75">
+                <pre>{{note.note}}</pre>
+            </div>
+        </div>
+    </nz-spin>
+    <ng-template #indicatorTemplate>
+        <div class="is-loading">
+            <span class="btn-spinner card-loader"></span>
+        </div>
+    </ng-template>
+</nz-list>
+<!-- EMPTY VIEW -->
+<ng-template #emptyUserBlock >
+
+    <nz-empty
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+        [nzNotFoundContent]="contentTpl"
+        [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <ng-template #contentTpl>
+            <h4 class="mt-24">No Data Found</h4>
+            <span>Please click on new button to add notes</span>
+        </ng-template>
+
+    </nz-empty>
+
+</ng-template>
+<!-- / EMPTY VIEW -->
+

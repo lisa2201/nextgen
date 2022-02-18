@@ -1,0 +1,19 @@
+@import "src/@fuse/scss/fuse";
+
+fees-list-view {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+        .ant-table-content {
+            min-height: 0px!important;
+        }
+    }
+
+    @include media-breakpoint('gt-xs') {
+        .ant-table-content {
+            min-height: 0px!important;
+        }
+        // width: 640px;
+    }
+
+}

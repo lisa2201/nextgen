@@ -1,0 +1,286 @@
+<div class="tab-inner-view">
+
+    <div #ViewPortContainer>
+
+        <div *ngIf="this.bookingItem.items.length > 0">
+
+            <div class="tab-help-panel no-select" fxLayout="row" fxLayoutAlign="space-between center">
+    
+                <div class="booking-summary">
+    
+                    <!-- <ul>
+                        <li>
+                            <span class="label">
+                                <i class="id badge outline icon mr-4"></i>
+                                Children In
+                            </span>
+                            <span class="label highlight">{{ summaryReport?.totalChildren }}</span>
+                        </li>
+                    </ul>  -->
+    
+                    <ul>
+                        <li>
+                            <span class="label">
+                                <i class="home icon mr-4"></i>
+                                Capacity
+                            </span>
+                            <span class="label highlight">{{ summaryReport?.totalCapacity || 0 }}</span>
+                        </li>
+                    </ul>
+    
+                    <ul>
+                        <li>
+                            <span class="label">
+                                <i class="hourglass half icon mr-4"></i>
+                                Sessions
+                            </span>
+                            <span class="label highlight">{{ summaryReport?.totalSessions || 0 }}</span>
+                        </li>
+                    </ul>
+    
+                    <ul>
+                        <li>
+                            <span class="label">
+                                <i class="clock half icon mr-4"></i>
+                                Hours
+                            </span>
+                            <span class="label highlight">{{ summaryReport?.totalHours | number : '1.1-1' || 0 }}</span>
+                        </li>
+                    </ul>
+    
+                    <ul>
+                        <li>
+                            <span class="label">
+                                <i class="money bill alternate icon mr-4"></i>
+                                Fee
+                            </span>
+                            <span class="label highlight">{{ summaryReport?.totalFees | currency: client.currency :'symbol':'1.2-2' || 'N/A' }}</span>
+                        </li>
+                    </ul>
+    
+                    
+    
+                </div>
+    
+                <div class="booking-summary m-0">
+    
+                    <!-- <ul>
+                        <li>
+                            <span class="label">
+                                <i class="id badge outline icon mr-4"></i>
+                                Booked In
+                            </span>
+                            <span class="label highlight">{{ attendanceSummaryReport?.bookings }}</span>
+                        </li>
+                    </ul> -->
+    
+                    <ul>
+                        <li>
+                            <span class="label">
+                                <i class="sign-in icon mr-4"></i>
+                                In
+                            </span>
+                            <span class="label highlight">{{ attendanceSummaryReport?.in }}</span>
+                        </li>
+                    </ul>
+    
+                    <ul>
+                        <li>
+                            <span class="label">
+                                <i class="sign-out icon mr-4"></i>
+                                Out
+                            </span>
+                            <span class="label highlight">{{ attendanceSummaryReport?.out }}</span>
+                        </li>
+                    </ul>
+    
+                    <ul>
+                        <li>
+                            <span class="label">
+                                <i class="bell slash outline icon mr-4"></i>
+                                Absence
+                            </span>
+                            <span class="label highlight">{{ attendanceSummaryReport?.absences }}</span>
+                        </li>
+                    </ul>
+    
+                    <!-- <ul>
+                        <li>
+                            <span class="label">
+                                <i class="calendar check outline icon mr-4"></i>
+                                Casual
+                            </span>
+                            <span class="label highlight">{{ attendanceSummaryReport?.casual }}</span>
+                        </li>
+                    </ul> -->
+    
+                    <ul>
+                        <li>
+                            <span class="label">
+                                <i class="question circle outline icon mr-4"></i>
+                                Unknown
+                            </span>
+                            <span class="label highlight">{{ attendanceSummaryReport?.unknown }}</span>
+                        </li>
+                    </ul>
+    
+                </div>
+    
+            </div>
+        
+            <p class="my-4 px-16" fxLayout="row" fxLayoutAlign="space-between center">
+        
+                <label class="check-box-header"
+                    nz-checkbox
+                    [(nzChecked)]="allChildrenChecked"
+                    [nzIndeterminate]="indeterminateChildren"
+                    (nzCheckedChange)="selectAllChildren($event)"
+                    [nzDisabled]="this.bookingItem.items.length < 1">Check all</label>
+        
+                <span *ngIf="filterBy && filterBy.room !== '0' else filterDefault">
+                    <i class="home icon"></i> - <span class="font-weight-600">{{ getRoomInfo(filterBy.room) ? getRoomInfo(filterBy.room).title : 'N/A' }}</span>
+                </span>
+        
+                <ng-template #filterDefault>
+                    <span><i class="home icon"></i> - <span class="font-weight-600">All</span></span>
+                </ng-template>
+                
+            </p>
+
+        </div>
+
+        <ul class="child-list">
+
+            <ng-container #calendarViewPortContainer></ng-container>
+            
+        </ul>
+
+    </div>
+
+    <ng-template #listViewItem let-row="row">
+
+        <li class="no-select"
+            [ngClass]="{'bordered': hideBookingInfo }" [@fadeMotion]>
+
+            <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <span class="check-box">
+                        <label nz-checkbox
+                            [(nzChecked)]="row.selected"
+                            (nzCheckedChange)="checkChildrenSelectionStatus()"></label>
+                    </span>
+
+                    <span fxLayout="column" fxLayoutAlign="center start">
+                        <span class="name"><a (click)="openChildProfile($event, row.child.id)">{{ row.child.getFullName() }}</a></span>
+                        <span class="sub">{{ row.child.age }}</span>
+                    </span>
+
+                </span>
+
+                <span fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <nz-badge
+                        *ngIf="hideBookingInfo && row.booking.length > 0" [@fadeMotion]
+                        [nzCount]="row.booking.length"
+                        class="badge"></nz-badge>
+
+                    <button class="ml-8 blank"
+                        type="button"
+                        nz-button 
+                        nzType="link"
+                        (click)="createBooking($event, bookingItem, row.child)">
+                        <i class="plus icon"></i>
+                    </button>
+
+                </span>
+                
+            </div>
+
+            <div class="content" *ngIf="!hideBookingInfo">
+
+                <nz-table class="table-no-border" 
+                    #childListTable 
+                    *ngIf="row.booking.length > 0 else noRecordBlock"
+                    [nzSize]="'small'"
+                    [nzTableLayout]="'fixed'"
+                    [nzShowPagination]="false"
+                    [nzData]="row.booking">
+
+                    <thead>
+                        <tr>
+                            <th nzWidth="115px">Type</th> 
+                            <th nzWidth="80px">Room</th> 
+                            <th nzWidth="100px">Fee</th> 
+                            <th>Start Time</th>
+                            <th>End Time</th> 
+                            <th>Sign In</th> 
+                            <th>Sign Out</th> 
+                            <th>CCS Fee</th> 
+                            <th>Gap Fee</th> 
+                            <th>Action</th> 
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let item of childListTable.data">
+                            <td>
+                                <span class="status-lbl {{ item.status }}"
+                                [ngClass]="{ 'error' : !item.hasRemovedRoomLinked() && item.hasError(row.child.rooms, fees).hasError }" >{{ item.status }}</span>
+                                <i *ngIf="item.isCasual" class="circle icon session-type-color-code casual ml-4" tooltip="Casual booking" placement="top" display-mobile="false" hide-delay="50"></i>
+                                <i class="bus icon ml-4" *ngIf="item.hasAttendance() && item.attendance.hasBusInfo()" tooltip="{{ item.getAttendanceBusInfo().name || 'N/A' }}" placement="top" display-mobile="false" hide-delay="50"></i>
+                            </td>
+                            <td nzEllipsis>{{ item.room.title }}</td>
+                            <td nzEllipsis>{{ item.fee.name }}</td>
+                            <td>{{ item.sessionStart | convertTimeString }}</td>
+                            <td>{{ item.sessionEnd | convertTimeString }}</td>
+                            <td>{{ item.attendance && (item.attendance.checkInTime || item.attendance.parentCheckInTime) ? ((item.attendance.parentCheckInTime)? (item.attendance.parentCheckInTime | convertTimeString): (item.attendance.checkInTime | convertTimeString)) : 'N/A' }}</td>
+                            <td>{{ item.attendance && (item.attendance.checkOutTime || item.attendance.parentCheckOutTime) ? ((item.attendance.parentCheckOutTime)? (item.attendance.parentCheckOutTime | convertTimeString): (item.attendance.checkOutTime | convertTimeString)) : 'N/A' }}</td>
+                            <td>{{ item?.getBookingFeeAmount() | currency: client.currency :'symbol':'1.2-2' }}</td>
+                            <td>N/A</td>
+                            <td>
+                                <button
+                                    type="button"
+                                    nz-button 
+                                    nzType="link"
+                                    (click)="editSlot($event, bookingItem, item, row.child)">
+                                    <i class="edit outline icon"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </nz-table>
+
+                <ng-template #noRecordBlock>
+                    <p class="m-0 py-8 font-weight-600" fxLayout="row" fxLayoutAlign="center center">
+                        <i class="info circle icon mr-8"></i> Booking not available
+                    </p>
+                </ng-template>
+
+            </div>
+
+        </li>
+
+    </ng-template>
+
+    <!-- EMPTY VIEW -->
+    <ng-template #emptyBlock>
+
+        <nz-empty class="pt-24 pb-24 m-0"
+            [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+            [nzNotFoundContent]="contentTpl"
+            [@fadeInOnEnter]>
+
+            <ng-template #contentTpl>
+                <h4 class="mt-24">No Data Found</h4>
+                <span>Looks like there's no information to display here</span>
+            </ng-template>
+
+        </nz-empty>
+
+    </ng-template>
+    <!-- / EMPTY VIEW -->
+
+</div>

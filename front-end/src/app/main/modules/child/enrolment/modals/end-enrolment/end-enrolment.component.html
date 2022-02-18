@@ -1,0 +1,20 @@
+<form name="form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="form" nz-form>
+
+    <nz-form-item>
+
+        <nz-form-control nzHasFeedback [nzErrorTip]="ccsEndDateErrorTpl">
+
+            <nz-date-picker class="block"
+                formControlName="end_date" 
+                nzPlaceHolder="Enrolment end date"
+                [nzInputReadOnly]="true"></nz-date-picker>
+
+            <ng-template #ccsEndDateErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">Please select end date</ng-container>
+            </ng-template>
+
+        </nz-form-control>
+
+    </nz-form-item>
+
+</form>

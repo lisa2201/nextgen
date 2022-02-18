@@ -1,0 +1,42 @@
+<form name="setAbsenceReasonForm" 
+    fxLayout="column" fxFlex 
+    nz-form [nzLayout]="'vertical'" 
+    [formGroup]="setAbsenceReasonForm" >
+
+    <nz-form-item>
+
+        <nz-form-label nzRequired>CCS Absence Reason</nz-form-label>
+
+        <nz-form-control nzHasFeedback [nzErrorTip]="ccsAbsErrorTpl">
+
+            <nz-select  
+                formControlName="absence"
+                nzAllowClear
+                nzPlaceHolder="select a absence reason">
+
+                <nz-option *ngFor="let item of reasons | keyvalue; trackBy: trackByFn;" nzValue="{{ item.key }}" nzLabel="{{ item.value }}"></nz-option>
+                
+            </nz-select>
+
+            <ng-template #ccsAbsErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">Please select a absence reason (CCS)</ng-container>
+            </ng-template>
+
+        </nz-form-control>
+
+    </nz-form-item>
+
+    <nz-form-item>
+
+        <nz-form-label>Absence Document Held</nz-form-label>
+
+        <nz-form-control>
+
+            <nz-switch formControlName="absent_document_held" nzCheckedChildren="Yes" nzUnCheckedChildren="No"></nz-switch>
+
+        </nz-form-control>
+
+    </nz-form-item>
+
+
+</form>

@@ -1,0 +1,82 @@
+<div id="import-enrollments" class="page-layout carded fullwidth" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Import Bookings</h1>
+
+            <ng-container *hasPermission="['AC1']; belongsTo 'N56'">
+
+                <button class="text-uppercase" 
+                    nz-button nzType="primary" 
+                    (click)="addDialog($event)">
+                    <i class="download icon mr-8"></i> Import
+                </button>
+
+            </ng-container>
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card ps" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span>
+                    <span *ngIf="hasBookings()" [@fadeMotion]>
+                        <span>Total Records: {{ getBookings().length }}</span>
+                        <nz-divider nzType="vertical"></nz-divider>
+                        <span>Total Errors: {{ getBookingErrors().length }}</span>
+                    </span>
+                </span>
+
+                <span fxLayout="row" fxLayoutAlign="space-between center">
+                    
+                    <button class="text-uppercase mr-8"
+                        nz-button 
+                        nzType="default" 
+                        (click)="reload($event)"
+                        [promiseBtn]="buttonLoader"
+                        [disabled]="!hasBookings()">
+                        <i class="sync alternate icon b-i mr-8"></i> Reload
+                    </button>
+
+                    <ng-container *ngIf="hasBookings() && !hasErrors()" [@fadeMotion]>
+
+                        <button class="text-uppercase"
+                            nz-button 
+                            nzType="default" 
+                            (click)="update($event)"
+                            [promiseBtn]="buttonLoader">
+                            <i class="save outline icon b-i mr-8"></i> Update
+                        </button>
+
+                    </ng-container>
+                    
+                </span>
+
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content pb-16"
+                fusePerfectScrollbar 
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <import-bookings-list-view></import-bookings-list-view>
+
+            </div>
+            <!-- / CONTENT --> 
+
+        </div>
+        <!-- / CONTENT CARD --> 
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

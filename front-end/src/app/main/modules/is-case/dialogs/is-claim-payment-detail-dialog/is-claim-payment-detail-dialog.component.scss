@@ -1,0 +1,25 @@
+@import "src/@fuse/scss/fuse";
+
+
+.is-claim-payment-detail-dialog {
+    @include media-breakpoint("xs") {
+        width: 100%;
+    }
+
+    @include media-breakpoint("gt-xs") {
+        // width: 640px;
+    }
+
+    .mat-dialog-container {
+
+        padding: 0px;
+
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+
+}

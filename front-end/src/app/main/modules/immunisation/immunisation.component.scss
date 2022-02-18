@@ -1,0 +1,38 @@
+@import "src/@fuse/scss/fuse";
+
+app-immunisation {
+    @include media-breakpoint("xs") {
+        // width: 100%;
+    }
+
+    @include media-breakpoint("gt-xs") {
+        // width: 640px;
+    }
+    // .permission-table {
+    //     .ant-table-content {
+    //         min-height: auto;
+    //         margin: 0;
+    //         overflow: hidden;
+    //     }
+
+    //     .ant-table-row-indent + .ant-table-row-expand-icon {
+    //         margin-right: 0;
+    //     }
+
+    //     .status-lbl {
+    //         font-size: 13px;
+    //         font-weight: 600;
+    //         padding: 3px 8px 4px;
+    //         border-radius: 16px;
+    //         color: #fff;
+    //     }
+    // }
+
+    // nz-table{
+    //     .btn-add-role{
+    //         float: right!important;
+    //         cursor: pointer;
+    //         text-decoration: none;
+    //     }
+    // }
+}

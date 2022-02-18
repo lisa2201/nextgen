@@ -1,0 +1,67 @@
+<div class="dialog-content-wrapper">
+    <div class="" nz-col [nzMd]="24" [nzLg]="24">
+        <mat-toolbar class="mat-accent m-0">
+
+            <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="title dialog-title">{{dialogTitle}}</span>
+
+                <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                        aria-label="Close dialog">
+                    <mat-icon>close</mat-icon>
+                </button>
+
+            </mat-toolbar-row>
+        </mat-toolbar>
+    </div>
+    <div class="" nz-col [nzMd]="24" [nzLg]="24">
+
+
+            <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+                 [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                    <!-- date no longer at risk-->
+                    <nz-form-item nz-col [nzMd]="24" [nzLg]="24">
+                        <nz-form-label nzRequired>Document Type</nz-form-label>
+
+                        <nz-select  [(ngModel)]="selectedDoc">
+                            <nz-option *ngFor="let item of documentTypes | keyvalue" nzValue="{{ item.value.value }}" nzLabel="{{ item.value.name }}"></nz-option>
+                        </nz-select>
+
+                        <nz-form-control [nzErrorTip]="dateNoLongerAtRiskErrorTpl">
+                            <s3-upload [uploadDisabled]="!this.selectedDoc" [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, selectedDoc)" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                        </nz-form-control>
+
+                        <ng-template #dateNoLongerAtRiskErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please select a document</ng-container>
+                        </ng-template>
+
+                    </nz-form-item>
+                </div>
+
+            </div>
+
+            <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span></span>
+
+                <span class="text-right">
+                    <button
+                        class="text-uppercase mr-8"
+                        nz-button
+                        [disabled]="(!this.fileUploaded) || (!this.selectedDoc)"
+                        nzType="primary"
+                        (click)="submitDocument($event)"
+                    >
+                        <i class="plus icon mr-8"></i> Submit
+                    </button>
+
+
+            </span>
+
+            </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,76 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32" style="padding-top: 32px !important;">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0">
+
+    <form fxLayout="column" fxFlex [formGroup]="isCaseFilterForm">
+
+        <div class="mb-16">
+
+            <label class="filter-label">IS Case ID</label>
+
+            <input nz-input formControlName="case_id" placeholder="IS Case ID" type="text" />
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Start Date</label>
+
+            <nz-date-picker [nzInputReadOnly]="true" [nzAllowClear]="true" class="block" nzPlaceHolder="Start Date" formControlName="start_date"></nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">End Date</label>
+
+            <nz-date-picker [nzInputReadOnly]="true" [nzAllowClear]="true" class="block" nzPlaceHolder="End Date" formControlName="end_date"
+                [nzDisabled]="!isCaseFilterForm.controls['start_date'].value"></nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">IS Case Types</label>
+
+            <nz-select [nzAllowClear]="true" formControlName="case_type" nzMode="default" nzPlaceHolder="IS Case Types">
+
+                <nz-option *ngFor="let item of isCaseTypes" nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                </nz-option>
+
+            </nz-select>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Status</label>
+
+            <nz-select [nzAllowClear]="true" formControlName="status" nzMode="default" nzPlaceHolder="Status">
+
+                <nz-option *ngFor="let item of statuses" nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                </nz-option>
+
+            </nz-select>
+
+        </div>
+
+        <!-- <button class="mb-16" nz-button nzType="default" *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button> -->
+
+        <button class="mb-16" nz-button nzType="default" [disabled]="tableLoader" (click)="queryData($event)"
+            [@fadeInOnEnter] [@fadeOutOnLeave]>
+            <i class="sync left icon pr-8"></i>
+            Query Cases
+        </button>
+
+    </form>
+
+
+</div>
+<!-- / SIDEBAR CONTENT -->

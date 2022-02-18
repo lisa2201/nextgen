@@ -1,0 +1,27 @@
+<div id="care_provided_vacancy" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <div id="care_provided_vacancy_wrapper" class="center">
+
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2">
+                    Bus List Reports
+                </span>
+
+            </h1>
+
+        </div>
+
+        <div class="content p-24 pt-16" 
+            [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }" 
+            fusePerfectScrollbar            
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <buslist-report-filter></buslist-report-filter>
+            <!--<buslist-report-list-view></buslist-report-list-view>-->
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.service-ccms-authentication {
+
+    @include media-breakpoint("xs") {
+        width: 100%;
+    }
+
+    @include media-breakpoint("gt-xs") {
+        width: 640px;
+    }
+
+    .mat-dialog-container {
+
+        padding: 0px;
+
+    }
+
+}

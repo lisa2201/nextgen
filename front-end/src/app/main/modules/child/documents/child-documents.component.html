@@ -1,0 +1,372 @@
+<div class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2">
+                    Documents
+                </span>
+
+            </h1>
+            <span class="text-right">
+            <ng-container>
+                <button class="text-uppercase"
+                        *hasPermission="['AC2']; belongsTo 'N07'"
+                        nz-button
+                        nzType="primary"
+                        (click)="addNewDocument($event)"
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Add New
+                </button>
+                <!--<button class="text-uppercase"
+                        style="margin-left:10px;"
+                        *hasPermission="['AC2']; belongsTo 'N07'"
+                        nz-button
+                        nzType="primary"
+                        (click)="onFormSubmit($event)"
+
+                        [promiseBtn]="buttonLoader">
+                    <i class="save outline icon b-i mr-8"></i> Update
+                </button>-->
+            </ng-container>
+            </span>
+
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+               <span class="child-info">
+
+                <nz-avatar [nzSize]="56" nzSrc="{{ getChildProfileImage(child) }}" class="child-img img-bg"></nz-avatar>
+
+                <span class="child-name text-truncate">{{ child.getFullName() }}</span>
+
+                </span>
+
+            </div>
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="text-uppercase go-back-link" (click)="onBack($event)">
+                    <i class="long arrow alternate left icon"></i>
+                    <span>Go Back</span>
+                </span>
+
+                <!--<span class="text-right">-->
+
+                    <!--<ng-container>
+
+                        <button class="text-uppercase"
+                                *hasPermission="['AC2']; belongsTo 'N07'"
+                                nz-button
+                                nzType="primary"
+                                (click)="addNewDocument($event)"
+
+                                [promiseBtn]="buttonLoader">
+                            <i nz-icon nzType="plus" nzTheme="outline"></i> Add New
+                        </button>
+                        <button class="text-uppercase"
+                            *hasPermission="['AC2']; belongsTo 'N07'"
+                            nz-button
+                            nzType="primary"
+                            (click)="onFormSubmit($event)"
+
+                            [promiseBtn]="buttonLoader">
+                            <i class="save outline icon b-i mr-8"></i> Update
+                        </button>
+
+                    </ng-container>-->
+
+                <!--</span>-->
+
+            </div>
+            <!--/ CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24 pt-16" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <nz-tabset>
+                    <nz-tab nzTitle="Health">
+                        <ul nz-list nzBordered nzSize="large"  [nzDataSource]="healthDocuments">
+                            <ng-container *ngFor="let item of healthDocuments" >
+                                <li nz-list-item nzNoFlex >
+                                    <ng-container *ngIf="item=='healthRecord'">
+                                        <div nz-row [nzGutter]="24">
+                                            <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                Health Record
+                                            </div>
+                                            <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'healthRecord')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                            </div>-->
+                                            <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                <ul nz-list>
+                                                <ng-container *ngIf="findDocument(item)">
+                                                    <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                        <li nz-list-item>
+                                                            <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                            </div>
+                                                            <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank">  <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc)"><i nz-icon nzType="delete"></i> Delete </button>
+                                                            </div>
+                                                        </li>
+                                                    </ng-container>
+                                                    </ng-container>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="item=='childImmunised'">
+                                        <div nz-row [nzGutter]="24">
+                                            <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                Medicare immunisation record
+                                            </div>
+                                            <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'childImmunised')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                            </div>-->
+                                            <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                <ul nz-list>
+                                                    <ng-container *ngIf="findDocument(item)">
+                                                        <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                            <li nz-list-item>
+                                                                <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                    <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                </div>
+                                                                <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"> <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc)"><i nz-icon nzType="delete"></i> Delete </button>
+                                                                </div>
+                                                            </li>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="item=='prescribedMedicine'">
+                                        <div nz-row [nzGutter]="24">
+                                            <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                Regular Prescribed Medicine
+                                            </div>
+                                            <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'prescribedMedicine')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                            </div>-->
+                                            <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                <ul nz-list>
+                                                    <ng-container *ngIf="findDocument(item)">
+                                                        <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                            <li nz-list-item>
+                                                                <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                    <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                </div>
+                                                                <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"> <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc)"><i nz-icon nzType="delete"></i> Delete </button>
+                                                                </div>
+                                                            </li>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="item=='anaphylaxis'">
+                                        <div nz-row [nzGutter]="24">
+                                            <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                Anaphylaxis Action Plan
+                                            </div>
+                                            <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'anaphylaxis')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                            </div>-->
+                                            <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                <ul nz-list>
+                                                    <ng-container *ngIf="findDocument(item)">
+                                                        <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                            <li nz-list-item>
+                                                                <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                    <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                </div>
+                                                                <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"> <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc)"><i nz-icon nzType="delete"></i> Delete </button>
+                                                                </div>
+                                                            </li>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="item=='epipenOrAnipen'">
+                                        <div nz-row [nzGutter]="24">
+                                            <div  nz-col [nzMd]="6" [nzLg]="6">
+                                               Epipen or Anipen?
+                                            </div>
+                                            <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'healthConditions')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                            </div>-->
+                                            <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                <ul nz-list>
+                                                    <ng-container *ngIf="findDocument(item)">
+                                                        <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                            <li nz-list-item>
+                                                                <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                    <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                </div>
+                                                                <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"> <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc)"> <i nz-icon nzType="delete"></i>Delete </button>
+                                                                </div>
+                                                            </li>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="item=='healthConditions'">
+                                        <div nz-row [nzGutter]="24">
+                                            <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                Health Conditions
+                                            </div>
+                                            <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'healthConditions')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                            </div>-->
+                                            <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                <ul nz-list>
+                                                    <ng-container *ngIf="findDocument(item)">
+                                                        <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                            <li nz-list-item>
+                                                                <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                    <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                </div>
+                                                                <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"> <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc)"> <i nz-icon nzType="delete"></i>Delete </button>
+                                                                </div>
+                                                            </li>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="item=='asthma'">
+                                        <div nz-row [nzGutter]="24">
+                                            <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                Asthma Action Plan
+                                            </div>
+                                            <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'asthma')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                            </div>-->
+                                            <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                <ul nz-list>
+                                                    <ng-container *ngIf="findDocument(item)">
+                                                        <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                            <li nz-list-item>
+                                                                <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                    <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                </div>
+                                                                <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"><i nz-icon nzType="eye"></i>  Download </a></button>
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc)"><i nz-icon nzType="delete"></i> Delete </button>
+                                                                </div>
+                                                            </li>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </li>
+                            </ng-container>
+                        </ul>
+                    </nz-tab>
+                    <nz-tab nzTitle="Legal">
+                        <ul nz-list nzBordered nzSize="large"  [nzDataSource]="legalDocuments">
+                            <ng-container *ngFor="let item of legalDocuments" >
+                                <li nz-list-item nzNoFlex >
+                                    <ng-container *ngIf="item=='courtAppointed'">
+                                        <div nz-row [nzGutter]="24">
+                                            <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                Court Appointed Orders
+                                            </div>
+                                            <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'courtAppointed')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                            </div>-->
+                                            <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                <ul nz-list>
+                                                    <ng-container *ngIf="findDocument(item)">
+                                                        <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                            <li nz-list-item>
+                                                                <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                    <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                </div>
+                                                                <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"> <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc)"> <i nz-icon nzType="delete"></i>Delete </button>
+                                                                </div>
+                                                            </li>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </li>
+                            </ng-container>
+                        </ul>
+                    </nz-tab>
+                    <nz-tab nzTitle="Other">
+                        <ul nz-list nzBordered nzSize="large"  [nzDataSource]="otherDocuments">
+                            <ng-container *ngFor="let item of otherDocuments" >
+                                <ng-container *ngIf="item=='birthCertificate'">
+                                    <li nz-list-item nzNoFlex >
+                                        <div nz-row [nzGutter]="24">
+                                            <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                Birth Certificate
+                                            </div>
+                                            <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'birthCertificate')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                            </div>-->
+                                            <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                <ul nz-list>
+                                                    <ng-container *ngIf="findDocument(item)">
+                                                        <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                            <li nz-list-item>
+                                                                <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                    <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                </div>
+                                                                <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link" target="_blank" > <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                    <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc)"> <i nz-icon nzType="delete"></i> Delete </button>
+                                                                </div>
+                                                            </li>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ng-container>
+                            </ng-container>
+                        </ul>
+                    </nz-tab>
+                </nz-tabset>
+
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,59 @@
+<div 
+    id="adjustment-items" 
+    class="page-layout simple left-sidebar inner-sidebar inner-scroll" 
+    *canViewAuth
+    [@fadeInOnEnter] 
+    [@fadeOutOnLeave]>
+
+    <!-- HEADER -->
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+
+        <div></div>
+    
+        <ng-container *hasPermission="['AC1']; belongsTo 'N42'">
+    
+            <button 
+                nz-button 
+                nzType="primary" 
+                (click)="openAddDialog($event)"
+                [nzLoading]="buttonLoader"
+                [@animate]="{ value:'*', params:{ delay: '100ms', x:'15px' } }">
+                <i class="plus left icon pr-8"></i>
+                Add Item
+            </button>
+    
+        </ng-container>
+    
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content pt-16">
+
+        <!-- SIDEBAR -->
+        <!-- <fuse-sidebar class="sidebar" name="balance-adjustments-sidebar" position="left" lockedOpen="gt-md">
+
+            <app-adjustment-items-left-sidenav 
+                [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }" 
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+                (updateTableScroll)="updateScroll($event)">
+            </app-adjustment-items-left-sidenav>
+
+        </fuse-sidebar> -->
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <app-adjustment-items-list-view 
+            class="center p-24 pt-0" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+            (updateTableScroll)="updateScroll($event)"
+            [@animate]="{ value:'*', params:{ delay: '200ms', y:'15px' } }">
+        </app-adjustment-items-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

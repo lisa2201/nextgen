@@ -1,0 +1,26 @@
+<div class="filter-view px-24 pt-4 pb-16 mb-8 {{ cssClass }}" *ngIf="isFilterOn" [@fadeMotion]>
+
+    <span class="label">Filters:</span>
+
+    <nz-tag *ngIf="filterData?.fee && filterData.type !== ''" nzMode="closeable" nzColor="processing" (nzOnClose)="onClose()">
+        {{ getBookingType(filterData.type) }}
+    </nz-tag>
+
+    <nz-tag *ngIf="filterData?.fee && filterData.attend_type !== ''" nzMode="closeable" nzColor="processing" (nzOnClose)="onClose('1')">
+        {{ getAttendanceType(filterData.attend_type) }}
+    </nz-tag>
+
+    <nz-tag *ngIf="filterData?.room && filterData.room !== '0'" nzMode="closeable" nzColor="processing" (nzOnClose)="onClose('2')" [ngClass]="{ 'no-action': isChildrenViewLimited} ">
+        {{ getRoomInfo(filterData.room).title }}
+    </nz-tag>
+
+    <nz-tag *ngIf="filterData?.child && filterData.child !== '0'" nzMode="closeable" nzColor="processing" (nzOnClose)="onClose('3')">
+        {{ getChildInfo(filterData.child).getFullName() }}
+    </nz-tag>
+
+    <nz-tag *ngIf="filterData?.fee && filterData.fee !== '0'" nzMode="closeable" nzColor="processing" (nzOnClose)="onClose('4')">
+        {{ getFeeInfo(filterData.fee).name }}
+    </nz-tag>
+
+</div>
+

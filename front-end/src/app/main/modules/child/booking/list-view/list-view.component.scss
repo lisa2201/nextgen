@@ -1,0 +1,77 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+booking-list-view {
+    position: relative;
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 0;
+    border-right: 1px solid $layout-border-color;
+    overflow: hidden;
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .sub-title {
+        display: flex;
+        flex: 1 0 auto;
+        align-items: center;
+        height: 32px;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 0 16px;
+        background-color: #fafafa;
+        border-bottom: 1px solid #e5e8eb;
+        border-top: 1px solid #e5e8eb;
+
+        &:first-of-type {
+            border-top: none;
+        }
+    }
+
+    .booking-item-list {
+
+        .ant-skeleton, 
+        .ant-skeleton-header {
+            padding: 0;
+        }
+
+        .ant-list-item-meta-title {
+            margin-bottom: 0 !important;
+        }
+
+        .ant-empty-image {
+            height: auto;
+
+            img {
+                height: 48px;
+                width: 48px;
+            }
+        }
+
+        .list-view-item {
+            padding-left: 16px;
+            padding-right: 16px;
+            cursor: pointer;
+            margin-bottom: 0;
+            -webkit-transition: all .3s;
+            transition: all .3s;
+            border-right: 1px solid transparent;
+
+            // &:hover + nz-skeleton:not(.ant-skeleton-active) {
+            //     background-color: rgba(0, 0, 0, 0.04);
+            // }
+
+            .ant-list-item-meta {
+                margin-bottom: 0;
+            }
+        }
+    }
+}

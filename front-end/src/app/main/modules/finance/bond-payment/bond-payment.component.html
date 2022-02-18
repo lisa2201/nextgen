@@ -1,0 +1,51 @@
+<div id="is-cases" class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]
+    [@fadeOutOnLeave]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-15px' } }">Bond Payment</h1>
+
+
+        <ng-container *hasPermission="['AC1']; belongsTo 'N09'">
+
+            <button class="text-uppercase" nz-button nzType="primary" (click)="addDialog($event)"
+                [promiseBtn]="buttonLoader">
+                <i class="plus icon mr-8"></i> Create New
+            </button>
+
+        </ng-container>
+    </div>
+    <!-- / HEADER -->
+
+    <div class="p-24 pt-0">
+
+        <nz-alert nzType="info" [nzMessage]="infoMessage" nzShowIcon></nz-alert>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="bond-payment-filter-sidebar" position="left">
+
+            <bond-payment-filter-sidebar [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }"
+                fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+                (updateTableScroll)="updateScroll($event)">
+            </bond-payment-filter-sidebar>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <bond-payment-list-view class="center p-24 pt-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" (updateTableScroll)="updateScroll($event)"
+            [@animate]="{ value:'*', params:{ delay: '200ms', x:'15px' } }">
+        </bond-payment-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

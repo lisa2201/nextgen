@@ -1,0 +1,635 @@
+<div id="care_provided_vacancy" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <div id="care_provided_vacancy_wrapper" class="center">
+
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2">
+                    Care Provided & Vacancy
+                </span>
+
+            </h1>
+
+        </div>
+
+        <div class="content p-24 pt-16" 
+            [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }" 
+            fusePerfectScrollbar            
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <form nz-form name="careProvidedform" [nzLayout]="'vertical'" [formGroup]="careProvidedform" (ngSubmit)="onFormSubmit($event)">
+
+                <!-- <div nz-row [nzGutter]="24"> -->
+
+                    <span *ngIf="apierrors">
+                        <span *ngIf="!apierrors.length">
+                            <nz-alert nzCloseable nzType="error" nzMessage="{{ (apierrors.message) ? apierrors.message : 'Error Occured' }}"></nz-alert> 
+                        </span>
+                        <span *ngIf="apierrors.length">
+                            <nz-alert nzCloseable nzType="error" *ngFor="let obj of apierrors" nzMessage="{{ (obj.message) ? obj.message : 'Error Occured' }}"></nz-alert>
+                        </span>
+                    </span>
+                    
+                    <nz-tabset 
+                        [nzSize]="'large'"
+                        [nzSelectedIndex]="current"
+                        (nzSelectedIndexChange)="updatePosition($event)">
+
+                        <nz-tab nzTitle="Care Provided">
+                            The information you update here will automatically update the Child Care Finder website <a
+                                href="https://www.childcarefinder.gov.au" target="_blank">childcarefinder.gov.au</a>.
+
+                            <div class="pl-4 px-4">
+
+                                <div nz-row [nzGutter]="24">
+
+                                    <div class="section-name" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">Contact Details</div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                        
+                                        <nz-form-item>
+                                            <nz-form-label>E-mail</nz-form-label>
+                                            <nz-form-control [nzErrorTip]="emailError">
+                                                <input nz-input formControlName="email" type="text" />
+
+                                                <ng-template #emailError let-control>
+                                                    <ng-container *ngIf="control.hasError('required')">Please input your email
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="!control.hasError('required') && control.hasError('email')">Please
+                                                        input a valid email address
+                                                    </ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                        
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                        
+                                        <nz-form-item>
+                                            <nz-form-label>Phone</nz-form-label>
+                                            <nz-form-control [nzErrorTip]="phoneError">
+                                                <input nz-input formControlName="phone" id="phone" />
+
+                                                <ng-template #phoneError let-control>
+                                                    <ng-container>Please enter your phone number</ng-container>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                        
+                                        <nz-form-item>
+                                            <nz-form-label>Mobile</nz-form-label>
+                                            <nz-form-control [nzErrorTip]="mobileError">
+                                                <input nz-input formControlName="mobile" id="mobile" />
+
+                                                <ng-template #mobileError let-control>
+                                                    <ng-container>Please enter your mobile number</ng-container>
+                                                </ng-template>
+                                            </nz-form-control>
+                                        </nz-form-item>
+
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                        
+                                        <nz-form-item>
+                                            <nz-form-label>Website</nz-form-label>
+                                            <nz-form-control>
+                                                <input nz-input formControlName="service_url" />
+                                            </nz-form-control>
+                                        </nz-form-item>
+
+                                    </div>
+                                </div>
+
+                                <div nz-row [nzGutter]="24">   
+
+                                    <div class="section-name" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">Operational Details</div>
+
+                                    <div  nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" formArrayName="operationaldetails">
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" id="fee_group"
+                                            *ngFor="let group of operationalDetailsArray.controls; let i = index;"
+                                            [formGroupName]="i">
+    
+                                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" class="single_fee_detail">
+    
+                                                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" class="delete_btn_row">
+                                                    <button nzType="danger" *ngIf="(i != 0)" nz-button type="button"
+                                                        class="delete_btn" (click)="removeDay(i)"><i
+                                                            class="trash alternate outline icon danger-color"></i></button>
+                                                </div>
+    
+                                                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                                    <nz-form-item>
+                                                        <nz-form-label> Operational Day: </nz-form-label>
+                                                        <nz-form-control [nzErrorTip]="opendayError">
+                                                            <nz-select formControlName="operational_day" nzShowSearch
+                                                                nzPlaceHolder="Select Operational Day">
+    
+                                                                <nz-option *ngFor="let weekday of weekdays"
+                                                                    nzValue="{{ weekday.value }}" nzLabel="{{ weekday.text }}">
+                                                                </nz-option>
+    
+                                                            </nz-select>
+    
+                                                            <ng-template #opendayError let-control>
+                                                                <ng-container>Please select a day</ng-container>
+                                                            </ng-template>
+    
+                                                        </nz-form-control>
+                                                    </nz-form-item>
+                                                </div> 
+                                                
+                                                <div  nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" formArrayName="operationalservices">
+                                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" id="fee_group2"
+                                                        *ngFor="let subgroup of group.get('operationalservices').controls; let j = index;"
+                                                        [formGroupName]="j">
+                                                
+                                                        <div nz-row [nzGutter]="24"> 
+                                                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="7" [nzXl]="7" [nzXXl]="7">
+                                                                <nz-form-item>                                                                
+                                                                    <nz-form-label nzRequired> Service: </nz-form-label>
+                                                                    <nz-form-control [nzErrorTip]="openserviceError">
+                                                                        <nz-select formControlName="service_offered" nzShowSearch
+                                                                            nzPlaceHolder="Select Service">
+        
+                                                                            <nz-option *ngFor="let service of services"
+                                                                                nzValue="{{ service.value }}" nzLabel="{{ service.text }}">
+                                                                            </nz-option>
+        
+                                                                        </nz-select>
+        
+                                                                        <ng-template #openserviceError let-control>
+                                                                            <ng-container>Please select a service</ng-container>
+                                                                        </ng-template>
+        
+                                                                    </nz-form-control>
+                                                                </nz-form-item>
+                                                            </div>
+
+                                                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                                                <nz-form-item>    
+                                                                    <nz-form-label nzRequired>Start Time</nz-form-label>
+        
+                                                                    <nz-form-control [nzErrorTip]="starttimeError">
+        
+                                                                        <ry-time-picker #timePickerStart formControlName="open_time"
+                                                                            [ryType]="'single'" 
+                                                                            [ryMinuteStep]="1"
+                                                                            ryFormat="h:mm A"
+                                                                            [ryPlaceHolder]="'select ...'">
+                                                                        </ry-time-picker>
+        
+                                                                        <ng-template #starttimeError let-control>
+                                                                            <ng-container>Please enter start time</ng-container>
+                                                                        </ng-template>
+        
+                                                                    </nz-form-control>
+        
+                                                                </nz-form-item>
+                                                            </div>
+
+                                                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">                                                          
+                                                                <nz-form-item>
+                                                                    <nz-form-label nzRequired>End Time</nz-form-label>
+        
+                                                                    <nz-form-control [nzErrorTip]="endtimeError">
+        
+                                                                        <ry-time-picker #timePickerStart formControlName="end_time"
+                                                                            [ryType]="'single'" ryFormat="h:mm A" [ryMinuteStep]="1"
+                                                                            [ryPlaceHolder]="'select ...'">
+                                                                        </ry-time-picker>
+        
+                                                                        <ng-template #endtimeError let-control>
+                                                                            <ng-container>Please enter end time</ng-container>
+                                                                        </ng-template>
+                                                                    </nz-form-control>
+        
+                                                                </nz-form-item>
+                                                            </div>
+
+                                                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="1" [nzXl]="1" [nzXXl]="1">
+                                                                <button *ngIf="(j != 0)" nz-button type="button"
+                                                                    class="service_delete" (click)="removeService(group.controls.operationalservices, j)"><i
+                                                                        class="trash alternate outline icon"></i>
+                                                                    </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+    
+                                                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="6" [nzLg]="6" [nzXl]="6" [nzXXl]="6">
+                                                    <nz-form-item>
+    
+                                                        <button nz-button type="button" nzType="primary" [nzBlock]="true" [nzLoading]="buttonLoading"
+                                                            (click)="addService(group.controls.operationalservices,i,j)">
+                                                            Add Service
+                                                        </button>
+                        
+                                                    </nz-form-item>
+                                                </div>
+                                            </div>
+    
+                                        </div>
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="6" [nzLg]="6" [nzXl]="6" [nzXXl]="6">
+                                        <nz-form-item>
+        
+                                            <button nz-button type="button" nzType="primary" [nzBlock]="true" [nzLoading]="buttonLoading"
+                                                (click)="addDay()">
+                                                Add Operational Day
+                                            </button>
+        
+                                        </nz-form-item>
+                                    </div>
+
+                                </div>
+
+                                <div nz-row [nzGutter]="24">   
+                                    <div class="section-name" nz-col [nzMd]="24" [nzLg]="24">Fee details</div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                        <nz-form-item>
+                                            <nz-radio-group formControlName="fee_type"
+                                                (ngModelChange)="onFeeTypeChange($event)">
+                                                <label nz-radio nzValue="fee_url">Fee URL</label>
+                                                <label nz-radio nzValue="fee_details">Fee Detail</label>
+                                            </nz-radio-group>
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                        <nz-form-item *ngIf="fee_tpe_url">
+                                            <nz-form-label> Fee URL: </nz-form-label>
+                                            <nz-form-control>
+                                                <input type="text" nz-col [nzMd]="24" [nzLg]="24" nz-input placeholder="Fee Url"
+                                                    type="text" formControlName="fee_url" />    
+                                            </nz-form-control>
+                                        </nz-form-item>
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" *ngIf="!fee_tpe_url">
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" formArrayName="feedetails">
+                                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" id="fee_group" *ngFor="let group of feeDetailsArray.controls; let i = index;"
+                                                [formGroupName]="i">
+
+                                                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" class="single_fee_detail">
+                                                    <div nz-row [nzGutter]="24"> 
+                                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" class="delete_btn_row">
+                                                            <button nzType="danger" *ngIf="(i != 0)" nz-button type="button"
+                                                                class="delete_btn" (click)="removeFeeDeatil(i)"><i
+                                                                    class="trash alternate outline icon danger-color"></i></button>
+                                                        </div>
+
+                                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                                                            <nz-form-item>
+                                                                <nz-form-label> Age Group: </nz-form-label>
+                                                                <nz-form-control [nzErrorTip]="agegroupError">
+                                                                    <nz-select formControlName="age_group" nzShowSearch
+                                                                        nzPlaceHolder="Select Age Group">
+
+                                                                        <nz-option *ngFor="let ageGroup of ageGroups"
+                                                                            nzValue="{{ ageGroup.value }}" nzLabel="{{ ageGroup.text }}"
+                                                                            title="{{ageGroup.text}}">
+                                                                        </nz-option>
+
+                                                                    </nz-select>
+
+
+                                                                    <ng-template #agegroupError let-control>
+                                                                        <ng-container>Please select an Age group</ng-container>
+                                                                    </ng-template>
+                                                                </nz-form-control>
+                                                            </nz-form-item>
+                                                        </div>
+
+                                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                                                            <nz-form-item>
+                                                                <nz-form-label> Session Type: </nz-form-label>
+                                                                <nz-form-control [nzErrorTip]="sessionError">
+                                                                    <nz-select formControlName="session_type" nzShowSearch
+                                                                        nzPlaceHolder="Select Session Type">
+
+                                                                        <nz-option *ngFor="let sessionType of sessionTypes"
+                                                                            nzValue="{{ sessionType.value }}" nzLabel="{{ sessionType.text }}"
+                                                                            title="{{sessionType.value}}">
+                                                                        </nz-option>
+
+                                                                    </nz-select>
+
+                                                                    <ng-template #sessionError let-control>
+                                                                        <ng-container>Please select a Session type</ng-container>
+                                                                    </ng-template>
+                                                                </nz-form-control>
+                                                            </nz-form-item>
+                                                        </div>
+
+                                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                                                            <nz-form-item>
+                                                                <nz-form-label> Fee Amount: </nz-form-label>
+                                                                <nz-form-control [nzErrorTip]="amountError">
+                                                                    <nz-input-group nzAddOnBefore="$">
+                                                                        <input nz-input formControlName="fee_amount" type="number"
+                                                                            step="0.01" />
+                                                                    </nz-input-group>
+
+                                                                    <ng-template #amountError let-control>
+                                                                        <ng-container>Please enter Amount</ng-container>
+                                                                    </ng-template>
+                                                                </nz-form-control>
+                                                            </nz-form-item>
+                                                        </div>
+
+                                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                                                        <nz-form-item>
+                                                            <nz-form-label> Inclusions: </nz-form-label>
+                                                            <nz-form-control>
+                                                                <div nz-row [nzGutter]="24">
+                                                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                                                        <div>
+                                                                            <label nz-checkbox
+                                                                                formControlName="BRKFST">Breakfast</label>
+                                                                        </div>
+                                                                        <div>
+                                                                            <label nz-checkbox formControlName="MORTEA">Morning
+                                                                                Tea</label></div>
+                                                                        <div>
+                                                                            <label nz-checkbox formControlName="LUNCH">Lunch</label>
+                                                                        </div>
+                                                                        <div>
+                                                                            <label nz-checkbox formControlName="AFTTEA">Afternoon
+                                                                                Tea</label></div>
+                                                                        <div>
+                                                                            <label nz-checkbox formControlName="OTHMEA">Other
+                                                                                Meals</label></div>
+                                                                        <div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                                                        <div>
+                                                                            <label nz-checkbox formControlName="NAPPIE">Nappies</label>
+                                                                        </div>
+                                                                        <div>
+                                                                            <label nz-checkbox
+                                                                                formControlName="TRANSP">Transport</label></div>
+                                                                        <div>
+                                                                            <label nz-checkbox
+                                                                                formControlName="EDUPRO">Education
+                                                                                Programs</label></div>
+                                                                        <div>
+                                                                            <label nz-checkbox
+                                                                                formControlName="EXCINC">Excursions/Incursions</label>
+                                                                        </div>
+                                                                        <div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </nz-form-control>
+                                                        </nz-form-item>
+                                                    </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="6" [nzXl]="6" [nzXXl]="6">
+
+                                            <nz-form-item>
+                                                <button nz-button type="button" nzType="primary" [nzBlock]="true" [nzLoading]="buttonLoading"
+                                                    (click)="addNewFeeDeatil()">
+                                                    Add another Fee
+                                                </button>
+                                            </nz-form-item>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                                    <div class="text-right pl-4 pr-4 mt-8 navigation_button">
+                    
+                                        <button nz-button class="submit_button" nzType="default" (click)="next()" [nzLoading]="buttonLoader">
+                                            <span>Next</span>
+                                            <i class="arrow alternate circle right outline icon b-i ml-8"></i>
+                                        </button>
+
+                                    </div>   
+                                    </div>         
+                                </div>
+
+                            </div>
+                        </nz-tab>
+
+
+                        <nz-tab nzTitle="Vacancy">
+                            <div class="pl-4 pr-4">
+
+                                <h1 id="vacancy_day">Week Start
+
+                                    <span class="date-input-wrapper" (click)="toggleWeekPicker($event)">
+
+                                        <span class="date-label">
+                                            <img id="calander-img"
+                                                src="assets/icons/flat/ui_set/custom_icons/child/calendar-blank.svg">
+
+                                            <span id="calander-date"><b>{{ getWeekStartDay() }}</b></span>
+                                        </span>
+
+                                        <nz-date-picker class="date-input" formControlName="week_pick"
+                                            (ngModelChange)="getWeek($event)" 
+                                            [nzOpen]="openWeekPicker"
+                                            [nzDisabledDate]="disabledDates" 
+                                            [nzInputReadOnly]="true"
+                                            nzShowToday=false>
+                                        </nz-date-picker>
+
+                                    </span>
+
+                                    {{ day+" "+year+" "+month }}</h1>
+
+                                <!-- <label nz-checkbox formControlName="service_operational">Service Operational?</label> -->
+
+                                <nz-table #basicTable [nzData]="ageGroups" nzBordered nzSize="small"
+                                    [nzScroll]="scrollConfig" nzFrontPagination=false>
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2"></th>
+                                            <th colspan="5">
+                                                Age Ranges
+                                            </th>
+                                            <th colspan="2">Type</th>
+                                            <th colspan="5">Session Type</th>
+                                            <!-- <th rowspan="2">Available Places</th> -->
+                                        </tr>
+                                        <tr>
+                                            <th *ngFor="let ageGroup of ageGroups">
+                                                {{ ageGroup.text }}
+                                            </th>
+                                            <th>Perm</th>
+                                            <th>Casual</th>
+                                            <th *ngFor="let session of sessionTypes">
+                                                {{ session.text }}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody [hidden]="!currentweekstart" formArrayName="vacancies">
+
+                                        <tr *ngFor="let group of weeklyVacancies.controls; let i = index;" [formGroupName]="i">
+                                          
+                                            <td>{{ weekdays[i].text }}</td>
+                                          
+                                            <!-- <td *ngFor="let ageGroup of ageGroups;let j = index;">
+                                                <nz-switch value="ageGroup.value" formControlName="agegroup"+j></nz-switch>
+                                            </td> -->
+                                            <td>
+                                                <nz-switch formControlName="agegroup1"></nz-switch>
+                                            </td>
+                                            <td>
+                                                <nz-switch formControlName="agegroup2"></nz-switch>
+                                            </td>
+                                            <td>
+                                                <nz-switch formControlName="agegroup3"></nz-switch>
+                                            </td>
+                                            <td>
+                                                <nz-switch formControlName="agegroup4"></nz-switch>
+                                            </td>
+                                            <td>
+                                                <nz-switch formControlName="agegroup5"></nz-switch>
+                                            </td>
+                                          
+                                            <td><label nz-checkbox formControlName="permanent"></label></td>
+                                            <td><label nz-checkbox formControlName="casual"></label></td>
+                                          
+                                            <!-- <td *ngFor="let session of sessionTypes;let k = index;">
+                                            <label nz-checkbox formControlName="sessiontype"+k></label>
+                                            </td> -->
+                                            <td>
+                                                <label nz-checkbox formControlName="sessiontype1"></label>
+                                            </td>
+                                            <td>
+                                                <label nz-checkbox formControlName="sessiontype2"></label>
+                                            </td>
+                                            <td>
+                                                <label nz-checkbox formControlName="sessiontype3"></label>
+                                            </td>
+                                            <td>
+                                                <label nz-checkbox formControlName="sessiontype4"></label>
+                                            </td>
+                                            <td>
+                                                <label nz-checkbox formControlName="sessiontype5"></label>
+                                            </td>
+                                          
+                                            <!-- <td>
+                                                <input nz-input class="available_places" formControlName="available_places" type="text" />
+                                            </td> -->
+                                        </tr>
+                                        
+                                    </tbody>
+                                    <tbody [hidden]="currentweekstart" formArrayName="vacanciesnext">
+
+                                        <tr *ngFor="let group of weeklyVacanciesnext.controls; let i = index;" [formGroupName]="i">
+                                          
+                                            <td>{{ weekdays[i].text }}</td>
+                                          
+                                            <!-- <td *ngFor="let ageGroup of ageGroups;let j = index;">
+                                                <nz-switch value="ageGroup.value" formControlName="agegroup"+j></nz-switch>
+                                            </td> -->
+                                            <td>
+                                                <nz-switch formControlName="next_agegroup1"></nz-switch>
+                                            </td>
+                                            <td>
+                                                <nz-switch formControlName="next_agegroup2"></nz-switch>
+                                            </td>
+                                            <td>
+                                                <nz-switch formControlName="next_agegroup3"></nz-switch>
+                                            </td>
+                                            <td>
+                                                <nz-switch formControlName="next_agegroup4"></nz-switch>
+                                            </td>
+                                            <td>
+                                                <nz-switch formControlName="next_agegroup5"></nz-switch>
+                                            </td>
+                                          
+                                            <td><label nz-checkbox formControlName="next_permanent"></label></td>
+                                            <td><label nz-checkbox formControlName="next_casual"></label></td>
+                                          
+                                            <!-- <td *ngFor="let session of sessionTypes;let k = index;">
+                                            <label nz-checkbox formControlName="sessiontype"+k></label>
+                                            </td> -->
+                                            <td>
+                                                <label nz-checkbox formControlName="next_sessiontype1"></label>
+                                            </td>
+                                            <td>
+                                                <label nz-checkbox formControlName="next_sessiontype2"></label>
+                                            </td>
+                                            <td>
+                                                <label nz-checkbox formControlName="next_sessiontype3"></label>
+                                            </td>
+                                            <td>
+                                                <label nz-checkbox formControlName="next_sessiontype4"></label>
+                                            </td>
+                                            <td>
+                                                <label nz-checkbox formControlName="next_sessiontype5"></label>
+                                            </td>
+                                          
+                                            <!-- <td>
+                                                <input nz-input class="available_places" formControlName="next_available_places" type="text" />
+                                            </td> -->
+                                        </tr>
+                                        
+                                    </tbody>
+                                </nz-table>
+
+                                <label [hidden]="!currentweekstart" nz-checkbox [(ngModel)]="allChecked" (ngModelChange)="updateAllChecked()"
+                                    [nzIndeterminate]="indeterminate" [ngModelOptions]="{standalone: true}">
+                                    Check all
+                                </label>
+
+                                <label [hidden]="currentweekstart" nz-checkbox [(ngModel)]="allChecked_next" (ngModelChange)="updateAllCheckedNext()"
+                                    [nzIndeterminate]="indeterminate" [ngModelOptions]="{standalone: true}">
+                                    Check all
+                                </label>
+
+                            </div>
+
+                            <button nz-button class="submit_button" nzType="primary" type="submit" [nzLoading]="buttonLoader">
+                                Submit
+                            </button>
+
+                            <div class="text-left pl-4 pr-4 mt-8 navigation_button">
+            
+                                <button nz-button nzType="default" (click)="pre()">
+                                    <i class="arrow alternate circle left outline icon b-i mr-8"></i>
+                                    <span>Previous</span>
+                                </button>
+            
+                            </div>
+
+                        </nz-tab>
+
+                    </nz-tabset>
+
+                <!-- </div> -->
+
+            </form>
+
+        </div>
+    </div>
+</div>

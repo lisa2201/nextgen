@@ -1,0 +1,427 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">
+                {{dialogTitle}} <ng-container *ngIf="showData">- {{ selectedItem.name }}</ng-container>
+            </span>
+
+            <button mat-icon-button disableRipple="true" aria-label="Close dialog" (click)="matDialogRef.close()">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <ng-container *ngIf="!showData; else showDataTpl">
+
+        <form name="feesForm" class="compose-form" fxLayout="column" [nzLayout]="'vertical'" [formGroup]="feesForm"
+            (ngSubmit)="onFormSubmit($event)" fxFlexnz-form nz-form>
+
+            <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <div nz-row [nzGutter]="24">
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+
+                            <nz-form-label nzRequired>Fee Name</nz-form-label>
+
+                            <nz-form-control nzHasFeedback [nzErrorTip]="feeNameErrorTpl">
+
+                                <input nz-input formControlName="feeName" placeholder="fee name" type="text" />
+
+                                <ng-template #feeNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('minlength')">fee name can't be less than 3
+                                        characters
+                                    </ng-container>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your fee name
+                                    </ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                        <nz-form-item>
+
+                            <nz-form-label nzRequired>Fee Type</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="feeTypeErrorTpl">
+                                <nz-select nzPlaceHolder="Please select" formControlName="feeType">
+                                    <nz-option *ngFor="let option of feeType" nzValue="{{option.index}}"
+                                        nzLabel="{{option.name}}">
+                                    </nz-option>
+                                </nz-select>
+    
+                                <ng-template #feeTypeErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please select your fee type
+                                    </ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                        <nz-form-item>
+
+                            <nz-form-label nzRequired>Frequency</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="frequencyErrorTpl">
+                                <nz-select nzPlaceHolder="Please select" formControlName="frequency">
+                                    <nz-option *ngFor="let option of frequency" nzValue="{{option.index}}"
+                                        nzLabel="{{option.name}}">
+                                    </nz-option>
+                                </nz-select>
+    
+                                <ng-template #frequencyErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please select your frequency
+                                    </ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+
+                            <nz-form-label nzRequired>Subsidy Vendor</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="vendorErrorTpl">
+    
+                                <nz-select nzPlaceHolder="Please select" formControlName="vendor">
+                                    <nz-option *ngFor="let option of vendor" nzValue="{{option.index}}"
+                                        nzLabel="{{option.name}}">
+                                    </nz-option>
+                                </nz-select>
+    
+                                <ng-template #vendorErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please select your vendor
+                                    </ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+
+                    </div>
+
+                    <ng-container *ngIf="feesForm.get('frequency').value !== 'Hourly'">
+    
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+    
+                            <nz-form-item>
+    
+                                <nz-form-label nzRequired>Session Time</nz-form-label>
+    
+                                <nz-form-control nzHasFeedback [nzErrorTip]="sStartErrorTpl">
+    
+                                    <ry-time-picker 
+                                        #timePicker
+                                        formControlName="session_time"
+                                        ryFormat="h:mm A"
+                                        [ryType]="'range'"
+                                        [ryMinuteStep]="5"
+                                        [ryPlaceHolder]="'session time'">
+                                    </ry-time-picker>
+
+                                    <ng-template #sStartErrorTpl let-control>
+                                        <ng-container *ngIf="control.hasError('required')">Please input your session start & time
+                                        </ng-container>
+                                    </ng-template>
+    
+                                </nz-form-control>
+    
+                            </nz-form-item>
+    
+                        </div>
+    
+                    </ng-container>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                        <nz-form-item>
+
+                            <!-- <ng-container *ngIf="!adjustMode; else nTpl">
+                                
+                            </ng-container>
+
+                            <ng-template #nTpl>
+                                <nz-form-label class="block" nzRequired>
+                                    <span fxFlex="1 0 auto" fxLayoutAlign="space-between center">
+                                        New Net Amount
+                                        <span *ngIf="selectedItem && selectedItem.getCurrentAdjusted()" class="primary-color">
+                                            <i class="calendar alternate outline icon mr-4"></i>{{ selectedItem.getCurrentAdjusted().effectiveDate }} <i class="arrows alternate horizontal icon mx-4"></i>{{ (selectedItem.getFeeAmount() | currency: client.currency :'symbol':'1.2-2') || 'N/A' }}
+                                        </span>
+                                    </span>
+                                </nz-form-label>
+                            </ng-template> -->
+
+                            <nz-form-label class="block" nzRequired>
+                                <span fxFlex="1 0 auto" fxLayoutAlign="space-between center">
+                                    Net Amount
+                                    <span *ngIf="selectedItem && selectedItem.getCurrentAdjusted()" class="primary-color">
+                                        <i class="calendar alternate outline icon mr-4"></i>{{ selectedItem.getCurrentAdjusted().effectiveDate }} <i class="arrows alternate horizontal icon mx-4"></i>{{ (selectedItem.getFeeAmount() | currency: client.currency :'symbol':'1.2-2') || 'N/A' }}
+                                    </span>
+                                </span>
+                            </nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="netAmountErrorTpl">
+
+                                <nz-input-group nzAddOnBefore="AUD">
+                                    <input formControlName="nAmount" nz-input placeholder="net amount" type="text" />
+                                </nz-input-group>
+                                <ng-template #netAmountErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('pattern')">invalid input</ng-container>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your net amount
+                                    </ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+                    </div>
+    
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12" *ngIf="!adjustMode">
+                        <nz-form-item>
+    
+                            <nz-form-label nzRequired>Visibility</nz-form-label>
+    
+                            <nz-form-control [nzErrorTip]="visibilityErrorTpl">
+    
+                                <nz-radio-group formControlName="visible" nzButtonStyle="solid" class="has-img">
+    
+                                    <label nz-radio-button nzValue="0">
+                                        <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/child/inactive.svg"
+                                            alt="male icon">
+                                        <span>Public</span>
+                                    </label>
+    
+                                    <label nz-radio-button nzValue="1">
+                                        <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/child/lock.svg"
+                                            alt="female icon">
+                                        <span>Admin</span>
+                                    </label>
+    
+                                </nz-radio-group>
+    
+                                <ng-template #visibilityErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please select one option
+                                    </ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+    
+                        <nz-form-item>
+    
+                            <nz-form-label>Assign to Rooms</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="roomErrorTpl">
+    
+                                <nz-select
+                                    formControlName="rooms"
+                                    nzMode="multiple"
+                                    nzAllowClear
+                                    nzPlaceHolder="Please select">
+                        
+                                    <nz-option *ngFor="let item of rooms" 
+                                        [nzLabel]="item.title" 
+                                        [nzValue]="item.id"></nz-option>
+                        
+                                </nz-select>
+                    
+                                <ng-template #roomErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please select at least one room</ng-container>
+                                </ng-template>
+                    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+    
+                    </div>
+    
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12" *ngIf="adjustMode">
+                        <nz-form-item>
+    
+                            <nz-form-label nzRequired>Effective Date</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="dateErrorTpl">
+    
+                                <nz-date-picker formControlName="eDate" [nzInputReadOnly]="true" [nzDisabledDate]="disabledDate"
+                                    nzPlaceHolder="effective date" class="block"></nz-date-picker>
+                                <ng-template #dateErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please select the date
+                                    </ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12" *ngIf="adjustMode">
+
+                        <nz-form-item>
+    
+                            <nz-form-label>Update Future Bookings</nz-form-label>
+    
+                            <nz-form-control>
+
+                                <nz-switch
+                                    formControlName="update_future_bookings"
+                                    nzCheckedChildren="Yes"
+                                    nzUnCheckedChildren="No"></nz-switch>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+
+                    </div>
+
+                </div>
+                
+            </div>
+
+            <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span></span>
+
+                <span class="text-right">
+
+                    <ng-container *ngIf="!editMode && !adjustMode">
+                        
+                        <button *hasPermission="['AC1']; belongsTo 'N24'" 
+                            class="text-uppercase mr-8" nz-button nzType="primary"
+                            [disabled]="!feesForm.valid" [promiseBtn]="buttonLoader">
+                            <i class="plus icon mr-8"></i> Add
+                        </button>
+
+                    </ng-container>
+                    
+                    <ng-container *ngIf="editMode || adjustMode">
+
+                        <button *hasPermission="['AC2', 'AC8']; belongsTo 'N24'" 
+                            class="text-uppercase mr-8" nz-button nzType="primary"
+                            [disabled]="!feesForm.valid || !checkAdjustedAmountChanged()" [promiseBtn]="buttonLoader">
+                            <i class="plus icon mr-8"></i> Update
+                        </button>
+
+                    </ng-container>
+
+                    <button *ngIf="!editMode && !adjustMode" class="text-uppercase mr-8" type="button" nz-button
+                        nzType="default" (click)="resetForm($event)">
+                        Reset
+                    </button>
+
+                    <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                        (click)="matDialogRef.close()">
+                        Close
+                    </button>
+
+                </span>
+
+            </div>
+
+        </form>
+
+    </ng-container>
+
+    <ng-template #showDataTpl>
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <p *ngIf="selectedItem && adjustedList.length > 0" [@fadeMotion]>Initial Amount: <span class="font-weight-600">{{ selectedItem.netAmount | currency: client.currency :'symbol':'1.2-2' }}</span></p>
+
+            <nz-table class="reset-m-h" 
+                [nzSize]="'small'"
+                *ngIf="adjustedList.length > 0 else emptyAdjustedFeesBlock"
+                #adjustedListTable 
+                nzBordered
+                [nzShowPagination]="adjustedList.length > 10"
+                [nzData]="adjustedList">
+                    
+                <thead>
+                    <tr>
+                        <th nzWidth="90px">Effective On</th>
+                        <th nzWidth="100px">Amount</th>
+                        <th nzWidth="40px">Status</th>
+                        <th nzWidth="40px">Booking Updated</th>
+                        <th>Created By</th>
+                        <th >Created On</th>
+                        <th nzWidth="100px">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let item of adjustedListTable.data">
+                        <td>{{ item.effectiveDate }}</td>
+                        <td>{{ item.netAmount | currency: client.currency :'symbol':'1.2-2' }}</td>
+                        <td>
+                            <nz-tag [nzColor]="'#4CAF50'" *ngIf="item.isActive()">active</nz-tag>
+                            <nz-tag [nzColor]="'#e74c3c'" *ngIf="!item.isActive()">inactive</nz-tag>
+                        </td>
+                        <td>{{ item.isFutureBookingsUpdated ? 'Yes' : 'No' }}</td>
+                        <td>{{ item.creator?.getFullName() || 'N/A' }}</td>
+                        <td>{{ item.createdAt | SetGlobalDTFormat }}</td>
+                        <td>
+                            <a class="remove-btn" [ngClass]="{ 'disabled': !item.editable }" (click)="removeData(item, $event)">
+                                <i class="trash alternate outline icon mr-4"></i>
+                                remove
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </nz-table>
+
+            <ng-template #emptyAdjustedFeesBlock>
+                <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                    [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                    <ng-template #contentTpl>
+                        <h4 class="mt-24">No Data Found</h4>
+                        <span>Looks like there's no information to display here</span>
+                    </ng-template>
+
+                </nz-empty>
+            </ng-template>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+            
+            <span class="text-right">
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </ng-template>
+
+</div>

@@ -1,0 +1,29 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+booking-master-roll-filter-view {
+
+    .filter-view {
+        border-bottom: 2px solid rgba(240, 240, 240, 0.5);
+
+        .label {
+            font-size: 16;
+            padding-right: 16px;
+            color: rgba(34, 34, 34, 0.4);
+        }
+
+        .ant-tag {
+            font-size: 16px;
+            padding: 4px 8px;
+
+            &.no-action {
+                pointer-events: none;
+
+                i {
+                    display: none;
+                }
+            }
+        }
+    }
+    
+}

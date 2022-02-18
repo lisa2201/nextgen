@@ -1,0 +1,27 @@
+@import "src/@fuse/scss/fuse";
+
+.mat-menu-panel {
+    min-height: 50px;
+}
+
+.vertical-center-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .ant-modal {
+        top: 0;
+
+        .ant-modal-body {
+            padding: 32px !important;
+
+            .ant-modal-confirm-btns {
+                margin-top: 16px;;
+            }
+
+        }
+
+    }
+
+}
+

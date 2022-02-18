@@ -1,0 +1,29 @@
+<div id="manage-finance" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+    <div class="center">
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="start center">
+            <h1 [@animate]="{
+                    value: '*',
+                    params: { delay: '200ms', x: '-25px' }
+                }">
+                Finance Management
+            </h1>
+        </div>
+
+        <div class="content-card" [@animate]="{ value: '*', params: { delay: '200ms', y: '15px' } }">
+
+            <nav mat-tab-nav-bar>
+                <a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
+                    [active]="rla.isActive">
+                    {{link.label}}
+                </a>
+            </nav>
+
+            <div class="content">
+
+                <router-outlet></router-outlet>
+
+            </div>
+
+        </div>
+    </div>
+</div>

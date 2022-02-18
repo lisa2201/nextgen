@@ -1,0 +1,104 @@
+<div 
+    id="finance-account-payments" 
+    class="page-layout simple left-sidebar inner-sidebar inner-scroll" 
+    *canViewAuth
+    [@fadeInOnEnter] 
+    [@fadeOutOnLeave]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+    
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-15px' } }">Parent Payments</h1>
+
+        <span class="text-right" fxLayout="row" *hasPermission="['AC1']; belongsTo 'N43'">
+
+            <button
+                class="mr-8"
+                nz-button 
+                nzType="primary" 
+                (click)="syncPaymentStatus($event)"
+                [nzLoading]="syncLoader"
+                [@animate]="{ value:'*', params:{ delay: '100ms', x:'15px' } }">
+                <i nz-icon nzType="sync"></i>
+                Sync Payment Status
+            </button>
+
+            <button
+                class="mr-8"
+                nz-button 
+                nzType="primary" 
+                (click)="addManualPayment($event)"
+                [nzLoading]="manualLoader"
+                [@animate]="{ value:'*', params:{ delay: '100ms', x:'15px' } }">
+                <i nz-icon nzType="plus"></i>
+                Manual Payment
+            </button>
+
+            <button
+                *hasPermission="['AC1']; belongsTo 'N43'"
+                nz-button 
+                nzType="primary" 
+                (click)="openOneTimePaymentDialog($event)"
+                [nzLoading]="buttonLoader"
+                [@animate]="{ value:'*', params:{ delay: '100ms', x:'15px' } }">
+                <i nz-icon nzType="plus"></i>
+                One-time Scheduled Payment
+            </button>
+
+        </span>
+    
+        <!-- <ng-container *hasPermission="['AC1']; belongsTo 'N43'">
+    
+            <button 
+                nz-button 
+                nzType="primary" 
+                (click)="openOneTimePaymentDialog($event)"
+                [nzLoading]="buttonLoader"
+                [@animate]="{ value:'*', params:{ delay: '100ms', x:'15px' } }">
+                <i class="plus left icon pr-8"></i>
+                One-time Scheduled Payment
+            </button>
+    
+        </ng-container> -->
+    
+    </div>
+    <!-- / HEADER -->
+
+    <div class="p-24 pt-0">
+        <nz-alert nzType="info" [nzMessage]="infoMessage" nzShowIcon></nz-alert>
+    </div>
+
+    <div class="p-24 pt-0">
+        <nz-alert nzType="warning" [nzMessage]="warnMessage" nzShowIcon></nz-alert>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="finance-account-payments-sidebar" position="left">
+
+            <app-finance-account-payments-left-sidenav 
+                [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }" 
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+                (updateTableScroll)="updateScroll($event)">
+            </app-finance-account-payments-left-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <app-finance-account-payments-list-view 
+            class="center p-24 pt-0" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+            (updateTableScroll)="updateScroll($event)"
+            [@animate]="{ value:'*', params:{ delay: '200ms', x:'15px' } }">
+        </app-finance-account-payments-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

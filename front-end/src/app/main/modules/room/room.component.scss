@@ -1,0 +1,17 @@
+@import "src/@fuse/scss/fuse";
+
+#room {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .room-pagination{
+        text-align: right;
+    }
+    
+}

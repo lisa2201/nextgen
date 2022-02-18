@@ -1,0 +1,247 @@
+<!-- CONTENT TOOLBAR -->
+<div class="content" [@animate]="{ value:'*', params:{ delay: '100ms' } }">
+
+    <!-- CONTENT TOOLBAR -->
+    <div class="toolbar px-8 py-8 br-0" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span fxLayout="row" fxLayoutAlign="space-between center" fxHide.gt-md [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <button class="text-uppercase blank"
+                nz-button 
+                nzType="link"
+                (click)="toggleSidebar('users-card-filter-sidebar')">
+                <i class="filter icon"></i>
+            </button>
+    
+        </span>
+
+        <nz-input-group class="search-container"
+            [nzSuffix]="suffixTemplate" 
+            [nzPrefix]="prefixTemplate">
+            <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+        </nz-input-group>
+
+        <ng-template #prefixTemplate>
+            <i nz-icon nzType="search" class="search-icon"></i>
+        </ng-template>
+
+        <ng-template #suffixTemplate>
+            <i class="times circle outline icon ant-input-clear-icon"
+                *ngIf="searchInput.value" [@fadeInOnEnter] [@fadeOutOnLeave]
+                (click)="clearSearch($event)">
+            </i>
+        </ng-template>
+
+    </div>
+    <!-- / CONTENT TOOLBAR -->
+
+</div>
+<!-- / CONTENT TOOLBAR -->
+
+
+<!-- CONTENT CARD -->
+<div class="mt-16">
+
+    <nz-spin 
+        [nzIndicator]="indicatorTemplate"
+        [nzSpinning]="listViewLoading">
+
+        <nz-list 
+            class="list-view-pagination"
+            [nzNoResult]="emptyBlock"
+            [nzDataSource]="userList"
+            [nzRenderItem]="item" 
+            [nzPagination]="pagination"
+            [nzGrid]="{ gutter: 16, xs: 24, sm: 12, md: 10, lg: 8, xl: 8, xxl: 6 }">
+
+            <ng-template #item let-item let-index="index">
+
+                <nz-list-item [nzContent]="nzContent">
+
+                    <ng-template #nzContent>
+
+                        <nz-spin 
+                            [nzSpinning]="item.isLoading"
+                            [nzIndicator]="indicatorTemplate">
+
+                            <nz-card 
+                                [nzBordered]="false"
+                                [nzActions]="hasActionButton ? [actionEdit, actionResetPassword, actionDelete] : []"
+                                [@animate]="{ value:'*', params:{ delay: (item.isNew ? 100 : ((index + 1) * 100)) + 'ms', x: '-25px' } }">
+
+                                <div class="color-bar {{ item.status ? 'active' : 'inactive' }}"></div>
+
+                                <div class="image-container" fxLayout="row" fxLayoutAlign="center center">
+
+                                    <ng-container *ngIf="item.isAdministrator; else userImage">
+                                        <nz-badge [nzCount]="iconTemplate">
+                                            <img class="img-bg" src="{{ getStaffProfileImage(item) }}" alt="{{ item.getFullName() }}">
+                                        </nz-badge>
+                                    </ng-container>
+
+                                    <ng-template #userImage>
+                                        <img class="img-bg" src="{{ getStaffProfileImage(item) }}" alt="{{ item.getFullName() }}">
+                                    </ng-template>
+
+                                </div>
+
+                                <div class="text-content" fxLayout="column" fxLayoutAlign="center center">
+
+                                    <span class="name text-truncate">{{ item.getFullName() }}</span>
+
+                                    <span class="email text-truncate">{{ item.email }}</span>
+
+                                    <span class="roles text-truncate">
+                                        <span *ngFor="let data of item.roles; let isLast=last">
+                                            {{ data.display_name }}{{isLast ? '' : ', '}}
+                                        </span>
+                                    </span>                                       
+
+                                    <span class="pincode text-truncate" *ngIf="item.pincode">Pincode: {{item.pincode}}</span>
+
+                                </div>
+
+                                <div class="text-center mt-8"
+                                    *hasPermission="['AC1']; belongsTo 'N04'">
+
+                                    <nz-switch 
+                                        [(ngModel)]="item.status"
+                                        [nzControl]="true"
+                                        (click)="updateStatus(item, index, $event)"
+                                        [nzLoading]="item.statusLoading"
+                                        nzCheckedChildren="Active" 
+                                        nzUnCheckedChildren="Inactive"></nz-switch>
+
+                                    <ng-container *hasPermission="['AC2']; belongsTo 'N04'">
+                                        <sync-kinder-connect-profile [id]="item.id" [type]="'user'"></sync-kinder-connect-profile>
+                                    </ng-container>
+                                </div>
+
+                            </nz-card>
+
+                            <ng-template #actionEdit>
+                                <span class="pr-8 pl-8"
+                                    (click)="edit(item, $event)"
+                                    *hasPermission="['AC1']; belongsTo 'N04'">
+                                    <i class="edit outline icon primary-color"></i>
+                                </span>
+                            </ng-template>
+
+                            <ng-template #actionResetPassword>
+                                <span class="pr-8 pl-8"
+                                    (click)="resetPassword($event, item)"
+                                    *hasPermission="['AC1']; belongsTo 'N04'">
+                                    <i class="unlock alternate icon primary-color"></i>
+                                </span>
+                            </ng-template>
+
+                            <ng-template #actionDelete>
+                                <span class="pr-8 pl-8" 
+                                    (click)="delete(item, $event)" 
+                                    *hasPermission="['AC3']; belongsTo 'N04'">
+                                    <i class="trash alternate outline icon danger-color"></i>
+                                </span>
+                            </ng-template>
+
+                        </nz-spin>
+
+                        <ng-template #indicatorTemplate>
+                            <div class="is-loading">
+                                <span class="btn-spinner card-loader"></span>
+                            </div>
+                        </ng-template>
+
+                    </ng-template>
+
+                </nz-list-item>
+
+            </ng-template>
+
+        </nz-list>
+
+    </nz-spin>
+
+    <ng-template #iconTemplate>
+        <i nz-icon nzType="safety-certificate" nzTheme="fill" class="ant-scroll-number-custom-component administrator"></i>
+    </ng-template>
+
+    <!-- PAGINATION VIEW -->
+    <ng-template #pagination>
+        <nz-pagination
+            *ngIf="total > 0"
+            [nzShowSizeChanger]="pageSizeChanger"
+            [nzTotal]="total"
+            [(nzPageIndex)]="pageIndex"
+            [(nzPageSize)]="pageSize"
+            [nzPageSizeOptions]="pageSizeOptions"
+            [nzShowTotal]="totalTemplate"
+            [nzSimple]="mobilePagination"
+            (nzPageIndexChange)="onPaginationChange()"
+            (nzPageSizeChange)="onPaginationChange(true)"></nz-pagination>
+    </ng-template>
+    <!-- / PAGINATION VIEW -->
+
+    <!-- TOTAL LABEL VIEW -->
+    <ng-template #totalTemplate let-range="range" let-total>
+        <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ range[0] }} to {{ range[1] }} of {{ total }} entries</span>
+        <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} - {{ range[1] }} of {{ total }} entries</span>
+    </ng-template>
+    <!-- / TOTAL LABEL VIEW -->
+
+    <!-- LOADER VIEW -->
+    <ng-template #indicatorTemplate>
+        <div class="is-loading">
+            <span class="btn-spinner card-loader"></span>
+        </div>
+    </ng-template>
+    <!-- / LOADER VIEW -->
+
+    <!-- EMPTY VIEW -->
+    <ng-template #emptyBlock>
+
+        <nz-empty 
+            class="mb-16" 
+            [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+            [nzNotFoundContent]="contentTpl" 
+            [nzNotFoundFooter]="footerTpl"
+            [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <ng-template #contentTpl>
+
+                <h4 class="mt-24">No Data Found</h4>
+
+                <ng-container *ngIf="filterValue !== null && total > 1; else showButton">
+                    <span>Looks like there's no information to display here</span>
+                </ng-container>
+
+                <ng-template #showButton>
+                    <span *hasPermission="['AC0', 'AC1']; belongsTo 'N09'; else emptyDesc">Please click on below button to send invitations</span>
+                    <ng-template #emptyDesc>
+                        <span>Looks like there's no information to display here</span>
+                    </ng-template>
+                </ng-template>
+                
+            </ng-template>
+
+            <ng-template #footerTpl>
+
+                <ng-container *ngIf="filterValue === null && total < 1">
+
+                    <button *hasPermission="['AC0', 'AC1']; belongsTo 'N09'" class="text-uppercase"
+                        nz-button 
+                        nzType="primary" 
+                        (click)="goToInvitation($event)">
+                        <i class="paper plane icon mr-8"></i> Go To Invitation
+                    </button>
+
+                </ng-container>
+
+            </ng-template>
+
+        </nz-empty>
+
+    </ng-template>
+    <!-- / EMPTY VIEW -->
+
+</div>
+<!-- / CONTENT CARD -->

@@ -1,0 +1,197 @@
+<!-- CONTENT CARD -->
+<div class="content" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+    <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <button class="text-uppercase blank mr-8" 
+            nz-button nzType="link" 
+            (click)="toggleSidebar('fees-sidebar')">
+            <i class="filter icon"></i>
+        </button>
+        
+        <nz-input-group class="search-container" [nzSuffix]="suffixTemplate" [nzPrefix]="prefixTemplate">
+            <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+        </nz-input-group>
+
+        <ng-template #prefixTemplate>
+            <i nz-icon nzType="search" class="search-icon"></i>
+        </ng-template>
+
+        <ng-template #suffixTemplate>
+            <i class="times circle outline icon ant-input-clear-icon" *ngIf="searchInput.value" [@fadeInOnEnter]
+                [@fadeOutOnLeave] (click)="clearSearch($event)">
+            </i>
+        </ng-template>
+
+    </div>
+
+    <ng-container>
+
+        <nz-table #headerTable 
+            [nzData]="feesList" 
+            [nzScroll]="{ x: '1500px' }" 
+            [nzNoResult]="emptyBlock"
+            [nzLoading]="tableLoading" 
+            [nzLoadingIndicator]="indicatorTemplate"
+            [nzShowPagination]="true"
+            [nzShowSizeChanger]="pageSizeChanger"
+            [nzShowTotal]="totalTemplate"
+            [nzFrontPagination]="false"
+            [nzTotal]="total"
+            [(nzPageIndex)]="pageIndex"
+            [(nzPageSize)]="pageSize"
+            [nzPageSizeOptions]="pageSizeOptions"
+            (nzPageIndexChange)="onTableChange()"
+            (nzPageSizeChange)="onTableChange(true)"
+            [nzSimple]="mobilePagination">
+
+            <thead>
+                <tr>
+                    <th nzWidth="150px" nzLeft="0px">Name</th>
+                    <th nzWidth="150px">Type</th>
+                    <th nzWidth="150px">Frequency</th>
+                    <th nzWidth="150px">Amount</th>
+                    <th nzWidth="150px">Upcoming Adjusted</th>
+                    <th nzWidth="150px">Room</th>
+                    <th nzWidth="150px">Session Time</th>
+                    <th nzWidth="150px">Vendor Name</th>
+                    <th nzWidth="150px">Status</th>
+                    <th nzWidth="100px" nzRight="0px">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let item of headerTable.data">
+                    <td nzBreakWord nzWidth="150px" nzLeft="0px">{{ item.name }}</td>
+                    <td nzBreakWord>{{ item.getType() }}</td>
+                    <td nzBreakWord>{{ item.getFrequency() }}</td>
+                    <td nzBreakWord>
+                        <p *ngIf="item.getCurrentAdjusted() else defaultAmount" class="success-color">
+                            {{ item.getCurrentAdjusted().netAmount | currency: client.currency :'symbol':'1.2-2' }} <br/>
+                            <span class="font-size-13 font-weight-600">({{ item.getCurrentAdjusted().effectiveDate | SetGlobalDTFormat:true:false }})</span>
+                        </p>
+                        <ng-template #defaultAmount>{{ item.netAmount | currency: client.currency :'symbol':'1.2-2' }}</ng-template>
+                    </td>
+                    <td nzBreakWord>
+                        <p *ngIf="item.getFutureAdjusted() else naBlock" class="primary-color">
+                            {{ item.getFutureAdjusted().netAmount | currency: client.currency :'symbol':'1.2-2' }} <br/>
+                            <span class="font-size-13 font-weight-600">({{ item.getFutureAdjusted().effectiveDate | SetGlobalDTFormat:true:false }})</span>
+                        </p>
+                    </td>
+                    <td nzBreakWord [ngStyle]="{ 'white-space': 'pre' }">{{ item.getRooms() }}</td>
+                    <td nzBreakWord>
+                        <ng-container *ngIf="item.sessionStart && item.sessionEnd; else naBlock">
+                            {{ item.sessionStart | convertTimeString }} - {{ item.sessionEnd | convertTimeString }}
+                        </ng-container>
+                    </td>
+                    <td nzBreakWord>{{ item.getVendor() }}</td>
+                    <td nzBreakWord> 
+                        <span [innerHTML]="item.getExpiredLabel()"></span>
+                        <span>{{  item.archivedDate |date:"dd-MM-yyyy" }}</span>
+                    </td>
+                    <td nzBreakWord nzWidth="100px" nzRight="0px" class="tbl-style">
+
+                        <button 
+                            nz-button 
+                            nzType="link" 
+                            nzSize="large" 
+                            [matMenuTriggerFor]="menu">
+                            <i class="ellipsis vertical icon"></i>
+                        </button>
+
+                        <mat-menu #menu="matMenu" backdropClass="tlp-more">
+                            <ng-container>
+                                <button mat-menu-item *hasPermission="['AC2']; belongsTo 'N24'"
+                                    (click)="editDialog(item, $event,'EDIT')">
+                                    <i class="edit outline icon primary-color"></i>
+                                    <span class="font-weight-600">Edit</span>
+                                </button>
+                            </ng-container>
+
+                            <ng-container>
+                                <button mat-menu-item *hasPermission="['AC8']; belongsTo 'N24'"
+                                    (click)="editDialog(item, $event,'ADJUST')">
+                                    <i class="exchange alternate icon primary-color"></i>
+                                    <span class="font-weight-600">Adjust</span>
+                                </button>
+                            </ng-container>
+
+                            <ng-container *ngIf="item.status =='0'">
+                                <button mat-menu-item *hasPermission="['AC9']; belongsTo 'N24'"
+                                    (click)="setStatus(item, $event)">
+                                    <i class="archive icon primary-color"></i>
+                                    <span class="font-weight-600">Archive</span>
+                                </button>
+                            </ng-container>
+
+                            <ng-container *ngIf="item.status =='1'">
+                                <button mat-menu-item *hasPermission="['AC9']; belongsTo 'N24'"
+                                    (click)="setStatus(item, $event)">
+                                    <i class="redo icon primary-color"></i>
+                                    <span class="font-weight-600">Restore</span>
+                                </button>
+                            </ng-container>
+
+                            <ng-container *ngIf="item.editable">
+                                <button mat-menu-item (click)="delete(item,$event)"
+                                    *hasPermission="['AC3']; belongsTo 'N24'">
+                                    <i class="trash alternate outline icon danger-color"></i>
+                                    <span class="font-weight-600">Delete</span>
+                                </button>
+                            </ng-container>
+
+                            <ng-container>
+                                <button mat-menu-item (click)="showData(item,$event)">
+                                    <i class="history icon primary-color"></i>
+                                    <span class="font-weight-600">History</span>
+                                </button>
+                            </ng-container>
+
+                        </mat-menu>
+                    </td>
+                </tr>
+            </tbody>
+
+        </nz-table>
+
+        <ng-template #naBlock>N/A</ng-template> 
+
+        <!-- LOADER VIEW -->
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+        <!-- / LOADER VIEW -->
+
+        <!-- TOTAL LABEL VIEW -->
+        <ng-template #totalTemplate let-range="range" let-total>
+            <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ range[0] }}
+                to
+                {{ range[1] }} of {{ total }} entries</span>
+            <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} -
+                {{ range[1] }} of
+                {{ total }} entries</span>
+        </ng-template>
+        <!-- / TOTAL LABEL VIEW -->
+
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+
+    </ng-container>
+
+</div>
+<!-- / CONTENT CARD -->

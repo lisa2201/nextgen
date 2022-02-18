@@ -1,0 +1,38 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+import-bookings-list-view {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .booking-list {
+
+        .ant-list-item {
+
+            .ant-table-content {
+                min-height: auto;
+                margin: 0;
+                overflow: hidden;
+            }
+        
+            .status-check {
+                width: 36px;
+                margin-left: 8px;
+                margin-right: -8px;
+                font-size: 28px;
+                display: flex;
+                align-items: self-end;
+                justify-content: center;
+                min-width: 24px;
+            }
+    
+        }
+    }
+
+}

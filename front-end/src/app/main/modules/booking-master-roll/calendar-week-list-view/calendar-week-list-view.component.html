@@ -1,0 +1,147 @@
+<div class="loading-bar" *ngIf="weekCalendarLoading" [@fadeMotion]>
+    <div class="__inner">
+        <img src="assets/loading/gears_c1.svg">
+        <span>Loading! Please Wait...</span>
+    </div>
+</div>
+
+<!-- CONTENT TOOLBAR -->
+<div class="toolbar">
+
+    <div class="px-24 pt-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span></span>
+
+        <span class="week-title">
+
+            <button type="button" class="b-nav blank mr-8"
+                nz-button 
+                nzType="default"
+                (click)="calendarPrevious($event)">
+                <i class="chevron left icon"></i>
+            </button>
+            
+            <span class="date-input-wrapper" (click)="toggleCalendar($event)">
+
+                <span class="date-label">
+                    <img src="assets/icons/flat/ui_set/custom_icons/child/calendar.svg" alt="date">
+                    <span class="text">
+                        <p class="sub">{{ getCalendarTitle().week }}</p>
+                        <p class="big">Week {{ getCalendarTitle().weekNumber }}</p>
+                    </span>
+                </span>
+
+                <span #weekPicker>
+                    <nz-week-picker class="date-input"
+                        [formControl]="calendarWeek"
+                        [nzInputReadOnly]="true"
+                        nzPlaceHolder="select week"></nz-week-picker>
+                </span>                    
+                
+            </span>
+
+            <button type="button" class="b-nav blank ml-8"
+                nz-button 
+                nzType="default"
+                (click)="calendarNext($event)">
+                <i class="chevron right icon"></i>
+            </button>
+
+        </span>
+
+        <span fxLayout="row" fxLayoutAlign="center center">
+
+            <button class="text-uppercase blank mr-8"
+                [ngClass]="{ 'active' : hideBookingInfo }"
+                nz-button 
+                nzType="link"
+                tooltip="hide booking view" placement="bottom" display-mobile="false" hide-delay="50"
+                (click)="toggleBookingDetails($event)">
+                <i class="window minimize icon"></i>
+            </button>
+
+            <button class="text-uppercase blank"
+                nz-button 
+                nzType="link"
+                [ngClass]="{ 'active' : isFilterOn }"
+                (click)="toggleSidebar('master-roll-calendar-list-view-filter-sidebar')">
+                <i class="filter icon"></i>
+            </button>
+
+            <button class="text-uppercase blank"
+                nz-button 
+                nzType="link"
+                (click)="clearFilter($event)"
+                *ngIf="isFilterOn" [@fadeMotion]>
+                <i class="times icon" [ngStyle]="{'font-size': '20px'}"></i>
+            </button>
+
+        </span>
+
+    </div>
+
+    <nz-divider nzText="Daily Bookings" nzOrientation="left" class="mt-4 mb-0"></nz-divider>
+
+    <booking-master-roll-filter-view 
+        [isFilterOn]="filterFormChanged"
+        [filterData]="filterBy"
+        [filterDefaultValues]="defaultFilterValues"
+        [fees]="fees"
+        [children]="children"
+        [rooms]="rooms"
+        [cssClass]="'mt-16'">
+    </booking-master-roll-filter-view>
+
+</div>
+<!-- / CONTENT TOOLBAR -->
+
+<div class="content" 
+    fusePerfectScrollbar
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+    [@animate]="{ value:'*', params:{ delay: '200ms', y:'15px' } }">
+
+    <div class="tab-view">
+
+        <nz-tabset
+            [nzSize]="'large'"
+            (nzSelectedIndexChange)="onTabChange($event)">
+        
+            <nz-tab class="tab-wrapper" 
+                [nzTitle]="tabTitle" 
+                *ngFor="let bookingItem of bookingCalendar; trackBy: trackByFn;" [@fadeMotion]>
+
+                <ng-template nz-tab>
+
+                    <booking-master-roll-calendar-week-list-tab-view 
+                        [bookingItem]="bookingItem"
+                        [hideBookingInfo]="hideBookingInfo"
+                        [filterBy]="filterBy"
+                        (fetchBookings)="fetchBookings($event)">
+                    </booking-master-roll-calendar-week-list-tab-view>
+
+                </ng-template>
+
+                <ng-template #tabTitle>
+                    <div class="tab-title no-select" fxLayout="column" fxLayoutAlign="center center">
+                        <span class="day">{{ bookingItem.day }}</span>
+                        <span class="date">{{ bookingItem.date | formatMoment: 'YYYY-MM-DD' }}</span>
+                    </div>
+                </ng-template>
+
+            </nz-tab>
+
+        </nz-tabset>
+
+    </div>
+    
+</div>
+
+<!-- SIDEBAR -->
+<fuse-sidebar class="sidebar"
+    name="master-roll-calendar-list-view-filter-sidebar"
+    position="right">
+
+    <manage-master-roll-calender-list-view-filter [@animate]="{ value:'*', params:{ delay: '200ms', x:'30px' } }"></manage-master-roll-calender-list-view-filter>
+
+</fuse-sidebar>
+<!-- / SIDEBAR -->

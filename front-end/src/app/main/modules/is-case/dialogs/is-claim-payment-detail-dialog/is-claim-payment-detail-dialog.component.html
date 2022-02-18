@@ -1,0 +1,56 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Payment Detail</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <nz-descriptions nzBordered [nzColumn]="{ xxl: 2, xl: 2, lg: 2, md: 1, sm: 1, xs: 1 }">
+                <nz-descriptions-item nzTitle="Case ID">{{ payment.CaseId }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Case Claim ID">{{ payment.CaseClaimId }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Payment Line Item ID">{{ payment.PaymentLineItemId }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Clearing Number">{{ payment.ClearingNumber }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Payee ID">{{ payment.PayeeId }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Financial Year">{{ payment.FinancialYear }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Date Paid">{{ payment.DatePaid }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Processing Date">{{ payment.ProcessingDate }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Invoice Number">{{ payment.InvoiceNumber }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Payment Type">{{ payment.PaymentType }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Remittance Description">{{ payment.RemittanceDescription }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="GST Exclusive Amount">{{ payment.GSTExclusiveAmount | currency:'AUD' }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="GST Inclusive Amount">{{ payment.GSTInclusiveAmount | currency:'AUD' }}</nz-descriptions-item>
+                <nz-descriptions-item nzTitle="Payment/Refund">{{ payment.PaymentOrRefund }}</nz-descriptions-item>
+            </nz-descriptions>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+</div>

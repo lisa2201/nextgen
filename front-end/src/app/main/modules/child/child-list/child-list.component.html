@@ -1,0 +1,170 @@
+<div class="child-list-top-panel" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <span>
+        <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ paginationMeta?.from || '0' }} to {{ paginationMeta?.to || '0' }} of {{ total }} entries</span>
+        <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ paginationMeta?.from || '0' }} - {{ paginationMeta?.to || '0' }} of {{ total }} entries</span>
+    </span>
+
+    <span>
+
+        <nz-button-group>
+
+            <button nz-button 
+                [disabled]="childrenList.length === 0 || pageIndex === 1 || detailContentLoading"
+                (click)="previousPage($event)">
+                <i class="chevron left icon b-i"></i>
+            </button>
+
+            <button nz-button 
+                [disabled]="childrenList.length === 0 || pageIndex === getLastIndex || detailContentLoading"
+                (click)="nextPage($event)">
+                <i class="chevron right icon b-i"></i>
+            </button>
+            
+        </nz-button-group>
+
+    </span>
+
+</div>
+
+<div class="child-list" 
+    fusePerfectScrollbar 
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <nz-list 
+        class="list-view-pagination"
+        [nzNoResult]="emptyBlock"
+        [nzDataSource]="childrenList"
+        [nzRenderItem]="item"
+        [nzItemLayout]="'horizontal'">
+    
+        <ng-template #item let-item let-index="index">
+
+            <nz-list-item 
+                class="list-view-item {{ 'cl-' + item.attrId }}"
+                (click)="getChild($event, item.id)"
+                [ngClass]="{ 'current-item': item?.id == currentChild?.id, 'block-container': detailContentLoading }">
+
+                <nz-skeleton 
+                    [nzAvatar]="true" 
+                    [nzActive]="true" 
+                    [nzTitle]="false" 
+                    [nzParagraph]="{ rows: 3 }"
+                    [nzLoading]="listViewLoading">
+
+                    <div fxLayout="row" fxLayoutAlign="space-between center">
+
+                        <nz-list-item-meta 
+                            [nzAvatar]="nzAvatar"
+                            [nzTitle]="nzTitle"
+                            [nzDescription]="nzDescription">
+
+                            <ng-template #nzAvatar>
+
+                                <nz-avatar 
+                                    [nzSize]="56" 
+                                    nzSrc="{{ getChildProfileImage(item) }}"
+                                    class="child-list-img img-bg"></nz-avatar>
+                                
+                            </ng-template>
+
+                            <ng-template #nzTitle>
+
+                                <h4 class="child-list-title text-truncate">{{ item.getShortName() }}</h4>
+
+                            </ng-template>
+
+                            <ng-template #nzDescription>
+
+                                <p class="m-0 d-in-blk danger-button-style border-radius-16 px-8 py-2" *ngIf="item.isWaitList()">Waitlist</p>
+
+                                <p class="m-0">
+                                    <span class="font-weight-600">Date of Birth</span>: 
+                                    {{ item.dob }}
+                                </p>   
+
+                                <p class="m-0">
+                                    <span class="font-weight-600">Age</span>: 
+                                    {{ item.age }}
+                                </p>  
+
+                                <p class="my-4" *ngIf="item.getEnrolment()">
+                                    <span class="status mr-8">{{ item.getEnrolment().arrangementType || 'N/A' }}</span> 
+                                    <span class="status {{ getEnrolmentClassName(item) }}">
+                                        <ng-container *ngIf="item.getEnrolment().hasError(); else elseBlock">CCS Error</ng-container>
+                                        <ng-template #elseBlock>{{ item.getEnrolment().statusLabel }}</ng-template>
+                                    </span>
+                                </p>
+
+                                <!-- <ul class="status-icons-bar mt-8">
+                                    <li>
+                                        <span tooltip="{{ item.isActive() ? 'Active' : 'Inactive' }}" display-mobile="false" hide-delay="50">
+                                            <img 
+                                                [ngStyle]="!item.isActive() && { 'padding': '3px' }" 
+                                                src="assets/icons/flat/ui_set/custom_icons/child/{{ (item.isActive()) ? 'tick' : 'cross' }}.svg" alt="status">
+                                        </span>    
+                                    </li>
+                                    <li *ngIf="item.nappyRequired">
+                                        <span tooltip="Nappy Change" display-mobile="false" hide-delay="50">
+                                            <img src="assets/icons/flat/ui_set/custom_icons/child/baby-changing.svg" alt="nappy change">
+                                        </span>    
+                                    </li>
+                                    <li *ngIf="item.bottleFeedRequired">
+                                        <span tooltip="Bottle Feed" display-mobile="false" hide-delay="50">
+                                            <img src="assets/icons/flat/ui_set/custom_icons/child/bottle-feed.svg" alt="bottle feed">
+                                        </span>    
+                                    </li>
+                                    <li *ngIf="item.hasAllergiesMedications">
+                                        <span tooltip="Allergies/Medications" display-mobile="false" hide-delay="50">
+                                            <img src="assets/icons/flat/ui_set/custom_icons/child/pills.svg" alt="allergies/medications">
+                                        </span>    
+                                    </li>
+                                </ul> -->
+
+                            </ng-template>
+
+                        </nz-list-item-meta>
+
+                        <button class="text-uppercase blank arrow-key"
+                            fxHide.gt-sm
+                            nz-button nzType="link">
+                            <i class="chevron right icon"></i>
+                        </button>
+
+                    </div>
+
+                </nz-skeleton>
+                
+            </nz-list-item>
+
+        </ng-template>
+
+    </nz-list>
+
+    <!-- LOADER VIEW -->
+    <ng-template #indicatorTemplate>
+        <div class="is-loading">
+            <span class="btn-spinner card-loader"></span>
+        </div>
+    </ng-template>
+    <!-- / LOADER VIEW -->
+
+    <!-- EMPTY VIEW -->
+    <ng-template #emptyBlock>
+
+        <nz-empty class="pt-24 pb-24 m-0"
+            [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+            [nzNotFoundContent]="contentTpl"
+            [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <ng-template #contentTpl>
+                <h4 class="mt-24">No Data Found</h4>
+                <span>Looks like there's no information to display here</span>
+            </ng-template>
+
+        </nz-empty>
+
+    </ng-template>
+    <!-- / EMPTY VIEW -->
+
+</div>

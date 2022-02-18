@@ -1,0 +1,73 @@
+<!-- CONTENT CARD -->
+<div class="content" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+    <ng-container>
+
+        <nz-table 
+            #headerTable 
+            [nzFrontPagination]="true"
+            [nzShowPagination]="true"
+            [nzData]="services"
+            [nzNoResult]="emptyBlock"
+            [nzLoading]="isLoading"
+            [nzLoadingIndicator]="indicatorTemplate">
+
+            <thead>
+                <tr>
+                    <th>Service ID</th>
+                    <th>Service Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <ng-template ngFor let-data [ngForOf]="headerTable.data" let-i="index" [ngForTrackBy]="trackByFn">
+
+                    <tr>
+                        <td>{{ data?.service_id }}</td>
+                        <td>{{ data?.service_name }}</td>
+                        <td>
+                            <span class="mr-16 action-icon" (click)="pingCCMS(data.service_id)">
+                                <i nz-tooltip nzTooltipTitle="Ping CCMS" class="handshake outline icon primary-color"></i>
+                            </span>
+    
+                            <span class="mr-16 action-icon" (click)="CCMSAuth(data.service_id , data)">
+                                <i nz-tooltip nzTooltipTitle="Change CCMS Credentials" class="key icon primary-color"></i>
+                            </span>
+                        </td>
+                    </tr>
+
+                </ng-template>
+                
+            </tbody>
+        </nz-table>
+
+        <!-- LOADER VIEW -->
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+        <!-- / LOADER VIEW -->
+
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+
+    </ng-container>
+
+</div>
+<!-- / CONTENT CARD -->

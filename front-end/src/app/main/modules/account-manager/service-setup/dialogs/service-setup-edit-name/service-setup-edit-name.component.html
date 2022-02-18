@@ -1,0 +1,78 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Edit Name </span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="providerForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'"
+        [formGroup]="serviceForm" nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <nz-form-item>
+                <nz-form-label nzRequired>Name</nz-form-label>
+    
+                <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl" class="ant-form-flex">
+                    <input nz-input formControlName="name" placeholder="buisness name" type="text" />
+    
+                    <ng-template #emailErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input your service name</ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                <nz-form-label nzRequired>Effective Date</nz-form-label>
+    
+                <nz-form-control nzHasFeedback [nzErrorTip]="dateErrorTpl">
+    
+                    <nz-date-picker formControlName="sdate" [nzInputReadOnly]="true"
+                        nzPlaceHolder="effective date" class="block"></nz-date-picker>
+                    <ng-template #dateErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please select the date
+                        </ng-container>
+                    </ng-template>
+    
+                </nz-form-control>
+    
+            </nz-form-item>
+
+            
+
+        </div>
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8" nz-button
+                    nzType="primary" [disabled]="!serviceForm.valid" [promiseBtn]="buttonLoading">
+                    <i class="plus icon mr-8"></i> Save
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

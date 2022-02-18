@@ -1,0 +1,102 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+ccs-care-provided-vacancy{
+    #care_provided_vacancy{
+
+        .section-name{
+            font-weight: 500;
+            font-size: 18px;
+            margin: 43px 0 25px 0;
+            text-align: left;
+            display: block;
+            border-bottom: 1px solid #f5f5f5;
+            margin-left: 10px;
+
+        }
+
+        #care_provided_vacancy_wrapper{
+            
+            padding: 25px;
+
+            .content{
+                padding:25px;
+                background: white;
+            }
+
+            .single_fee_detail{
+                border: #d6d6c2 1px solid;
+                margin: 3px;
+            }
+
+            .delete_btn_row{
+                padding-top: 10px;
+            }
+
+            .delete_btn{
+                float: right;
+            }
+
+            .service_delete{
+                margin-top:35px;
+            }
+
+            #vacancy_day{
+                padding-top: 15px;
+                padding-bottom: 15px;
+            }
+
+            .available_places{
+                height:31px !important;
+                width:50px;
+            }
+
+            .submit_button{
+                float: right;
+                margin-top: 35px !important;
+                margin-right: 20px !important;
+            }
+
+            .navigation_button{
+                margin-top: 35px !important;
+            }
+
+            .date-input-wrapper {
+                position: relative;
+                cursor: grab;
+
+                #calander-img{
+                    position: absolute;
+                    opacity: 0.5;
+                }
+
+                #calander-date{
+                    position: relative;
+                    padding: 5px;
+                    font-size: 27px;
+                }
+
+                .date-input {
+                    position: absolute;
+                    z-index: 1;
+                    visibility: hidden;
+                    width: calc(100% + 40px);
+                    left: -20px;
+
+                    @media screen and (max-width: 599px) {
+                        width: calc(100% + 72px);
+                        left: -40px;
+                    }
+
+                }
+ 
+            }
+
+            // table{
+            //     font-size: 12px;
+            // }
+
+        }
+    }
+    
+}

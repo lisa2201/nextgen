@@ -1,0 +1,201 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+app-payment-register {
+
+    #subscription-payment {
+        width: 100%;
+        // background: #1d8deb;
+        // background-image: linear-gradient(-152deg, #377FEA 1%, #009fe9 65%);
+        // background-size: cover;
+
+        #subscription-payment-wrapper {
+            flex: 1 0 auto;
+            padding: 32px;
+
+            @include media-breakpoint('xs') {
+                padding: 16px;
+            }
+
+            #payment-form {
+
+                text-align: center;
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: $custom-box-shadow-high;
+                // @include mat-elevation(8);
+
+                @include media-breakpoint('xl') {
+                    padding: 34px;
+                    width: 640px;
+                }
+
+                @include media-breakpoint('lg') {
+                    padding: 32px;
+                    width: 640px;
+                }
+
+                @include media-breakpoint('md') {
+                    padding: 30px;
+                    width: 640px;
+                }
+
+                @include media-breakpoint('sm') {
+                    padding: 28px;
+                    width: 80%;
+                }
+
+                @include media-breakpoint('xs') {
+                    padding: 26px;
+                    width: 100%;
+                }
+
+                .logo {
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 64px;
+                    overflow: hidden;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 15;
+
+                    img {
+                        max-width: 150px;
+                        margin-top: -5px;
+                    }
+                }
+
+                .title {
+                    font-size: 20px;
+                    margin: 16px 0 32px 0;
+                }
+
+                form {
+                    width: 100%;
+                    text-align: left;
+
+                    input[type=number]::-webkit-inner-spin-button, 
+                    input[type=number]::-webkit-outer-spin-button { 
+                        -webkit-appearance: none; 
+                        margin: 0; 
+                    }
+
+                    nz-form-label {
+                        label {
+                            color: #353535d9;
+                        }
+                    }
+
+                    .copyright {
+                        text-align: center;
+                        color: dimgray;
+                    }
+
+                    .visa {
+                        background-image: url('assets/images/payment_types/flat/visa.svg');
+                        background-repeat: no-repeat;
+                        background-position: right;
+                        background-size: 35px;
+                    }
+
+                    .mastercard {
+                        background-image: url('assets/images/payment_types/flat/mastercard.svg');
+                        background-repeat: no-repeat;
+                        background-position: right;
+                        background-size: 35px;
+                    }
+
+                    .mastercard {
+                        background-image: url('assets/images/payment_types/flat/mastercard.svg');
+                        background-repeat: no-repeat;
+                        background-position: right;
+                        background-size: 35px;
+                    }
+
+                    .maestro {
+                        background-image: url('assets/images/payment_types/flat/maestro.svg');
+                        background-repeat: no-repeat;
+                        background-position: right;
+                        background-size: 35px;
+                    }
+
+                    .amex {
+                        background-image: url('assets/images/payment_types/flat/amex.svg');
+                        background-repeat: no-repeat;
+                        background-position: right;
+                        background-size: 35px;
+                    }
+
+                    .dinersclub {
+                        background-image: url('assets/images/payment_types/flat/diners.svg');
+                        background-repeat: no-repeat;
+                        background-position: right;
+                        background-size: 35px;
+                    }
+
+                    .discover {
+                        background-image: url('assets/images/payment_types/flat/discover.svg');
+                        background-repeat: no-repeat;
+                        background-position: right;
+                        background-size: 35px;
+                    }
+
+                    .unionpay {
+                        background-image: url('assets/images/payment_types/flat/unionpay.svg');
+                        background-repeat: no-repeat;
+                        background-position: right;
+                        background-size: 35px;
+                    }
+
+                    .jcb {
+                        background-image: url('assets/images/payment_types/flat/jcb.svg');
+                        background-repeat: no-repeat;
+                        background-position: right;
+                        background-size: 35px;
+                    }
+
+                    .hidden {
+                        display: none;
+                    }
+                    
+                    .ant-radio-wrapper {
+
+                        span {
+                            text-transform: none;
+                        }
+
+                        .label {
+                            text-transform: none;
+                        }
+                        
+                    }
+
+                    .ezidebit-instruction {
+                        background-color: #d3d3d359;
+                        padding: 20px;
+                        border-radius: 10px;
+
+                        p {
+                            text-align: center;
+                            font-size: 14px;
+                            font-weight: 700;
+                        }
+
+                        .ant-form-item {
+                            margin: 0px;
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+}

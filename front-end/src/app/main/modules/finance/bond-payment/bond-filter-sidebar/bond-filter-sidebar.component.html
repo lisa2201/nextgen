@@ -1,0 +1,103 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32" style="padding-top: 32px !important;">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0">
+
+    <form fxLayout="column" fxFlex [formGroup]="filterForm">
+
+        <div class="mb-16">
+
+            <label class="filter-label">Date</label>
+
+            <nz-date-picker [nzInputReadOnly]="true" [nzAllowClear]="true" class="block" nzPlaceHolder="Date" nzSize="small"
+                nzAllowClear="false" formControlName="date"></nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Parent</label>
+            <nz-select [nzAllowClear]="true" nzShowSearch formControlName="user" nzMode="default" nzPlaceHolder="Parent">
+
+                <nz-option *ngFor="let item of userList" nzValue="{{ item.id }}" nzLabel="{{ item.getFullName() }}">
+                </nz-option>
+
+            </nz-select>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Child</label>
+            <nz-select [nzAllowClear]="true"  nzShowSearch formControlName="child" nzMode="default" nzPlaceHolder="Child"
+            [nzDisabled]="selectedChild.length < 1">
+
+                <nz-option *ngFor="let item of selectedChild" nzValue="{{ item.id }}" nzLabel="{{ item.getFullName()}}">
+                </nz-option>
+
+            </nz-select>
+
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Type</label>
+            <nz-select [nzAllowClear]="true" formControlName="type" nzMode="default" nzPlaceHolder="Type">
+
+                <nz-option *ngFor="let item of bondType" nzValue="{{ item.value }}" nzLabel="{{ item.lable }}">
+                </nz-option>
+
+            </nz-select>
+
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Amount</label>
+            <input nz-input formControlName="amount" placeholder="Amount" type="text" />
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Comments</label>
+            <input nz-input formControlName="comments" placeholder="Comments" type="text" />
+
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Parent Status</label>
+        
+            <nz-radio-group formControlName="parent_status">
+        
+                <label nz-radio nzValue="all" class="_filter">All</label>
+                <label nz-radio nzValue="0" class="_filter">Active</label>
+                <label nz-radio nzValue="1" class="_filter">Inactive</label>
+        
+            </nz-radio-group>
+        
+        </div>
+
+        <nz-button-group class="filter-action px-24 py-16">
+
+            <button nz-button 
+                (click)="clearFilter($event)" 
+                [disabled]="checkClearFilter()">Clear</button>
+        
+            <button nz-button nzType="primary" 
+                [promiseBtn]="buttonLoader"
+                (click)="submitFilter($event)">Filter</button>
+        
+        </nz-button-group>
+
+    </form>
+
+</div>
+<!-- / SIDEBAR CONTENT -->

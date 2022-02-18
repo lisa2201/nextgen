@@ -1,0 +1,134 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.parent-bulk-invitation {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 759px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+        .filtersdiv{
+            padding: 20px 0 30px 25px;
+            height:30px;
+        }
+
+        .loginaccess-filter{
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .help-panel {
+            display: flex;
+            width: 100%;
+            padding: 0;
+            margin-bottom: 12px;
+    
+            @media only screen and (max-width: 997px) {
+                align-items: flex-start !important;
+            }
+    
+            .email-summary {
+                display: inline-flex;
+                margin-right: 16px;
+    
+                @media only screen and (max-width: 997px) {
+                    flex-direction: column;
+                    flex: 1 0 auto;
+                }
+    
+                ul {
+                    @media only screen and (max-width: 997px) {
+                        margin: 0 0 8px;
+    
+                        &:last-of-type {
+                            margin-bottom: 0;
+                        }
+                    }
+    
+                    li {
+                        @media only screen and (max-width: 997px) {
+                            flex: 1;
+                            justify-content: space-between;
+                        }
+                    }
+                }
+    
+            }
+    
+            ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                display: inline-flex;
+                padding: 8px 12px;
+                border-radius: 4px;
+                background: #fff;
+                margin-right: 16px;
+                border: 1px solid $form-border-color;
+                box-shadow: $custom-box-shadow;
+    
+                &:last-of-type {
+                    margin-right: 0;
+                }
+    
+                &.__wrapper {
+                    margin-right: 16px;
+    
+                    &:last-of-type {
+                        margin-right: 0;
+                    }
+    
+                    @media only screen and (max-width: 997px) {
+                        margin-right: 0;
+                    }
+                }
+    
+                li {
+                    display: inline-flex;
+                    align-items: center;
+                    margin-right: 8px;
+    
+                    @media only screen and (max-width: 997px) {
+                        margin-bottom: 4px;
+    
+                        &:last-of-type {
+                            margin-bottom: 0;
+                        }
+                    }
+    
+                    &:last-of-type {
+                        margin-right: 0;
+                    }
+    
+                    .label {
+                        font-size: 14px;
+                        font-weight: 600;
+    
+                        &.highlight {
+                            padding-left: 6px;
+                            color: $success-color;
+                        }
+                    }
+                }
+            }
+        }
+
+        .hasInitiation {
+            background-color: #faf8ff;
+        }
+
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+}

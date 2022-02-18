@@ -1,0 +1,152 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title"> {{ dialogTitle}} </span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+            
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form 
+        nz-form
+        name="servicesetupForm" 
+        class="compose-form" 
+        fxLayout="column"
+        [formGroup]="servicesetupForm" 
+        [nzLayout]="'vertical'"
+        (ngSubmit)="onFormSubmit($event)"
+        novalidate>
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+                        <nz-form-label nzRequired>CCMS Username</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="addrtyErrorTpl" class="ant-form-flex">
+
+                            <input nz-input formControlName="username" placeholder="Username" type="text" autocomplete="off" />
+
+                            <ng-template #addrtyErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input the username</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>CCMS Password</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="strliErrorTpl" class="ant-form-flex">
+
+                            <input nz-input formControlName="password" placeholder="Password" [type]="'password'" autocomplete="off" />
+
+                            <ng-template #strliErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your password</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+                        <nz-form-label nzRequired>Authorised Person ID</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="authpersonidErrorTpl" class="ant-form-flex">
+
+                            <input nz-input formControlName="authPersonID" placeholder="Authorised Person ID" autocomplete="off"/>
+
+                            <ng-template #authpersonidErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input the Authorised Person ID</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Authorised Person First Name</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="authpersonfnameErrorTpl" class="ant-form-flex">
+
+                            <input nz-input formControlName="authPersonFirstName" placeholder="First Name" autocomplete="off"/>
+
+                            <ng-template #authpersonfnameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input the Authorised Person First Name</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Authorised Person Last Name</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="authpersonlnameErrorTpl" class="ant-form-flex">
+
+                            <input nz-input formControlName="authPersonLastName" placeholder="Last Name" autocomplete="off"/>
+
+                            <ng-template #authpersonlnameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input the Authorised Person Last Name</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+            <span></span>
+
+            <span class="text-right">
+                    <button class="text-uppercase mr-8" nz-button
+                        nzType="primary" [disabled]="!servicesetupForm.valid" [promiseBtn]="buttonLoading">
+                        <i class="plus icon mr-8"></i> Save
+                    </button>
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+            </span>
+        </div>
+
+    </form>
+
+</div>

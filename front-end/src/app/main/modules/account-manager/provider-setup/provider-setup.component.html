@@ -1,0 +1,125 @@
+<div class="header pt-8 pr-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <div>
+    </div>
+
+    <div>
+        <button nz-button nzType="primary" (click)="addDialog($event)" [nzLoading]="buttonLoader">
+            <i class="plus icon mr-8"></i> Add provider
+        </button>
+    </div>
+</div>
+
+
+<div id="provider-list" class="content p-24">
+    <!-- <div nz-row *ngIf="providers.length > 0"> -->
+
+    <!-- <div nz-col 
+            [nzSpan]="8" 
+            *ngFor="let provider of providers; let i = index"> -->
+    <nz-list [nzNoResult]="emptyBlock" [nzDataSource]="providers" [nzRenderItem]="item"
+        [nzGrid]="{ gutter: 16, xs: 24, sm: 12, md: 8, lg: 8, xl: 6, xxl: 5 }">
+        <ng-template #item let-item let-index="index">
+
+            <nz-list-item [nzContent]="nzContent">
+
+                <ng-template #nzContent>
+                    <nz-card class="mb-20 zoom" [nzBordered]="true" [routerLink]="[item.id, 'view']"
+                        *hasPermission="['AC2']; belongsTo: 'N03'" style="cursor: pointer;">
+                        <div
+                            class="color-bar {{ item.is_synced === '2' || item.is_synced === '3'? 'inactive' : 'active' }}">
+                        </div>
+                        <!-- <div class="color-bar green-600 ng-tns-c43-17 ng-star-inserted" style></div> -->
+                        <p>
+                            <span class="font-weight-600">Proda Organisation ID</span>
+                            <br />
+                            {{ item?.ccs_setup?.PRODA_org_id }}
+                        </p>
+                        <p>
+                            <span class="font-weight-600">Provider ID</span>
+                            <br />
+                            {{ item.provider_id }}
+                        </p>
+                        <p>
+                            <span class="font-weight-600">Business Name</span>
+                            <br />
+                            {{ item.buisness_name }}
+                        </p>
+                        <p>
+                            <span class="font-weight-600">Legal Name</span> <br />
+                            {{ item.legal_name || 'N/A' }}
+                        </p>
+                        <p>
+                            <span class="font-weight-600">Provider Entity Type</span>
+                            <br />
+
+                            <ng-container></ng-container>
+                            <ng-container *ngIf="item.entity_type==='01'">Incorporated Body/Association</ng-container>
+                            <ng-container *ngIf="item.entity_type==='02'">Indigenous Corporation</ng-container>
+                            <ng-container *ngIf="item.entity_type==='03'">Sole Trader/Individual</ng-container>
+                            <ng-container *ngIf="item.entity_type==='04'">Partnership</ng-container>
+                            <ng-container *ngIf="item.entity_type==='05'">Private Company</ng-container>
+
+                            <ng-container *ngIf="item.entity_type==='06'">Public Company</ng-container>
+                            <ng-container *ngIf="item.entity_type==='07'">Registered Co-operative</ng-container>
+                            <ng-container *ngIf="item.entity_type==='08'">Australian Government</ng-container>
+                            <ng-container *ngIf="item.entity_type==='09'">State/Territory Government</ng-container>
+                            <ng-container *ngIf="item.entity_type==='10'">Local Government</ng-container>
+                            <ng-container *ngIf="item.entity_type==='11'">Unincorporated Body</ng-container>
+                        </p>
+
+                        <p>
+                            <span class="font-weight-600">No of Services</span> <br />
+                            {{ item.services?.length || '0' }}
+                        </p>
+                        <p>
+                            <span class="font-weight-600">Provider ABN</span> <br />
+                            {{ item.ABN || 'N/A' }}
+                        </p>
+                        <p>
+                            <span class="font-weight-600">ACECQA RegistrationCode </span> <br />
+                            {{ item.registration_code || 'N/A' }}
+                        </p>
+
+                        <!-- <ng-template #actionView>
+                    <span class="pr-8 pl-8" [routerLink]="[provider.id, 'view']"
+                        *hasPermission="['AC2']; belongsTo: 'N03'">
+                        <i class="eye icon primary-color"></i>
+                    </span>
+                </ng-template> -->
+                    </nz-card>
+                </ng-template>
+            </nz-list-item>
+        </ng-template>
+    </nz-list>
+
+    <!-- <nz-list [nzGrid]="{ gutter: 16, xs: 24, sm: 12, md: 8, lg: 8, xl: 6, xxl: 5 }">
+            <nz-list-item [nzContent]="nzContent">
+                <ng-template #nzContent>
+                    <nz-card class="mb-20 zoom" [nzBordered]="true" style="cursor: pointer;" (click)="addDialog($event)"
+                        [nzLoading]="buttonLoader">
+                        <div class="color-bar active"></div>
+                        <img class="add-icon" alt="example" src="assets/icons/flat/ui_set/custom_icons/add.svg" />
+                    </nz-card>
+                </ng-template>
+            </nz-list-item>
+
+        </nz-list> -->
+
+    <!-- </div> -->
+
+
+
+    <ng-template #emptyBlock>
+        <nz-empty class="mb-16" [nzNotFoundImage]="
+            'assets/icons/flat/ui_set/navigation-maps/svg/location3.svg'
+        " [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+            <ng-template #contentTpl>
+                <h4 class="mt-24">To retrive provider details from government system,please click 'Add provider'
+                    button!!
+                </h4>
+            </ng-template>
+        </nz-empty>
+    </ng-template>
+
+</div>

@@ -1,0 +1,43 @@
+@import "src/@fuse/scss/fuse";
+
+app-list-view {
+    .operate {
+        // border-width: 1px;
+        // border-bottom-style: solid;
+        // border-color: #d9d9d9c9;
+        // .action-bar-btn {
+        //     margin-left: 8px;
+        //     margin-right: 8px;
+        //     margin: 5px;
+        // }
+
+        // .approve-bar-icon {
+        //     padding-right: 5px;
+        // }
+
+        // .action-bar-btn-delete:focus,
+        // .action-bar-btn-delete:hover {
+        //     color: red;
+        //     background-color: #fff;
+        //     border-color: red;
+        // }
+
+        // .action-bar-btn-approve:focus, .action-bar-btn-approve:hover {
+        //     color: green;
+        //     background-color: #fff;
+        //     border-color: green;
+        // }
+    }
+
+    @include media-breakpoint("xs") {
+        // width: 100%;
+    }
+
+    @include media-breakpoint("gt-xs") {
+        // width: 640px;
+    }
+}
+
+.mat-dialog-container {
+    width: 720px !important;
+}

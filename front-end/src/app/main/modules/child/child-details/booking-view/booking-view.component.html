@@ -1,0 +1,68 @@
+<div class="s-title mb-16" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <h3 class="header mb-0">Weekly Booking information</h3>
+
+    <button class="text-uppercase blank py-0"
+        type="button"
+        nz-button 
+        nzType="link"
+        (click)="toggleCalendar($event)"
+        [promiseBtn]="weekCalendarLoading">
+
+        <span class="date-input-wrapper">
+
+            <i class="calendar plus outline icon mr-8"></i>
+
+            <span class="date-label">
+                {{ getCalendarTitle() }}
+            </span>
+           
+            <span #weekView>
+                <nz-week-picker class="date-input"
+                    [formControl]="calendarWeek"
+                    [nzInputReadOnly]="true"
+                    nzPlaceHolder="select week"></nz-week-picker>
+            </span>
+
+        </span>
+
+    </button>
+
+</div>
+
+<div class="weekly-booking-wrapper" *ngIf="bookingCalendar.length > 0">
+
+    <ul class="week-view">
+
+        <li *ngFor="let item of bookingCalendar; trackBy trackByFn"
+            [ngClass]="{ 'hide-week': hideWeekEnd }" [@fadeInOnEnter]>
+            
+            <div class="py-4" fxLayout="column" fxLayoutAlign="center center" [ngStyle]="{'min-height': '64px'}">
+
+                <p class="mb-0 date">{{ item.date | formatMoment: 'DD MMM' }}</p>
+    
+                <p class="mb-0 font-weight-600 font-size-13"> {{ item.day_name }}</p>
+
+                <div class="booking-items px-4">
+
+                    <ng-container *ngIf="item.booking.length > 0 else bookingNotFound">
+
+                        <span class="slot {{ slot.status }}" *ngFor="let slot of item.booking; trackBy: trackByFn;"></span>
+
+                    </ng-container>
+                    
+                    <ng-template #bookingNotFound>
+
+                        <span class="slot"></span>
+
+                    </ng-template>
+                    
+                </div>
+
+            </div>
+
+        </li>
+
+    </ul>
+
+</div>

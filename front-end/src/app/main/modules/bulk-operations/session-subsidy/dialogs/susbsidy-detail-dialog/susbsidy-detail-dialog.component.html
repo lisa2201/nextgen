@@ -1,0 +1,113 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Subsidy Details</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <nz-descriptions nzBordered [nzColumn]="{ xxl: 1, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }">
+            <nz-descriptions-item nzTitle="Service ID">{{ subsidyDetail.serviceID }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Enrolment ID">{{ subsidyDetail.enrolmentID }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Report Start Date">{{ subsidyDetail.sessionReportStartDate }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Submission Date">{{ subsidyDetail.initialSubmittedDateTime | date:'medium' }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Status">{{ subsidyDetail.sessionReportProcessingStatus }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Fee Charged">{{ subsidyDetail.weeklyFeeChargedByService | currency:'AUD' }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Hours In Care">{{ subsidyDetail.weeklyHoursInCare | number:'1.2-2' }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Entitlement Amount">{{ subsidyDetail.weeklyEntitlementAmount | currency:'AUD' }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Subsidised Hours">{{ subsidyDetail.weeklySubsidisedHours | number:'1.2-2' }}</nz-descriptions-item>
+            <!-- <nz-descriptions-item nzTitle="Sub Transaction">{{ subsidyDetail.weeklyPreschoolSubsidisedHours }}</nz-descriptions-item> -->
+        </nz-descriptions>
+
+        
+        <div *ngIf="subsidyDetail.SessionOfCares.results.length > 0">
+
+            <nz-divider nzText="Session Details" nzOrientation="center"></nz-divider>
+
+            <nz-table [nzShowPagination]="false" [nzNoResult]="emptyBlock" nzBordered #sessionDetail [nzData]="subsidyDetail.SessionOfCares.results">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Hours In Session</th>
+                        <th>Amount Charged</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of sessionDetail.data">
+                        <td>{{ data.date }}</td>
+                        <td>{{ data.startTime }}</td>
+                        <td>{{ data.endTime }}</td>
+                        <td>{{ data.totalHoursInSession | number:'1.2-2' }}</td>
+                        <td>{{ data.sessionAmountCharged | currency:'AUD' }}</td>
+                        <td>
+                            <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="menu">
+                                <i class="ellipsis vertical icon"></i>
+                            </button>
+                            
+                            <mat-menu #menu="matMenu" backdropClass="tlp-more">
+                            
+                                <ng-container *hasPermission="['AC2']; belongsTo 'N43'">
+                                    <button mat-menu-item (click)="openDetail($event, data)">
+                                        <i class="tasks icon primary-color"></i>
+                                        <span class="font-weight-600">Details</span>
+                                    </button>
+                                </ng-container>
+                            
+                            </mat-menu>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+
+        </div>
+
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0"
+                [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span></span>
+
+        <span class="text-right">
+
+            <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                (click)="matDialogRef.close()">
+                Cancel
+            </button>
+
+        </span>
+
+    </div>
+
+</div>

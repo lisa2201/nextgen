@@ -1,0 +1,56 @@
+<form name="dateSetForm" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="dateSetForm" nz-form>
+
+    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+        <nz-form-item>
+
+            <nz-form-label nzRequired>Do you know the administered date? </nz-form-label>
+
+            <nz-form-control [nzErrorTip]="genderErrorTpl">
+                    
+                <nz-radio-group formControlName="knowDate" nzButtonStyle="solid" class="has-img">
+        
+                    <label nz-radio-button nzValue="0">
+                        <!-- <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/greetings.svg" alt="male icon"> -->
+                        <span class="font-size-14">Yes</span>
+                    </label>
+        
+                    <label nz-radio-button nzValue="1">
+                        <!-- <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/sad.svg" alt="female icon"> -->
+                        <span class="font-size-14">No</span>
+                    </label>
+        
+                </nz-radio-group>
+        
+                <ng-template #genderErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('required')">Please select an option</ng-container>
+                </ng-template>
+        
+            </nz-form-control>
+        </nz-form-item>
+
+    </div>
+
+    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" *ngIf="knowDate">
+
+        <nz-form-item>
+
+            <nz-form-label nzRequired>Date</nz-form-label>
+
+            <nz-form-control nzHasFeedback [nzErrorTip]="edateErrorTpl">
+
+                <nz-date-picker [nzInputReadOnly]="true" [nzAllowClear]="true" class="block" nzPlaceHolder="select a date"
+                    nzSize="small" nzAllowClear="false" formControlName="date" [nzDisabled]="">
+                </nz-date-picker>
+
+                <ng-template #edateErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('required')">Please select a date
+                    </ng-container>
+                </ng-template>
+
+            </nz-form-control>
+
+        </nz-form-item>
+
+    </div>
+</form>

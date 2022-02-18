@@ -1,0 +1,10 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+widget-parent-bookings {
+
+    .child_booking{
+        overflow-y: auto;
+    }
+    
+}

@@ -1,0 +1,42 @@
+@import "src/@fuse/scss/fuse";
+
+.financial-payment-adjustment-dialog {
+
+    @include media-breakpoint("xs") {
+        width: 100%;
+    }
+
+    @include media-breakpoint("gt-xs") {
+        width: 640px;
+    }
+
+    .mat-dialog-container {
+
+        padding: 0px;
+
+        form {
+            width: 100%;
+            text-align: left;
+    
+            input[type="number"]::-webkit-inner-spin-button,
+            input[type="number"]::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+    
+            nz-form-label {
+                label {
+                    color: #353535d9;
+                }
+            }
+
+        }
+
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+}

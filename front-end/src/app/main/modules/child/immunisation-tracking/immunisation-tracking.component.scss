@@ -1,0 +1,288 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+immunisation-tracking {
+    @include media-breakpoint("xs") {
+        // width: 100%;
+    }
+
+    @include media-breakpoint("gt-xs") {
+        // width: 640px;
+    }
+
+    .toolbar-separator {
+        height: 32px;
+        width: 1px;
+        margin: 0 12px;
+        background-color: #e5e8eb;
+    }
+
+    .toolbar {
+        .on {
+            color: $danger-color !important;
+        }
+
+        .clear-filter {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.45);
+            transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+            user-select: none;
+            cursor: pointer;
+
+            &:hover {
+                opacity: 0.6;
+            }
+        }
+
+        .qt {
+            font-size: 17px;
+        }
+
+        .active {
+            color: $primary-color !important;
+        }
+    }
+
+    .content {
+        // .help-panel {
+        //     .child-info {
+        //         position: relative;
+        //         display: inline-flex;
+        //         align-items: center;
+
+        //         .child-img {
+        //             border: 4px solid $ant-border-color;
+        //             box-shadow: $custom-box-shadow-high;
+        //             margin-right: 16px;
+        //         }
+
+        //         .child-name {
+        //             font-size: 18px;
+        //             max-width: 300px;
+
+        //             @media only screen and (max-width: 670px) {
+        //                 display: none;
+        //             }
+        //         }
+        //     }
+        //     display: flex;
+        //     width: 100%;
+        //     padding: 16px 24px 16px 14px;
+        //     background: $default-background-color;
+        //     box-shadow: 0 1px 10px 1px rgba(0, 0, 0, 0.05);
+        //     border-bottom: 1px solid $layout-border-color;
+        //     max-height: 80px;
+
+        //     .booking-summary {
+        //         display: inline-flex;
+        //         margin-right: 16px;
+
+        //         @media only screen and (max-width: 957px) {
+        //             flex-direction: column;
+        //             flex: 1 0 auto;
+        //         }
+
+        //         ul {
+        //             @media only screen and (max-width: 957px) {
+        //                 margin: 0 0 8px;
+
+        //                 &:last-of-type {
+        //                     margin-bottom: 0;
+        //                 }
+        //             }
+
+        //             li {
+        //                 @media only screen and (max-width: 957px) {
+        //                     flex: 1;
+        //                     justify-content: space-between;
+        //                 }
+        //             }
+        //         }
+
+        //     }
+
+        //     ul {
+        //         list-style: none;
+        //         margin: 0;
+        //         padding: 0;
+        //         display: inline-flex;
+        //         padding: 8px 12px;
+        //         border-radius: 4px;
+        //         background: #fff;
+        //         margin-right: 16px;
+        //         border: 1px solid $form-border-color;
+        //         box-shadow: $custom-box-shadow;
+        //         height: 40px;
+
+        //         &:last-of-type {
+        //             margin-right: 0;
+        //         }
+
+        //         &.booking-types {
+        //             margin: 0;
+
+        //             @media only screen and (max-width: 957px) {
+        //                 flex-direction: column;
+        //                 flex: 1 0 auto;
+        //             }
+        //         }
+
+        //         li {
+        //             display: inline-flex;
+        //             align-items: center;
+        //             margin-right: 8px;
+
+        //             &:last-of-type {
+        //                 margin-right: 0;
+        //             }
+
+        //             @media only screen and (max-width: 957px) {
+        //                 margin-bottom: 4px;
+
+        //                 &:last-of-type {
+        //                     margin-bottom: 0;
+        //                 }
+        //             }
+
+        //             .color-box {
+        //                 font-size: 21px;
+        //                 -webkit-text-fill-color:#e2e2b7;
+        //                 border-color: transparent;
+
+        //                 &.hasDate{
+        //                     -webkit-text-fill-color: rgba(76, 175, 80, 0.4);
+        //                     border-color: transparent;
+        //                 }
+        //                 &.pastDue{
+        //                     -webkit-text-fill-color: rgba(202, 22, 22, 0.623);
+        //                     border-color: transparent;
+        //                 }
+        //                 &.dueSoon{
+        //                     -webkit-text-fill-color: rgba(232, 172, 18, 0.66);
+        //                     border-color: transparent;
+        //                 }
+        //             }
+
+        //             .label {
+        //                 font-size: 14px;
+        //                 font-weight: 600;
+
+        //                 &.highlight {
+        //                     padding-left: 6px;
+        //                     color: $success-color;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        .help-panel {
+            display: flex;
+            width: 100%;
+            padding: 16px 24px;
+            background: $default-background-color;
+            box-shadow: 0 1px 10px 1px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid $layout-border-color;
+
+            .booking-summary {
+                display: inline-flex;
+                margin-right: 16px;
+
+                @media only screen and (max-width: 957px) {
+                    flex-direction: column;
+                    flex: 1 0 auto;
+                }
+
+                ul {
+                    @media only screen and (max-width: 957px) {
+                        margin: 0 0 8px;
+
+                        &:last-of-type {
+                            margin-bottom: 0;
+                        }
+                    }
+
+                    li {
+                        @media only screen and (max-width: 957px) {
+                            flex: 1;
+                            justify-content: space-between;
+                        }
+                    }
+                }
+            }
+
+            ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                display: inline-flex;
+                padding: 8px 12px;
+                border-radius: 4px;
+                background: #fff;
+                margin-right: 16px;
+                border: 1px solid $form-border-color;
+                box-shadow: $custom-box-shadow;
+
+                &:last-of-type {
+                    margin-right: 0;
+                }
+
+                &.booking-types {
+                    margin: 0;
+
+                    @media only screen and (max-width: 957px) {
+                        flex-direction: column;
+                        flex: 1 0 auto;
+                    }
+                }
+
+                li {
+                    display: inline-flex;
+                    align-items: center;
+                    margin-right: 8px;
+
+                    &:last-of-type {
+                        margin-right: 0;
+                    }
+
+                    @media only screen and (max-width: 957px) {
+                        margin-bottom: 4px;
+
+                        &:last-of-type {
+                            margin-bottom: 0;
+                        }
+                    }
+
+                    .color-box {
+                        font-size: 21px;
+                        -webkit-text-fill-color: #e2e2b7;
+                        border-color: transparent;
+
+                        &.hasDate {
+                            -webkit-text-fill-color: rgba(76, 175, 80, 0.72);
+                            border-color: transparent;
+                        }
+                        &.pastDue {
+                            -webkit-text-fill-color: rgba(236,28 ,28, 0.45);
+                            border-color: transparent;
+                        }
+                        &.dueSoon {
+                            -webkit-text-fill-color: rgba(232, 172, 18, 0.66);
+                            border-color: transparent;
+                        }
+                    }
+                    .label {
+                        font-size: 14px;
+                        font-weight: 600;
+
+                        &.highlight {
+                            padding-left: 6px;
+                            color: $success-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

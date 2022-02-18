@@ -1,0 +1,261 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="invitationForm" class="compose-form"  
+        fxLayout="column" fxFlex [nzLayout]="'vertical'" 
+        nz-form 
+        [formGroup]="invitationForm" 
+        (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" 
+            fusePerfectScrollbar 
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <nz-form-item>
+        
+                        <nz-form-label nzRequired>Email</nz-form-label>
+        
+                        <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl">
+        
+                            <input nz-input formControlName="email" placeholder="email" type="email" />
+        
+                            <ng-template #emailErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your email</ng-container>
+                                <ng-container *ngIf="control.hasError('email')">Please enter a valid email address</ng-container>
+                                <ng-container *ngIf="control.hasError('exists')">Email already exists</ng-container>
+                            </ng-template>
+        
+                        </nz-form-control>
+        
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" *ngIf="!isOwnerSetup">
+
+                    <nz-form-item>
+        
+                        <nz-form-label nzRequired>Branch & Roles</nz-form-label>
+        
+                        <nz-form-control 
+                            [nzValidateStatus]="branchFormStatus"
+                            [nzErrorTip]="branchRoleErrorTpl">
+        
+                            <nz-table 
+                                #branchTable  
+                                [nzData]="branches"
+                                [nzShowPagination]="false"
+                                [nzSize]="'small'"
+                                formArrayName="branches">
+            
+                                <thead>
+                                    <tr>
+                                        <th nzWidth="50px" 
+                                            nzShowCheckbox
+                                            [(nzChecked)]="allChecked" 
+                                            [nzIndeterminate]="indeterminate"
+                                            (nzCheckedChange)="checkAll($event)">
+                                        </th>
+                                        <th>
+                                            <span>Select all</span>
+                                        </th>
+                                        <th nzWidth="50px"></th>
+                                    </tr>
+                                </thead>
+            
+                                <tbody>
+                                    
+                                    <ng-container *ngFor="let item of branchTable.data; trackBy: trackByFn;">
+                                        <tr>
+                                            <td class="ant-table-selection-column" 
+                                                [ngClass]="{ 'ant-item-picked' : item.disabled }">
+            
+                                                <nz-switch
+                                                    [formControlName]="item.index"
+                                                    (click)="updateCheckbox(item, $event)"
+                                                    [nzCheckedChildren]="checkedTemplate"
+                                                    [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+            
+                                                <ng-template #checkedTemplate><i nz-icon nzType="check"></i></ng-template>
+                                                <ng-template #unCheckedTemplate><i nz-icon nzType="close"></i></ng-template>
+            
+                                            </td>
+                                            <td>
+                                                <span class="font-weight-600">{{ item?.name }}</span> ({{ item.url }})
+                                            </td>
+                                            <td>
+                                                <button type="button" 
+                                                    type="button"
+                                                    nz-button 
+                                                    nzType="link"
+                                                    [ngStyle]="{'font-size': '18px'}"
+                                                    (click)="showRoles($event, item, 'edit')"
+                                                    *ngIf="hasRolesSelected(item)" [@fadeInOnEnter] [@fadeOutOnLeave]>
+                                                    <i nz-icon nzType="edit"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                    
+                                </tbody>
+            
+                            </nz-table>
+        
+                            <ng-template #branchRoleErrorTpl let-control>
+                                <ng-container>Please select at least one option from the list</ng-container>
+                            </ng-template>
+        
+                        </nz-form-control>
+        
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" *ngIf="isOwnerSetup">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Select Roles</nz-form-label>
+                
+                        <nz-form-control 
+                            formArrayName="roles"
+                            [nzValidateStatus]="rolesFormStatus"
+                            [nzErrorTip]="rolesErrorTpl">
+                
+                            <ng-container *ngIf="selectedRoles.length > 0; else typeEmpty">
+                
+                                <ng-container *ngFor="let item of selectedRoles; trackBy: item?.index;">
+                
+                                    <div>
+                                        <label nz-checkbox 
+                                            [formControlName]="item.index" >{{ item?.display }}</label>
+                                    </div>
+                
+                                </ng-container>
+                
+                            </ng-container>
+                            
+                            <ng-template #typeEmpty>
+                            
+                                <nz-empty
+                                    class="e-sm-img"
+                                    [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                                    [nzNotFoundContent]="contentTpl">
+                                </nz-empty>
+                
+                                <ng-template #contentTpl>
+                                    <div class="mt-16">Roles not available! Please select different role type</div>
+                                </ng-template>
+                
+                            </ng-template>
+                
+                            <ng-template #rolesErrorTpl let-control>
+                                <ng-container>Please select at least one option from the list</ng-container>
+                            </ng-template>
+                
+                        </nz-form-control>
+                
+                    </nz-form-item>
+                    
+                    <nz-alert nzType="warning" [nzMessage]="siteManagerWarningMsg" nzShowIcon></nz-alert>
+                    
+                    <ng-template #siteManagerWarningMsg>
+                        Site manager users will have all the permissions that are assigned to <span class="font-weight-600">Branch Administrator</span> role by default.
+                    </ng-template>
+
+                    <nz-alert nzType="warning" [nzMessage]="siteManagerWarningMsg" nzShowIcon></nz-alert>
+
+                    <ng-template #siteManagerWarningMsg>
+                        Site manager users will have all the permissions that are assigned to <span class="font-weight-600">Branch Administrator</span> role by default.
+                    </ng-template>
+                    
+                </div>
+    
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span>
+
+                <ng-container *ngIf="!isOwnerSetup">
+
+                    <button class="text-uppercase mr-8" 
+                        type="button"
+                        nz-button 
+                        nzType="default"
+                        *ngIf="branchSelected()"
+                        (click)="showRoles($event)"
+                        [@fadeInOnEnter] [@fadeOutOnLeave]>
+                        Assign Roles
+                    </button>
+
+                </ng-container>
+
+            </span>
+
+            <span class="text-right">
+
+                <ng-container *ngIf="!editMode">
+                    <button class="text-uppercase mr-8"
+                        *hasPermission="['AC1']; belongsTo 'N09'"
+                        nz-button 
+                        nzType="primary" 
+                        [disabled]="!invitationForm.valid || !hasRolesSelected()"
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Save
+                    </button>
+                </ng-container>
+                
+                <ng-container *ngIf="editMode">
+                    <button class="text-uppercase mr-8"
+                        *hasPermission="['AC2']; belongsTo 'N09'"
+                        nz-button 
+                        nzType="primary" 
+                        [disabled]="!invitationForm.valid || !hasRolesSelected()"
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Update
+                    </button>
+                </ng-container>
+    
+                <button class="text-uppercase mr-8" 
+                    type="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+    
+                <button class="text-uppercase mat-close-btn" 
+                    type="button"
+                    nz-button 
+                    nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

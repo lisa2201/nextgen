@@ -1,0 +1,128 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32" style="padding-top: 32px !important;">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0">
+
+    <form fxLayout="column" fxFlex [formGroup]="queryFiltersForm">
+
+        <div class="mb-16">
+
+            <label class="filter-label">Select Child</label>
+
+            <nz-select formControlName="child" nzShowSearch nzPlaceHolder="Select Child">
+
+                <nz-option nzValue="ServiceID" nzLabel="All Children" title="All Children"></nz-option>
+                <ng-container *ngFor="let item of this.childrenList">
+                    <nz-option 
+                        *ngIf="item.id" 
+                        nzValue="{{ item.id }}"
+                        [nzLabel]="getChildLabel(item)">
+                    </nz-option>
+                </ng-container>
+            </nz-select>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Date of Entitlement</label>
+
+            <nz-date-picker
+                [nzInputReadOnly]="true" 
+                (ngModelChange)="setMinDate($event)" 
+                formControlName="dateInputStart" 
+                nzPlaceHolder="Select Date" 
+                class="block">
+            </nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Reached Annual Cap</label>
+        
+            <nz-radio-group formControlName="annual_cap">
+        
+                <label nz-radio nzValue="all" class="_filter">All</label>
+                <label nz-radio nzValue="yes" class="_filter">Yes</label>
+                <label nz-radio nzValue="no" class="_filter">No</label>
+        
+            </nz-radio-group>
+        
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Reached Allowable Absence Count</label>
+        
+            <nz-radio-group formControlName="absence_count">
+        
+                <label nz-radio nzValue="all" class="_filter">All</label>
+                <label nz-radio nzValue="yes" class="_filter">Yes</label>
+                <label nz-radio nzValue="no" class="_filter">No</label>
+        
+            </nz-radio-group>
+        
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Has CCS Percentage</label>
+        
+            <nz-radio-group formControlName="ccs_percentage">
+        
+                <label nz-radio nzValue="all" class="_filter">All</label>
+                <label nz-radio nzValue="yes" class="_filter">Yes</label>
+                <label nz-radio nzValue="no" class="_filter">No</label>
+        
+            </nz-radio-group>
+        
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Has ACCS Percentage</label>
+        
+            <nz-radio-group formControlName="accs_percentage">
+        
+                <label nz-radio nzValue="all" class="_filter">All</label>
+                <label nz-radio nzValue="yes" class="_filter">Yes</label>
+                <label nz-radio nzValue="no" class="_filter">No</label>
+        
+            </nz-radio-group>
+        
+        </div>
+
+
+        <button 
+            class="mb-16" 
+            *hasPermission="['AC0']; belongsTo: 'N48'" 
+            nz-button 
+            (click)="filter($event)"
+            nzType="default" 
+            [disabled]="tableLoading || queryFiltersForm.invalid"
+            [promiseBtn]="buttonLoading"> 
+            <i class="sync left icon pr-8"></i>
+            View Entitlements
+        </button>
+
+        <button 
+            class="mb-16" 
+            *hasPermission="['AC0']; belongsTo: 'N48'" 
+            nz-button 
+            (click)="downloadCsv($event)"
+            nzType="default" 
+            [disabled]="tableLoading || queryFiltersForm.invalid"
+            [promiseBtn]="buttonLoaderDownload"> 
+            <i class="file excel left icon pr-8"></i>
+            Download CSV
+        </button>
+
+
+    </form>
+</div>
+<!-- / SIDEBAR CONTENT -->

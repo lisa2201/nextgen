@@ -1,0 +1,22 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+widget-live-ratio {
+
+    table{
+        thead{
+            tr{
+                th{
+                    @include media-breakpoint('xs'){
+                        font-size: 5px!important;
+                    }
+                }
+            }            
+        }
+
+        .center_summary{
+            font-weight: bold;
+            font-size: 15px;;
+        }
+    }
+}

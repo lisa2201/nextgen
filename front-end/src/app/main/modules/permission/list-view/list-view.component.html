@@ -1,0 +1,115 @@
+<nz-table
+    class="permission-table"
+    #permissionTable
+    [nzTitle]="tableTitle"
+    [nzFrontPagination]="false"
+    [nzShowPagination]="false"
+    [nzLoading]="tableLoading"
+    [nzData]="permissionTableData"
+    [nzNoResult]="emptyBlock"
+    [nzLoadingIndicator]="indicatorTemplate"
+    [ngClass]="{ 'ant-table-empty': permissionTableData.length === 0 }">
+    
+    <thead>
+        <tr>
+            <th nzAlign="center" [nzWidth]="'50px'"></th>
+            <th>Group</th>
+            <th>Permissions</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <ng-template ngFor let-data [ngForOf]="permissionTable.data">
+
+            <tr>
+                <td [(nzExpand)]="data.expand"></td>
+                <td>{{ data.name }}</td>
+                <td>{{ data.list.length }}</td>
+                <td>
+                    <ng-container *ngIf="hasConflicts(data.list) else ok">
+                        <span class="status-lbl danger-button-style">Conflict</span></ng-container>
+                    <ng-template #ok>
+                        <span class="status-lbl success-button-style">Ok</span>
+                    </ng-template>                    
+                </td>
+            </tr>
+
+            <tr [nzExpand]="data.expand">
+                <nz-table 
+                #innerTable 
+                [nzData]="data.list" 
+                nzSize="middle" 
+                [nzShowPagination]="false">
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Nav Ref</th>
+                            <th>Slug</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let data of innerTable.data">
+                            <td [ngClass]="{ 'danger-color': data.isNew }">
+                                {{ data.name }} <span *ngIf="data.isNew">({{ data.isUpdate ? 'Update' : 'New' }})</span>
+                            </td>
+                            <td>{{ data.desc || 'N/A' }}</td>
+                            <td>{{ data.navReference || 'N/A' }}</td>
+                            <td>{{ data.slug || 'N/A' }}</td>
+                            <td>{{ data.created || 'N/A' }}</td>
+                        </tr>
+                    </tbody>
+
+                </nz-table>
+            </tr>
+
+        </ng-template>
+    </tbody>
+    
+</nz-table>
+
+<ng-template #tableTitle>
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <span>
+            <span>Total Records: {{ permissionTableData.length }}</span>
+            <span class="ml-8" *ngIf="hasError()" [@fadeMotion]>Total Conflicts: {{ getErrors().length }}</span>
+        </span>
+        <span>
+            <button class="text-uppercase blank h-auto"
+                nz-button nzType="link"
+                (click)="refreshList($event)">
+                <i class="sync alternate icon"></i>
+            </button>
+        </span>
+    </div>
+</ng-template>
+
+<!-- LOADER VIEW -->
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+<!-- / LOADER VIEW -->
+
+<!-- EMPTY VIEW -->
+<ng-template #emptyBlock>
+
+    <nz-empty class="pt-24 pb-24 m-0"
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+        [nzNotFoundContent]="contentTpl"
+        [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <ng-template #contentTpl>
+            <h4 class="mt-24">No Data Found</h4>
+            <span>Looks like there's no information to display here</span>
+        </ng-template>
+
+    </nz-empty>
+
+</ng-template>
+<!-- / EMPTY VIEW -->

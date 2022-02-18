@@ -1,0 +1,43 @@
+
+
+.entitlement-detail {
+
+    .mat-dialog-container {
+
+        padding: 0px;
+
+        form {
+            width: 100%;
+            text-align: left;
+    
+            input[type="number"]::-webkit-inner-spin-button,
+            input[type="number"]::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+    
+            nz-form-label {
+                label {
+                    color: #353535d9;
+                }
+            }
+
+        }
+
+    }
+
+}
+
+entitlement-detail {
+
+    .toolbar {
+        .go-back-link {
+            flex: none;
+        }
+    }
+    
+    .ant-table-placeholder {
+        background-color: #f3f3f3;
+    }
+
+}

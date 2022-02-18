@@ -1,0 +1,511 @@
+<div id="subscription" fxLayout="column">
+    
+    <div id="subscription-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+
+        <div id="subscription-form" [@animate]="{ value:'*', params:{ duration:'500ms', y:'100px', opacity: 0, delay:'300ms' }}" *ngIf="!isSubmitted && registrationMode">
+
+            <div class="logo">
+                <img src="assets/images/logos/KMLOGO.png" alt="Kinder m8 Logo">
+            </div>
+
+            <div class="title">CREATE AN ACCOUNT</div>
+
+            <form [nzLayout]="'vertical'" nz-form name="subscriptionForm" [formGroup]="subscriptionForm" (ngSubmit)="onSubmit($event)" novalidate>
+
+                <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12">
+
+                        <nz-form-item>
+                    
+                            <nz-form-label nzRequired>First Name</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="fnameErrorTpl">
+                        
+                                <input nz-input formControlName="firstName" placeholder="First Name" type="text" />
+                        
+                                <ng-template #fnameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your first name</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12">
+
+                        <nz-form-item>
+                    
+                            <nz-form-label nzRequired>Last Name</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="lnameErrorTpl">
+                        
+                                <input nz-input formControlName="lastName" placeholder="Last Name" type="text" />
+                        
+                                <ng-template #lnameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your last name</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                        <nz-form-item>
+        
+                            <nz-form-label nzRequired>Company Name</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="companyNameErrorTpl">
+                                
+                                <input nz-input formControlName="companyName" placeholder="Company Name" type="text" />
+                        
+                                <ng-template #companyNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your company name</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                        <nz-form-item>
+                        
+                            <nz-form-label nzRequired>Business Number/ABN</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="abnErrorTpl">
+                        
+                                <input nz-input formControlName="abn" placeholder="Business Number" type="text" />
+                        
+                                <ng-template #abnErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your business number</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                        <nz-form-item>
+                        
+                            <nz-form-label nzRequired>Address Line 1</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="address1ErrorTpl">
+                        
+                                <input nz-input formControlName="address1" placeholder="Street address, P.O box, C/O" type="text" />
+                        
+                                <ng-template #address1ErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your address</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                        <nz-form-item>
+                        
+                            <nz-form-label>Address Line 2</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback>
+                        
+                                <input nz-input formControlName="address2" placeholder="Apartment, Suite, Unit, Building, Floor, Etc" type="text" />
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                        <nz-form-item>
+                        
+                            <nz-form-label nzRequired>City</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="cityErrorTpl">
+                        
+                                <input nz-input formControlName="city" placeholder="City" type="text" />
+                        
+                                <ng-template #cityErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your city name</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12">
+
+                        <nz-form-item>
+                    
+                            <nz-form-label nzRequired>State</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="stateErrorTpl">
+                        
+                                <input nz-input formControlName="state" placeholder="State" type="text" />
+                        
+                                <ng-template #stateErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your state name</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12">
+
+                        <nz-form-item>
+                    
+                            <nz-form-label nzRequired>Postal Code</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="postCodeErrorTpl">
+                        
+                                <input nz-input formControlName="postalCode" placeholder="Postal Code" type="text" />
+                        
+                                <ng-template #postCodeErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your postal code</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12">
+
+                        <nz-form-item>
+                    
+                            <nz-form-label nzRequired>Country</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="countryErrorTpl">
+                        
+                                <nz-select formControlName="country" nzShowSearch nzPlaceHolder="Select a country">
+                        
+                                    <nz-option *ngFor="let item of countriesList" nzValue="{{ item.code }}" nzLabel="{{ item.name }}">
+                                    </nz-option>
+                        
+                                </nz-select>
+                        
+                                <ng-template #countryErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your country</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12">
+
+                        <nz-form-item>
+                
+                            <nz-form-label nzRequired>Timezone</nz-form-label>
+                    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="timezoneErrorTpl">
+                    
+                                <nz-select formControlName="timezone" nzShowSearch nzPlaceHolder="Select a timezone">
+    
+                                    <nz-option *ngFor="let item of timezoneList" nzValue="{{ item.zoneName }}" nzLabel="{{ item.zoneName }}">
+                                    </nz-option>
+                    
+                                </nz-select>
+                    
+                                <ng-template #timezoneErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your timezone</ng-container>
+                                </ng-template>
+                    
+                            </nz-form-control>
+                    
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                        <nz-form-item>
+                        
+                            <nz-form-label nzRequired>Phone</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="phoneErrorTpl">
+                        
+                                <input nz-input formControlName="phone" placeholder="Phone" type="number" />
+                        
+                                <ng-template #phoneErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your phone number</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                        <nz-form-item>
+                
+                            <nz-form-label nzRequired>Email/Username</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl">
+                        
+                                <input nz-input formControlName="email" placeholder="Email" type="email" />
+                        
+                                <ng-template #emailErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your email</ng-container>
+                                    <ng-container *ngIf="!control.hasError('required') && control.hasError('email')">Please input a valid email
+                                        address</ng-container>
+                                    <ng-container
+                                        *ngIf="!control.hasError('required') && !control.hasError('email') && control.hasError('exists')">Email
+                                        already in use</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                        <p class="form-hint">
+                            To conform with our Strong Password policy, you are required to use a sufficiently strong
+                            password. <br /> Password must
+                            be more than 7 characters.
+                        </p>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12">
+
+                        <nz-form-item>
+                    
+                            <nz-form-label nzRequired>Choose a password</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="passwordErrorTpl">
+                        
+                                <input nz-input formControlName="password" placeholder="Password" [type]="'password'"/>
+                        
+                                <ng-template #passwordErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input a password</ng-container>
+                                    <ng-container *ngIf="!control.hasError('required') && control.hasError('minlength')">Please input a valid password</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="12" [nzMd]="12">
+
+                        <nz-form-item>
+                    
+                            <nz-form-label nzRequired>Confirm Password</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="confirmPasswordErrorTpl">
+                        
+                                <input nz-input formControlName="confirmPassword" placeholder="Confirm Password" [type]="'password'" />
+                        
+                                <ng-template #confirmPasswordErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input a password</ng-container>
+                                    <ng-container *ngIf="!control.hasError('required') && control.hasError('mustMatch')">Passwords do not match</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                        <nz-form-item>
+                        
+                            <nz-form-label nzRequired>How did you hear about us?</nz-form-label>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="howHearErrorTpl">
+                        
+                                <nz-select formControlName="hearAbout" nzShowSearch nzPlaceHolder="Select payment frequency">
+                        
+                                    <nz-option *ngFor="let channel of mediaChannels" nzValue="{{ channel }}" nzLabel="{{ channel }}">
+                                    </nz-option>
+                        
+                                </nz-select>
+                        
+                                <ng-template #howHearErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please mention how did you hear about us</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                        <nz-form-item *ngIf="showHearAbout" [@expandCollapse]>
+                        
+                            <nz-form-control nzHasFeedback [nzErrorTip]="howInputErrorTpl">
+                        
+                                <input formControlName="hearAboutOther" nz-input placeholder="Please mention how did you hear about us" />
+        
+                                <ng-template #howInputErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please mention how did you hear about us</ng-container>
+                                </ng-template>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                            <div class="tems-box">
+
+                                <nz-form-item>
+            
+                                    <nz-form-control [nzSpan]="14" [nzOffset]="6">
+            
+                                        <label nz-checkbox formControlName="agreement">
+                                            <span>I have read the <a href="javascript:;" (click)="openTermsDialog()"> terms and conditions</a></span>
+                                        </label>
+            
+                                    </nz-form-control>
+            
+                                </nz-form-item>
+            
+                                <div class="mt-20" fxLayout="row" fxLayoutAlign="center center">
+                                    <ngx-recaptcha2 #captchaElem [siteKey]="recaptchaSiteKey" [useGlobalDomain]="false"
+                                        formControlName="recaptcha">
+                                    </ngx-recaptcha2>
+                                </div>
+            
+                            </div>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                            <button nz-button nzType="primary" type="submit" [nzBlock]="true" [nzLoading]="buttonLoading" [disabled]="!subscriptionForm.valid">
+                                Submit To Kinder m8
+                            </button>
+            
+                            <p class="mt-24 copyright">
+                                Copyright © {{ currentYear }} <strong>Kinder M8</strong>, All rights reserved.
+                            </p>
+
+                        </div>
+
+                    </div>
+                    
+                </div>
+
+
+            </form>
+
+        </div>
+
+        <div id="mail-confirm-form" [@animate]="{ value:'*', params:{ duration:'500ms', y:'100px', opacity: 0, delay:'300ms' }}" *ngIf="isSubmitted">
+        
+            <div class="logo">
+                <img src="assets/images/logos/KMLOGO.png" alt="Kinder m8 Logo">
+            </div>
+        
+            <div class="title">Thank you for subscribing!</div>
+
+            <div class="logo mt-20">
+                <img class="mail-confirm" src="assets/icons/flat/svgset_3/100-envelope-1.svg" height="120px" alt="Mail Confirmation">
+            </div>
+        
+            <div class="subtitle">
+                <p>
+                    A confirmation e-mail has been sent to <b>{{ subscribedEmail }}</b>.
+                </p>
+                <p>
+                    Please go check your email for this confirmation. it could take up to 30 minutes to show up in your inbox. when you get
+                    it, click on the provided link to activated your account.
+                </p>
+                <p>
+                    if you cant find the email check your spam folder
+                    or click the link below to resend.
+                </p>
+            </div>
+        
+            <div class="message">
+                <button nz-button nzType="primary" type="button" (click)="resendVerfication()" [nzBlock]="true" [nzLoading]="buttonLoading">
+                    Resend verification email
+                </button>
+            </div>
+
+            <p class="mt-24 copyright">
+                Copyright © {{ currentYear }} <strong>Kinder M8</strong>, All rights reserved.
+            </p>
+        
+        </div>
+
+        <div id="mail-verify" [@animate]="{ value:'*', params:{ duration:'500ms', y:'100px', opacity: 0, delay:'300ms' }}" *ngIf="verifyMode">
+        
+            <div class="logo">
+                <img src="assets/images/logos/KMLOGO.png" alt="Kinder m8 Logo">
+            </div>
+        
+            <div class="verify-process mb-12" *ngIf="verifyProcessing" [@expandCollapse] [@animate]="{ value:'*', params:{ duration:'500ms', y:'50px', opacity: 0, delay:'300ms' }}">
+
+                <div class="title">Please Wait</div>
+                <nz-spin nzSimple nzSize="large" nzTip="Verifying email..." [nzSpinning]="true" class="mt-20"></nz-spin>
+            
+            </div>
+
+            <nz-result 
+                nzStatus="success" 
+                [nzTitle]="verifyMessage" 
+                [nzSubTitle]="'Thank you for verifying your email address. We will notify you once the subscription is approved by our admin.'"
+                [@animate]="{ value:'*', params:{ duration:'500ms', y:'50px', opacity: 0, delay:'300ms' }}"
+                [@expandCollapse]
+                *ngIf="verfiySuccess">
+            </nz-result>
+
+            <nz-result 
+                nzStatus="warning" 
+                [nzTitle]="verifyMessage"
+                [nzSubTitle]="showVerifyResend ? 'Click below button to resend verification email.' : 'The requested link does not represent any resource on the server.'"
+                [@animate]="{ value:'*', params:{ duration:'500ms', y:'50px', opacity: 0, delay:'300ms' }}"
+                [@expandCollapse]
+                *ngIf="verifyFail">
+
+                <div nz-result-extra *ngIf="showVerifyResend" >
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                        <button nz-button nzType="primary" (click)="resendVerfication()" [nzLoading]="buttonLoading">Resend verification email</button>
+                    </div>
+                </div>
+            </nz-result>
+
+            <p class="mt-24 copyright">
+                Copyright © {{ currentYear }} <strong>Kinder M8</strong>, All rights reserved.
+            </p>
+        
+        </div>
+
+    </div>
+
+</div>

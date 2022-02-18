@@ -1,0 +1,32 @@
+@import "src/@fuse/scss/fuse";
+
+.waitlist-view-dialog {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 640px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+        .compose-form {
+
+        }
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    p {
+        text-align: justify;
+        text-justify: inter-word;
+    }
+
+}
+

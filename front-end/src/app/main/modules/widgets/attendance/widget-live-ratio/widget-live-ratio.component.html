@@ -1,0 +1,89 @@
+<fuse-widget class="widget" fxLayout="column">
+
+    <!-- Front -->
+    <div class="fuse-widget-front">
+
+        <nz-spin
+            [nzSpinning]="widgetLoader"
+            [nzIndicator]="indicatorTemplate">
+
+            <div class="p-16 table-title border-bottom" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="font-size-16">Live Ratio</span>
+
+                <button class="refresh-button" nz-button nzType="link" nzSize="small" (click)="updateAttendance()">
+                    <i class="sync vertical icon"></i>
+                </button>
+            </div>
+
+            <table class="simple">
+                <thead>
+                    <tr>
+                        <th>Room</th>
+                        <th>Staff In</th>
+                        <th>Child In</th>
+                        <th>Expected Ratio</th>
+                        <th>Live Ratio</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngIf="center_details" class="center_summary">
+                        <td>
+                            <nz-tag>
+                                Centre Total
+                            </nz-tag>
+                        </td>
+                        <td>{{ center_details.current_staff }}</td>
+                        <td>{{ center_details.center_child_in }}</td>
+                        <td>{{ center_details.required_staff }} (Required)</td>
+                        <td>{{ center_details.current_staff }} (Current)</td>
+                    </tr>     
+                    <tr *ngFor="let attendance of attendances; let i = index">
+                        <td>
+                            <nz-tag nzColor="{{ attendance.status }}">
+                                {{ attendance.room_name.length > 17 ? attendance.room_name.substring(0,17)+"..." : attendance.room_name }}
+                            </nz-tag>
+                        </td>
+                        <td>
+                            <div nz-popover
+                                 [nzPopoverTitle]="contentTemplateTitle"
+                                 [nzPopoverVisible]="checkifVisible(attendance)"
+                                 nzPopoverTrigger="click"
+                                 (nzPopoverVisibleChange)="changePopup(attendance, $event)"
+                                 [nzPopoverContent]="contentTemplate"
+                                 style="cursor: pointer">{{ attendance.staff_in }}
+                            </div>
+                        </td>
+                        <td>{{ attendance.child_in }}</td>
+                        <td>{{ attendance.expected_ratio }}</td>
+                        <td>{{ attendance.live_ratio }}</td>
+
+                        <ng-template #contentTemplateTitle>
+                            <span>Staff Names</span>
+                            <a style="float: right;font-size: 16px;text-decoration: none;" (click)="closePopupNew(attendance)"><i class="close vertical icon"></i></a>
+                        </ng-template>
+                        <ng-template #contentTemplate>
+                            <nz-list>
+                                <nz-list-item style="padding: 6px 0;" *ngFor="let item of attendance.staff_names">
+                                    <span nz-typography>{{ item.first_name }}  {{ item.last_name }} </span>
+                                </nz-list-item>
+                            </nz-list>
+                        </ng-template>
+                    </tr>
+                </tbody>
+            </table>
+        </nz-spin>
+
+    </div>
+    <!-- / Front -->
+
+</fuse-widget>
+
+<!-- LOADER VIEW -->
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+<!-- / LOADER VIEW -->

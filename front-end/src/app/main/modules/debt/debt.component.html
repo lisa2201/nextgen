@@ -1,0 +1,52 @@
+<div id="debt-management" class="page-layout carded fullwidth" *canViewAuth [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="start center">
+        <h1 [@animate]="{
+                    value: '*',
+                    params: { delay: '200ms', x: '-25px' }
+                }">
+            Debt Management
+        </h1>
+    </div>
+
+    <div class="content-card" [@animate]="{ value: '*', params: { delay: '200ms', y: '15px' } }">
+
+        <mat-tab-group dynamicHeight="true" animationDuration="0ms" >
+
+            <mat-tab label="Debt">
+                <ng-template matTabContent>
+
+                    <!-- SIDEBAR -->
+                    <fuse-sidebar class="sidebar" name="debt-sidebar" position="left">
+                        <debt-left-sidenav [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">
+                        </debt-left-sidenav>
+                    </fuse-sidebar>
+                    <!-- / SIDEBAR -->
+                    
+                    <debt-list-view></debt-list-view>
+                </ng-template>
+
+            </mat-tab>
+
+            <mat-tab label="Alternative Payment Arrangement" *hasPermission="['AC0']; belongsTo 'N39'">
+                <ng-template matTabContent>
+
+                    <!-- SIDEBAR -->
+                    <fuse-sidebar class="sidebar" name="apa-sidebar" position="left">
+
+                        <apa-left-sidenav [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">
+                        </apa-left-sidenav>
+
+                    </fuse-sidebar>
+                    <!-- / SIDEBAR -->
+
+                    <apa-list-view></apa-list-view>
+                </ng-template>
+
+            </mat-tab>
+
+        </mat-tab-group>
+
+    </div>
+
+</div>

@@ -1,0 +1,154 @@
+<div id="child-view" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="start center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2">
+                    Manage Petty Cash
+                </span>
+
+            </h1>
+
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="text-uppercase go-back-link">
+                </span>
+
+                <span class="text-right">
+                </span>
+
+                <span fxLayout="row" fxLayoutAlign="space-between center">
+                    
+                </span>
+
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24 pt-16"
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                    <nz-tabset
+                        [nzSize]="'large'"
+                        [nzSelectedIndex]="current"
+                        (nzSelectedIndexChange)="updatePosition($event)">
+                        <nz-tab [nzTitle]="titleTemplateSummery"  *hasPermission="['AC0']; belongsTo 'N63'">
+
+                            <ng-template nz-tab>
+
+                                <div class="pl-4 pr-4">
+                                    <petty-cash-summery-view class="section"></petty-cash-summery-view>
+                                </div>
+
+                            </ng-template>
+
+                        </nz-tab>
+
+                        <!-- <nz-tab [nzTitle]="titleTemplateReceipt"  *hasPermission="['AC0']; belongsTo 'N66'">
+
+                            <ng-template nz-tab>
+
+                                <div class="pl-4 pr-4">
+                                    <petty-cash-receipts class="section"></petty-cash-receipts>
+                                </div>
+
+                            </ng-template>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateReimbursement"  *hasPermission="['AC0']; belongsTo 'N67'">
+
+                            <ng-template nz-tab>
+
+                                <div class="pl-4 pr-4">
+                                    <petty-cash-reimbursement class="section"></petty-cash-reimbursement>
+                                </div>
+
+                            </ng-template>
+
+                        </nz-tab> -->
+                        <nz-tab [nzTitle]="titleTemplateSupplier" *hasPermission="['AC0']; belongsTo 'N64'">
+
+                            <ng-template nz-tab>
+
+                                <div class="pl-4 pr-4">
+                                    <petty-cash-supplier class="section"></petty-cash-supplier>
+                                </div>
+
+                            </ng-template>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateCategory" *hasPermission="['AC0']; belongsTo 'N65'">
+
+                            <ng-template nz-tab>
+
+                                <div class="pl-4 pr-4">
+                                    <petty-cash-category class="section"></petty-cash-category>
+                                </div>
+
+                            </ng-template>
+
+                        </nz-tab>`
+
+                        
+
+                    </nz-tabset>
+
+                    <ng-template #titleTemplateSummery>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/strategy-and-management/svg/042-analytics.svg" alt="img">
+                            <span>Summary</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateSupplier>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/strategy-and-management/svg/supplier.svg" alt="img">
+                            <span>Supplier</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateCategory>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/strategy-and-management/svg/categories.svg" alt="img">
+                            <span>Category</span>
+                        </div>
+                    </ng-template>
+                    <ng-template #titleTemplateReceipt>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/e-learning/svg/certificate.svg" alt="img">
+                            <span>Receipt</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateReimbursement>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/e-learning/svg/vocabulary.svg" alt="img">
+                            <span>Reimbursement</span>
+                        </div>
+                    </ng-template>
+
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

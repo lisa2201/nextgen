@@ -1,0 +1,133 @@
+<div class="mb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <h3 class="header mb-0">Parents information</h3>
+    
+    <ng-container *hasPermission="['AC2']; belongsTo 'N07'" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <button class="text-uppercase blank"
+            type="button"
+            nz-button 
+            nzType="link"
+            (click)="addUser($event)"
+            [promiseBtn]="buttonLoader">
+            <i class="plus icon mr-8"></i>
+            Add
+        </button>
+        
+    </ng-container>
+
+</div>
+
+<nz-list class="child-item-list"
+    [nzNoResult]="emptyUserBlock"
+    [nzDataSource]="selected?.parents" 
+    [nzRenderItem]="item" 
+    [nzGrid]="{ gutter: 16, xs: 24, sm: 24, md: 12, lg: 12, xl: 8, xxl: 8 }">
+
+    <ng-template #item let-item>
+
+        <nz-list-item 
+            [nzContent]="item.isLoading ? '' : nzContent">
+
+            <nz-skeleton [nzAvatar]="true" [nzActive]="true" [nzTitle]="false" [nzParagraph]="{ rows: 5 }" [nzLoading]="item.isLoading">
+
+                <ng-template #nzContent>
+
+                    <nz-card>
+
+                        <nz-list-item-meta 
+                            [nzAvatar]="nzAvatar" 
+                            [nzTitle]="nzTitle"
+                            [nzDescription]="nzDescription">
+
+                            <ng-template #nzAvatar>
+
+                                <nz-avatar 
+                                    [nzSize]="48" 
+                                    nzSrc="{{ item.getImage() }}"
+                                    class="item-img img-bg">
+                                </nz-avatar>
+
+                            </ng-template>
+
+                            <ng-template #nzTitle>
+
+                                <h4 class="text-truncate mb-4">{{ item.getFullName() }}</h4>
+
+                            </ng-template>
+
+                            <ng-template #nzDescription>
+
+                                <p class="m-0 text-truncate">
+                                    <i class="envelope outline icon"></i>
+                                    {{ item.email }}
+                                </p>
+
+                                <p class="m-0 text-truncate">
+                                    <i class="mobile alternate icon"></i>
+                                    {{ item.mobileNumber || 'N/A' }}
+                                </p>
+
+                                <p class="m-0 text-truncate">
+                                    <i class="phone icon"></i>
+                                    {{ item.phoneNumber || 'N/A' }}
+                                </p>
+
+                                <p class="m-0">
+                                    <i class="universal access icon"></i>
+                                    {{ item.loginAccess ? 'Yes' : 'No' }}
+                                </p>
+
+                                <p class="m-0" *ngIf="item.isPrimaryPayer">
+                                    <i class="dollar sign icon"></i>
+                                    Primary Payer
+                                    <i *ngIf="item.pivotUpdatedAt" nz-tooltip [nzTooltipTitle]="'Updated at ' + (item.pivotUpdatedAt | date: 'medium')" class="info circle right icon ml-4"></i>
+                                </p>
+
+                                <p class="m-0" *ngIf="!item.isPrimaryPayer">
+                                    <i class="dollar sign icon"></i>
+                                    <a (click)="setPrimaryPayer(item, $event)">
+                                        Set as primary payer
+                                    </a>
+                                </p>
+
+                                <a class="remove-btn" 
+                                    (click)="removeUser(item, $event)">
+                                    <i class="trash alternate outline icon mr-4"></i>
+                                    remove
+                                </a>
+
+                            </ng-template>
+
+                        </nz-list-item-meta>
+
+                    </nz-card>
+
+                </ng-template>
+
+            </nz-skeleton>
+
+        </nz-list-item>
+
+    </ng-template>
+
+</nz-list>
+
+<!-- EMPTY VIEW -->
+<ng-template #emptyUserBlock>
+
+    <nz-empty 
+        class="m-0" 
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+        [nzNotFoundContent]="contentTpl" 
+        [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <ng-template #contentTpl>
+            <h4 class="mt-24">No Data Found</h4>
+            <span>Please click on add button to attach parents to this child</span>
+        </ng-template>
+
+    </nz-empty>
+
+</ng-template>
+<!-- / EMPTY VIEW -->

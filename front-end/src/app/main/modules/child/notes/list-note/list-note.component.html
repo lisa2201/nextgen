@@ -1,0 +1,30 @@
+<nz-spin [nzIndicator]="indicatorTemplate" [nzSpinning]="inputsLoading">
+    <div fxLayout="column" fxLayoutAlign="center stretch" class="fuse-card"
+         *ngFor="let note  of noteList['notes']">
+        <div class="p-16" fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="secondary-text">{{note.created_at | date:'dd-MM-yyyy h:mm a' }} by <span
+                class="accent-500-fg">
+                <nz-avatar [nzSize]="26"
+                           nzSrc="{{ getUserProfileImage(note) }}"
+                           class="child-img img-bg"></nz-avatar>
+                {{note.created_by|titlecase}}</span></div>
+            <div>
+            <span class="accessButton" *ngIf="note.accessibility">
+                  <i (click)="edit(note)" nz-tooltip nzTooltipTitle="Edit"
+                     class="edit outline icon text-dec-none mr-4"></i>
+        <i (click)="delete(note)" class="trash alternate outline icon mr-4" nz-tooltip nzTooltipTitle="Delete"></i>
+
+            </span>
+            </div>
+        </div>
+        <div class="p-16 pt-0 line-height-1.75">
+            <pre>{{note.note}}</pre>
+        </div>
+    </div>
+</nz-spin>
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+

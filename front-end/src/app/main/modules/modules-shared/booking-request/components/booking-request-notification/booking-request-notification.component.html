@@ -1,0 +1,24 @@
+<ng-container *hasPermission="['AC0']; belongsTo: 'N31'"> 
+
+    <ng-container *ngIf="bookingRequests && bookingRequests.length > 0 && isAdmin">
+
+        <div class="toolbar-separator"></div>
+    
+        <button
+            class="notification-toggle-button" 
+            mat-button 
+            nz-dropdown
+            (click)="openBookingRequestView($event)" 
+            [@fadeMotion]>
+        
+            <nz-badge nzOverflowCount="100" [nzCount]="bookingRequests.length">
+                <mat-icon class="secondary-text">calendar_event_note</mat-icon>
+            </nz-badge>
+        
+        </button>
+
+    </ng-container>
+    
+</ng-container>
+
+

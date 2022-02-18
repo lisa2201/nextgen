@@ -1,0 +1,30 @@
+<div id="ccs" class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Manage Fees</h1>
+
+        <ng-container *hasPermission="['AC1']; belongsTo 'N24'">
+            <button class="text-uppercase" nz-button nzType="primary" (click)="addDialog($event)"
+                [promiseBtn]="buttonLoader">
+                <i class="plus icon mr-8"></i>Create New
+            </button>
+        </ng-container>
+
+    </div>
+
+    <div class="content">
+
+        <fees-list-view class="center p-24 pt-0"
+            [isCreateButtonLoading]="buttonLoader" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+        </fees-list-view>
+
+        <fuse-sidebar class="sidebar" name="fees-sidebar" position="left">
+            <fees-filter-right-side-nav [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }"></fees-filter-right-side-nav>
+        </fuse-sidebar>
+        
+    </div>
+
+</div>

@@ -1,0 +1,187 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <nz-alert nzCloseable nzType="warning" *ngIf="errorMsg && !errorMsg.length; else errors"
+        nzMessage="{{ (errorMsg.message) ? errorMsg.message : 'Error Occurred' }}">
+    </nz-alert>
+
+    <ng-template #errors>
+
+        <nz-alert nzCloseable nzType="warning" *ngFor="let obj of errorMsg;trackBy: trackByFn;"
+            nzMessage="{{ (obj.message) ? obj.message : 'Error Occurred' }}"></nz-alert>
+    </ng-template>
+
+    <!-- <nz-alert nzType="info" *ngIf="!enrolmentData" [nzMessage]="enrolmentIdEmpty" [@fadeInOnEnter]>
+        <ng-template #enrolmentIdEmpty>
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <img src="assets/icons/flat/ui_set/custom_icons/child/warning_sign.svg" alt="img">
+                <p class="mb-0">Enrolment ID not available.</p>
+            </div>
+        </ng-template>
+    </nz-alert> -->
+
+    <form name="ReturnFeeReductionForm" fxLayout="column" fxFlex [nzLayout]="'vertical'"
+        [formGroup]="ReturnFeeReductionForm" nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <nz-form-item nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-label nzRequired>Child Enrolment ID</nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="enrolmentIdErrorTpl">
+
+                        <input nz-input formControlName="enrolmentID" placeholder="Enrolment ID" type="text" />
+
+                        <ng-template #enrolmentIdErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input enrolment ID</ng-container>
+                            <ng-container *ngIf="control.hasError('maxlength')">Enrolment ID can't be longer than 20
+                                characters</ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+                <nz-form-item nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-label nzRequired>Session Report Start Date </nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="ReportStartDateErrorTpl">
+
+                        <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledDates" formControlName="sessionReportStartDate"
+                            class="block">
+                        </nz-date-picker>
+
+                        <ng-template #ReportStartDateErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input session start date
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+                <nz-form-item nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-label nzRequired>Total Fee Reduction Amount For Week</nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="totFeeReductionErrorTpl">
+
+                        <input nz-input formControlName="totalFeeReductionAmountForWeek"
+                            placeholder="Total Fee Reduction" type="number" />
+
+                        <ng-template #totFeeReductionErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input total fee reduction
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+                <nz-form-item nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-label nzRequired>Amount Passed On To Individual</nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="amountToIndividualErrorTpl">
+
+                        <input nz-input formControlName="amountPassedOnToIndividual" placeholder="Amount Passed"
+                            type="number" />
+
+                        <ng-template #amountToIndividualErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input amount passed on to
+                                individual</ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+                <nz-form-item nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-label nzRequired>Amount Not Passed On To Individual</nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="amountNotToIndividualErrorTpl">
+
+                        <input nz-input formControlName="amountNotPassedOnToIndividual" placeholder="Amount Not Passed"
+                            type="number" />
+
+                        <ng-template #amountNotToIndividualErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input amount not passed on to
+                                individual</ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+                <nz-form-item nz-col [nzMd]="24" [nzLg]="24">
+
+                    <nz-form-label nzRequired>Return Fee Reduction Reason</nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="returnFeeReductReasonErrorTpl">
+
+                        <textarea nz-input formControlName="returnFeeReductionReason"
+                            placeholder="Return Fee Reduction Reason" type="text" rows="4"></textarea>
+
+                        <ng-template #returnFeeReductReasonErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input return fee reduction reason
+                            </ng-container>
+                            <ng-container *ngIf="control.hasError('maxlength')">Fee reduction reason can't be longer
+                                than 250 characters</ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8" *hasPermission="['AC1']; belongsTo 'N37'" nz-button nzType="primary"
+                    [disabled]="!ReturnFeeReductionForm.valid" [promiseBtn]="buttonLoader">
+                    <i class="plus icon mr-8"></i> {{buttonAction}}
+                </button>
+
+                <button class="text-uppercase mr-8" type="button" nz-button nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

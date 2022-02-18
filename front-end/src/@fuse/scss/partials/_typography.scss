@@ -1,0 +1,569 @@
+@font-face {
+    font-family: 'spartan_mbbold';
+    src: url('assets/fonts/SpartanMB/spartanmb-bold-webfont.woff2') format('woff2'), 
+    url('assets/fonts/SpartanMB/spartanmb-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'spartan_mblight';
+    src: url('assets/fonts/SpartanMB/spartanmb-light-webfont.woff2') format('woff2'), 
+    url('assets/fonts/SpartanMB/spartanmb-light-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'spartan_mbregular';
+    src: url('assets/fonts/SpartanMB/spartanmb-regular-webfont.woff2') format('woff2'), 
+    url('assets/fonts/SpartanMB/spartanmb-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'spartan_mbthin';
+    src: url('assets/fonts/SpartanMB/spartanmb-thin-webfont.woff2') format('woff2'),
+    url('assets/fonts/SpartanMB/spartanmb-thin-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Icons';
+    src: url('assets/fonts/SemanticFonts/icons.eot');
+    src: url('assets/fonts/SemanticFonts/icons.eot?#iefix') format('embedded-opentype'), 
+    url('assets/fonts/SemanticFonts/icons.woff2') format('woff2'), 
+    url('assets/fonts/SemanticFonts/icons.woff') format('woff'), 
+    url('assets/fonts/SemanticFonts/icons.ttf') format('truetype'), 
+    url('assets/fonts/SemanticFonts/icons.svg#icons') format('svg');
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-decoration: inherit;
+    text-transform: none;
+}
+
+@font-face {
+    font-family: 'outline-icons';
+    src: url('assets/fonts/SemanticFonts/outline-icons.eot');
+    src: url('assets/fonts/SemanticFonts/outline-icons.eot?#iefix') format('embedded-opentype'), 
+    url('assets/fonts/SemanticFonts/outline-icons.woff2') format('woff2'), 
+    url('assets/fonts/SemanticFonts/outline-icons.woff') format('woff'), 
+    url('assets/fonts/SemanticFonts/outline-icons.ttf') format('truetype'), 
+    url('assets/fonts/SemanticFonts/outline-icons.svg#icons') format('svg');
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-decoration: inherit;
+    text-transform: none;
+}
+
+@font-face {
+    font-family: 'brand-icons';
+    src: url('assets/fonts/SemanticFonts/brand-icons.eot');
+    src: url('assets/fonts/SemanticFonts/brand-icons.eot?#iefix') format('embedded-opentype'), 
+    url('assets/fonts/SemanticFonts/brand-icons.woff2') format('woff2'), 
+    url('assets/fonts/SemanticFonts/brand-icons.woff') format('woff'), 
+    url('assets/fonts/SemanticFonts/brand-icons.ttf') format('truetype'), 
+    url('assets/fonts/SemanticFonts/brand-icons.svg#icons') format('svg');
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-decoration: inherit;
+    text-transform: none;
+}
+
+@font-face {
+    font-family: 'Quicksand';
+    src: url('assets/fonts/Quicksand/Quicksand-Light.woff2') format('woff2'),
+        url('assets/fonts/Quicksand/Quicksand-Light.woff') format('woff'),
+        url('assets/fonts/Quicksand/Quicksand-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Quicksand';
+    src: url('assets/fonts/Quicksand/Quicksand-Regular.woff2') format('woff2'),
+        url('assets/fonts/Quicksand/Quicksand-Regular.woff') format('woff'),
+        url('assets/fonts/Quicksand/Quicksand-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Quicksand';
+    src: url('assets/fonts/Quicksand/Quicksand-Bold.woff2') format('woff2'),
+        url('assets/fonts/Quicksand/Quicksand-Bold.woff') format('woff'),
+        url('assets/fonts/Quicksand/Quicksand-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ Theming
+// -----------------------------------------------------------------------------------------------------
+@mixin typography-theme($theme) {
+
+    $background: map-get($theme, background);
+    $accent: map-get($theme, accent);
+    $is-dark: map-get($theme, is-dark);
+
+    a {
+        // color: map-get($accent, default);
+    }
+
+    code {
+
+        &:not(.highlight) {
+            background-color: map-get($background, app-bar);
+        }
+    }
+
+    .changelog {
+
+        .entry {
+            background-color: map-get($background, card);
+        }
+    }
+
+    .text-boxed {
+        @if ($is-dark) {
+            background-color: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.54);
+        } @else {
+            background-color: rgba(0, 0, 0, 0.12);
+            color: rgba(0, 0, 0, 0.54);
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ Typography
+// -----------------------------------------------------------------------------------------------------
+html {
+    font-size: 62.5%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Lato", "Fira Sans", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol";
+    line-height: 1.4 !important;
+    letter-spacing: -0.1px !important;
+}
+
+body {
+    font-size: 14px;
+}
+
+html, body {
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+}
+
+// Headings
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    // font-weight: normal;
+}
+
+h1, .h1 {
+    font-size: 24px;
+}
+
+h2, .h2 {
+    font-size: 20px;
+}
+
+h3, .h3 {
+    font-size: 16px;
+}
+
+h4, .h4 {
+    font-size: 15px;
+}
+
+h5, .h5 {
+    font-size: 13px;
+}
+
+h6, .h6 {
+    font-size: 12px;
+}
+
+// Links
+a {
+    text-decoration: none;
+
+    &:not(.mat-button):not(.mat-raised-button):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button):not(.mat-fab):not(.mat-mini-fab) {
+
+        &:hover, &:active {
+            text-decoration: underline;
+        }
+    }
+}
+
+// Abbr
+abbr {
+    cursor: help;
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.54);
+}
+
+// Blockquote
+blockquote {
+    border-left: 3px solid rgba(0, 0, 0, 0.12);
+    font-style: italic;
+    margin: 1em 0;
+    padding-left: 16px;
+
+    footer {
+        font-style: normal;
+
+        &:before {
+            content: '\2014 \00A0';
+        }
+    }
+
+    &.reverse {
+        border-left: none;
+        border-right: 3px solid rgba(0, 0, 0, 0.12);
+        text-align: right;
+        padding-left: 0;
+        padding-right: 16px;
+
+        footer {
+
+            &:before {
+                content: '';
+            }
+
+            &:after {
+                content: '\2014 \00A0';
+            }
+        }
+    }
+}
+
+// Code
+code {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Lato", "Fira Sans", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol";
+
+    &:not(.highlight) {
+        color: #106CC8;
+        padding: 2px 3px;
+        border-radius: 2px;
+        line-height: 1.7;
+    }
+}
+
+// Definition lists
+dl {
+
+    dt {
+        font-weight: bold;
+    }
+
+    dd {
+        margin: 4px 0 16px 0;
+    }
+}
+
+// Mark
+mark {
+    background: #F7F49A;
+}
+
+// Pre
+pre {
+    line-height: 1.6;
+    margin: 8px 16px;
+    white-space: pre-wrap;
+}
+
+// Small
+small {
+    font-size: 80%;
+}
+
+// Table
+table {
+
+    thead {
+
+        tr {
+
+            th {
+                text-align: left;
+            }
+        }
+    }
+}
+
+// Text format helpers
+.text-italic {
+    font-style: italic;
+}
+
+.text-semibold {
+    font-weight: 600;
+}
+
+.text-bold,
+strong {
+    font-weight: 700;
+}
+
+.text-strike {
+    text-decoration: line-through;
+}
+
+.text-super {
+    vertical-align: super;
+}
+
+.text-sub {
+    vertical-align: sub;
+}
+
+.text-capitalize {
+    text-transform: capitalize;
+}
+
+.text-lowercase {
+    text-transform: lowercase;
+}
+
+.text-uppercase {
+    text-transform: uppercase;
+}
+
+.text-underline {
+    text-decoration: underline;
+}
+
+.text-dec-none {
+    text-decoration: none;
+}
+
+// Text align helpers
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+
+// Font weight helpers
+@for $weight from 1 through 9 {
+
+    .font-weight-#{$weight * 100} {
+        font-weight: #{$weight * 100};
+    }
+}
+
+// Font size helpers
+@for $size from 1 through 60 {
+
+    .font-size-#{$size * 1} {
+        font-size: #{$size * 1}px;
+    }
+
+    .font-size-#{$size * 2} {
+        font-size: #{$size * 2}px;
+    }
+}
+
+// Line height helpers
+@for $lineHeight from 1 through 60 {
+
+    .line-height-#{$lineHeight * 2} {
+        line-height: #{$lineHeight * 2}px;
+    }
+}
+
+.line-height-1 {
+    line-height: 1;
+}
+
+.line-height-1\.25 {
+    line-height: 1.25;
+}
+
+.line-height-1\.5,
+.line-height-1\.50 {
+    line-height: 1.5;
+}
+
+.line-height-1\.75 {
+    line-height: 1.75;
+}
+
+// Letter spacing helpers
+.letter-spacing-condensed {
+    letter-spacing: -0.02em;
+}
+
+.letter-spacing-normal {
+    letter-spacing: normal;
+}
+
+.letter-spacing-relaxed {
+    letter-spacing: 0.02em;
+}
+
+// Boxed text
+.text-boxed {
+    border-radius: 2px;
+    padding: 4px 8px;
+    margin: 0 8px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+// Truncate
+.text-truncate {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// Nowrap
+.text-nowrap {
+    white-space: nowrap;
+}
+
+// Changelog
+.changelog {
+
+    .entry {
+        margin-bottom: 24px;
+        padding: 24px 32px;
+        @include mat-elevation(2);
+
+        > .title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+
+            .version {
+                font-size: 24px;
+            }
+
+            .date {
+                margin-left: 8px;
+                font-size: 17px;
+                opacity: 0.54;
+            }
+        }
+
+        .groups {
+
+            div {
+                margin-bottom: 32px;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            .title {
+                display: inline-flex;
+                font-size: 13px;
+                color: white;
+                letter-spacing: 0.015em;
+                line-height: 1;
+                padding: 5px 8px;
+                border-radius: 2px;
+            }
+
+            .breaking-changes {
+
+                .title {
+                    background: #F44336;
+                }
+            }
+
+            .new {
+
+                .title {
+                    background: #43A047;
+                }
+            }
+
+            .improved {
+
+                .title {
+                    background: #673AB7;
+                }
+            }
+
+            .fixed {
+
+                .title {
+                    background: #2196F3;
+                }
+            }
+
+            ul {
+                padding-left: 24px;
+
+                li {
+                    margin-bottom: 6px;
+                    letter-spacing: 0.015em;
+
+                    ul {
+                        margin-top: 6px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Message boxes
+.message-box {
+    padding: 16px;
+    background: #607D8B;
+    border-left: 6px solid #37474F;
+    color: rgba(255, 255, 255, 1);
+
+    &.error {
+        background: #EF5350;
+        border-left-color: #B71C1C;
+    }
+
+    &.warning {
+        background: #FFECB3;
+        border-left-color: #FFC107;
+        color: rgba(0, 0, 0, 0.87);
+    }
+
+    &.success {
+        background: #4CAF50;
+        border-left-color: #2E7D32;
+    }
+
+    &.info {
+        background: #B3E5FC;
+        border-left-color: #03A9F4;
+        color: rgba(0, 0, 0, 0.87);
+    }
+}
+
+.txt-w {
+    color: #fff !important;
+}
+
+.hint-txt {
+    color: rgba(0, 0, 0, .25);
+}

@@ -1,0 +1,41 @@
+<div class="dialog-content-wrapper">
+
+    <div id="waitlist" fxLayout="column">
+
+        <div id="waitlist-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+
+            <mat-toolbar class="mat-accent m-0">
+
+                <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <span class="title dialog-title">{{ dialogTitle }}</span>
+
+                    <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                            aria-label="Close dialog">
+                        <mat-icon>close</mat-icon>
+                    </button>
+
+                </mat-toolbar-row>
+
+            </mat-toolbar>
+            <div id="waitlist-form" fxLayoutAlign="space-between stretch" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24"
+                 [nzLg]="24" [nzXl]="24" [nzXXl]="24"
+                 [@animate]="{ value:'*', params:{ duration:'500ms', y:'100px', opacity: 0, delay:'300ms' }}">
+
+                <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+                     [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+                    <form nz-form>
+                        <!--================  new sections ================-->
+                        <view-dynamic-data
+                            [sectionsCollection]="this.waitlistInputList"
+                            [waitlistInfo]="this.waitlistInfo"
+                            [type]="type"
+                        >
+                        </view-dynamic-data>
+                        <!--================ / new sections ================-->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

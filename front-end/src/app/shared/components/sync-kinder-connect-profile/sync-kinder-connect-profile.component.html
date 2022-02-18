@@ -1,0 +1,11 @@
+<ng-container *ngIf="this.client && this.client.hasKinderConnect">
+
+    <button class="text-uppercase blank ant-btn-icon-only" type="button" 
+        nz-button nzType="link" 
+        (click)="syncProfile($event)"
+        [promiseBtn]="buttonLoader"
+        tooltip="sync profile" placement="bottom" display-mobile="false" hide-delay="50">
+        <i class="sync alternate icon"></i>
+    </button>
+
+</ng-container>

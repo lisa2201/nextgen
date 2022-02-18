@@ -1,0 +1,120 @@
+<div class="loading-bar" *ngIf="listViewLoading" [@fadeMotion]>
+    <div class="__inner">
+        <img src="assets/loading/gears_c1.svg">
+        <span>Loading! Please Wait...</span>
+    </div>
+</div>
+
+<div class="toolbar px-8 pt-8 pb-24 br-0" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <nz-input-group class="search-container" [nzSuffix]="suffixTemplate" [nzPrefix]="prefixTemplate">
+        <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+    </nz-input-group>
+    
+    <ng-template #prefixTemplate>
+        <i nz-icon nzType="search" class="search-icon"></i>
+    </ng-template>
+    
+    <ng-template #suffixTemplate>
+        <i class="times circle outline icon ant-input-clear-icon" *ngIf="searchInput.value" [@fadeInOnEnter]
+            [@fadeOutOnLeave] (click)="clearSearch($event)">
+        </i>
+    </ng-template>
+
+    <ng-container *hasPermission="['AC2']; belongsTo 'N64'" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <button class="text-uppercase blank"
+            type="button"
+            nz-button 
+            nzType="link"
+            (click)="addSupplier($event)"
+            [promiseBtn]="buttonLoader">
+            <i class="plus icon mr-8"></i>
+            Add
+        </button>
+        
+    </ng-container>
+
+
+
+</div>
+<nz-list class="enrolment-list"
+    [nzBordered]="supplier.length > 0"
+    [nzNoResult]="emptyEnrolmentBlock"
+    [nzDataSource]="supplier"
+    [nzPagination]="pagination"
+    [nzRenderItem]="item">
+
+    <ng-template #item let-item>
+
+        <nz-list class="demo-loadmore-list" [nzLoading]="item.isLoading">
+            
+            <nz-list-item>
+                <ng-container>
+                    <nz-list-item-meta nzAvatar="{{item.getImage()}}"
+                        nzDescription="{{item.address || 'N/A'}}">
+                        <nz-list-item-meta-title>
+                            <a href="">{{ item.name}}</a>
+                        </nz-list-item-meta-title>
+                    </nz-list-item-meta>
+                    {{item.getGST() || 'N/A'}}
+                    <ul nz-list-item-actions>
+                        <nz-list-item-action>
+                            <a class="action-btn ml-8" *hasPermission="['AC2']; belongsTo 'N64'"
+                            (click) = editSupplier($event,item)>
+                                <i class="edit outline icon text-dec-none mr-4"></i>
+                                Edit
+                            </a>
+                        </nz-list-item-action>
+                        <nz-list-item-action>
+                            <a class="action-btn danger-color ml-8" *hasPermission="['AC3']; belongsTo 'N64'"
+                            (click) = delete($event,item)>
+                                <i class="trash alternate outline icon text-dec-none mr-4 danger-color"></i>
+                                Delete
+                            </a>
+                        </nz-list-item-action>
+                    </ul>
+                </ng-container>
+            </nz-list-item>
+        </nz-list>
+
+    </ng-template>
+
+    <ng-template #pagination>
+        <nz-pagination
+            *ngIf="total > 0"
+            [nzShowSizeChanger]="pageSizeChanger"
+            [nzTotal]="total"
+            [(nzPageIndex)]="pageIndex"
+            [(nzPageSize)]="pageSize"
+            [nzPageSizeOptions]="pageSizeOptions"
+            [nzShowTotal]="totalTemplate"
+            [nzSimple]="mobilePagination"
+            (nzPageIndexChange)="onPaginationChange()"
+            (nzPageSizeChange)="onPaginationChange(true)"></nz-pagination>
+    </ng-template>
+
+    <ng-template #totalTemplate let-range="range" let-total>
+        <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ range[0] }} to {{ range[1] }} of {{ total }} entries</span>
+        <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} - {{ range[1] }} of {{ total }} entries</span>
+    </ng-template>
+
+</nz-list>
+
+
+<ng-template #emptyEnrolmentBlock>
+
+    <nz-empty 
+        class="m-0" 
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+        [nzNotFoundContent]="contentTpl" 
+        [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <ng-template #contentTpl>
+            <h4 class="mt-24">No Data Found</h4>
+            <span>Please click on add button to add rooms to this child</span>
+        </ng-template>
+
+    </nz-empty>
+
+</ng-template>

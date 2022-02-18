@@ -1,0 +1,92 @@
+html {
+    scroll-behavior: smooth;
+}
+
+.elements-list-horizontal {
+    width: 1000px;
+    max-width: 100%;
+    border: solid 1px #ccc;
+    min-height: 20px;
+    display: flex;
+    flex-direction: row;
+    background: #ebf8ff;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.element-box-horizontal {
+    padding: 10px 10px;
+    border-right: solid 1px #ccc;
+    color: rgba(0, 0, 0, 0.87);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    cursor: move;
+    background: #ebf8ff;
+    font-size: 14px;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.element-box-horizontal:last-child {
+    border: none;
+}
+
+.elements-list-horizontal.cdk-drop-list-dragging .element-box-horizontal:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.toolbar {
+    min-height: unset !important;
+    max-height: unset !important;
+    height: auto !important;
+}
+
+.external-links {
+    .ant-btn {
+        height: 24px !important;
+    }
+}
+
+p {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.material-icons {
+    cursor: pointer;
+    justify-content: right;
+    float: right;
+}
+
+.buttonSet {
+    max-width: 20px;
+}
+
+.trash:hover {
+    cursor: pointer;
+    color: red;
+}
+
+.edit:hover {
+    cursor: pointer;
+    color: dodgerblue;
+}

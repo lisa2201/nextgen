@@ -1,0 +1,326 @@
+<div id="provider-view" class="p-20" [@fadeInOnEnter] [@fadeOutOnLeave]
+    [@animate]="{ value: '*', params: { delay: '100ms', y: '15px' } }">
+    <div class="mb-16">
+        <!-- <span>
+
+            <button nz-button (click)="goBack()">Back</button>
+        </span> -->
+        <ng-container *ngIf="provider.is_synced !== '0' && provider.is_synced !== '1' ">
+            <nz-alert 
+                nzType="warning" 
+                nzCloseable 
+                [nzMessage]="syncerror" 
+                (nzOnClose)="afterClose()">
+            </nz-alert>
+        </ng-container>
+        
+    </div>
+
+
+
+    <nz-divider nzText="Basic Information"></nz-divider>
+
+    <nz-table 
+        #basicTable 
+        [nzData]="apiNameData"
+        nzShowPagination="false">
+        <thead>
+          <tr>
+            <th>Provider ID</th>
+            <th>Buisness Name</th>
+            <th>Legal Name</th>
+            <th>Entity Type</th>
+            <th>ABN</th>
+            <th>PRODA Organisation ID</th>
+            <th>Commencement Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        <ng-container *ngIf="provider.is_synced === '0' || provider.is_synced === '3' ; else NameApiDataTpl">
+            <tr *ngFor="let data of basicTable.data">
+                <td>{{data.provider_id}}</td>
+                <td>{{data.buisness_name}}</td>
+                <td>{{data.legal_name}}</td>
+                <td>{{ getEntityType(data) }}</td>
+                <td>{{data.ABN}}</td>
+                <td>{{ data?.ccs_setup?.PRODA_org_id || 'N/A' }}</td>
+                <td>{{data.commencementDate || 'N/A'}}</td>
+                <td>
+                    <button nz-button nzType="link" nzSize="large"
+                    (click)="editBusinessName(data)">
+                    <i class="edit outline icon primary-color"></i>
+                    </button>
+                </td>
+              </tr>
+        </ng-container>
+        <ng-template #NameApiDataTpl>
+            <tr *ngFor="let data of providerNameData">
+                <td>{{data.provider_id}}</td>
+                <td>{{data.buisness_name || 'N/A' }}</td>
+                <td>{{data.legal_name || 'N/A' }}</td>
+                <td>{{ getEntityType(data) }}</td>
+                <td>{{data.ABN || 'N/A' }}</td>
+                <td>{{ data?.ccs_setup?.PRODA_org_id || 'N/A' }}</td>
+                <td>{{data.commencementDate || 'N/A'}}</td>
+                <td>
+                    <button nz-button nzType="link" nzSize="large"
+                    (click)="editBusinessName(data)">
+                    <i class="edit outline icon primary-color"></i>
+                    </button>
+                </td>
+              </tr>
+        </ng-template>
+        </tbody>
+    </nz-table>
+
+    <nz-divider nzText="Address Information"></nz-divider>
+    <nz-table [nzData]="provider.address" [nzShowPagination]="false" [nzLoading]="tableLoading"
+        [nzLoadingIndicator]="indicatorTemplate">
+        <thead>
+            <tr>
+                <th>Address Type</th>
+                <th>Street Line1</th>
+                <th>Street Line2</th>
+                <th>Suburb</th>
+                <th>State</th>
+                <th>Post Code</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <ng-container *ngIf="provider.is_synced === '0' || provider.is_synced === '2' ; else addressApiDataTpl">
+                <tr *ngFor="let addr of provider.address; let i = index">
+                    <td *ngIf ="addr.type === 'ZPHYSICAL'"> Physical </td>
+                    <!-- <ng-template #postAddTpl>
+                    <td>Postal Address</td>
+                    </ng-template> -->
+                    <td *ngIf ="addr.type === 'ZPOSTAL'"> Postal Address </td>
+                    <td>{{ addr.streetLine1 || 'N/A' }}</td>
+                    <td>{{ addr.streetLine2 || 'N/A' }}</td>
+                    <td>{{ addr.suburb || 'N/A' }}</td>
+                    <td>{{ addr.state || 'N/A' }}</td>
+                    <td>{{ addr.postcode || 'N/A' }}</td>
+
+                    <td>{{ addr.startDate || 'N/A' }}</td>
+                    <td>{{ addr.endDate || 'N/A' }}</td>
+
+                    <td>
+                        <button 
+                            nz-button nzType="link" 
+                            nzSize="large" 
+                            *hasPermission="['AC2']; belongsTo: 'N20'"
+                            (click)="editAddressDialog(provider.id,i, false)">
+                                <i class="edit outline icon primary-color"></i>
+                        </button>
+                    </td>
+                </tr>
+            </ng-container>
+            <ng-template #addressApiDataTpl>
+                <tr *ngFor="let addr of apiData['Address']['results']; let i = index">
+                    <td *ngIf ="addr.type === 'ZPHYSICAL'"> Physical </td>
+                    <td *ngIf ="addr.type === 'ZPOSTAL'"> Postal Address </td>
+                    <td>{{ addr.streetLine1 || 'N/A' }}</td>
+                    <td>{{ addr.streetLine2 || 'N/A' }}</td>
+                    <td>{{ addr.suburb || 'N/A' }}</td>
+                    <td>{{ addr.state || 'N/A' }}</td>
+                    <td>{{ addr.postcode || 'N/A' }}</td>
+
+                    <td>{{ addr.startDate || 'N/A' }}</td>
+                    <td>{{ addr.endDate || 'N/A' }}</td>
+                    <td>
+                        <button 
+                            nz-button nzType="link" 
+                            nzSize="large" 
+                            *hasPermission="['AC2']; belongsTo: 'N20'"
+                            (click)="editAddressDialog(provider.id,i, true)">
+                                <i class="edit outline icon primary-color"></i>
+                        </button>
+
+                    </td>
+                </tr>
+            </ng-template>
+        </tbody>
+    </nz-table>
+
+    <ng-container *ngIf="provider.is_synced !== '0'">
+        <nz-divider nzText="CCS Approvel Information"></nz-divider>
+
+    <nz-table [nzData]="apiData['CCSApproval']['results']" [nzShowPagination]="false" [nzLoading]="tableLoading"
+        [nzLoadingIndicator]="indicatorTemplate">
+        <thead>
+            <tr>
+                <th>Reason</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <ng-container>
+                <tr *ngFor="let approvel of apiData['CCSApproval']['results']; let i = index">
+                    
+                    <td *ngIf="approvel.reason === '195H' ">195H - Provider sanctioned</td>
+                    <td *ngIf="approvel.reason === '197AA' ">197A(a) - Immediate suspension as the Provider is not complying with Commonwealth, State and Territory laws</td>
+                    <td *ngIf="approvel.reason === '197AB' ">197A(b) - Immediate suspension due to an imminent threat to the health or safety of a child because of the care provided</td>
+                    <td *ngIf="approvel.reason === '197AC' ">197A(c) - Immediate suspension as it is not appropriate for (a) Service/s to provide care</td>
+                    <td *ngIf="approvel.reason === '197AD' ">197A(d) - Immediate suspension as it is not appropriate for the Provider to administer payments under the Family Assistance Law</td>
+
+                    <td *ngIf="approvel.reason === '197BA' ">197B(a) - The Provider has been issued 10 infringement notices within a 12 month period</td>
+                    <td *ngIf="approvel.reason === '197BB' ">197B(b) - The Provider has been issued 5 infringement notices within a 12 month period and penalties remain unpaid</td>
+                    <td *ngIf="approvel.reason === '197D' ">197D - Provider should not have been approved</td>
+
+                    <td *ngIf="approvel.reason === '197F' ">197F - All approved child care services have failed to provide child care for 3 continuous months or more</td>
+                    <td *ngIf="approvel.reason === '197H' ">197H - Provider has ceased to operate all of their approved child care services</td>
+                    <td *ngIf="approvel.reason === '197K' ">197K - Provider is no longer approved in respect of any child care service</td>
+
+                    <td *ngIf="approvel.reason === '197C' ">197C - Cancellation on request</td>
+                    <td *ngIf="approvel.reason === '196C' ">196C - Service removed on application</td>
+                    <td *ngIf="approvel.reason === '197E' ">197E - Provider should not have been approved for a service</td>
+                    <td *ngIf="approvel.reason === '197G' ">197G - Service has failed to provide child care for 3 continuous months or more</td>
+                    <td *ngIf="approvel.reason === '197J' ">197J - The Provider has ceased to operate the Service</td>
+                    <td *ngIf="approvel.reason === '' ">N/A</td>
+
+                    <td>{{approvel.startDate  || 'N/A' }}</td>
+                    <td>{{approvel.endDate || 'N/A' }}</td>
+
+                    <td *ngIf="approvel.status === 'CURR' ">Current</td>
+                    <td *ngIf="approvel.status === 'SUSP' ">Suspended</td>
+                    <td *ngIf="approvel.status === 'CANC' ">Cancelled</td>
+                    <td *ngIf="approvel.status === 'REFU' ">Refused</td>
+                    <td *ngIf="approvel.status === 'PEND' ">Pending</td>
+                    
+                </tr>
+            </ng-container>
+        </tbody>
+    </nz-table>
+    </ng-container>
+    
+
+    <ng-template #indicatorTemplate>
+        <div class="is-loading">
+            <span class="btn-spinner card-loader"></span>
+        </div>
+    </ng-template>
+
+    <nz-divider nzText="Financial Information"></nz-divider>
+
+    <nz-table [nzData]="provider.financial" [nzShowPagination]="false">
+        <thead>
+            <tr>
+                <th>Financial BSB</th>
+                <th>Account Number</th>
+                <th>Account Name</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let data of provider.financial; let i = index">
+                <td>{{ data.BSB }}</td>
+                <td>{{ data.accountNumber }}</td>
+                <td>{{ data.accountName }}</td>
+                <td>{{ data.date | date:'mediumDate' }}</td>
+                <td>
+                    <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="financialActionMenu">
+                        <i class="ellipsis vertical icon"></i>
+                    </button>
+
+                    <mat-menu #financialActionMenu="matMenu">
+                        <ng-container *hasPermission="['AC2']; belongsTo: 'N20'">
+                            <button mat-menu-item (click)="editfinancialDialog(i)">
+                                <span class="pr-8 pl-8">
+                                    <i class="edit outline icon primary-color"></i>
+                                    <span class="font-weight-600"> Edit</span>
+                                </span>
+                            </button>
+                        </ng-container>
+                    </mat-menu>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+
+    <nz-divider nzText="Contact Information"></nz-divider>
+
+    <nz-table [nzData]="provider.contact" [nzShowPagination]="false">
+        <thead>
+            <tr>
+
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Mobile</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let data of provider.contact; let i = index">
+
+                <td>{{ data.email || 'N/A' }}</td>
+                <td>{{ data.phone || 'N/A' }}</td>
+                <td>{{ data.mobile || 'N/A' }}</td>
+
+                <td>
+                    <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="contactActionsMenu">
+                        <i class="ellipsis vertical icon"></i>
+                    </button>
+
+                    <mat-menu #contactActionsMenu="matMenu">
+                        <ng-container *hasPermission="['AC2']; belongsTo: 'N20'">
+                            <button mat-menu-item (click)="editcontactDialog(i)">
+                                <span class="pr-8 pl-8">
+                                    <i class="edit outline icon primary-color">
+                                    </i>
+                                    <span class="font-weight-600"> Edit</span>
+                                </span>
+                            </button>
+                        </ng-container>
+                    </mat-menu>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+
+
+    <nz-divider nzText="Service Information"></nz-divider>
+
+    <nz-table [nzData]="provider.services" [nzShowPagination]="false">
+        <thead>
+            <tr>
+                <th>Service ID</th>
+                <th>Service Name</th>
+                <th>Service Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of provider.services">
+                <td>{{ data.service_id || 'N/A' }}</td>
+                <td>{{ data.service_name || 'N/A' }}</td>
+                <td>{{ data.service_type || 'N/A' }}</td>
+                <td>
+                    <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="seviceActionMenu">
+                        <i class="ellipsis vertical icon"></i>
+                    </button>
+
+                    <mat-menu #seviceActionMenu="matMenu">
+                        <ng-container *hasPermission="['AC2']; belongsTo: 'N20'">
+                            <button mat-menu-item [routerLink]="['/account-manager/modules/services/',data.id,'view']">
+                                <span class="pr-8 pl-8">
+                                    <i class="eye icon primary-color"></i>
+                                    <span class="font-weight-600"> View</span>
+                                </span>
+                            </button>
+                        </ng-container>
+                    </mat-menu>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>

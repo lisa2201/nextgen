@@ -1,0 +1,87 @@
+<div id="app-enrollment-form" class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth
+     [@fadeInOnEnter]>
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Enquiry Master Form</h1>
+        <div *hasPermission="['AC0']; belongsTo 'N57'" fxLayout="column" fxLayoutAlign="end end">
+
+        <span>
+            <button
+                class="mr-8"
+                nz-button
+                nzType="primary"
+                (click)="addNewInputDialog($event)"
+                [@animate]="{ value:'*', params:{ delay: '100ms', x:'15px' } }">
+                <i nz-icon nzType="plus"></i>
+                Add New Field
+            </button>
+
+            <button
+                class="mr-8"
+                nz-button
+                nzType="primary"
+                (click)="previewWaitlist($event)"
+                [@animate]="{ value:'*', params:{ delay: '100ms', x:'15px' } }">
+                <i nz-icon nzType="eye"></i>
+                Preview
+            </button>
+
+            <button
+                nz-button
+                nzType="primary"
+                [disabled]="!saveButtonActive"
+                (click)="onFormSubmit($event)"
+                [promiseBtn]="loadingActiveSave"
+                [@animate]="{ value:'*', params:{ delay: '100ms', x:'15px' } }">
+                <i nz-icon nzType="save"></i>
+                Save
+            </button>
+        </span>
+
+
+            <span *hasPermission="['AC0']; belongsTo 'N57'" class="lastUpdate secondary-text">
+
+            Last Updated : {{lastUpdated | date:"dd-MM-yy" }}
+        </span>
+
+
+        </div>
+
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar"
+                      name="sections-sidebar"
+                      position="left"
+                      lockedOpen="gt-md">
+            <!--            {{sections|json}}-->
+            <waitlist-template-left-sidenav
+                [settingsMaster]="settingsMaster"
+                [sections]="sections"
+                [formGroup]="enquiryForm"
+                (sectionEvent)="receiveSection($event)"
+                [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">
+            </waitlist-template-left-sidenav>
+            <!--            {{enrollmentForm.value|json}}-->
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+
+        <!-- CENTER -->
+
+        <section-template class="center p-24 pt-0"
+                          [settingsMaster]="settingsMaster"
+                          [selectedSection]="selectedSection"
+                          [formGroup]="enquiryForm"
+                          fusePerfectScrollbar
+                          [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        </section-template>
+        <!-- / CENTER -->
+
+    </div>
+</div>

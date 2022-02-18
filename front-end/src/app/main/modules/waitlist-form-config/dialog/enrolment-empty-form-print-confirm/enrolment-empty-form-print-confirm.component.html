@@ -1,0 +1,92 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Enrolment Form Print Configuration</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                    aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="printForm" fxLayout="column" fxFlex [nzLayout]="'vertical'"
+          [formGroup]="printForm" nz-form (ngSubmit)="onSubmit()">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+             [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Number of emergency contacts</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="amountErrorTpl">
+
+                            <input nz-input formControlName="contacts" placeholder="Number of emergency contacts" type="number" />
+
+                            <ng-template #amountErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input amount</ng-container>
+                                <ng-container *ngIf="control.hasError('min')">Please input minimum of 1 contact</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Number of allergies</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="allergyamountErrorTpl">
+
+                            <input nz-input formControlName="allergies" placeholder="Number of emergency allergies" type="number" />
+
+                            <ng-template #allergyamountErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input amount</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+                <button class="text-uppercase mr-8" type="submit" nz-button [disabled]="!printForm.valid"
+                        nzType="primary"  [promiseBtn]="buttonLoading">
+                    <i class="print icon mr-8"></i> Print
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                        (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

@@ -1,0 +1,193 @@
+<div class="dialog-content-wrapper" fxLayout="column">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form nz-form name="paymentForm" fxLayout="column" (ngSubmit)="onSubmit()" novalidate>
+
+        <div mat-dialog-content [formGroup]="paymentForm" class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+
+            <div fxLayout="row wrap" fxLayoutAlign="space-between" *ngIf="editMode === true">
+
+                <p *ngIf="editMode === true" fxFlex="49" fxFlex.lt-sm="100" class="text-truncate"><span
+                        class="font-weight-600">Branch Name:</span> {{paymentInfo.data.branch.name}}</p>
+                <p *ngIf="editMode === true" fxFlex="49" fxFlex.lt-sm="100" class="text-truncate"><span
+                        class="font-weight-600">Branch Info:</span> {{paymentInfo.data.branch.desc}}</p><br>
+                <br>
+            </div>
+
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Payment Type
+                </nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="paymentTypeErrorTpl">
+                    <!-- [(ngModel)]="radioValue" -->
+                    <nz-radio-group formControlName="paymentType">
+
+                        <label nz-radio nzValue="ezidebit"><img class="icon-img"
+                                src="https://nsw.childcarealliance.org.au/images/Ezidebit_Logo.jpg"></label>
+                        <label nz-radio nzValue="stripe"><img class="icon-img"
+                                src="https://upload.wikimedia.org/wikipedia/en/thumb/e/eb/Stripe_logo%2C_revised_2016.png/800px-Stripe_logo%2C_revised_2016.png"></label>
+                    </nz-radio-group>
+
+                    <ng-template #paymentTypeErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please select your payment type
+                        </ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+
+
+            <div *ngIf="EziType === true" fxLayout="row wrap" fxLayoutAlign="space-between">
+
+
+
+                <nz-form-item fxFlex="49" fxFlex.lt-sm="100">
+
+                    <nz-form-label nzRequired>Digital Key
+                    </nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="digitalKeyErrorTpl">
+
+                        <input nz-input formControlName="digitalKey" placeholder="Digital Key" type="text" />
+
+                        <ng-template #digitalKeyErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input your Digital Key
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+
+                <nz-form-item fxFlex="49" fxFlex.lt-sm="100">
+
+                    <nz-form-label nzRequired>Public Key
+                    </nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="publicKeyErrorTpl">
+
+                        <input nz-input formControlName="publicKey" placeholder="Public Key" type="text" />
+
+                        <ng-template #publicKeyErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input your Public Key
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+
+            </div>
+
+            <div *ngIf="EziType === false" fxLayout="row wrap" fxLayoutAlign="space-between">
+
+
+
+                <nz-form-item fxFlex="49" fxFlex.lt-sm="100">
+
+                    <nz-form-label nzRequired>Publishable Key
+                    </nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="publishableKeyErrorTpl">
+
+                        <input nz-input formControlName="publishableKey" placeholder="Publishable Key" type="text" />
+
+                        <ng-template #publishableKeyErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input your Publishable Key
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+
+                <nz-form-item fxFlex="49" fxFlex.lt-sm="100">
+
+                    <nz-form-label nzRequired>Secret Key
+                    </nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="secretKeyErrorTpl">
+
+                        <input nz-input formControlName="secretKey" placeholder="Secret Key" type="text" />
+
+                        <ng-template #secretKeyErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input your Secret Key
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+
+            </div>
+
+
+
+
+            <nz-form-item *ngIf="editMode === false">
+                <nz-form-label>Select Branches </nz-form-label>
+                <nz-form-control nzHasFeedback>
+                    <nz-checkbox-wrapper style="width: 100%;" (nzOnChange)="log($event)">
+
+                        <div nz-row *ngFor='let branch of branches'>
+                            <div nz-col nzSpan="8"><label nz-checkbox nzValue={{branch.index}}>{{branch.name}}</label>
+                            </div>
+                            <!-- <div nz-col nzSpan="12"><label [ngModel]="true" [ngModelOptions]="{standalone: true}"
+                            nz-checkbox nzValue={{branch.index}}>{{branch.name}}</label></div> -->
+                        </div>
+
+                    </nz-checkbox-wrapper>
+                </nz-form-control>
+            </nz-form-item>
+
+
+        </div>
+
+
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8" type="submit" *hasPermission="['AC1']; belongsTo 'N15'" nz-button
+                    nzType="primary" [disabled]="numberOf === 0 || !paymentForm.valid" [promiseBtn]="buttonLoading">
+                    <i class="plus icon mr-8"></i> Save
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

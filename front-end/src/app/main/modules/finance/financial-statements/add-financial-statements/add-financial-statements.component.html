@@ -1,0 +1,217 @@
+<div class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+        
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+        
+                <span class="h2">
+                    Generate Statement
+                </span>
+        
+            </h1>
+        
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- SIDEBAR -->
+            <fuse-sidebar class="sidebar" name="financial-statements-user-filter-sidebar" position="left">
+
+                <app-add-financial-statement-user-left-sidenav 
+                    [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }" 
+                    fusePerfectScrollbar
+                    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+                    (updateTableScroll)="updateScroll($event)">
+                </app-add-financial-statement-user-left-sidenav>
+
+            </fuse-sidebar>
+            <!-- / SIDEBAR -->
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+            
+                <div class="text-uppercase go-back-link" (click)="onBack($event)">
+                    <i class="long arrow alternate left icon"></i>
+                    <span>Go Back</span>
+                </div>
+
+                <div></div>
+            
+            </div>
+            <!--/ CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24 pt-16" fxLayout="column" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+            
+                <h3 class="my-16 mx-0"><i class="file alternate outline left icon mr-8"></i>Generate Financial Statement</h3>
+            
+                <form nz-form name="statementForm" fxLayout="column" [formGroup]="statementForm" [nzLayout]="'vertical'">
+            
+                    <div fxLayout="row wrap" fxLayoutAlign="space-between">
+            
+                        <nz-form-item fxFlex.lt-sm="100" fxFlex="32">
+            
+                            <nz-form-label nzRequired>Start Date</nz-form-label>
+            
+                            <nz-form-control nzHasFeedback [nzErrorTip]="startDateErrorTpl">
+            
+            
+                                <nz-date-picker [nzInputReadOnly]="true" [nzAllowClear]="false" [nzDisabledDate]="disabledStartDate"
+                                    formControlName="start_date" nzPlaceHolder="Start Date" class="block">
+                                </nz-date-picker>
+            
+                                <ng-template #startDateErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input start date
+                                    </ng-container>
+                                </ng-template>
+            
+                            </nz-form-control>
+            
+                        </nz-form-item>
+            
+                        <nz-form-item fxFlex.lt-sm="100" fxFlex="32">
+            
+                            <nz-form-label nzRequired>End Date</nz-form-label>
+            
+                            <nz-form-control nzHasFeedback [nzErrorTip]="endDateErrorTpl">
+            
+            
+                                <nz-date-picker [nzInputReadOnly]="true" [nzAllowClear]="false" [nzDisabledDate]="disabledEndDate" formControlName="end_date"
+                                    nzPlaceHolder="End Date" class="block">
+                                </nz-date-picker>
+            
+                                <ng-template #endDateErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input end date</ng-container>
+                                </ng-template>
+            
+                            </nz-form-control>
+            
+                        </nz-form-item>
+            
+                        <nz-form-item fxFlex.lt-sm="100" fxFlex="32">
+            
+                            <nz-form-label>
+                                Payment Date
+                                <i nz-tooltip nzTooltipTitle="This field will override next payment date for all the parents in the statement" class="info circle right icon ml-8 primary-color"></i>
+                            </nz-form-label>
+            
+                            <nz-form-control nzHasFeedback [nzErrorTip]="paymentDateErrorTpl">
+            
+            
+                                <nz-date-picker [nzInputReadOnly]="true" [nzAllowClear]="false" formControlName="payment_date" nzPlaceHolder="Payment Date"
+                                    class="block">
+                                </nz-date-picker>
+            
+                                <ng-template #paymentDateErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input payment date</ng-container>
+                                </ng-template>
+            
+                            </nz-form-control>
+            
+                        </nz-form-item>
+            
+                    </div>
+            
+                    <ng-container *ngIf="statementForm.invalid">
+                        <nz-alert class="mt-4 mb-12" nzType="info"
+                            nzMessage="Please select start date, end date and payment date to proceed"></nz-alert>
+                    </ng-container>
+            
+                    <nz-form-item>
+            
+                        <nz-form-label>
+                            Select Parents 
+                            <span>
+                                <button class="blank primary-color font-size-12 px-8 py-0" nz-button nzType="link" (click)="toggleSidebar('financial-statements-user-filter-sidebar')">
+                                    <i class="filter icon primary-color"></i> 
+                                    Filter
+                                </button>
+                            </span>
+                        </nz-form-label>
+            
+                        <nz-form-control [nzErrorTip]="startDateErrorTpl">
+            
+                            <nz-transfer [nzDisabled]="statementForm.invalid" [nzDataSource]="transferList"
+                                nzNotFoundContent="List is empty" [nzTitles]="['Parents', 'Selected Parents']"
+                                nzSearchPlaceholder="Search" (nzChange)="change($event)" nzShowSearch
+                                [nzFilterOption]="filterOption">
+                            </nz-transfer>
+            
+                        </nz-form-control>
+            
+                    </nz-form-item>
+            
+                    <div class="statement-list">
+                        <div *ngFor="let parent of selectedParents; trackBy: trackByFn; let i = index" class="px-24 py-12 statement-list-item mb-8"
+                            fxLayout="row" fxLayoutAlign="space-between">
+            
+                            <div fxFlex="49" fxFlex.lt-sm="100" fxLayout="row" fxLayoutAlign="start center">
+                                <span>{{ parent.title }}</span></div>
+            
+                            <div fxFlex="49" fxFlex.lt-sm="100" fxLayout="row" fxLayoutAlign="flex-end">
+
+                                <span class="mr-8">
+                                    <button nzSize="small" nz-button [nzLoading]="parent.previewLoading"
+                                        nzType="default"
+                                        (click)="showPreview($event, parent.id, i)">
+                                        <i class="eye icon mr-8"></i>
+                                        Preview
+                                    </button>
+                                </span>
+            
+                                <span class="mr-8">
+                                    <button nzSize="small" nz-button [nzLoading]="parent.downloadLoading"
+                                        nzType="default"
+                                        (click)="downloadPdf($event, parent.id, i)">
+                                        <i class="file pdf icon mr-8"></i>
+                                        Download PDF
+                                    </button>
+                                </span>
+            
+                                <span>
+                                    <button nz-button nzSize="small" nzType="primary" [nzLoading]="parent.sendLoading"
+                                        [disabled]="parent.sendDone" (click)="sendStatement($event, parent.id, i)">
+                                        <i class="paper plane icon mr-8"></i>
+                                        Send
+                                    </button>
+                                </span>
+                            </div>
+            
+                        </div>
+            
+                    </div>
+            
+                    <div class="m-0 p-16" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="selectedParents.length > 0">
+            
+                        <span></span>
+            
+                        <span class="text-right">
+            
+                            <button class="text-uppercase mr-8" type="submit" *hasPermission="['AC0']; belongsTo 'N36'" nz-button
+                                nzType="primary" [nzLoading]="buttonLoading" (click)="sendAll($event)" [disabled]="buttonDone">
+                                <i class="paper plane icon mr-8"></i> Send All
+                            </button>
+            
+                        </span>
+            
+                    </div>
+            
+                </form>
+            
+            </div>
+            <!--/ CONTENT -->
+
+        </div>
+        <!--/ CONTENT CARD -->
+
+    </div>
+    <!--/ CENTER -->
+
+</div>

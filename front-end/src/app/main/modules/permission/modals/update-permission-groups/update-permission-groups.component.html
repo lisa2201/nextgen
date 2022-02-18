@@ -1,0 +1,57 @@
+<div fxLayout="column" fxFlex>
+
+    <form name="permissionForm" 
+        fxLayout="column" fxFlex 
+        nz-form [nzLayout]="'vertical'" 
+        [formGroup]="permissionForm" 
+        nz-form>
+    
+        <nz-form-item>
+    
+            <nz-form-label nzRequired>Avaliable migration files</nz-form-label>
+    
+            <nz-form-control
+                [nzValidateStatus]="permissionFormStatus"
+                [nzErrorTip]="rolePermissionErrorTpl">
+    
+                <p class="mb-8" *ngIf="updates.length > 1">
+                    <label class="no-select"
+                        nz-checkbox
+                        [ngModelOptions]="{ standalone: true }"
+                        [(ngModel)]="allChecked"
+                        (ngModelChange)="updateAllChecked()"
+                        [nzIndeterminate]="indeterminate">
+                        Check all
+                    </label>
+                </p>
+    
+                <ng-container 
+                    formArrayName="migrationFiles" 
+                    *ngFor="let item of updates; let i = index; trackBy: trackByFn">
+    
+                    <p [ngClass]="(i === updates.length - 1) ? 'mb-0' : 'mb-4'">
+                                                    
+                        <label 
+                            nz-checkbox 
+                            (nzCheckedChange)="updateSingleChecked()"
+                            [formControlName]="i">
+    
+                            <span class="lbl-inner">{{ item }}</span>
+    
+                        </label>
+                    
+                    </p>
+    
+                </ng-container>
+    
+                <ng-template #rolePermissionErrorTpl let-control>
+                    <ng-container>Please select at least one option from the list</ng-container>
+                </ng-template>
+    
+            </nz-form-control>
+    
+        </nz-form-item>
+    
+    </form>
+
+</div>

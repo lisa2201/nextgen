@@ -1,0 +1,76 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Accs Percentage </span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="providerForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'"
+        [formGroup]="serviceForm" nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24">
+                    <nz-form-item>
+                        <nz-date-picker class="date-input" formControlName="date"
+                        [nzInputReadOnly]="true" (ngModelChange)="onFormSubmit($event)"
+                            nzSize=small>
+                        </nz-date-picker>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-spin nzTip="Loading..." [nzSpinning]="loading" [nzIndicator]="indicatorTemplate">
+                        <nz-descriptions nzBordered [nzColumn]="{ xxl: 1, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }">
+                            <nz-descriptions-item nzTitle="Date Retrieved">{{ result?.ACCSPercentage?.queryDate }}</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="ACCS Percentage Cap">{{ result?.ACCSPercentage?.ACCSPercentageCap }}</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="# Of Child At Risk">{{ result?.ACCSPercentage?.numberOfChildAtRisk }}</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="% Of Child At Risk">{{ result?.ACCSPercentage?.percentageOfChildAtRisk }}</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Certificate/Application To Be Submitted">{{ result?.ACCSPercentage?.certificateOrApplicationToBeSubmitted }}</nz-descriptions-item>
+                        </nz-descriptions>
+                    </nz-spin>
+
+                    <ng-template #indicatorTemplate>
+                        <div class="is-loading">
+                            <span class="btn-spinner card-loader"></span>
+                        </div>
+                    </ng-template>
+
+                </div>
+
+            </div>
+            
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

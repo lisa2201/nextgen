@@ -1,0 +1,35 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.child-booking-add-config {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 540px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+        .compose-form {
+            margin-top: 16px;
+            
+            .error-msg {
+                position: relative;
+                overflow: hidden;
+                padding: 0 16px;
+                font-size: 14px;
+                line-height: 1.5;
+                color: $danger-color;
+            }
+        }
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+}

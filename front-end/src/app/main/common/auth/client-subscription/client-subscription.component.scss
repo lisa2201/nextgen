@@ -1,0 +1,295 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+
+client-subscription {
+
+    #subscription {
+        width: 100%;
+        background: #1d8deb;
+        background-image: linear-gradient(-152deg, #377FEA 1%, #009fe9 65%);
+        background-size: cover;
+
+        #subscription-form-wrapper {
+            flex: 1 0 auto;
+            padding: 32px;
+
+            @include media-breakpoint('xs') {
+                padding: 16px;
+            }
+
+            #subscription-form {
+
+                text-align: center;
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: $custom-box-shadow-high;
+
+                // @include mat-elevation(16);
+
+                @include media-breakpoint('xl') {
+                    padding: 34px;
+                    width: 40%;
+                }
+
+                @include media-breakpoint('lg') {
+                    padding: 32px;
+                    width: 45%;
+                }
+
+                @include media-breakpoint('md') {
+                    padding: 30px;
+                    width: 60%;
+                }
+
+                @include media-breakpoint('sm') {
+                    padding: 28px;
+                    width: 80%;
+                }
+
+                @include media-breakpoint('xs') {
+                    padding: 26px;
+                    width: 100%;
+                }
+
+                .logo {
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 64px;
+                    overflow: hidden;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 15;
+
+                    img {
+                        max-width: 150px;
+                        margin-top: -5px;
+                    }
+                }
+
+                .title {
+                    font-size: 20px;
+                    margin: 16px 0 32px 0;
+                }
+
+                form {
+                    width: 100%;
+                    text-align: left;
+
+                    input[type=number]::-webkit-inner-spin-button, 
+                    input[type=number]::-webkit-outer-spin-button { 
+                        -webkit-appearance: none; 
+                        margin: 0; 
+                    }
+
+                    nz-form-label {
+                        label {
+                            color: #353535d9;
+                        }
+                    }
+
+                    .hidden {
+                        display: none;
+                    }
+
+                    .form-hint {
+                        font-size: 7pt;
+                        line-height: 9pt;
+                        margin: -5px auto 5px;
+                        margin-left: 4px;
+                        color: #999;
+                    }
+
+                    .ant-form-item {
+                        margin: 0 0 15px;
+                    }
+
+                    .tems-box {
+                        background: rgba(245, 245, 245, 0.45);
+                        padding: 16px;
+                        display: block;
+                        overflow: hidden;
+                        margin-bottom: 12px;
+                        border: 1px solid #eee;
+
+                        .ant-form-item {
+                            margin: 0;
+
+                            .ant-form-item-control {
+                                line-height: 1.5;
+                            }
+                        }
+                    }
+
+                    .copyright {
+                        text-align: center;
+                        color: dimgray;
+                    }   
+
+                }
+
+            }
+
+            #mail-confirm-form {
+                padding: 48px;
+                text-align: center;
+                background-color: white;
+                border-radius: 10px;
+
+                @include mat-elevation(16);
+
+                @include media-breakpoint('xs') {
+                    padding: 24px;
+                    width: 100%;
+                }
+
+                @include media-breakpoint('sm') {
+                    width: 65%;
+                }
+
+                @include media-breakpoint('md') {
+                    width: 55%;
+                }
+
+                @include media-breakpoint('lg') {
+                    width: 50%;
+                }
+
+                @include media-breakpoint('xl') {
+                    width: 45%;
+                }
+
+                .logo {
+                    margin: 0 auto 32px auto;
+                }
+
+                .mail-confirm {
+                    height: 120px;
+                }
+
+                .title {
+                    font-size: 28px;
+                    margin-top: 16px;
+                    color: #636363;
+                }
+
+                .subtitle {
+                    margin: 16px auto;
+                    max-width: 450px;
+                    font-size: 15px;
+                    color: #484848e6;
+                }
+
+                .message {
+                    font-weight: 600;
+                    text-align: center;
+                    margin-top: 40px;
+                }
+
+                .copyright {
+                    text-align: center;
+                    color: dimgray;
+                }
+
+            }
+
+            #mail-verify {
+                padding: 48px;
+                text-align: center;
+                background-color: white;
+                border-radius: 10px;
+                min-height: 50%;
+
+                @include mat-elevation(16);
+
+                @include media-breakpoint('xs') {
+                    padding: 24px;
+                    width: 100%;
+                }
+
+                @include media-breakpoint('sm') {
+                    width: 65%;
+                }
+
+                @include media-breakpoint('md') {
+                    width: 55%;
+                }
+
+                @include media-breakpoint('lg') {
+                    width: 50%;
+                }
+
+                @include media-breakpoint('xl') {
+                    width: 45%;
+                }
+
+                .ant-result-icon i.anticon {
+                    font-size: 72px !important;
+                }
+
+                .ant-result-success .anticon {
+                    color: #52c41a !important;
+                }
+
+                .ant-result-warning .anticon {
+                    color: #faad14 !important;
+                }
+
+                .ant-result {
+                    padding: 32px 32px;
+                }
+
+                nz-spin {
+
+                    .ant-spin-lg {
+
+                        .ant-spin-dot {
+                            font-size: 48px;
+                        }
+
+                    }
+
+                }
+
+                .logo {
+                    margin: 0 auto 32px auto;
+                }
+
+                .mail-confirm {
+                    height: 120px;
+                }
+
+                .title {
+                    font-size: 28px;
+                    margin-top: 16px;
+                    color: #636363;
+                }
+
+                .subtitle {
+                    margin: 16px auto;
+                    max-width: 450px;
+                    font-size: 15px;
+                    color: #484848e6;
+                }
+
+                .message {
+                    font-weight: 600;
+                    text-align: center;
+                    margin-top: 40px;
+                }
+
+                .copyright {
+                    text-align: center;
+                    color: dimgray;
+                }
+
+            }
+
+        }
+
+    }
+
+}

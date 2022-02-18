@@ -1,0 +1,195 @@
+<div *ngIf="!session" fxLayout="column" fxLayoutAlign="center center" fxFlex [@fadeInOnEnter]>
+
+    <!-- EMPTY VIEW -->
+    <nz-empty class="pt-24 pb-24 m-0"
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/state/' + (!isSessionAvailable ? 'support' : 'clicking') + '.svg'"
+        [nzNotFoundContent]="contentTpl">
+
+        <ng-template #contentTpl>
+
+            <ng-container *ngIf="isSessionAvailable; else createBlock">
+                <h4 class="mt-24">Select a session</h4>
+                <span class="hint-txt">Looks like there's no information to display here</span>
+            </ng-container>
+
+            <ng-template #createBlock>
+                <h4 class="mt-24">Create a new session submission report by clicking the create new button</h4>
+            </ng-template>
+
+        </ng-template>
+
+    </nz-empty>
+    <!-- / EMPTY VIEW -->
+
+</div>
+
+<div class="session-detail" *ngIf="session" [@animate]="{ value:'*', params:{ delay: '150ms', x:'15px' } }">
+    
+    <div class="session-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
+    
+        <span>
+    
+            <button class="text-uppercase blank" *ngIf="session" fxHide.gt-sm nz-button nzType="link"
+                (click)="deselectCurrentSession($event)">
+                <i class="arrow left icon"></i>
+            </button>
+    
+        </span>
+    
+        <span>
+
+            <ng-container *hasPermission="['AC1']; belongsTo 'N33'">
+
+                <button class="text-uppercase blank" type="button" 
+                    (click)="resubmit($event)"
+                    *ngIf="session.canResubmit()"
+                    [promiseBtn]="buttonLoader"
+                    nz-button 
+                    nzType="link"
+                    tooltip="resubmit" placement="bottom" display-mobile="false" hide-delay="50">
+                    <i class="edit outline icon"></i>
+                </button>
+
+            </ng-container>
+    
+            <ng-container *hasPermission="['AC11']; belongsTo 'N33'">
+    
+                <button class="text-uppercase blank" type="button" 
+                    (click)="withdraw($event)"
+                    *ngIf="session.canWithDrawSession()"
+                    [promiseBtn]="buttonLoader"
+                    nz-button 
+                    nzType="link"
+                    tooltip="withdraw" placement="bottom" display-mobile="false" hide-delay="50">
+                    <i class="eraser icon"></i>
+                </button>
+    
+            </ng-container>
+
+            <ng-container *hasPermission="['AC3']; belongsTo 'N33'">
+    
+                <button class="text-uppercase blank" type="button" 
+                    (click)="delete($event)"
+                    *ngIf="session.canDeleteSession()"
+                    [promiseBtn]="buttonLoader"
+                    nz-button 
+                    nzType="link">
+                    <i class="trash alternate outline icon"></i>
+                </button>
+    
+            </ng-container>
+
+        </span>
+    
+    </div>
+    
+    <div class="session-info" 
+        fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <ng-container *ngIf="session.hasError()">
+
+            <nz-alert class="mb-16" nzType="error" [nzMessage]="syncError"
+                *ngFor="let error of session.syncErrors; trackBy: trackByFn;">
+    
+                <ng-template #syncError>
+                    <div fxLayout="row" fxLayoutAlign="start center">
+                        <img src="assets/icons/flat/ui_set/custom_icons/child/enrolment-error.svg" alt="img">
+                        <p class="mb-0 font-weight-600">{{ error.message || 'Unknown error' }}</p>
+                    </div>
+                </ng-template>
+    
+            </nz-alert>
+
+        </ng-container>
+    
+        <div class="section">
+            <h3 class="header-sub">Session Week</h3>
+            <h1 class="header">
+                {{ session.reportDate | formatMoment: 'MMMM Do' }} to {{ session.endDate | formatMoment: 'MMMM Do' }} {{ session.endDate | formatMoment: 'YYYY' }}
+                <small>({{ session.type }})</small>
+            </h1>
+        </div>
+
+        <div class="section">
+            <h3 class="header-sub">Enrolment ID</h3>
+            <h1 class="header">{{ session.enrolment?.enrolId }}</h1>
+        </div>
+
+        <div class="section">
+             <h3 class="header-sub">Status</h3>
+             <h1 class="header">{{ session.statusLabel }}</h1>
+        </div>
+
+        <div class="section" *ngIf="!session.isCareProvided">
+            <h3 class="header-sub">Submitted Sessions</h3>
+            <nz-table class="mt-8 reset-m-h"
+                #sessionTable 
+                nzBordered
+                [nzShowPagination]="false"
+                [nzData]="session.sessions">
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Day</th>
+                        <th>Session Start - End</th>
+                        <th>Attendance Start - End</th>
+                        <th>Charged Amount</th>
+                        <th>Pre School Program</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let data of sessionTable.data">
+                        <td>{{ data.date }}</td>
+                        <td>{{ data.date | formatMoment: 'dddd' }}</td>
+                        <td>{{ data.startTime | convert24StringTime }} - {{ data.endTime | convert24StringTime }}</td>
+                        <td>
+                            <ng-container *ngIf="!data.isChildAbsent; else AbsenceBlock">
+                                {{ data.Attendances[0]?.timeIn | convert24StringTime }} - {{ data.Attendances[0]?.timeOut | convert24StringTime }}
+                            </ng-container>
+                            <ng-template #AbsenceBlock>
+                                Absence 
+                                <p *ngIf="data.absenceDocumentHeld" class="m-0 font-size-13 font-weight-600 danger-color">(absence document held)</p>
+                            </ng-template>
+                        </td>
+                        <td>{{ data.amountCharged | currency: client.currency :'symbol':'1.2-2' }}</td>
+                        <td>{{ session.getPreSchoolStatus(data.isPreSchoolProgram) }}</td>
+                    </tr>
+                </tbody>
+
+            </nz-table>
+        </div>
+
+        <div class="section">
+            <h3 class="header-sub">Status History</h3>
+            <nz-table class="mt-8 reset-m-h"
+                #sessionHistoryTable 
+                nzBordered
+                [nzShowPagination]="false"
+                [nzData]="session.statusHistory">
+
+                <thead>
+                    <tr>
+                        <th>Date Time</th>
+                        <th>Status</th>
+                        <th>Status Text</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let data of sessionHistoryTable.data">
+                        <td>{{ data.time_stamp | formatMoment: 'MMMM Do YYYY, h:mm:ss a' }}</td>
+                        <td>{{ data.status }}</td>
+                        <td>{{ data.status_text || 'N/A' }}</td>
+                        <td>{{ data.reason || 'N/A' }}</td>
+                    </tr>
+                </tbody>
+
+            </nz-table>
+        </div>
+    
+    </div>
+
+</div>

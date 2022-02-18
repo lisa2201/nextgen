@@ -1,0 +1,76 @@
+<div id="invitation" class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Manage Invitations</h1>
+
+        <ng-container *hasPermission="['AC1']; belongsTo 'N09'">
+
+            <ng-container *ngIf="isOwnerView else elseBlock">
+
+                <button class="text-uppercase"
+                    nz-button nz-dropdown nzType="primary"
+                    [nzDropdownMenu]="menu"
+                    [promiseBtn]="buttonLoader">
+                    Create New <i class="chevron down icon ml-8"></i>
+                </button>
+
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu>
+                        <li nz-menu-item (click)="addDialog($event)">
+                            <span class="font-weight-600">For Centre</span>
+                        </li>
+                        <li nz-menu-item (click)="addDialog($event, 'owner')">
+                            <span class="font-weight-600">For Site Manager</span>
+                        </li>
+                    </ul>
+                </nz-dropdown-menu>
+
+            </ng-container>
+
+            <ng-template #elseBlock>
+
+                <button class="text-uppercase"
+                    nz-button nzType="primary"
+                    (click)="addDialog($event)"
+                    [promiseBtn]="buttonLoader">
+                    <i class="plus icon mr-8"></i> Create New
+                </button>
+
+            </ng-template>
+
+        </ng-container>
+
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar"
+            name="invitation-filter-sidebar"
+            position="left"
+            lockedOpen="gt-md">
+
+            <invitation-left-sidenav
+                [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">
+            </invitation-left-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <invitation-list-view class="center p-24 pt-0"
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+            [isCreateButtonLoading]="buttonLoader"
+            (updateTableScroll)="updateScroll($event)">
+        </invitation-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

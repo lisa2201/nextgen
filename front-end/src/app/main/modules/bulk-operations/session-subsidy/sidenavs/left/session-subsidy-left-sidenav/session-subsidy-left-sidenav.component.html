@@ -1,0 +1,61 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32" style="padding-top: 32px !important;">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0">
+
+    <form fxLayout="column" fxFlex [formGroup]="sessionSubsidyFilterForm">
+
+        <div class="mb-16">
+
+            <label class="filter-label">Enrolment</label>
+
+            <nz-select [nzShowSearch]="true" formControlName="enrolment_id" nzMode="default" nzPlaceHolder="Enrolment">
+
+                <nz-option *ngFor="let item of children" [nzValue]="getValue(item)" [nzLabel]="getLabel(item)">
+                </nz-option>
+
+            </nz-select>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Start Date</label>
+
+            <nz-date-picker class="block" [nzInputReadOnly]="true" [nzDisabledDate]="disabledStartDate" nzPlaceHolder="Start Date" nzSize="small"
+                formControlName="start_date">
+            </nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">End Date</label>
+
+            <nz-date-picker class="block" [nzInputReadOnly]="true" [nzDisabledDate]="disabledEndDate" nzPlaceHolder="End Date" nzSize="small"
+                formControlName="end_date" [nzDisabled]="!sessionSubsidyFilterForm.controls['start_date'].value">
+            </nz-date-picker>
+
+        </div>
+
+        <button class="mb-16" nz-button nzType="default" [disabled]="tableLoader || sessionSubsidyFilterForm.invalid" (click)="queryData($event)"
+            [@fadeInOnEnter] [@fadeOutOnLeave]>
+            <i class="sync left icon pr-8"></i>
+            Query Session Subsidy
+        </button>
+
+        <button class="mb-16" nz-button nzType="default" [disabled]="tableLoader || sessionSubsidyFilterForm.invalid" (click)="downloadCsv($event)"
+            [@fadeInOnEnter] [@fadeOutOnLeave]>
+            <i class="file excel left icon pr-8"></i>
+            Download CSV
+        </button>
+
+    </form>
+
+
+</div>
+<!-- / SIDEBAR CONTENT -->

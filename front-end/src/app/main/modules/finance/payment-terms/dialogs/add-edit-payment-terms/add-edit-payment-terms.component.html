@@ -1,0 +1,179 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ title }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="paymentTermForm" fxLayout="column" fxFlex [nzLayout]="'vertical'"
+        [formGroup]="paymentTermForm" nz-form (ngSubmit)="onSubmit()">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label>Name</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback>
+    
+                            <input nz-input formControlName="name" placeholder="Name" type="text" />
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+                
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Start Date</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="startdateErrorTpl">
+    
+                            <nz-date-picker 
+                                [nzInputReadOnly]="true" 
+                                nzAllowClear="false" 
+                                formControlName="start_date" 
+                                nzPlaceHolder="Start Date" 
+                                class="block">
+                            </nz-date-picker>
+    
+                            <ng-template #startdateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input start date</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>End Date</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="enddateErrorTpl">
+    
+                            <nz-date-picker 
+                                [nzInputReadOnly]="true" 
+                                [nzDisabledDate]="disabledDate" 
+                                nzAllowClear="false" 
+                                formControlName="end_date" 
+                                nzPlaceHolder="End Date" 
+                                class="block">
+                            </nz-date-picker>
+    
+                            <ng-template #enddateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input end date</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>
+                            Activation Date
+                            <i nz-tooltip nzTooltipTitle="Starting from this date, bookings will be added to parent's transactions for the term period" class="info circle right icon ml-8 primary-color"></i>
+                        </nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="transactiondateErrorTpl">
+    
+                            <nz-date-picker 
+                                [nzInputReadOnly]="true" 
+                                [nzDisabledDate]="disabledTransactionDate"
+                                nzAllowClear="false" 
+                                formControlName="transaction_date" 
+                                nzPlaceHolder="Transaction Date" 
+                                class="block">
+                            </nz-date-picker>
+    
+                            <ng-template #transactiondateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input transaction date</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label>Payment Date</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="paymentdateErrorTpl">
+    
+                            <nz-date-picker 
+                                [nzInputReadOnly]="true" 
+                                [nzDisabled]="!paymentTermForm.get('transaction_date').value"
+                                [nzDisabledDate]="disabledPaymentDate"
+                                nzAllowClear="false" 
+                                formControlName="payment_date" 
+                                nzPlaceHolder="Payment Date" 
+                                class="block">
+                            </nz-date-picker>
+    
+                            <ng-template #paymentdateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input payment date</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8" type="submit" *hasPermission="['AC1']; belongsTo 'N61'" nz-button
+                    nzType="primary"  [promiseBtn]="buttonLoading" [disabled]="!paymentTermForm.valid">
+                    <i class="plus icon mr-8"></i> {{ editMode ? 'Update' : 'Save'}}
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

@@ -1,0 +1,28 @@
+.ant-col-xs-24.ant-col-sm-12.ant-col-md-8.ant-col-lg-8.ant-col-xl-6.ant-col-xxl-5.ng-star-inserted
+{
+    width: 33% !important;
+}
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+emergency-emergency-view-holder{
+    .child-info {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+
+        .child-img {
+            border: 4px solid $ant-border-color;
+            box-shadow: $custom-box-shadow-high;
+            margin-right: 16px;
+        }
+
+        .child-name {
+            font-size: 21px;
+            max-width: 300px;
+
+            @media only screen and (max-width: 670px) {
+                display: none;
+            }
+        }
+    }
+}

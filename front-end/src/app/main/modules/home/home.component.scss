@@ -1,0 +1,73 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+app-home {
+
+    #parent-dashboard {
+    
+        > .center {
+    
+            > .header {
+                background-color: #1BB0B4;
+
+                .welcome-message {
+                    color: white;
+                }
+    
+                .selected-project {
+                    background: rgba(0, 0, 0, 0.12);    
+                    color: #FFFFFF;
+                    padding: 8px 16px;
+                    height: 40px;
+                    line-height: 24px;
+                    font-size: 16px;
+                    border-radius: 8px 0 0 0;
+                }
+
+            }
+    
+            > .content {
+                flex: 1;
+                // overflow: scroll;
+
+                .widget {
+
+                    .child-selection{
+                        text-align: right;
+                        padding-top: 7px;
+
+                        .mat-icon {
+                            cursor: pointer;
+                        }
+                        
+                    }                    
+
+                    .refresh-button {
+                        color: grey;
+                    }
+
+                    table {
+                        thead {
+                            tr {
+                                background-color: #f1f1f1;
+                            }
+                        }
+                    }
+
+                    .child_booking{
+                        height: 145px;
+                    }
+                }
+
+                .go-back-link{
+                    padding-left: 8px;
+                }
+
+            }
+         
+            
+        }
+    
+    }
+
+}

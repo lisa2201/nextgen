@@ -1,0 +1,135 @@
+@import "src/@fuse/scss/variables";
+
+@-webkit-keyframes button-spin {
+    from {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+}
+
+@keyframes button-spin {
+    from {
+        -webkit-transform: rotate(0);
+        transform: rotate(0)
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+}
+
+.btn-spinner {
+    overflow: hidden;
+
+    visibility: hidden;
+    opacity: 0;
+    
+    -webkit-transition: -webkit-transform 0.3s, opacity 0.3s !important;
+    transition: transform 0.3s, opacity 0.3s !important;
+    -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1) !important;
+    transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1) !important;
+}
+
+.is-loading {
+    opacity: 0.8;
+
+    span:not(.btn-spinner), i {
+        opacity: 0;
+
+        -webkit-transition: -webkit-transform 0.2s, opacity 0.2s !important;
+        transition: transform 0.2s, opacity 0.2s !important;
+        -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1) !important;
+        transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1) !important;
+    }
+
+    .btn-spinner {
+        visibility: visible;
+        opacity: 1;
+
+        -webkit-transition-delay: 0.15s !important;
+        transition-delay: 0.15s !important;
+
+        &:before {
+            position: absolute;
+            content: '';
+            top: 50%;
+            left: 50%;
+            margin: -.64285714em 0 0 -.64285714em;
+            margin-top: -10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 500rem;
+            border: .2145em solid rgba(0, 0, 0, .1);
+            background: transparent;
+        }
+
+        &:after {
+            position: absolute;
+            content: '';
+            top: 50%;
+            left: 50%;
+            margin: -.64285714em 0 0 -.64285714em;
+            margin-top: -10px;
+            width: 20px;
+            height: 20px;
+            -webkit-animation: button-spin .6s linear;
+            animation: button-spin .6s linear;
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+            border-radius: 500rem;
+            border-color: #f5f5f5 transparent transparent;
+            border-style: solid;
+            border-width: .2145em;
+            -webkit-box-shadow: 0 0 0 1px transparent;
+            box-shadow: 0 0 0 1px transparent;
+        }
+    }
+}
+
+.ant-btn-lg {
+
+    &.is-loading {
+
+        .btn-spinner {
+
+            &:before {
+                margin-top: -11.5px;
+                width: 24px;
+                height: 24px;
+            }
+    
+            &:after {
+                margin-top: -11.5px;
+                width: 24px;
+                height: 24px;
+            }
+
+        }
+    
+    }
+}
+
+.card-loader {
+    &.btn-spinner {
+
+        &:before,
+        &:after {
+            margin: -1.28571428em 0 0 -1.28571428em;
+            margin-top: -20px;
+            width: 40px;
+            height: 40px;
+            border-width: 0.25em;
+        }
+
+        &:after {
+            border-color: $primary-color transparent transparent;
+        }
+
+    }
+}

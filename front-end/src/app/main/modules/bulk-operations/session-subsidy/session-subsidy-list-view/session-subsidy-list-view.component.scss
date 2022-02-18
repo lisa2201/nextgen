@@ -1,0 +1,22 @@
+.mat-menu-panel {
+    min-height: 50px !important;
+}
+
+
+app-session-subsidy-list-view {
+
+    nz-table {
+        .ant-table-content {
+            // min-height: unset;
+        }
+    }
+
+    nz-tag {
+        &.child-tag {
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+
+}

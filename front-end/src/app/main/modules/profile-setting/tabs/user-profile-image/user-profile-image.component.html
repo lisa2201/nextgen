@@ -1,0 +1,41 @@
+<div class="pl-4 pr-4">
+
+    <div class="s-title mb-16" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h3 class="header mb-0">Upload staff profile image</h3>
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+                <span class="text-right">
+                        <button class="text-uppercase" type="button"
+                                *hasPermission="['AC2']; belongsTo 'N04'"
+                                nz-button
+                                nzType="primary"
+                                (click)="onSubmit($event)"
+
+                                [promiseBtn]="buttonLoader">
+                            <i class="save outline icon b-i mr-8"></i> Update
+                        </button>
+                </span>
+
+                <button class="text-uppercase" type="button"
+                        *hasPermission="['AC2']; belongsTo 'N04'"
+                        nz-button
+                        nzType="danger"
+                        (click)="deleteImage($event)"
+
+                        [promiseBtn]="buttonLoader">
+                    <i class="trash icon b-i mr-8"></i> Delete
+                </button>
+            </div>
+
+            </div>
+            <div nz-row>
+            <div nz-col nzSpan="8"></div>
+            <div nz-col nzSpan="8"><img width="500" class="images" src="{{ userData.image | s3Link }}"/></div>
+            <div nz-col nzSpan="8"></div>
+        </div>
+    <div class="pl-4 pr-4">
+        <s3-upload [uploadCountLimit]="1" [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'staffImage')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+    </div>
+
+
+</div>

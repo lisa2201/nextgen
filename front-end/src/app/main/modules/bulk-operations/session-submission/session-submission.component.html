@@ -1,0 +1,90 @@
+<div id="bulk-session-submission" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Manage Session Submissions</h1>
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card ps" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span fxLayout="row" fxLayoutAlign="space-between center">
+                    
+                    <nz-week-picker class="date-input mr-8"
+                        [formControl]="calendarWeek"
+                        [nzInputReadOnly]="true"
+                        [nzDisabledDate]="disabledFutureWeeks"
+                        [nzDisabled]="listViewLoading"
+                        nzPlaceHolder="select week"></nz-week-picker>
+
+                    <nz-select class="child-selector"  
+                        [formControl]="selectedChild"
+                        [nzDisabled]="!calendarWeek.value || listViewLoading"
+                        nzShowSearch
+                        nzPlaceHolder="select a child">
+        
+                        <nz-option nzValue="0" nzLabel="All Children"></nz-option>
+            
+                        <nz-option *ngFor="let item of children; trackBy: trackByFn;" nzValue="{{ item.id }}" nzLabel="{{ item.getFullName() }}"></nz-option>
+                        
+                    </nz-select>
+                    
+                </span>
+
+                <span fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <button class="text-uppercase blank"
+                        nz-button
+                        nzType="link"
+                        (click)="reload($event)"
+                        [promiseBtn]="buttonLoader"
+                        [disabled]="disableReload()">
+                        <i class="sync alternate icon"></i>
+                    </button>
+
+                    <button class="text-uppercase blank"
+                        nz-button
+                        nzType="link"
+                        (click)="toggleSidebar($event)">
+                        <i class="list alternate outline icon"></i>
+                    </button>
+                    
+                </span>
+
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content pb-16"
+                fusePerfectScrollbar 
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true, suppressScrollY: isSidebarOpened() }">
+
+                <bulk-session-submission-list-view></bulk-session-submission-list-view>
+
+            </div>
+            <!-- / CONTENT --> 
+
+            <!-- SIDEBAR -->
+            <fuse-sidebar class="sidebar" name="session-summary-sidebar" position="right">
+
+                <session-summary-view-sidebar></session-summary-view-sidebar>
+
+            </fuse-sidebar>
+            <!-- / SIDEBAR -->
+
+        </div>
+        <!-- / CONTENT CARD --> 
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

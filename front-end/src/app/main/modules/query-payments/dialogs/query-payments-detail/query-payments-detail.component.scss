@@ -1,0 +1,23 @@
+
+
+query-payments-detail {
+
+    .toolbar {
+        .go-back-link {
+            flex: none;
+        }
+    }
+    
+    .ant-table-placeholder {
+        background-color: #f3f3f3;
+    }
+
+}
+
+.query-payments-detail {
+
+    .mat-dialog-container {
+        padding: 0;
+    }
+
+}

@@ -1,0 +1,379 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">
+                Waive Gap Fee
+            
+                <span *ngIf="preview" [@fadeMotion]>
+                    <i class="long arrow alternate right icon px-8"></i>Preview
+                </span>
+
+            </span>
+
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="waiveFeeForm" fxLayout="column" fxFlex [nzLayout]="'vertical'"
+        [formGroup]="waiveFeeForm" nz-form>
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }" *ngIf="!preview" [@fadeInOnEnter]>
+
+                
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+    
+                        <div fxLayout="row" fxLayoutAlign="space-between center">
+    
+                            <nz-form-label nzRequired fxFlex="60">Parent</nz-form-label>
+    
+                            <div fxFlex="40" fxLayoutAlign="end center" class="select-actions">
+                                <button nz-button nzType="link" class="pr-4 pl-0" [disabled]="parents.length === 0" (click)="toggleSelectAllParents(true)">Select All</button>
+                                <span>|</span>
+                                <button nz-button nzType="link" class="pl-4 pr-0" [disabled]="parents.length === 0" (click)="toggleSelectAllParents(false)">Select None</button>
+                            </div>
+    
+                        </div>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="parentsErrorTpl">
+    
+                            <nz-select 
+                                [nzMaxTagCount]="2" 
+                                [nzMaxTagPlaceholder]="tagPlaceHolder"
+                                nzShowSearch
+                                formControlName="parents" 
+                                nzMode="multiple"
+                                nzPlaceHolder="Select Parents">
+    
+                                <nz-option *ngFor="let parent of parents" nzValue="{{ parent.id }}"
+                                    nzLabel="{{ parent.getFullName() }}">
+                                </nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #tagPlaceHolder let-selectedList> and {{ waiveFeeForm.get('parents').value.length - 2 }} more selected </ng-template>
+    
+                            <ng-template #parentsErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select atleast 1 parent
+                                </ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>
+                            Start Date
+                            <!-- <i nz-tooltip nzTooltipTitle="Days can be selected for current week and future dates" class="info circle right icon ml-8 primary-color"></i> -->
+                        </nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="startdateErrorTpl">
+    
+                            <nz-date-picker 
+                                [nzInputReadOnly]="true" 
+                                [nzAllowClear]="false" 
+                                formControlName="start_date" 
+                                nzPlaceHolder="Start Date" 
+                                class="block"
+                                [nzDisabledDate]="disabledStartDate">
+                            </nz-date-picker>
+    
+                            <ng-template #startdateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input start date</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>End Date</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="enddateErrorTpl">
+    
+                            <nz-date-picker 
+                                [nzInputReadOnly]="true" 
+                                [nzAllowClear]="false" 
+                                formControlName="end_date" 
+                                nzPlaceHolder="End Date" 
+                                class="block"
+                                [nzDisabled]="!waiveFeeForm.get('start_date').value"
+                                [nzDisabledDate]="disabledEndDate">
+                            </nz-date-picker>
+    
+                            <ng-template #enddateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input end date</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" *ngIf="showDays">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Days</nz-form-label>
+
+                        <nz-form-control
+                            [nzErrorTip]="daysErrorTpl"
+                            formArrayName="days">
+
+                            <div class="day-selector">
+
+                                <div class="day-selector-inner">
+
+                                    <ng-container *ngFor="let item of weekDays; trackBy trackByFn;">
+
+                                        <label class="attendance-chk"
+                                            nz-checkbox 
+                                            [formControlName]="item?.index"
+                                            [nzDisabled]="!item.enable"
+                                            tooltip="{{ item?.name }}" placement="top" display-mobile="false" hide-delay="50">
+            
+                                            <span class="attendance-lbl-inner no-select" [ngClass]="{ weekend : item.weekend }">{{ item?.name | shorten: 2: '' }}</span>
+            
+                                        </label>
+
+                                    </ng-container>
+
+                                </div>
+
+                            </div>
+
+                            <ng-template #daysErrorTpl let-control>
+                                <ng-container>Please select at least one option from the list</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+            <div *ngIf="preview" [@fadeInOnEnter]>
+
+                <p class="mb-8 text-center">
+
+                    <span fxLayout="row" fxLayoutAlign="space-between center">
+                        <span>
+                            Date range from 
+                            <span class="text-bold">{{ getStartDate() }}</span> to 
+                            <span class="text-bold">{{ getEndDate() }}</span>
+                        </span>
+
+                        <span>
+                            Days: {{ this.previewWeekDays }}
+                        </span>
+
+                        <span class="text-bold">
+                            Selected Parents: {{ getSelectedUsersNumber() }} out of {{ previewData.length }}
+                        </span>
+                    </span>
+
+                </p>
+
+                <nz-form-item class="mb-0">
+
+                    <nz-form-control [nzValidateStatus]="previewDataError">
+
+                        <nz-table class="mt-4"
+                            #previewDataTable 
+                            [nzData]="previewData"
+                            [nzShowPagination]="true"
+                            [nzPageSize]="20"
+                            [nzSize]="'small'">
+                        
+                            <thead>
+                                <tr>
+                                    <th 
+                                        nzShowCheckbox 
+                                        [(nzChecked)]="isAllPreviewDataChecked"
+                                        [nzIndeterminate]="isPreviewIndeterminate"
+                                        (nzCheckedChange)="checkAllPreviews($event)"></th>
+                                    <th></th>
+                                    <th>Parent Name</th>
+                                    <th>Gap Fee</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <ng-container *ngFor="let data of previewDataTable.data; trackBy: trackByFn">
+                                    <tr>
+                                        <td [nzAlign]="'center'">
+                                            <label 
+                                                nz-checkbox
+                                                [(nzChecked)]="data.child_all_checked"
+                                                [nzIndeterminate]="data.child_intermediate_checked"
+                                                [(nzChecked)]="data.selected"
+                                                (nzCheckedChange)="checkParent($event, data)"></label>
+                                        </td>
+                                        <td [(nzExpand)]="data.expand"></td>
+                                        <td>
+                                            <p class="m-0">{{ getFullname(data) }}</p>
+                                        </td>
+                                        <td>
+                                            <!-- <p class="m-0">{{ getParentGapFee(data) | currency }}</p> -->
+                                            <p class="m-0">{{ data.gap_fee | currency }}</p>
+                                        </td>
+                                    </tr>
+
+                                    <tr [nzExpand]="data.expand" [@expandCollapse]>
+                                        <nz-table 
+                                            class="mt-4"
+                                            #innerTable 
+                                            [nzData]="data.child" 
+                                            [nzSize]="'small'" 
+                                            [nzShowPagination]="false">
+
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Child Name</th>
+                                                    <th>Amount</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+
+                                                <ng-container *ngFor="let child of innerTable.data; trackBy: trackByFn">
+
+                                                    <tr>
+                                                        <td [nzAlign]="'center'">
+                                                            <label 
+                                                                nz-checkbox
+                                                                [(nzChecked)]="child.selected"
+                                                                (nzCheckedChange)="checkChild($event)"></label>
+                                                        </td>
+                                                        <td>
+                                                            <p class="m-0">{{ getFullname(child) }}</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="m-0">{{ child.gap_fee | currency }}</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="m-0">
+                                                                <span class="detail-link" (click)="openDetails($event, child)">Details</span>
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+
+                                                </ng-container>
+
+                                            </tbody>
+
+                                        </nz-table>
+                                    </tr>
+
+                                </ng-container>
+                            </tbody>
+                        
+                        </nz-table>
+
+                        <ng-template #previewDataError let-control>
+                            <ng-container>Please select at least one option</ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span>
+
+                <ng-container *ngIf="preview">
+
+                    <button class="text-uppercase mr-8" 
+                        type="button"
+                        nz-button 
+                        nzType="default"
+                        (click)="closePreview($event)">
+                        <i class="long arrow alternate left icon mr-8"></i> Back
+                    </button>
+
+                </ng-container>
+
+            </span>
+
+            <span class="text-right">
+
+                <ng-container *ngIf="!preview">
+
+                    <button 
+                        class="text-uppercase mr-8" 
+                        type="button" 
+                        nz-button
+                        nzType="primary"  
+                        [promiseBtn]="buttonLoading"
+                        (click)="getPreviewData($event)"
+                        [disabled]="waiveFeeForm.invalid"
+                        >
+                        Preview
+                        <i class="long arrow alternate right icon ml-8"></i> 
+                    </button>
+
+                </ng-container>
+
+                <ng-container *ngIf="preview">
+
+                    <button 
+                        class="text-uppercase mr-8" 
+                        type="button" 
+                        nz-button
+                        nzType="primary"  
+                        [promiseBtn]="buttonLoading"
+                        (click)="submit($event)"
+                        [disabled]="waiveFeeForm.invalid || !hasSelectedPreviewItems()"
+                        >
+                        <i class="check icon mr-8"></i> 
+                        Submit
+                    </button>
+
+                </ng-container>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

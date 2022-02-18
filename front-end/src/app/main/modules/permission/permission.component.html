@@ -1,0 +1,87 @@
+<div id="permissions" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+    
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Manage Permissions</h1>
+
+            <ng-container *hasPermission="['AC0']; belongsTo 'N06'">
+
+                <button class="text-uppercase" 
+                    nz-button nz-dropdown nzType="primary"
+                    [nzDropdownMenu]="menu"
+                    [promiseBtn]="buttonLoader">
+                    Action <i class="chevron down icon ml-8"></i>
+                </button>
+    
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu>
+                        <li nz-menu-item (click)="resolveConflicts($event)" [nzDisabled]="!hasErrors()">
+                            <span class="_icon mr-8"><i class="sync alternate icon mr-8"></i></span>
+                            <span class="font-weight-600">Resolve Conflicts</span>
+                        </li>
+
+                        <li nz-menu-item nzDisabled><span class="font-weight-600">Edit Permissions</span></li>
+                        <li nz-menu-item (click)="manageSubscriberPermissions($event, '0')">
+                            <span class="_icon mr-8"><i class="user circle outline icon mr-8"></i></span>
+                            <span class="font-weight-600">Subscriber</span>
+                        </li>
+                        <li nz-menu-item (click)="manageSubscriberPermissions($event, '1')">
+                            <span class="_icon mr-8"><i class="address book outline icon mr-8"></i></span>
+                            <span class="font-weight-600">Emergency Contact</span>
+                        </li>
+                    </ul>
+                </nz-dropdown-menu>
+
+            </ng-container>
+    
+        </div>
+        <!-- / HEADER -->
+    
+        <!-- CONTENT CARD -->
+        <div class="content-card ps" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+    
+            <div class="px-16 pt-16 pb-8" *ngIf="updates.length > 0" [@slideMotion]="'bottom'">
+    
+                <nz-alert
+                    nzType="info"
+                    nzMessage="New Permissions"
+                    [nzDescription]="updateContent"
+                    [nzCloseable]="false"
+                    nzShowIcon>
+                </nz-alert>
+    
+                <ng-template #updateContent>
+    
+                    <div fxLayout="row" fxLayoutAlign="space-between center">
+    
+                        <p class="mb-0">New permission groups available to migrate.</p>
+    
+                        <a class="underline" (click)="showUpdates($event)">View</a>
+                        
+                    </div>
+    
+                </ng-template>
+    
+            </div>
+
+            <!-- CONTENT -->
+            <div class="content"
+                fusePerfectScrollbar 
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <permission-list-view></permission-list-view>
+
+            </div>
+            <!-- / CONTENT --> 
+    
+        </div>
+        <!-- / CONTENT CARD --> 
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

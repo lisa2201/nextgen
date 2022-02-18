@@ -1,0 +1,200 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32" style="padding-top: 32px !important;">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0">
+
+    <form fxLayout="column" fxFlex [formGroup]="financeAccountsFilterForm">
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Payment Schedule</label>
+        
+            <nz-radio-group formControlName="payment_schedule">
+        
+                <label nz-radio nzValue="all" class="_filter">All</label>
+                <label nz-radio nzValue="active" class="_filter">Active</label>
+                <label nz-radio nzValue="upcoming" class="_filter">Upcoming</label>
+                <label nz-radio nzValue="no" class="_filter">No</label>
+        
+            </nz-radio-group>
+        
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Payment Frequency</label>
+
+            <nz-select class="mb-8" formControlName="payment_frequency" nzMode="default" [nzAllowClear]="true" nzPlaceHolder="Payment Frequency" [nzDisabled]="planInputDisable()">
+
+                <nz-option 
+                    *ngFor="let frequency of paymentFrequencies" 
+                    [nzValue]="frequency.value"
+                    [nzLabel]="frequency.name">
+                </nz-option>
+
+            </nz-select>
+        
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Billing Term</label>
+
+            <nz-select formControlName="billing_term" nzPlaceHolder="Billing Term" [nzAllowClear]="true" [nzDisabled]="planInputDisable()">
+    
+                <nz-option 
+                    *ngFor="let term of billingTerms" 
+                    [nzValue]="term.value"
+                    [nzLabel]="term.name">
+                </nz-option>
+
+            </nz-select>
+        
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Payment Day</label>
+        
+            <nz-select formControlName="payment_day" nzPlaceHolder="Payment Day" [nzAllowClear]="true" [nzDisabled]="planInputDisable()">
+    
+                <nz-option 
+                    *ngFor="let day of paymentdays" 
+                    [nzValue]="day.value"
+                    [nzLabel]="day.name">
+                </nz-option>
+
+            </nz-select>
+        
+        </div>
+
+        <div class="mb-16">
+            <label nz-checkbox fxLayout="row" fxLayoutAlign="start center" formControlName="auto_charge" [nzDisabled]="planInputDisable()">Auto Charge</label>
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Payment Method</label>
+
+            <nz-select class="mb-8" formControlName="payment_method" nzMode="default" [nzAllowClear]="false" nzPlaceHolder="Payment Method">
+
+                <nz-option nzValue="all" nzLabel="All"></nz-option>
+                <nz-option nzValue="ezidebit" nzLabel="Ezidebit"></nz-option>
+                <nz-option nzValue="bpay" nzLabel="BPay"></nz-option>
+                <nz-option nzValue="none" nzLabel="None"></nz-option>
+
+            </nz-select>
+        
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Primary Payer</label>
+        
+            <nz-radio-group formControlName="primary_payer">
+        
+                <label nz-radio nzValue="all" class="_filter">All</label>
+                <label nz-radio nzValue="yes" class="_filter">Yes</label>
+                <label nz-radio nzValue="no" class="_filter">No</label>
+        
+            </nz-radio-group>
+        
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Parent Status</label>
+        
+            <nz-radio-group formControlName="parent_status">
+        
+                <label nz-radio nzValue="all" class="_filter">All</label>
+                <label nz-radio nzValue="0" class="_filter">Active</label>
+                <label nz-radio nzValue="1" class="_filter">Inactive</label>
+        
+            </nz-radio-group>
+        
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Account Balance</label>
+
+            <nz-select class="mb-8" formControlName="account_balance_equality" nzMode="default" [nzAllowClear]="true" nzPlaceHolder="Account Balance Criteria">
+
+                <nz-option nzValue="lt" nzLabel="Less Than"></nz-option>
+                <nz-option nzValue="gt" nzLabel="Greater Than"></nz-option>
+                <nz-option nzValue="eq" nzLabel="Equal To"></nz-option>
+
+            </nz-select>
+
+            <input nz-input formControlName="account_balance_value" placeholder="Account Balance Value" type="number" />
+
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Last Scheduled Payment Date</label>
+
+            <nz-select class="mb-8" formControlName="last_payment_date_equality" nzMode="default" [nzAllowClear]="true" nzPlaceHolder="Last Payment Date Criteria">
+
+                <nz-option nzValue="lt" nzLabel="Before"></nz-option>
+                <nz-option nzValue="gt" nzLabel="After"></nz-option>
+                <nz-option nzValue="eq" nzLabel="Equal To"></nz-option>
+
+            </nz-select>
+
+            <nz-date-picker 
+                class="block" 
+                nzPlaceHolder="Last Payment Date" 
+                nzSize="small" 
+                nzAllowClear="false" 
+                formControlName="last_payment_date" 
+                [nzInputReadOnly]="true"
+                [nzDisabled]="financeAccountsFilterForm.controls['last_payment_date'].disabled">
+            </nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Next Scheduled Payment Date</label>
+
+            <nz-select class="mb-8" formControlName="next_payment_date_equality" nzMode="default" [nzAllowClear]="true" nzPlaceHolder="Next Payment Date Criteria">
+
+                <nz-option nzValue="lt" nzLabel="Before"></nz-option>
+                <nz-option nzValue="gt" nzLabel="After"></nz-option>
+                <nz-option nzValue="eq" nzLabel="Equal To"></nz-option>
+
+            </nz-select>
+
+            <nz-date-picker 
+                class="block" 
+                nzPlaceHolder="Next Payment Date" 
+                nzSize="small" 
+                nzAllowClear="false" 
+                formControlName="next_payment_date" 
+                [nzInputReadOnly]="true"
+                [nzDisabled]="financeAccountsFilterForm.controls['next_payment_date'].disabled">
+            </nz-date-picker>
+
+        </div>
+
+        <button class="mb-12" nz-button nzType="default" *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button>
+
+        <button 
+            nz-button 
+            nzType="default" 
+            (click)="filter($event)"
+            [disabled]="loading"
+        > <i class="filter icon mr-8"></i> Filter</button>
+
+    </form>
+
+
+</div>
+<!-- / SIDEBAR CONTENT -->

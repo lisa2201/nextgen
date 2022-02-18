@@ -1,0 +1,32 @@
+<div id="profile" class="page-layout simple tabbed">
+    <div class="content" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <mat-tab-group dynamicHeight="true">
+
+            <mat-tab label="Message">
+                <ng-template matTabContent>
+                    <provider-message-view></provider-message-view>
+                </ng-template>
+
+
+            </mat-tab>
+
+            <mat-tab label="Correspondence">
+                <ng-template matTabContent>
+                    <correspondence-list-view></correspondence-list-view>
+                </ng-template>
+
+            </mat-tab>
+
+            <!--<mat-tab label="Entitlement History">
+                <ng-template matTabContent>
+                    <entitlement-history-view></entitlement-history-view>
+                </ng-template>
+
+            </mat-tab>-->
+
+        </mat-tab-group>
+
+    </div>
+
+</div>

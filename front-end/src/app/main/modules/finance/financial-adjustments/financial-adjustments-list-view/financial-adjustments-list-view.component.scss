@@ -1,0 +1,16 @@
+
+.mat-menu-panel {
+    min-height: 50px !important;
+}
+
+app-financial-adjustments-list-view {
+
+    nz-tag {
+        &.child-tag {
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+
+}

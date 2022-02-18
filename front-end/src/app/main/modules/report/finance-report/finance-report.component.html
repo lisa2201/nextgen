@@ -1,0 +1,114 @@
+
+<div class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <div class="center">
+
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2">
+                    Finance Reports
+                </span>
+
+            </h1>
+
+        </div>
+
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <div class="content p-24 pt-16" fxLayout="column" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <!-- SIDEBAR -->
+                <fuse-sidebar class="sidebar" name="finance-report-user-right-sidebar" position="right">
+
+                    <app-finance-report-user-filter-right-sidenav 
+                        [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }" 
+                        fusePerfectScrollbar
+                        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+                        (updateTableScroll)="updateScroll($event)">
+                    </app-finance-report-user-filter-right-sidenav>
+
+                </fuse-sidebar>
+                <!-- / SIDEBAR -->
+
+                <!-- REPORT TYPE SELECTOR -->
+                <h3 class="my-16 mx-0"><i class="file alternate outline left icon mr-8"></i>Report Types</h3>
+
+                <nz-select [(ngModel)]="type" (ngModelChange)="typeChange($event)" nzShowSearch nzPlaceHolder="Select a report type">
+
+                    <nz-option 
+                        *ngFor="let item of reportTypes; trackBy: trackByFn;"
+                        nzValue="{{ item.value }}" 
+                        nzLabel="{{ item.name }}">
+                    </nz-option>
+
+                </nz-select>
+                <!-- REPORT TYPE SELECTOR -->
+
+                <ng-container *ngIf="type === reportTypeEnums.ACCOUNT_BALANCE_REPORT">
+                    <app-account-balance-report [reportType]="type"></app-account-balance-report>
+                </ng-container>
+
+                <ng-container *ngIf="type === reportTypeEnums.AGED_DEBTORS_REPORT">
+                    <app-aged-debtors-report [reportType]="type"></app-aged-debtors-report>
+                </ng-container>
+
+                <ng-container *ngIf="type === reportTypeEnums.INCOME_SUMMARY_REPORT">
+                    <app-income-summary-report [reportType]="type"></app-income-summary-report>
+                </ng-container>
+
+                <ng-container *ngIf="type === reportTypeEnums.TRANSACTION_LISTING_REPORT">
+                    <app-transaction-summary-report [reportType]="type"></app-transaction-summary-report>
+                </ng-container>
+
+                <ng-container *ngIf="type === reportTypeEnums.WEEKLY_REVENUE_SUMMARY_REPORT">
+                    <app-weekly-revenue-summary-report [reportType]="type"></app-weekly-revenue-summary-report>
+                </ng-container>
+
+                <ng-container *ngIf="type === reportTypeEnums.PROJECTED_WEEKLY_REVENUE_SUMMARY_REPORT">
+                    <app-projected-weekly-revenue-summary-report [reportType]="type"></app-projected-weekly-revenue-summary-report>
+                </ng-container>
+
+                <ng-container *ngIf="type === reportTypeEnums.BOND_REPORT">
+                    <app-bond-report [reportType]="type"></app-bond-report>
+                </ng-container>
+
+                <ng-container *ngIf="type === reportTypeEnums.OPENING_BALANCE_REPORT">
+                    <app-opening-balance-report [reportType]="type"></app-opening-balance-report>
+                </ng-container>
+
+                <ng-container *ngIf="type === reportTypeEnums.FINANCIAL_ADJUSTMENT">
+                    <app-financial-adjustments-report [reportType]="type"></app-financial-adjustments-report>
+                </ng-container>
+
+                <ng-container *ngIf="type === reportTypeEnums.GAP_FEE_REPORT">
+                    <app-gap-fee-report [reportType]="type"></app-gap-fee-report>
+                </ng-container>
+
+                <ng-container *ngIf="type === reportTypeEnums.BANKING_SUMMARY_REPORT">
+                    <app-banking-summary-report [reportType]="type"></app-banking-summary-report>
+                </ng-container>
+
+                <div fxLayout="column" fxLayoutAlign="center center" fxFlex [@fadeInOnEnter] *ngIf="!type">
+
+                    <!-- EMPTY VIEW -->
+                    <nz-empty 
+                        class="pt-24 pb-24 m-0"
+                        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/state/clicking.svg'"
+                        [nzNotFoundContent]="contentTpl">
+                
+                        <ng-template #contentTpl>
+                            <h4 class="mt-24">Please select a report type</h4>
+                        </ng-template>
+                
+                    </nz-empty>
+                    <!-- / EMPTY VIEW -->
+                
+                </div>
+    
+            </div>
+
+        </div>
+    </div>
+</div>

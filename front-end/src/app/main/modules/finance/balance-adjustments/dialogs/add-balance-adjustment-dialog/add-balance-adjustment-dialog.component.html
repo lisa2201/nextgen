@@ -1,0 +1,162 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Add Balance Adjustment</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form nz-form name="adjustmentForm" fxLayout="column" [formGroup]="adjustmentForm" [nzLayout]="'vertical'"
+        (ngSubmit)="onSubmit()" novalidate>
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Select Account</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="accountErrorTpl">
+    
+    
+                            <nz-select formControlName="account" nzShowSearch nzPlaceHolder="Select Account" [nzAllowClear]="true">
+    
+                                <nz-option *ngFor="let parent of parents" nzValue="{{ parent.id }}"
+                                    nzLabel="{{ parent.getFullName() }}">
+                                </nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #accountErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select account</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Type of Adjustment</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="typeErrorTpl">
+    
+                            <nz-select formControlName="type" nzPlaceHolder="Adjustment Type">
+    
+                                <nz-option nzValue="credit" nzLabel="Credit"></nz-option>
+                                <nz-option nzValue="debit" nzLabel="Debit"></nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #typeErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select type of adjustment
+                                </ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                    
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Amount</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="amountErrorTpl">
+    
+                            <input nz-input formControlName="amount" placeholder="Amount" type="number" />
+    
+                            <ng-template #amountErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input amount</ng-container>
+                                <ng-container *ngIf="control.hasError('min')">Please input valid amount</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+                    
+                        <nz-form-label nzRequired>Date</nz-form-label>
+                        
+                        <nz-form-control nzHasFeedback [nzErrorTip]="dateErrorTpl">
+                        
+                            <nz-date-picker [nzInputReadOnly]="true" formControlName="date" nzPlaceHolder="Date" class="block"></nz-date-picker>
+                        
+                            <ng-template #dateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input date</ng-container>
+                            </ng-template>
+                        
+                        </nz-form-control>
+                    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Description</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback>
+    
+                            <input nz-input formControlName="description" placeholder="Description" type="text" />
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <button class="text-uppercase mr-8" type="submit" *hasPermission="['AC1']; belongsTo 'N35'" nz-button
+                    nzType="primary" [disabled]="!adjustmentForm.valid" [promiseBtn]="buttonLoading">
+                    <i class="plus icon mr-8"></i> Save
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

@@ -1,0 +1,173 @@
+<form name="ChildSetRoomForm" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="ChildSetRoomForm" nz-form>
+
+    <div class="header p-8 mb-16 text-center">
+    
+        <nz-avatar [nzSize]="100" nzIcon="user" nzSrc="{{getProfile()}}"></nz-avatar>
+
+        <h3 style="color: #00bcd4;"> {{child?.full_name | uppercase}}</h3>
+
+        <h3 style="color: #00bcd4;">
+            Please select your booking
+        </h3>
+
+    </div>
+
+    <ng-container *ngIf="isAbsent">
+
+        <div class="list-item-view"
+        fusePerfectScrollbar 
+        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div *ngIf="(booking | filterByImpure: searchProperties: ChildSetRoomForm.get('search').value).length > 0; else typeEmpty" [@animate]="{ value:'*', params:{ delay: '100ms', y:'10px' } }">
+
+                <ng-container *ngFor="let item of booking | filterByImpure: searchProperties: ChildSetRoomForm.get('search').value; trackBy: item?.index;">
+    
+                    <label 
+                        [ngStyle]="{ 'display': 'flex' }" 
+                        fxLayout="row" fxLayoutAlign="start center" 
+                        class="list-item">
+
+                        <!-- <div class="header p-8 mb-16 text-center">
+
+                            <h5>{{item.session_start | convertTimeString}} - {{item.session_end | convertTimeString}}</h5>
+                
+                        </div> -->
+    
+                        <!-- <img src="{{ item.image }}" alt="{{ item.title }}" class="img-bg mr-16"> -->
+    
+                        <span class="text-truncate" style="width: 250px;">
+                            <div class="header p-8 text-center">
+                            
+                                <h5>{{item.session_start | convertTimeString}} - {{item.session_end | convertTimeString}}</h5>
+                            
+                            </div>
+                            <span style="display: flex;">
+                                <i class="home icon mr-8 ic"></i><p class="m-0">{{ item.room.title }}</p>
+                            </span >
+                            <span style="display: flex;">
+                                <i class="dollar sign icon mr-8 ic"></i><p class="m-0">{{getFeeData(item)}}</p>
+                            </span>
+                            <span style="display: flex;">
+                                <i class="clock outline icon mr-8 ic"></i> <p class="m-0">{{getSignInData(item)}}</p>
+                            </span>
+                            
+                            <!-- <p class="m-0"><small>{{getDesc(item)}}</small></p> -->
+                            
+                        </span>
+
+                        <span class="text-right" *ngIf="item.attendance == null">
+
+                            <button nz-button 
+                                nzType="danger" 
+                                [nzSize]="size" 
+                                nzShape="circle"
+                                (click)= "absent($event, item)"> 
+                                <i class="x icon"></i>
+                            </button>
+                        </span>
+    
+                    </label>
+                    <hr>
+    
+                </ng-container>
+
+            </div>
+
+            <ng-template #typeEmpty>
+                
+                <div [@animate]="{ value:'*', params:{ delay: '100ms', y:'-10px' } }">
+
+                    <nz-empty
+                        class="e-sm-img"
+                        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                        [nzNotFoundContent]="contentTpl">
+                    </nz-empty>
+    
+                    <ng-template #contentTpl>
+                        <span>No Data</span>
+                    </ng-template>
+
+                </div>
+
+            </ng-template>
+
+
+    </div>
+
+    </ng-container>
+    
+    <ng-container  *ngIf="!isAbsent">
+        <div class="list-item-view"
+        fusePerfectScrollbar 
+        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <nz-radio-group formControlName="room">
+
+            <div *ngIf="(booking | filterByImpure: searchProperties: ChildSetRoomForm.get('search').value).length > 0; else typeEmpty" [@animate]="{ value:'*', params:{ delay: '100ms', y:'10px' } }">
+
+                <ng-container *ngFor="let item of booking | filterByImpure: searchProperties: ChildSetRoomForm.get('search').value; trackBy: item?.index;">
+    
+                    <label nz-radio 
+                        nzValue="{{ item.index}}" 
+                        [ngStyle]="{ 'display': 'block' }" 
+                        fxLayout="row" fxLayoutAlign="start center" 
+                        class="list-item">
+    
+                        <!-- <img src="{{ item.image }}" alt="{{ item.title }}" class="img-bg mr-16"> -->
+    
+                        <span class="text-truncate">
+                            <div class="header p-8 text-center">
+                            
+                                <h5>{{item.session_start | convertTimeString}} - {{item.session_end | convertTimeString}}</h5>
+                            
+                            </div>
+
+                            <span style="display: flex;">
+                                <i class="home icon mr-8 ic"></i> <p class="m-0">{{ item.room.title }}</p>
+                            </span>
+                           
+                            <span style="display: flex;">
+                                <i class="dollar sign icon mr-8 ic"></i> <p class="m-0">{{getFeeData(item)}}</p>
+                            </span>
+                           
+                            <span style="display: flex;">
+
+                                <i class="clock outline icon mr-8 ic"></i><p class="m-0">{{getSignInData(item)}}</p>
+
+                            </span>
+                            
+                            <!-- <p class="m-0"><small>{{getDesc(item)}}</small></p> -->
+                            
+                        </span>
+    
+                    </label>
+                    <hr>
+    
+                </ng-container>
+
+            </div>
+
+            <ng-template #typeEmpty>
+                
+                <div [@animate]="{ value:'*', params:{ delay: '100ms', y:'-10px' } }">
+
+                    <nz-empty
+                        class="e-sm-img"
+                        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                        [nzNotFoundContent]="contentTpl">
+                    </nz-empty>
+    
+                    <ng-template #contentTpl>
+                        <span>No Data</span>
+                    </ng-template>
+
+                </div>
+
+            </ng-template>
+
+        </nz-radio-group>
+
+    </div>
+    </ng-container>
+
+</form>

@@ -1,0 +1,15 @@
+
+.mat-menu-panel {
+    min-height: 50px !important;
+}
+
+
+app-financial-ccs-payments-list-view {
+
+    nz-table {
+        .ant-table-content {
+            // min-height: unset;
+        }
+    }
+
+}

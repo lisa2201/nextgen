@@ -1,0 +1,238 @@
+<div class="px-24" *ngFor="let section of sectionsCollection">
+
+    <h1 class="header">{{section['name']}}</h1>
+
+    <div
+        nz-col
+        [nzMd]="24"
+        [nzLg]="24"
+        *ngFor="let newInput  of section['inputs']"
+        [hidden]="section['code']=='emergency_contact_details' ||'addAllergy'==newInput">
+
+        <p fxLayout="row" fxLayoutAlign="start center" [hidden]="getInputIndex(newInput)['type'] == 'hyperlink'">
+
+            <span [innerHTML]="getInputIndex(newInput)['question'] | keepHtml"></span>
+            <span *ngIf="newInput!=='preferedDate' && newInput !== 'attendance'">
+                                        {{ (getInputIndex(newInput)['type'] == 'richTextBox' || (getInputIndex(newInput)['type'] == 'signature' && getInputIndex(newInput)['values'] !== null && getInputIndex(newInput)['values'] !== '')) ? ''
+                : (getInputIndex(newInput)['type'] == 'hyperlink') ? ''
+                    : (getInputIndex(newInput)['type'] == 'select' && newInput == 'parentCountry') ? getInputIndex(newInput)['values'] != null && getInputIndex(newInput)['values'] != '' ? ':&nbsp;' + countryName.name : ':&nbsp;N/A'
+                        : (getInputIndex(newInput)['type'] == 'textbox-switch' && newInput == 'religiousRequirements') ? getInputIndex(newInput)['values'] != null && getInputIndex(newInput)['values'] != '' ? ':&nbsp;' + waitlistInfo['religious_requirements'] : ':&nbsp;N/A'
+                            : (getInputIndex(newInput)['type'] == 'textbox-switch' && newInput == 'culturalRequirements') ? getInputIndex(newInput)['values'] != null && getInputIndex(newInput)['values'] != '' ? ':&nbsp;' + waitlistInfo['cultural_requirement'] : ':&nbsp;N/A'
+                                : (getInputIndex(newInput)['type'] == 'select' && newInput == 'additionalCarerCountry') ? getInputIndex(newInput)['values'] != null && getInputIndex(newInput)['values'] != '' ? ':&nbsp;' + additionalCarerCountry.name : ':&nbsp;N/A'
+                                    : (getInputIndex(newInput)['type'] == 'radio-group') ? getInputIndex(newInput)['values'] == 1 ? ':&nbsp;Female' : getInputIndex(newInput)['values'] == null ? '&nbsp;N/A' : ':&nbsp;Male'
+                                        : ((getInputIndex(newInput)['values'] === '' || getInputIndex(newInput)['values'] === null) && (getInputIndex(newInput)['type'] === 'textbox' || getInputIndex(newInput)['type'] === 'date-picker')) ? ':&nbsp;N/A'
+                                            : (getInputIndex(newInput)['values'] === false || getInputIndex(newInput)['values'] === null || getInputIndex(newInput)['values'] == 0) ? ':&nbsp;No'
+                                                : (getInputIndex(newInput)['values'] === true || getInputIndex(newInput)['values'] == 1) ? ':&nbsp;Yes'
+                                                    : ': ' + getInputIndex(newInput)['values']
+                }}
+            </span>
+
+            <span *ngIf="getInputIndex(  newInput)['name'] =='attendance'">
+                {{ ': '}}
+                {{ (waitlistInfo.attendance['monday']) ? 'Monday,' : ''}}
+                {{ (waitlistInfo.attendance['tuesday']) ? 'Tuesday,' : ''}}
+                {{ (waitlistInfo.attendance['wednesday']) ? 'Wednesday,' : ''}}
+                {{ (waitlistInfo.attendance['thursday']) ? 'Thursday,' : ''}}
+                {{ (waitlistInfo.attendance['friday']) ? 'Friday,' : ''}}
+                {{ (waitlistInfo.attendance['allDays']) ? 'All Days,' : ''}}
+            </span>
+        </p>
+
+        <!----------------------------------------------- hyperlink -------------------------------------------------------->
+        <span *ngIf="getInputIndex(newInput)['type'] == 'hyperlink'">
+            <a (click)="gotoPage(getInputIndex(  newInput)['options']['hyperlink'])">
+                <span [innerHTML]="getInputIndex(newInput)['question'] | keepHtml"></span>
+            </a>
+        </span>
+
+        <!----------------------------------------------- signature -------------------------------------------------------->
+        <span
+            *ngIf="getInputIndex(newInput)['type'] == 'signature' && getInputIndex(newInput)['values']!=''&& getInputIndex(newInput)['values']!==null">
+            <img *ngIf="getInputIndex(newInput)['values']!=''&& getInputIndex(newInput)['values']!==null"
+                 [src]="getInputIndex(newInput)['values']"
+                 alt="signature">
+        </span>
+        <!--upload span start-->
+        <span nz-col [nzMd]="24" [nzLg]="24"
+              *ngIf="(getInputIndex(   newInput)['type'] == 'upload-switch') && (waitlistInfo.upload_files[newInput])!=undefined && waitlistInfo.upload_files[newInput].length>0">
+                    <nz-list nzBordered>
+                        <nz-list-item
+                            *ngFor="let item of waitlistInfo.upload_files[  newInput]; let i = index">
+                            <i nz-icon nzType="file"></i>
+                            <a [href]="item | s3Link" target="_blank">{{ getFileName(item) }}</a>
+                        </nz-list-item>
+                    </nz-list>
+        </span>
+        <!--upload span end-->
+
+        <!-- / emergency contacts section-->
+        <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12"
+             *ngIf="section['code']=='booking_details' && newInput=='preferedDate'">
+            <ul class="session-routine">
+                <ng-container>
+                    <li class="session-row">
+                        <div class="session-content">
+                            <div class="session-label">
+                                {{ (bookingsdisplay.monday) ? 'MON' : 'MON' }}
+                            </div>
+                            <div class="session-inner">
+                                <div class="session-item no-select">
+                                    <div>{{ (bookingsdisplay.monday) ? bookingsdisplay.monday : 'N/A' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="session-row">
+                        <div class="session-content">
+                            <div class="session-label">
+                                {{ (bookingsdisplay.tuesday) ? 'TUE' : 'TUE' }}
+                            </div>
+                            <div class="session-inner">
+                                <div class="session-item no-select">
+                                    <div>{{ (bookingsdisplay.tuesday) ? bookingsdisplay.tuesday : 'N/A' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="session-row">
+                        <div class="session-content">
+                            <div class="session-label">
+                                {{ (bookingsdisplay.wednesday) ? 'WED' : 'WED' }}
+                            </div>
+                            <div class="session-inner">
+                                <div class="session-item no-select">
+                                    <div>{{ (bookingsdisplay.wednesday) ? bookingsdisplay.wednesday : 'N/A'}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="session-row">
+                        <div class="session-content">
+                            <div class="session-label">
+                                {{ (bookingsdisplay.thursday) ? 'THU' : 'THU' }}
+                            </div>
+                            <div class="session-inner">
+                                <div class="session-item no-select">
+                                    <div>{{ (bookingsdisplay.thursday) ? bookingsdisplay.thursday : 'N/A'}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="session-row">
+                        <div class="session-content">
+                            <div class="session-label">
+                                {{ (bookingsdisplay.friday) ? 'FRI' : 'FRI' }}
+                            </div>
+                            <div class="session-inner">
+                                <div class="session-item no-select">
+                                    <div>{{ (bookingsdisplay.friday) ? bookingsdisplay.friday : 'N/A' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="session-row">
+                        <div class="session-content">
+                            <div class="session-label">
+                                {{ (bookingsdisplay.allDays) ? 'AllDays' : 'AllDays' }}
+                            </div>
+                            <div class="session-inner">
+                                <div class="session-item no-select">
+                                    <div>{{ (bookingsdisplay.allDays) ? bookingsdisplay.allDays : 'N/A'
+                                        }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ng-container>
+            </ul>
+        </div>
+
+    </div>
+    <!--emergency contacts section-->
+    <div *ngIf="section['code']=='emergency_contact_details'">
+        <div *ngFor="let emRow of getInputIndex('addEmergencyContact')['values'];let i = index;">
+            <h2 class="header">{{'Details ' + (i + 1)}}</h2>
+            <p fxLayout="row" fxLayoutAlign="start center"
+               *ngFor="let newInput  of section['inputs']"
+               [hidden]="'addEmergencyContact'==newInput">
+
+                <span [innerHTML]="getInputIndex(newInput)['question'] | keepHtml"></span>
+
+                <span>
+                   {{(emRow[newInput] !== undefined) ? (getInputIndex(newInput)['type'] == 'richTextBox' || (getInputIndex(newInput)['type'] == 'signature' && emRow[newInput] !== null && emRow[newInput] !== '')) ? ''
+                    : (getInputIndex(newInput)['type'] == 'hyperlink') ? ''
+                        : (getInputIndex(newInput)['type'] == 'date-picker' && !(emRow[newInput] === '' || emRow[newInput] === null)) ? ':&nbsp;' + emRow[newInput].substring(0, 10)
+                            : (getInputIndex(newInput)['type'] == 'select' && newInput == 'parentCountry') ? emRow[newInput] != null && emRow[newInput] != '' ? ':&nbsp;' + countryName.name : ':&nbsp;N/A'
+                                : (getInputIndex(newInput)['type'] == 'select' && newInput == 'additionalCarerCountry') ? emRow[newInput] != null && emRow[newInput] != '' ? ':&nbsp;' + additionalCarerCountry.name : ':&nbsp;N/A'
+                                    : (getInputIndex(newInput)['type'] == 'radio-group') ? emRow[newInput] === 1 ? ':&nbsp;Female' : ':&nbsp;Male'
+                                        : ((emRow[newInput] === '' || emRow[newInput] === null) && (getInputIndex(newInput)['type'] === 'textbox' || getInputIndex(newInput)['type'] === 'date-picker')) ? ':&nbsp;N/A'
+                                            : (emRow[newInput] === false || emRow[newInput] === null || emRow[newInput] == 0) ? ':&nbsp;No'
+                                                : (emRow[newInput] === true || getInputIndex(newInput)['values'] == 1) ? ':&nbsp;Yes'
+                                                    : ':&nbsp;' + emRow[newInput] :
+                    (getInputIndex(newInput)['type'] == 'hyperlink') ? ''
+                        : (getInputIndex(newInput)['type'] == 'date-picker' && !(getInputIndex(newInput)['values'] === '' || getInputIndex(newInput)['values'] === null)) ? ':&nbsp;' + getInputIndex(newInput)['values'].substring(0, 10)
+                        : (getInputIndex(newInput)['type'] == 'select' && newInput == 'parentCountry') ? getInputIndex(newInput)['values'] != null && getInputIndex(newInput)['values'] != '' ? ':&nbsp;' + countryName.name : ':&nbsp;N/A'
+                            : (getInputIndex(newInput)['type'] == 'select' && newInput == 'additionalCarerCountry') ? getInputIndex(newInput)['values'] != null && getInputIndex(newInput)['values'] != '' ? ':&nbsp;' + additionalCarerCountry.name : ':&nbsp;N/A'
+                                : (getInputIndex(newInput)['type'] == 'radio-group') ? getInputIndex(newInput)['values'] === 1 ? ':&nbsp;Female' : ':&nbsp;Male'
+                                    : ((getInputIndex(newInput)['values'] === '' || getInputIndex(newInput)['values'] === null) && (getInputIndex(newInput)['type'] === 'textbox' || getInputIndex(newInput)['type'] === 'date-picker')) ? ':&nbsp;N/A'
+                                        : (getInputIndex(newInput)['values'] === false || getInputIndex(newInput)['values'] === null || getInputIndex(newInput)['values'] == 0) ? ':&nbsp;No'
+                                            : (getInputIndex(newInput)['values'] === true || getInputIndex(newInput)['values'] == 1) ? ':&nbsp;Yes'
+                                                : ':&nbsp;' + getInputIndex(newInput)['values']
+
+
+                    }}
+                </span>
+
+                <!----------------------------------------------- hyperlink -------------------------------------------------------->
+                <span *ngIf="getInputIndex(newInput)['type'] == 'hyperlink'">
+                 <a (click)="gotoPage(getInputIndex(  newInput)['options']['hyperlink'])"><span
+                     [innerHTML]="getInputIndex(newInput)['question'] | keepHtml"></span></a>
+                </span>
+
+                <!----------------------------------------------- signature -------------------------------------------------------->
+                <span
+                    *ngIf="getInputIndex(newInput)['type'] == 'signature' && emRow[newInput]!=''&& emRow[newInput]!==null">
+                    <img src="{{emRow[newInput]}}" alt="signature">
+                </span>
+
+                <!--upload span start-->
+                <span nz-col [nzMd]="24" [nzLg]="24"
+                      *ngIf="(getInputIndex(newInput)['type'] == 'upload-switch') && (waitlistInfo.upload_files[newInput])!=undefined && waitlistInfo.upload_files[newInput].length>0">
+                        <nz-list nzBordered>
+                            <nz-list-item
+                                *ngFor="let item of waitlistInfo.upload_files[newInput]; let i = index">
+                                <i nz-icon nzType="file"></i>
+                                <a [href]="item | s3Link"
+                                   target="_blank">{{ getFileName(item) }}</a>
+                            </nz-list-item>
+                        </nz-list>
+                 </span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Allergy Section -->
+    <div nz-col [nzXs]="24"
+         *ngIf="section['code']=='health_information' && hasAllergy() && allergyMappedArray.length > 0">
+
+        <h4>Allergy/Dietary Requirements Details</h4>
+
+        <p fxLayout="row" fxLayoutAlign="start center" *ngFor="let allergy of allergyMappedArray">
+
+            <span class="pr-4">{{ allergy.name }}</span>
+
+            <span *ngIf="allergy.detail">: {{ allergy.detail }}</span>
+
+        </p>
+
+    </div>
+</div>
+

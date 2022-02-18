@@ -1,0 +1,252 @@
+<h3 class="my-16 mx-0">
+    <i class="file alternate outline left icon mr-8"></i>
+    Generate Gap Fee Report
+</h3>
+
+<div class="mt-8">
+
+    <form name="filterForm" [nzLayout]="'vertical'" [formGroup]="filterForm" nz-form>
+
+        <div>
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+    
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Start Date</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="sdateErrorTpl">
+
+                            <nz-date-picker 
+                                [nzAllowClear]="false" 
+                                formControlName="sdate" 
+                                [nzDisabledDate]="disabledDateOnlyMonday" 
+                                nzPlaceHolder="Start date" 
+                                class="block">
+                            </nz-date-picker>
+    
+                            <ng-template #sdateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a start date
+                                </ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+    
+                </div>
+    
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+    
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>End Date</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="edateErrorTpl">
+
+                            <nz-date-picker 
+                                [nzAllowClear]="false" 
+                                formControlName="edate" 
+                                [nzDisabledDate]="disabledDateOnlySunday"
+                                nzPlaceHolder="End date" 
+                                class="block">
+                            </nz-date-picker>
+    
+                            <ng-template #edateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select end date
+                                </ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+    
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+    
+                    <nz-form-item>
+    
+                        <div fxLayout="row" fxLayoutAlign="space-between center" class="h-24">
+    
+                            <nz-form-label [nzRequired]="filterForm.get('user').enabled">
+                                Parents
+                            </nz-form-label>
+    
+                            <div fxFlex="40" fxLayoutAlign="end center" class="select-actions">
+    
+                                <button
+                                    nz-button nzType="link"
+                                    class="p-0"
+                                    (click)="toggleSidebar('finance-report-user-right-sidebar')">
+                                    Filter
+                                </button>
+    
+                                <span class="pl-4 pr-4">|</span>
+    
+                                <button
+                                    nz-button nzType="link"
+                                    class="p-0"
+                                    (click)="toggleSelectAllUser(true)">
+                                    Select All
+                                </button>
+    
+                                <span class="pl-4 pr-4">|</span>
+    
+                                <button 
+                                    nz-button 
+                                    nzType="link" 
+                                    class="p-0"
+                                    (click)="toggleSelectAllUser(false)">
+                                    Select None
+                                </button>
+    
+                            </div>
+                        </div>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="parentErrorTpl">
+    
+                            <nz-select 
+                                nzMode="multiple" 
+                                formControlName="user" 
+                                nzShowSearch 
+                                nzAllowClear
+                                nzPlaceHolder="Select parents">
+    
+                                <nz-option *ngFor="let item of userList; trackBy: trackByFn;" nzValue="{{ item.id }}"
+                                           nzLabel="{{item.getFullName()}}">
+                                </nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #parentErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please selecte a parent
+                                </ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+    
+                </div>
+
+            </div>
+
+        </div>
+        
+        <div class="text-right px-4 mt-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+    
+            <span class="text-right">
+    
+                <button 
+                    class="mr-8" 
+                    nz-button 
+                    nzType="primary" 
+                    [disabled]="!filterForm.valid"
+                    (click)="submitReport($event, true, false)" 
+                    [promiseBtn]="buttonLoader">
+                    <i nz-icon nzType="eye" nzTheme="outline"></i>
+                    <span>View</span>
+                </button>
+    
+                <button 
+                    nz-button 
+                    nz-dropdown 
+                    [nzDropdownMenu]="menu" 
+                    [disabled]="!filterForm.valid || buttonLoader">
+                    Download
+                    <i nz-icon nzType="down"></i>
+                </button>
+
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+
+                    <ul nz-menu>
+
+                        <li nz-menu-item (click)="submitReport($event, false, true)">
+                            <i nz-icon nzType="file-pdf" nzTheme="outline"></i>PDF
+                        </li>
+
+                        <li nz-menu-item (click)="submitReport($event, false, false)">
+                            <i nz-icon nzType="file-excel" nzTheme="outline"></i>CSV
+                        </li>
+
+                    </ul>
+
+                </nz-dropdown-menu>
+
+            </span>
+    
+        </div>
+
+    </form>
+
+</div>
+
+<div class="center">
+
+    <div class="content-card pt-24" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+        
+        <nz-table 
+            #gapFeeReportTable
+            nzBordered
+            [nzData]="reportData" 
+            [nzShowPagination]="false" 
+            [nzLoading]="buttonLoader"
+            [nzNoResult]="emptyBlock" 
+            [nzLoadingIndicator]="indicatorTemplate" 
+            [nzFrontPagination]="false">
+
+            <thead>
+                <tr>
+                    <th>Parent</th>
+                    <th>Children</th>
+                    <th>Booking Fee</th>
+                    <th>CCS Estimate</th>
+                    <th>CCS/ACCS Payment</th>
+                    <th>Gap Fee</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <ng-template ngFor let-data [ngForOf]="gapFeeReportTable.data">
+                    <tr>
+                        <td [ngClass]="{'text-bold': data.type === 'total'}">{{ data.name }}</td>
+                        <td [ngClass]="{'text-bold': data.type === 'total'}">{{ data.children }}</td>
+                        <td [ngClass]="{'text-bold': data.type === 'total'}">{{ data.fee | currency }}</td>
+                        <td [ngClass]="{'text-bold': data.type === 'total'}">{{ data.estimate | currency }}</td>
+                        <td [ngClass]="{'text-bold': data.type === 'total'}">{{ data.ccs | currency }}</td>
+                        <td [ngClass]="{'text-bold': data.type === 'total'}">{{ data.gap_fee | currency }}</td>
+                    </tr>
+                </ng-template>
+
+            </tbody>
+
+        </nz-table>
+
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+
+    </div>
+
+</div>

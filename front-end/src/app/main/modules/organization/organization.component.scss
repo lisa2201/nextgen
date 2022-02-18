@@ -1,0 +1,24 @@
+@import "src/@fuse/scss/fuse";
+
+#organization {
+    .p-head {
+        // padding-top: 12px;
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
+    @include media-breakpoint("xs") {
+        // width: 100%;
+    }
+
+    @include media-breakpoint("gt-xs") {
+        // width: 640px;
+    }
+}
+
+.page-layout.simple.fullwidth > .header,
+.page-layout.simple.inner-sidebar > .header {
+    height: 78px;
+    min-height: 78px;
+    max-height: 78px;
+}

@@ -1,0 +1,73 @@
+<!-- <div class="page-layout blank p-24" 
+    *canViewAuth [@fadeInOnEnter]
+    fusePerfectScrollbar
+    [@animate]="{ value:'*', params:{ delay:'250ms', y:'-25px' } }" >
+ -->
+
+<div id="parent-dashboard" class="page-layout simple" fxLayout="row" *canViewAuth>
+
+    <div class="center" fusePerfectScrollbar fxFlex fxLayout="column">
+
+        <!-- HEADER -->
+        <div class="header p-20">
+
+            <div fxLayout="row" fxLayoutAlign="space-between start">
+
+                <div nz-col [nzMd]="18" [nzXs]="24">
+
+                    <span class="mat-display-1 my-0 my-sm-24 welcome-message"
+                        [@animate]="{ value: '*', params: { x: '50px' } }">Welcome back, {{ user.name | titlecase }}!
+                    </span>
+
+                </div>
+                
+            </div>           
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT -->
+        <div class="content" fxLayout="row">
+
+            <div fxFlex class="widget-group p-12"> 
+
+                <div nz-row [nzGutter]="{ xs: 2 }">
+                
+                    <!-- current balance widget -->
+                    <div nz-col [nzMd]="6" [nzSm]="8" [nzXs]="12">
+
+                        <widget-parent-balance [show_child_select]="show_child_select" [children]="children"></widget-parent-balance>
+                        
+                    </div>
+                    
+                    <!-- payment widget -->
+                    <div nz-col [nzMd]="6" [nzSm]="8" [nzXs]="12">
+
+                        <widget-parent-payment [show_child_select]="show_child_select" [children]="children"></widget-parent-payment>
+                        
+                    </div>
+                    
+                    <!-- bookings widget -->
+                    <div nz-col [nzMd]="6" [nzSm]="8" [nzXs]="12">
+
+                        <widget-parent-bookings [show_child_select]="show_child_select" [children]="children"></widget-parent-bookings>
+                        
+                    </div>
+                    
+                    <!-- absences widget -->
+                    <div nz-col [nzMd]="6" [nzSm]="8" [nzXs]="12">
+                        
+                        <widget-attendance-ytd [show_child_select]="show_child_select" [children]="children"></widget-attendance-ytd>
+
+                    </div>
+        
+
+                </div>
+        
+            </div>
+
+        </div>
+        <!-- / CONTENT -->
+
+    </div>
+</div>

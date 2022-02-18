@@ -1,0 +1,129 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Add WWCC </span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+    <form name="wwccForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="wwccForm"
+        nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzMd]="24" [nzLg]="24">
+
+                    <ng-container formArrayName="wwccInput"
+                        *ngFor="let control of wwccForm.get('wwccInput')['controls']; let idx = index;">
+                        <ng-container [formGroupName]="idx">
+                            <nz-table class="mt-4" #roleSelectData [nzData]="wwccForm.get('wwccInput')['controls']"
+                                [nzShowPagination]="false" [nzSize]="'small'">
+                                <thead>
+                                    <tr>
+                                        <th nzWidth="160px">WWCC</th>
+                                        <!-- <th nzWidth="160px">
+                                            <span class="btn-add-role" (click)="addWWCC()" *ngIf="idx == 0">
+                                                Add <i class="plus icon"></i>
+                                            </span>
+                                            <span class="btn-add-role" (click)="deleteWWCC($event, idx)"
+                                                *ngIf="idx != 0">
+                                                delete <i class="minus icon"></i>
+                                            </span>
+                                        </th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="ant-table-selection-column">
+                                            <nz-form-label class="f-left"> Card number</nz-form-label>
+                                        </td>
+                                        <td>
+                                            <nz-form-control>
+                                                <input nz-input formControlName="cardNumber" placeholder="card number"
+                                                    type="text" />
+                                            </nz-form-control>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="ant-table-selection-column">
+                                            <nz-form-label class="f-left"> Issuing State</nz-form-label>
+                                        </td>
+                                        <td>
+                                            <nz-form-control>
+
+                                                <nz-select formControlName="issuingState" nzShowSearch nzAllowClear
+                                                    nzPlaceHolder="select a state">
+
+                                                    <nz-option
+                                                        *ngFor="let item of IssuingStateList; trackBy: trackByFn;"
+                                                        nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                                                    </nz-option>
+
+                                                </nz-select>
+                                            </nz-form-control>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+
+                                        <td class="ant-table-selection-column">
+                                            <nz-form-label class="f-left"> Expiry date</nz-form-label>
+                                        </td>
+                                        <td>
+                                            <nz-form-control>
+                                                <nz-date-picker [nzInputReadOnly]="true" formControlName="expiryDate" nzPlaceHolder="date"
+                                                    class="block">
+                                                </nz-date-picker>
+                                                <!-- <nz-month-picker formControlName="expiryDate" nzSize="small"
+                                                    nzPlaceHolder="expiry date" [nzInputReadOnly]="true"></nz-month-picker> -->
+                                            </nz-form-control>
+
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </nz-table>
+                        </ng-container>
+
+                    </ng-container>
+
+                </div>
+
+            </div>
+        </div>
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8" nz-button nzType="primary" [promiseBtn]="buttonLoader"
+                    [disabled]="!wwccForm.valid">
+                    <i class="plus icon mr-8"></i>
+                    Save
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+</div>

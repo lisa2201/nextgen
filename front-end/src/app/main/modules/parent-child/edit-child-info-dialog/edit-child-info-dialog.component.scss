@@ -1,0 +1,25 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+    .edit-child-info-dialog{
+        @include media-breakpoint('xs') {
+            width: 100%;
+        }
+    
+        @include media-breakpoint('gt-xs') {
+            width: 640px;
+        }
+    
+        .mat-dialog-container {
+            padding: 0;
+    
+        }
+    
+        .dialog-content-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+        nz-collapse{
+
+            width: 700px;
+        }
+    }

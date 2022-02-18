@@ -1,0 +1,177 @@
+<!-- <button (click)="goBack()">Back</button> -->
+<div id="invoice" class="modern page-layout blank" fxLayout="row">
+
+    <div class="invoice-container">
+
+        <div class="mb-16">
+            <button 
+                nz-button 
+                nzType="primary"
+                (click)="goBack($event)"
+                [@animate]="{ value:'*', params:{ delay: '100ms',y:'-15px' } }">
+                <i nz-icon nzType="arrow-left"></i>
+                Go Back
+            </button>
+        </div>
+
+        <div class="card">
+
+            <div class="header" fxLayout="row" fxLayoutAlign="space-between start">
+
+                <div class="ids" fxLayout="column">
+
+                    <div fxLayout="row" class="seller" fxLayoutAlign="start center">
+
+                        <div class="logo">
+                            <img src="assets/images/logos/KMLOGO.png">
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="detail" fxFlex="45">
+                            <div class="title">Kinder M8 PTY LTD</div>
+                            <!-- <div class="address">
+                                Number 4, Gall Road, Colombo
+                            </div> -->
+                            <div class="phone">
+                                <span>Phone:</span>
+                                1300 47 20 27
+                            </div>
+                            <div class="email">
+                                <span>ABN:</span>
+                                30 609 722 125
+                            </div>
+                            <div class="phone">
+                                <span>Email:</span>
+                                info@kinderm8.com.au
+                            </div>
+                            <div class="website">
+                                <span>Web:</span>
+                                <a href="www.kinderm8.com.au">www.kinderm8.com.au</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div fxLayout="row" class="client" fxLayoutAlign="start center">
+                        <div class="label" fxLayout="row" fxLayoutAlign="end center">
+                            <div>CLIENT</div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="detail" fxFlex="45">
+                            <div class="title">{{ invoice.organization?.companyName | titlecase}}</div>
+                            <div class="address">
+                                {{ invoice?.organization?.address1 }}
+                            </div>
+                            <div class="address" *ngIf="invoice.organization.address2">
+                                {{ invoice?.organization?.address1 }}
+                            </div>
+                            <div class="phone">
+                                <span>Phone:</span>
+                                {{ invoice?.organization?.phoneNumber }}
+                            </div>
+                            <div class="email">
+                                <span>Email:</span>
+                                {{ invoice?.organization?.email }}
+                            </div>
+                            <!-- <div class="website">
+                                <span>Web:</span>
+                                www.darecare.com
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+
+                <table class="summary ml-20">
+                    <tr class="code">
+                        <td class="label">INVOICE</td>
+                        <td class="value">{{invoice?.number}}</td>
+                    </tr>
+
+                    <tr>
+                        <td class="label">INVOICE START DATE</td>
+                        <td class="value">{{invoice?.startDate}}</td>
+                    </tr>
+
+                    <tr>
+                        <td class="label">INVOICE END DATE</td>
+                        <td class="value">{{invoice?.endDate}}</td>
+                    </tr>
+
+                    <!-- <tr>
+                        <td class="label">TOTAL DUE</td>
+                        <td class="value">{{invoice?.subtotal | currency:'USD':'symbol'}}</td>
+                    </tr> -->
+                </table>
+            </div>
+
+            <div class="content">
+                <table class="simple invoice-table">
+                    <thead>
+                        <tr>
+                            <th>PRODUCT</th>
+                            <th>UNIT</th>
+                            <th class="text-right">UNIT PRICE</th>
+                            <th class="text-right">QUANTITY</th>
+                            <th class="text-right">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let addon of invoice?.invoiceItems">
+                            <td>
+                                <div class="title">{{addon?.name}}</div>
+                                <div class="detail">{{addon?.description}}</div>
+                            </td>
+                            <td>
+                                {{addon?.unit | uppercase}}
+                            </td>
+                            <td class="text-right">
+                                {{addon?.price | currency:'AUD'}}
+                            </td>
+                            <td class="text-right">
+                                {{addon?.quantity}}
+                            </td>
+                            <td class="text-right">
+                                {{ addon.price * addon.quantity | currency:'AUD'}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="simple invoice-table-footer">
+                    <tbody>
+                        <tr class="subtotal">
+                            <td>SUBTOTAL</td>
+                            <td>{{invoice?.subTotal | currency:'AUD'}}</td>
+                        </tr>
+                        <tr class="tax">
+                            <td>TAX</td>
+                            <!-- <td>{{invoice.tax | currency:'USD':'symbol'}}</td> -->
+                            <td>{{ taxValue | currency: 'AUD'}}</td>
+                        </tr>
+                        <tr class="total">
+                            <td>TOTAL</td>
+                            <td>{{invoice?.subTotal + taxValue | currency:'AUD'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- <div class="footer">
+                <div class="note">Please pay within 15 days. Thank you for your business.</div>
+                <div fxLayout="row" fxLayoutAlign="start start">
+                    <div class="logo">
+                        <img src="assets/images/logos/fuse.svg">
+                    </div>
+                    <div class="small-note">
+                        Terms and conditions
+                    </div>
+                </div>
+            </div> -->
+
+        </div>
+
+    </div>
+
+</div>

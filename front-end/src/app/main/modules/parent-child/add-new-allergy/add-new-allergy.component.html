@@ -1,0 +1,106 @@
+<div class="dialog-content-wrapper">
+    <div id="editEnrolment" fxLayout="column">
+        <div id="enrolment-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+            <mat-toolbar class="mat-accent m-0">
+
+                <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <span class="title dialog-title">{{ dialogTitle }}</span>
+
+                    <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                        aria-label="Close dialog">
+                        <mat-icon>close</mat-icon>
+                    </button>
+
+                </mat-toolbar-row>
+
+            </mat-toolbar>
+
+            <div id="enrollment-form" nz-col [nzMd]="24" [nzLg]="24"
+                [@animate]="{ value:'*', params:{ duration:'500ms', y:'100px', opacity: 0, delay:'300ms' }}">
+
+                <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+                    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                    <form nz-form name="allergiesFrom" [formGroup]="allergyForm" fxLayout="column" [nzLayout]="'vertical'"
+                        (ngSubmit)="onFormSubmit($event)">
+
+                        <div nz-row [nzGutter]="24">
+
+                            <nz-form-item nz-col [nzMd]="24" [nzLg]="24">
+
+                                <nz-form-label nzRequired>Allergies/Dietary type?</nz-form-label>
+
+                                <nz-form-control  [nzErrorTip]="allergiesErrorTpl">
+
+                                    <nz-select formControlName="allergies" nzShowSearch nzPlaceHolder="Select One">
+
+                                        <nz-option *ngFor="let items of allergiesList" nzValue="{{ items.index }}"
+                                            nzLabel="{{ items.name }}" title="{{items.name}}">
+                                        </nz-option>
+
+                                    </nz-select>
+
+                                    <ng-template #allergiesErrorTpl let-control>
+
+                                        <ng-container *ngIf="control.hasError('required')">Please select one</ng-container>
+                             
+                                    </ng-template>
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                            <nz-form-item nz-col [nzMd]="24" [nzLg]="24">
+
+                                <nz-form-label nzRequired>Allergen/s</nz-form-label>
+
+                                <nz-form-control [nzErrorTip]="allergenErrorTpl">
+
+                                    <textarea formControlName="description" rows="4" nz-input></textarea>
+
+                                    <ng-template nzHasFeedback #allergenErrorTpl let-control>
+
+                                        <ng-container *ngIf="control.hasError('maxlength')">Allergy Description can't be more than 150 characters</ng-container>
+                                        <ng-container *ngIf="control.hasError('required')">Please input Allergen</ng-container>
+
+                                    </ng-template>
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+                        </div>
+                    </form>
+                </div>
+                <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row"
+                    fxLayoutAlign="space-between center">
+
+                    <span></span>
+
+                    <span class="text-right">
+
+                        <ng-container>
+                            <button class="text-uppercase mr-8" nz-button
+                                nzType="primary" [promiseBtn]="buttonLoader" [disabled]="!allergyForm.valid"
+                                (click)="onFormSubmit($event)">
+                                <i class="plus icon mr-8"></i> {{buttonValue}}
+                            </button>
+                        </ng-container>
+
+                        <button class="text-uppercase mr-8" type="button" nz-button nzType="default"
+                            (click)="resetForm($event)">
+                            Reset
+                        </button>
+
+                        <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                            (click)="matDialogRef.close()">
+                            Close
+                        </button>
+
+                    </span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

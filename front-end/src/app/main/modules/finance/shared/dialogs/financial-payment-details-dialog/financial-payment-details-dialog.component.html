@@ -1,0 +1,60 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Payment Details</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <nz-descriptions nzBordered [nzColumn]="{ xxl: 1, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }">
+            <nz-descriptions-item nzTitle="Account">{{ paymentDetail.parent?.getFullName() }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Payment Date">{{ paymentDetail.date| date:'mediumDate' }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Settlement Date">{{ paymentDetail.settlementDate| date:'mediumDate' }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Payment Generation Type">{{ paymentDetail.paymentGenerationType === 'auto' ? 'System generated payment' : 'User generated payment' }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Payment Processing Type">{{ paymentDetail.paymentExecutionType === 'auto' ? 'Scheduled Payment' : 'On-Demand Payment' }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Payment Reference (KinderPay Reference)">{{ paymentDetail.paymenRef }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Transaction Reference (Payment Gateway Reference)">{{ paymentDetail.transactionRef }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Payment method">{{ getPaymentMethod(paymentDetail) }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Amount">{{ paymentDetail.amount | currency }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Comments">{{ paymentDetail.comments }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Status">
+                <nz-tag *ngIf="paymentDetail.status === 'approved'" [nzColor]="'blue'">{{ paymentDetail.getParentPaymentStatusDescription() }}</nz-tag>
+                <nz-tag *ngIf="paymentDetail.status === 'pending'" [nzColor]="'purple'">{{ paymentDetail.getParentPaymentStatusDescription() }}</nz-tag>
+                <nz-tag *ngIf="paymentDetail.status === 'submitted'" [nzColor]="'geekblue'">{{ paymentDetail.getParentPaymentStatusDescription() }}</nz-tag>
+                <nz-tag *ngIf="paymentDetail.status === 'completed'" [nzColor]="'green'">{{ paymentDetail.getParentPaymentStatusDescription() }}</nz-tag>
+                <nz-tag *ngIf="paymentDetail.status === 'refund_success'" [nzColor]="'cyan'">{{ paymentDetail.getParentPaymentStatusDescription() }}</nz-tag>
+                <nz-tag *ngIf="paymentDetail.status === 'rejected_gateway' || paymentDetail.status === 'rejected_user' || paymentDetail.status === 'refund_failed'" [nzColor]="'red'">{{ paymentDetail.getParentPaymentStatusDescription() }}</nz-tag>
+            </nz-descriptions-item>
+            <nz-descriptions-item *ngIf="paymentDetail.status === 'rejected_gateway' || paymentDetail.status === 'rejected_user' || paymentDetail.status === 'refund_failed'" nzTitle="Failed Reason">{{ paymentDetail.failReason }}</nz-descriptions-item>
+        </nz-descriptions>
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span></span>
+
+        <span class="text-right">
+
+            <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                (click)="matDialogRef.close()">
+                Cancel
+            </button>
+
+        </span>
+
+    </div>
+
+</div>

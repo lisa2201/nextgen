@@ -1,0 +1,737 @@
+<div class="content" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{dialogTitle}}</span>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="invitationForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'"
+        [formGroup]="incidentForm" nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <div nz-row [nzGutter]="24">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                            <nz-form-item>
+                                <nz-form-label nzRequired>Staff</nz-form-label>
+                                <nz-form-control nzHasFeedback [nzErrorTip]="staffErrorTpl">
+
+                                    <nz-select formControlName="staff" nzPlaceHolder="Select User">
+                                        <nz-option *ngFor="let option of staffList" [nzLabel]="option.getFullName()"
+                                            [nzValue]="option.id">
+                                        </nz-option>
+                                    </nz-select>
+
+                                </nz-form-control>
+
+                                <ng-template #staffErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')"> Please select staff
+                                    </ng-container>
+                                </ng-template>
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                            <nz-form-item>
+                                <nz-form-label>Incident/Injury Date </nz-form-label>
+                                <nz-form-control nzHasFeedback [nzErrorTip]="incidentDateErrorTpl">
+                                    <nz-date-picker [nzInputReadOnly]="true" formControlName="incidentDate"
+                                        nzPlaceHolder="Incident Date" class="block"></nz-date-picker>
+                                </nz-form-control>
+                                <ng-template #incidentDateErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')"> Incident Date Required
+                                    </ng-container>
+                                </ng-template>
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="6" [nzXl]="6" [nzXXl]="6">
+
+                            <nz-form-item>
+                                <nz-form-label>Incident/Injury Time</nz-form-label>
+                                <nz-form-control nzHasFeedback [nzErrorTip]="incidentTimeErrorTpl">
+
+                                    <ry-time-picker #timePicker formControlName="incidentTime" ryFormat="h:mm A"
+                                        [ryType]="'single'" [ryMinuteStep]="1" [ryPlaceHolder]="'Incident Time'">
+                                    </ry-time-picker>
+
+                                </nz-form-control>
+
+                                <ng-template #incidentTimeErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')"> Incident Time Required
+                                    </ng-container>
+                                </ng-template>
+                            </nz-form-item>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <nz-divider nzText="Details of person completing form"></nz-divider>
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <div nz-row [nzGutter]="24">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                            <nz-form-item>
+                                <nz-form-label>User</nz-form-label>
+                                <nz-form-control>
+
+                                    <nz-select formControlName="recordedPerson" nzPlaceHolder="Select User" nzAllowClear>
+                                        <nz-option *ngFor="let option of staffList" [nzLabel]="option.getFullName()"
+                                            [nzValue]="option.id">
+                                        </nz-option>
+                                    </nz-select>
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="14" [nzXl]="16" [nzXXl]="16">
+
+                            <nz-form-item  id="sig1">
+                                <nz-form-label>User Signature</nz-form-label>
+                                <div class="signatureClass">
+                                    <signature-pad #sigpadRecorded [options]="signaturePadOptions">
+                                    </signature-pad>
+                                </div>
+                                <button class="sigClear" (click)="clearSignature('sigpadRecorded')" type="button" nz-button nzBlock>Clear
+                                </button>
+                            </nz-form-item>                           
+                               
+                        </div>
+
+                    </div>
+
+                    <div nz-row [nzGutter]="24">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                            <nz-form-item>
+                                <nz-form-label>Record Date</nz-form-label>
+                                <nz-form-control>
+                                    <nz-date-picker [nzInputReadOnly]="true" formControlName="recordedDate"
+                                        nzPlaceHolder="Record Date" class="block"></nz-date-picker>
+                                </nz-form-control>
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="6" [nzXl]="6" [nzXXl]="6">
+
+                            <nz-form-item>
+                                <nz-form-label>Record Time</nz-form-label>
+                                <nz-form-control>
+
+                                    <ry-time-picker #timePicker formControlName="recordedTime" ryFormat="h:mm A"
+                                        [ryType]="'single'" [ryMinuteStep]="1" [ryPlaceHolder]="'Record Time'">
+                                    </ry-time-picker>
+
+                                </nz-form-control>
+                            </nz-form-item>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <nz-divider nzText="Details of witness"></nz-divider>
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <div nz-row [nzGutter]="24">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                            <nz-form-item>
+
+                                <nz-form-label>Witness</nz-form-label>
+
+                                <nz-form-control>
+
+                                    <nz-select formControlName="witnessPerson" nzPlaceHolder="Select User" nzAllowClear>
+                                        <nz-option *ngFor="let option of staffList" [nzLabel]="option.getFullName()"
+                                            [nzValue]="option.id">
+                                        </nz-option>
+                                    </nz-select>
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="16" [nzXl]="16" [nzXXl]="16">
+
+                                <div nz-col [nzMd]="18" [nzLg]="18">
+
+                                    <nz-form-item  id="sig1">
+                                        <nz-form-label>Witness Signature</nz-form-label>
+                                        <div class="signatureClass">
+                                            <signature-pad #sigpadWitness [options]="signaturePadOptions">
+                                            </signature-pad>
+                                        </div>
+                                        <button class="sigClear" (click)="clearSignature('sigpadWitness')" type="button" nz-button nzBlock>Clear
+                                        </button>
+                                    </nz-form-item>       
+
+                                </div>
+                               
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <nz-divider nzText="Incient/Injury details"></nz-divider>
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <div nz-row [nzGutter]="24">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                            <nz-form-item>
+
+                                <nz-form-label>Circumstances leading to the Incident/Injury</nz-form-label>
+
+                                <nz-form-control>
+
+                                    <textarea nz-input rows="4" formControlName="incidentCircumstances"
+                                        placeholder="Circumstances leading to the Incident/Injury"
+                                        type="text"></textarea>
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                            <nz-form-item>
+
+                                <nz-form-label>Equipment/Resources involved</nz-form-label>
+
+                                <nz-form-control>
+
+                                    <textarea nz-input rows="4" formControlName="incidentEquipments"
+                                        placeholder="Equipment/Resources involved" type="text"></textarea>
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                            <nz-form-item>
+
+                                <nz-form-label>Location</nz-form-label>
+
+                                <nz-form-control>
+
+                                    <input nz-input rows="4" formControlName="incidentLocation" placeholder="Location"
+                                        type="text" />
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                            <nz-form-item>
+
+                                <nz-form-label> Action taken (Including first aid etc)</nz-form-label>
+
+                                <nz-form-control>
+
+                                    <textarea nz-input rows="4" formControlName="incidentActionTaken"
+                                        placeholder="Action taken" type="text"></textarea>
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <nz-divider nzText="Notifications (Including attempted notifications)"></nz-divider>
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <div nz-row [nzGutter]="24">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                            <nz-form-item>
+
+                                <nz-form-label>Parent/Guardian</nz-form-label>
+
+                                <nz-form-control>
+                                    <input nz-input formControlName="notificationParent" placeholder="" type="text" />
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="5" [nzXl]="5" [nzXXl]="5">
+
+                            <nz-form-item>
+                                <nz-form-label>Date Record was completed </nz-form-label>
+                                <nz-form-control>
+                                    <nz-date-picker [nzInputReadOnly]="true" formControlName="notificationParentDate"
+                                        nzPlaceHolder="Select Date" class="block"></nz-date-picker>
+                                </nz-form-control>
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="5" [nzXl]="5" [nzXXl]="5">
+
+                            <nz-form-item>
+                                <nz-form-label>Time Record was completed</nz-form-label>
+                                <nz-form-control>
+
+                                    <ry-time-picker #timePicker formControlName="notificationParentTime" ryFormat="h:mm A"
+                                        [ryType]="'single'" [ryMinuteStep]="1" [ryPlaceHolder]="'Select Time'">
+                                    </ry-time-picker>
+
+                                </nz-form-control>
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="6" [nzXl]="6" [nzXXl]="6">
+
+                            <nz-form-item>
+                                <nz-form-label></nz-form-label>
+                                <label nz-checkbox formControlName="notificationParentContacted">
+                                    <span>successfully contacted?</span>
+                                </label>
+                            </nz-form-item>
+
+                        </div>
+
+                    </div>
+
+                    <div nz-row [nzGutter]="24">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                            <nz-form-item>
+
+                                <nz-form-label>Supervisor</nz-form-label>
+
+                                <nz-form-control>
+                                    <input nz-input formControlName="notificationSupervisor" placeholder=""
+                                        type="text" />
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="5" [nzXl]="5" [nzXXl]="5">
+
+                            <nz-form-item>
+                                <nz-form-label>Date Record was completed </nz-form-label>
+                                <nz-form-control>
+                                    <nz-date-picker [nzInputReadOnly]="true"
+                                        formControlName="notificationSupervisorDate" nzPlaceHolder="Select Date"
+                                        class="block"></nz-date-picker>
+                                </nz-form-control>
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="5" [nzXl]="5" [nzXXl]="5">
+
+                            <nz-form-item>
+                                <nz-form-label>Time Record was completed</nz-form-label>
+                                <nz-form-control>
+
+                                    <ry-time-picker #timePicker formControlName="notificationSupervisorTime" ryFormat="h:mm A"
+                                        [ryType]="'single'" [ryMinuteStep]="1" [ryPlaceHolder]="'Select Time'">
+                                    </ry-time-picker>
+
+                                </nz-form-control>
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="6" [nzXl]="6" [nzXXl]="6">
+
+                            <nz-form-item>
+                                <nz-form-label></nz-form-label>
+                                <label nz-checkbox formControlName="notificationSupervisorContacted">
+                                    <span>successfully contacted?</span>
+                                </label>
+                            </nz-form-item>
+
+                        </div>
+
+                    </div>
+
+                    <div nz-row [nzGutter]="24">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                            <nz-form-item>
+
+                                <nz-form-label>Regulatory Authority Officer (if applicable)</nz-form-label>
+
+                                <nz-form-control>
+                                    <input nz-input formControlName="notificationOfficer" placeholder="" type="text" />
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="5" [nzXl]="5" [nzXXl]="5">
+
+                            <nz-form-item>
+                                <nz-form-label>Date Record was completed </nz-form-label>
+                                <nz-form-control>
+                                    <nz-date-picker [nzInputReadOnly]="true" formControlName="notificationOfficerDate"
+                                        nzPlaceHolder="Select Date" class="block"></nz-date-picker>
+                                </nz-form-control>
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="5" [nzXl]="5" [nzXXl]="5">
+
+                            <nz-form-item>
+                                <nz-form-label>Time Record was completed</nz-form-label>
+                                <nz-form-control>
+
+                                    <ry-time-picker #timePicker formControlName="notificationOfficerTime" ryFormat="h:mm A"
+                                        [ryType]="'single'" [ryMinuteStep]="1" [ryPlaceHolder]="'Select Time'">
+                                    </ry-time-picker>
+
+                                </nz-form-control>
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="6" [nzXl]="6" [nzXXl]="6">
+
+                            <nz-form-item>
+                                <nz-form-label></nz-form-label>
+                                <label nz-checkbox formControlName="notificationOfficerContacted">
+                                    <span>successfully contacted?</span>
+                                </label>
+                            </nz-form-item>
+
+                        </div>
+
+                    </div>
+
+                    <div nz-row [nzGutter]="24">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                            <nz-form-item>
+
+                                <nz-form-label>Medical Authorities</nz-form-label>
+
+                                <nz-form-control>
+                                    <input nz-input formControlName="notificationMedical" placeholder="" type="text" />
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="5" [nzXl]="5" [nzXXl]="5">
+
+                            <nz-form-item>
+                                <nz-form-label>Date Record was completed </nz-form-label>
+                                <nz-form-control>
+                                    <nz-date-picker [nzInputReadOnly]="true" formControlName="notificationMedicalDate"
+                                        nzPlaceHolder="Select Date" class="block"></nz-date-picker>
+                                </nz-form-control>
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="5" [nzXl]="5" [nzXXl]="5">
+
+                            <nz-form-item>
+                                <nz-form-label>Time Record was completed</nz-form-label>
+                                <nz-form-control>
+
+                                    <ry-time-picker #timePicker formControlName="notificationMedicalTime" ryFormat="h:mm A"
+                                        [ryType]="'single'" [ryMinuteStep]="1" [ryPlaceHolder]="'Select Time'">
+                                    </ry-time-picker>
+
+                                </nz-form-control>
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="6" [nzXl]="6" [nzXXl]="6">
+
+                            <nz-form-item>
+                                <nz-form-label></nz-form-label>
+                                <label nz-checkbox formControlName="notificationMedicalContacted">
+                                    <span>successfully contacted?</span>
+                                </label>
+                            </nz-form-item>
+
+                        </div>
+
+                    </div>
+
+                    <div nz-row [nzGutter]="24" class="pb-24">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                            <label nz-checkbox formControlName="transportedByAmbulance">
+                                <span>Was the team member transported by ambulance?</span>
+                            </label>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                            <label nz-checkbox formControlName="excludedFromshifts">
+                                <span>Does the incident/injury require the team member to be excluded from
+                                    shifts?</span>
+                            </label>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                            <label nz-checkbox formControlName="notifiedToAuthorities">
+                                <span>Does the incident/injury require notification to the Health Department or other
+                                    recognised authorities?</span>
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                        <nz-form-item>
+
+                            <nz-form-label>Recommended leave period</nz-form-label>
+
+                            <nz-form-control>
+
+                                <input nz-input formControlName="recommendedLeave" placeholder="" type="text" />
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                </div>
+
+
+                <nz-divider nzText="Follow-up requirments"></nz-divider>
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    <div nz-row [nzGutter]="24">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                            <label nz-checkbox formControlName="medicalCertificateProvided">
+                                <span>Has a medical certificate been provided?</span>
+                            </label>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                            <label nz-checkbox formControlName="medicalCertificateSubmitted">
+                                <span>Has the medical certificate been submitted into the team members file?</span>
+                            </label>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <nz-divider nzText="Supervisors Acknowledgement and comments"></nz-divider>
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <div nz-row [nzGutter]="24">
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                            <nz-form-item>
+
+                                <nz-form-label>Name</nz-form-label>
+
+                                <nz-form-control>
+
+                                    <nz-select formControlName="supervisor" nzPlaceHolder="Select User" nzAllowClear>
+                                        <nz-option *ngFor="let option of staffList" [nzLabel]="option.getFullName()"
+                                            [nzValue]="option.id">
+                                        </nz-option>
+                                    </nz-select>
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                          
+                            <nz-form-item  id="sig1">
+                                <nz-form-label>Signature</nz-form-label>
+                                <div class="signatureClass">
+                                    <signature-pad #sigpadSupervisor [options]="signaturePadOptions">
+                                    </signature-pad>
+                                </div>
+                                <button class="sigClear" (click)="clearSignature('sigpadSupervisor')" type="button" nz-button nzBlock>Clear
+                                </button>
+                            </nz-form-item>  
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="6" [nzXl]="6" [nzXXl]="6">
+
+                            <nz-form-item>
+
+                                <nz-form-label> Date </nz-form-label>
+
+                                <nz-form-control>
+                                    <nz-date-picker [nzInputReadOnly]="true" formControlName="supervisedDate"
+                                        nzPlaceHolder="Select Date" class="block"></nz-date-picker>
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                            <nz-form-item>
+
+                                <nz-form-label> Comments</nz-form-label>
+
+                                <nz-form-control>
+
+                                    <textarea nz-input rows="4" formControlName="supervisorComments"
+                                        placeholder="Comments" type="text"></textarea>
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <nz-divider nzText="Images"></nz-divider>
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <div nz-row [nzGutter]="24">
+
+                        <div *ngIf="this.editMode" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                            <table>
+                                <tr *ngFor="let itemArray of formImages">
+                                    <td *ngFor = "let image of itemArray">
+                                        <img class="images" src="{{ getIncidentImage(image) }}"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                            <s3-upload [uploadCountLimit]="(this.editMode)? 10-incident.images.length: 10" [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'IncidentImages')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                        </div>
+
+                    </div>
+
+                </div>
+                
+
+
+            </div>
+
+        </div>
+
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row"
+            fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+                <ng-container *ngIf="!editMode">
+                    <button class="text-uppercase mr-8" *hasPermission="['AC1']; belongsTo 'N21'" nz-button
+                        nzType="primary" [disabled]="!incidentForm.valid" [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Save
+                    </button>
+                </ng-container>
+
+                <ng-container *ngIf="editMode">
+                    <button class="text-uppercase mr-8" *hasPermission="['AC2']; belongsTo 'N21'" nz-button
+                        nzType="primary" [disabled]="!incidentForm.valid" [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Update
+                    </button>
+                </ng-container>
+
+                <button class="text-uppercase mr-8" type="button" nz-button nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>
+    

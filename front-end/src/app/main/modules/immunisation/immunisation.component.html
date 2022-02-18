@@ -1,0 +1,73 @@
+
+<div id="invitation" class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+        <!-- HEADER -->
+        <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+    
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Manage Immunisation</h1>
+    
+            <ng-container *hasPermission="['AC0']; belongsTo 'N60'">
+
+                <ng-container *ngIf="!isRoot">
+                    <button class="text-uppercase"
+                    nz-button 
+                    nzType="primary"
+                    [promiseBtn]="buttonLoader"
+                    (debounceClick)="addDialog($event)">
+                    <i class="plus icon mr-8"></i> Create New
+                </button>
+                </ng-container>
+                
+                <ng-container *ngIf="isRoot">
+                    <button class="text-uppercase" nz-button nz-dropdown nzType="primary" [nzDropdownMenu]="menu"
+                        [promiseBtn]="buttonLoader">
+                        Action <i class="chevron down icon ml-8"></i>
+                    </button>
+
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu>
+                        <li nz-menu-item (click)="addDialog($event)">
+                            <span class="font-weight-600">Create New </span>
+                        </li>
+                        <li nz-menu-item (click)="ImportDialog($event, 'owner')">
+                            <span class="font-weight-600">Import Default</span>
+                        </li>
+                    </ul>
+                </nz-dropdown-menu>
+                </ng-container>
+
+            </ng-container>
+    
+        </div>
+        <!-- / HEADER -->
+    
+        <!-- CONTENT -->
+        <div class="content">
+    
+            <!-- SIDEBAR -->
+            <fuse-sidebar class="sidebar"
+                name="immunisation-sidenav-left"
+                position="left"
+                lockedOpen="gt-md">
+    
+                <immunisation-sidenav-left
+                    [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">
+                </immunisation-sidenav-left>
+    
+            </fuse-sidebar>
+            <!-- / SIDEBAR -->
+    
+            <!-- CENTER -->
+            <immunisation-list-view class="center p-24 pt-0"
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+                [isCreateButtonLoading]="buttonLoader"
+                (updateTableScroll)="updateScroll($event)">
+            </immunisation-list-view>
+            <!-- / CENTER -->
+    
+        </div>
+        <!-- / CONTENT -->
+    
+    </div>
+    

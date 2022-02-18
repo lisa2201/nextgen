@@ -1,0 +1,62 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Payment Plan Details <span *ngIf="schedule.parent"> - {{ schedule?.parent?.getFullName() }}</span></span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <nz-descriptions nzBordered [nzColumn]="{ xxl: 1, xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }">
+            <nz-descriptions-item nzTitle="Payment Frequency">{{ schedule.paymentFrequency | titlecase }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Billing Term">{{ billingTermDescriptionMap[schedule.billingTerm] }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Payment Day">{{ schedule.paymentDay | titlecase }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Activation Date">{{ schedule.activationDate ? (schedule.activationDate | date:'mediumDate') : 'Effective Immediately' }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Next Payment Date">{{ schedule.nextPaymentDate | date:'mediumDate' }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Amount Limit">{{ schedule.amountLimit | currency }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Fixed Amount">{{ schedule.fixedAmount | currency }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Status">
+                <nz-tag *ngIf="schedule.status === 'active'" [nzColor]="'green'">{{ schedule.status | titlecase }}</nz-tag>
+                <nz-tag *ngIf="schedule.status === 'inactive'" [nzColor]="'red'">{{ schedule.status | titlecase }}</nz-tag>
+                <nz-tag *ngIf="schedule.status === 'upcoming'" [nzColor]="'blue'">{{ schedule.status | titlecase }}</nz-tag>
+                <nz-tag *ngIf="schedule.status === 'paused'" [nzColor]="'orange'">{{ schedule.status | titlecase }}</nz-tag>
+            </nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Auto Charge">
+                <nz-tag [nzColor]="schedule.autoCharge ? 'green' : 'red'">{{ schedule.autoCharge ? 'Yes' : 'No' }}</nz-tag>
+            </nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Created On">{{ schedule.createdAt | date }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Updated On">{{ schedule.updatedAt | date }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Amount Edited On">{{ getEditDate(schedule) | date }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Created By" *ngIf="schedule.createdBy">{{ schedule.createdBy.getFullName() }}</nz-descriptions-item>
+            
+        </nz-descriptions>
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span></span>
+
+        <span class="text-right">
+
+            <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                (click)="matDialogRef.close()">
+                Cancel
+            </button>
+
+        </span>
+
+    </div>
+
+</div>

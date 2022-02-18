@@ -1,0 +1,37 @@
+<div class="dialog-content-wrapper">
+
+    <div fxLayout="column">
+
+        <div fxLayout="column" fxLayoutAlign="center center">
+
+            <mat-toolbar class="mat-accent m-0">
+
+                <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <span
+                        class="title dialog-title">{{ (addNew === 'new') ? dialogTitle : (addNew === 'edit') ? 'Edit' : 'Other'}}
+                    </span>
+                    <span>
+                        <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                                aria-label="Close dialog">
+                            <mat-icon>close</mat-icon>
+                        </button>`
+                    </span>
+                </mat-toolbar-row>
+
+            </mat-toolbar>
+            <div *ngIf="addNew!=='view'" fxLayoutAlign="space-between stretch" nz-col [nzXs]="24" [nzSm]="24"
+                 [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24"
+                 [@animate]="{ value:'*', params:{ duration:'200ms', y:'100px', opacity: 0, delay:'300ms' }}">
+
+                <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+                     [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                    <add-note>
+
+                    </add-note>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,146 @@
+<div class="session-list-top-panel" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <span>
+        <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ paginationMeta?.from || '0' }} to {{ paginationMeta?.to || '0' }} of {{ total }} entries</span>
+        <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ paginationMeta?.from || '0' }} - {{ paginationMeta?.to || '0' }} of {{ total }} entries</span>
+    </span>
+
+    <span>
+
+        <nz-button-group>
+
+            <button nz-button 
+                [disabled]="sessionList.length === 0 || pageIndex === 1"
+                (click)="previousPage($event)">
+                <i class="chevron left icon b-i"></i>
+            </button>
+
+            <button nz-button 
+                [disabled]="sessionList.length === 0 || pageIndex === getLastIndex"
+                (click)="nextPage($event)">
+                <i class="chevron right icon b-i"></i>
+            </button>
+            
+        </nz-button-group>
+
+    </span>
+
+</div>
+
+<div class="session-list"
+    fusePerfectScrollbar 
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <nz-list 
+        class="list-view-pagination"
+        [nzNoResult]="emptyBlock"
+        [nzDataSource]="listSource"
+        [nzRenderItem]="item"
+        [nzItemLayout]="'horizontal'">
+    
+        <ng-template #item let-item let-index="index">
+
+            <nz-list-item 
+                class="list-view-item"
+                (click)="getSession($event, item.id)"
+                [ngClass]="{ 'current-item': item?.id == currentSession?.id }">
+
+                <nz-skeleton 
+                    [nzAvatar]="true" 
+                    [nzActive]="true" 
+                    [nzTitle]="false" 
+                    [nzParagraph]="{ rows: 4 }"
+                    [nzLoading]="listViewLoading">
+
+                    <div fxLayout="row" fxLayoutAlign="space-between center">
+
+                        <nz-list-item-meta 
+                            [nzAvatar]="nzAvatar"
+                            [nzTitle]="nzTitle"
+                            [nzDescription]="nzDescription">
+
+                            <ng-template #nzAvatar>
+
+                                <nz-avatar 
+                                    [nzSize]="40" 
+                                    nzSrc="{{ item.getStatusImage() }}"
+                                    class="session-list-img img-bg"></nz-avatar>
+                                
+                            </ng-template>
+
+                            <ng-template #nzTitle>
+
+                                <h4 class="session-list-title text-truncate" [ngClass]="{ 'error': item.hasError(), 'success' : item.isCompleted() }">
+                                    {{ item.reportDate | formatMoment: 'Do MMM' }} - {{ item.endDate | formatMoment: 'Do MMM' }} {{ item.endDate | formatMoment: 'YYYY' }}
+                                </h4>
+
+                            </ng-template>
+
+                            <ng-template #nzDescription>
+
+                                <p class="m-0 font-weight-600">
+                                   {{ item.enrolment?.enrolId }}
+                                </p>
+
+                                <p class="m-0">
+                                    <span class="font-weight-600">Type</span>: 
+                                    {{ item.type }}
+                                </p>
+
+                                <p class="m-0">
+                                    <span class="font-weight-600">Process</span>: 
+                                    {{ item.isAutomatedProcess() ? 'Automated' : 'Manual' }}
+                                </p>   
+
+                                <p class="m-0">
+                                    <span class="font-weight-600">Status</span>: 
+                                    {{ item.statusLabel }}
+                                </p>  
+
+                            </ng-template>
+
+                        </nz-list-item-meta>
+
+                        <button class="text-uppercase blank arrow-key"
+                            fxHide.gt-sm
+                            nz-button nzType="link">
+                            <i class="chevron right icon"></i>
+                        </button>
+
+                    </div>
+
+                </nz-skeleton>
+                
+            </nz-list-item>
+
+        </ng-template>
+
+    </nz-list>
+
+    <!-- LOADER VIEW -->
+    <ng-template #indicatorTemplate>
+        <div class="is-loading">
+            <span class="btn-spinner card-loader"></span>
+        </div>
+    </ng-template>
+    <!-- / LOADER VIEW -->
+
+    <!-- EMPTY VIEW -->
+    <ng-template #emptyBlock>
+
+        <nz-empty class="pt-24 pb-24 m-0"
+            [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+            [nzNotFoundContent]="contentTpl"
+            [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <ng-template #contentTpl>
+                <h4 class="mt-24">No Data Found</h4>
+                <span>Looks like there's no information to display here</span>
+            </ng-template>
+
+        </nz-empty>
+
+    </ng-template>
+    <!-- / EMPTY VIEW -->
+
+</div>

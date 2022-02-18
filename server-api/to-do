@@ -1,0 +1,72 @@
+Laravel next gen
+
+//\DB::enableQueryLog();
+//\Log::info('ss', \DB::getQueryLog());
+// php artisan optmize, config: cache, route: cache
+// composer dumpautoload -o
+
+email test -
+
+https://mailtrap.io/
+
+> Module based Application
+
+https://github.com/pingpong-labs/modules
+https://github.com/nWidart/laravel-modules
+https://github.com/caffeinated/modules
+
+
+> Things to refer
+
+
+> changes done in vendor folder
+
+notification table change
+DatabaseNotification.php
+protected $table from 'notifications' to 'km8_notifications'
+
+> mail & notification reference
+
+php artisan make:notification UserSubscriptionActiveMail
+php artisan make:mail UserSubscriptionActiveMail
+
+// clear app cache
+php artisan cache:clear
+php artisan config:cache
+php artisan route:cache
+composer dumpautoload
+
+//changes
+
+*-------------------- Spatie\Permission\Models ------------------------------*
+
+/**
+ * The accessors to append to the model's array form.
+ *
+ * @var array
+ */
+protected $appends = ['index'];
+
+/**
+ * encrypt primary id
+ * @param $value
+ * @return string
+ */
+public function getIndexAttribute()
+{
+    return ($this->attributes['id'] != null) ? \Helpers::hxCode($this->attributes['id']) : $this->attributes['id'];
+}
+
+*-------------------- laravel ------------------------------*
+
+trait CollectsResources
+
+if ($resource instanceof MissingValue || is_null($resource) || empty($resource)) {
+    return $resource;
+}
+
+/******** passport *************/
+
+getPsrRequestViaBearerToken
+// $request->headers->set('Authorization', '', true); comment
+

@@ -1,0 +1,17 @@
+@import "src/@fuse/scss/fuse";
+
+.mat-menu-panel {
+    min-height: 50px !important;
+}
+
+app-invoices-list-view {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+}

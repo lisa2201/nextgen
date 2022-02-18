@@ -1,0 +1,45 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+bulk-session-waiting-tab {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .top-bar {
+        position: relative;
+    }
+
+    .title-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+            font-size: 21px;
+            display: none;
+        }
+    }
+
+    .ant-list-item-meta-avatar {
+        margin-left: 16px;
+        
+        .child-list-img {
+            background: #fff;
+            border: 4px solid $ant-border-color;
+            box-shadow: $custom-box-shadow-high;
+        }
+
+        .ant-scroll-number-custom-component {
+            font-size: 16px;
+            transform: none;
+        }
+    }
+
+    
+}

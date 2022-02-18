@@ -1,0 +1,33 @@
+/*
+@import "src/@fuse/scss/fuse";
+
+ccs-session-submissions {
+    .content {
+        flex: 1;
+
+        mat-tab-group {
+            height: 100%;
+
+            .mat-tab-body-wrapper {
+                flex-grow: 1;
+            }
+        }
+    }
+}*/
+
+
+ccs-session-submissions {
+
+    .mat-tab-link {
+        text-decoration: none !important;
+
+    }
+
+    mat-ink-bar {
+
+        &.mat-ink-bar {
+
+            background-color: #1f8de9 !important;
+        }
+    }
+}

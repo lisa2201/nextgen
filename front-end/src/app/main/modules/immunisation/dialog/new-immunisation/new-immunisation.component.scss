@@ -1,0 +1,44 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+    .new-immunisation{
+        @include media-breakpoint('xs') {
+            width: 100%;
+        }
+    
+        @include media-breakpoint('gt-xs') {
+            width: 640px;
+        }
+    
+        .mat-dialog-container {
+            padding: 0;
+    
+        }
+    
+        .dialog-content-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+        nz-collapse{
+
+            width: 700px;
+        }
+
+        nz-table{
+            .btn-add-role{
+                float: right!important;
+                cursor: pointer;
+            }
+            .remove{
+                color: #e74c3c!important;
+            }
+
+            .btn-add-role-dissabled {
+                float: right!important;
+                color: currentColor;
+                cursor: not-allowed;
+                opacity: 0.5;
+                text-decoration: none;
+            }
+        }
+
+    }

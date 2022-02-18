@@ -1,0 +1,393 @@
+<div class="dialog-content-wrapper ps">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">
+                {{ dialogTitle }}
+            </span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="bookingForm" class="compose-form" fxLayout="column" fxFlex 
+        [formGroup]="bookingForm" nz-form [nzLayout]="'vertical'" 
+        (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24" *ngIf="!preview" [@fadeInOnEnter]>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Type</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="typeError">
+
+                            <nz-select  
+                                formControlName="type"
+                                nzPlaceHolder="select a type">
+        
+                                <nz-option *ngFor="let item of batchTypeOptions; trackBy: trackByFn;" nzValue="{{ item.value }}" nzLabel="{{ item.name }}"></nz-option>
+                                
+                            </nz-select>
+        
+                            <ng-template #typeError let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select an option</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12" 
+                    *ngIf="bookingForm.get('type').value === '0'" [@fadeInOnEnter]>
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Date</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="dateError">
+
+                            <nz-date-picker class="block"
+                                formControlName="date" 
+                                [nzInputReadOnly]="true"
+                                nzPlaceHolder="select date"></nz-date-picker>
+        
+                            <ng-template #dateError let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a date</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12"
+                    *ngIf="bookingForm.get('type').value === '1'" [@fadeInOnEnter]>
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Week</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="weekError">
+
+                            <nz-week-picker class="block"
+                                formControlName="week"
+                                [nzFormat]="'ww of yyyy'"
+                                nzPlaceHolder="select date"
+                                [nzInputReadOnly]="true"></nz-week-picker>
+        
+                            <ng-template #weekError let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a week</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12"
+                    *ngIf="bookingForm.get('type').value === '2'" [@fadeInOnEnter]>
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Custom Selection</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="customSelectionError">
+
+                            <nz-range-picker 
+                                formControlName="range"
+                                [nzRanges]="dateRanges"></nz-range-picker>
+    
+                            <ng-template #customSelectionError let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select date/dates</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+            <div *ngIf="preview" [@fadeInOnEnter]>
+
+                <p class="mb-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <span [ngSwitch]="bookingForm.get('type').value">
+
+                        <ng-container *ngSwitchCase="'0'">
+                            Selected Date <span class="font-weight-600">{{ getPreviewLabel().start }}</span>
+                        </ng-container>
+
+                        <ng-container *ngSwitchCase="'1'">
+                            Selected Week <span class="font-weight-600">{{ getPreviewLabel().start }}</span> to <span class="font-weight-600">{{ getPreviewLabel().end }}</span>
+                        </ng-container>
+
+                        <ng-container *ngSwitchDefault>
+                            Selected Date Range <span class="font-weight-600">{{ getPreviewLabel().start }}</span> to <span class="font-weight-600">{{ getPreviewLabel().end }}</span>
+                        </ng-container>
+
+                    </span>
+
+                    <span>
+                        <a (click)="bulkUpdateAction($event)">Apply all</a>
+                    </span>
+
+                </p>
+
+                <nz-form-item>
+
+                    <nz-form-control
+                        [nzValidateStatus]="previewBatchUpdateErrorStatus"
+                        [nzErrorTip]="previewBookingSelectionErrorTpl">
+
+                        <ng-container *ngFor="let group of previewData | orderBy: ['child.firstName'] | groupBy: ['child.id'] | values; let i = index; trackBy: trackByFn">
+
+                            <div class="preview-list">
+
+                                <p class="title">
+                                    {{ group[0].child.getFullName() }}
+                                    <span class="small">{{ group[0].child.age }}</span>
+                                </p>
+
+                                <nz-table
+                                    [nzData]="group"
+                                    [nzShowPagination]="false"
+                                    [nzSize]="'small'">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Room</th>
+                                            <th>Fee</th>
+                                            <th>Session Time</th>
+                                            <th>Check In</th>
+                                            <th>Check Out</th>
+                                        </tr>
+                                    </thead>
+                                    
+                                    <tbody>
+                                        <tr *ngFor="let booking of group | orderBy: ['date']; trackBy: trackByFn">
+                                            <td>{{ booking.date }}</td>
+                                            <td nzEllipsis>{{ booking.room.title }}</td>
+                                            <td nzEllipsis>{{ booking.fee.name }}</td>
+                                            <td>{{ booking.sessionStart | convertTimeString }} - {{ booking.sessionEnd | convertTimeString }}</td>
+                                            <!-- <td>
+                                                <ng-container *ngIf="booking.attendance && booking.attendance.type === '0'; else noCheckoutTime">
+
+                                                    {{ booking.attendance.checkInTime | convertTimeString }} - 
+                                                    <ng-container *ngIf="booking.attendance.checkOutTime; else noCheckoutTime">
+                                                        {{ booking.attendance.checkOutTime | convertTimeString }}
+                                                    </ng-container>
+                                                    
+                                                </ng-container>
+                                                
+                                                <ng-template #noCheckoutTime>N/A</ng-template>
+                                            </td> -->
+
+                                            <td>
+                                                <ry-time-picker 
+                                                    class="hide-picker"
+                                                    #timePicker
+                                                    [id]="booking.attrId + '-in'"
+                                                    [ngModelOptions]="{ standalone: true }"
+                                                    [(ngModel)]="booking.holdAttendanceStartTime"
+                                                    (ngModelChange)="onPickerChange($event, booking, '0')"
+                                                    ryFormat="h:mm A"
+                                                    [ryType]="'single'"
+                                                    [ryMinuteStep]="1"
+                                                    [ryPlaceHolder]="'select ...'"
+                                                    [ryValidateValue]="booking.holdAttendanceEndTime"
+                                                    [ryValidateType]="ryValidatorValues.LESS_THAN_VALUE">
+                                                </ry-time-picker>
+
+                                                <div fxLayout="row" fxLayoutAlign="space-between center">
+
+                                                    <ng-container *ngIf="booking.attendance && booking.attendance.type === '0' && booking.attendance.checkInTime; else noCheckoutTime">
+                                                        <span>{{ booking.attendance.checkInTime | convertTimeString }}</span>
+                                                    </ng-container>
+
+                                                    <span fxLayout="row" fxLayoutAlign="space-between center">
+                                                        <i class="trash alternate outline icon danger-color clear-picker mr-4" 
+                                                            *ngIf="booking.attendance && booking.attendance.type === '0' && booking.attendance.checkInTime" 
+                                                            (click)="onPickerClear($event, booking, '0')"></i>
+
+                                                        <button
+                                                            type="button"
+                                                            nz-button 
+                                                            nzType="link"
+                                                            (click)="setAttendance($event, booking, 'in')">
+                                                            <i class="edit outline icon"></i>
+                                                        </button>
+                                                    </span>
+
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <ry-time-picker 
+                                                    class="hide-picker"
+                                                    #timePicker
+                                                    [id]="booking.attrId + '-out'"
+                                                    [ngModelOptions]="{ standalone: true }"
+                                                    [(ngModel)]="booking.holdAttendanceEndTime"
+                                                    (ngModelChange)="onPickerChange($event, booking, '1')"
+                                                    ryFormat="h:mm A"
+                                                    [ryType]="'single'"
+                                                    [ryMinuteStep]="1"
+                                                    [ryPlaceHolder]="'select ...'"
+                                                    [ryValidateValue]="booking.holdAttendanceStartTime"
+                                                    [ryValidateType]="ryValidatorValues.GREATER_THAN_VALUE">
+                                                </ry-time-picker>
+
+                                                <div fxLayout="row" fxLayoutAlign="space-between center">
+
+                                                    <ng-container *ngIf="booking.attendance && booking.attendance.type === '0' && booking.attendance.checkOutTime; else noCheckoutTime">
+                                                        <span>{{ booking.attendance.checkOutTime | convertTimeString }}</span>
+                                                    </ng-container>
+                                                    
+                                                    <span fxLayout="row" fxLayoutAlign="space-between center">
+                                                        <i class="trash alternate outline icon danger-color clear-picker mr-4" 
+                                                            *ngIf="booking.attendance && booking.attendance.type === '0' && booking.attendance.checkOutTime" 
+                                                            (click)="onPickerClear($event, booking, '1')"></i>
+
+                                                        <button
+                                                            type="button"
+                                                            nz-button 
+                                                            nzType="link"
+                                                            (click)="setAttendance($event, booking, 'out')">
+                                                            <i class="edit outline icon"></i>
+                                                        </button>
+                                                    </span>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                
+                                </nz-table>
+
+                                <ng-template #noCheckoutTime><span>N/A</span></ng-template>
+
+                            </div>
+                            
+                        </ng-container>
+                        
+                        <ng-template #previewBookingSelectionErrorTpl let-control>
+                            <ng-container>Please select at least one option</ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span>
+
+                <ng-container *ngIf="preview">
+
+                    <button class="text-uppercase mr-8" 
+                        type="button"
+                        nz-button 
+                        nzType="default"
+                        (click)="closePreview($event)">
+                        <i class="long arrow alternate left icon mr-8"></i> Back
+                    </button>
+
+                </ng-container>
+
+                <button class="text-uppercase mr-8" 
+                    *ngIf="children.length > 0"
+                    type="button"
+                    nz-button 
+                    nzType="link"
+                    (click)="toggleSidebar('children-list-manage-master-roll-sidebar')">
+                    <i class="list alternate outline icon mr-8"></i>
+                    <span>Selected {{ children.length }}</span>
+                </button>
+
+            </span>
+
+            <span class="text-right">
+
+                <ng-container *ngIf="!preview">
+
+                    <button class="text-uppercase mr-8"
+                        *hasPermission="['AC1']; belongsTo 'N25'"
+                        type="button"
+                        nz-button 
+                        nzType="primary" 
+                        (click)="previewSlots($event)"
+                        [disabled]="!bookingForm.valid"
+                        [promiseBtn]="buttonLoader">
+                        Preview <i class="long arrow alternate right icon ml-8"></i>
+                    </button>
+
+                </ng-container>
+                
+                <ng-container *ngIf="preview">
+
+                    <button class="text-uppercase mr-8"
+                        *hasPermission="['AC1']; belongsTo 'N25'"
+                        nz-button 
+                        nzType="primary" 
+                        [disabled]="!bookingForm.valid || !isFormUpdated()"
+                        [promiseBtn]="buttonSaveLoader">
+                        <i class="plus icon mr-8"></i> Save
+                    </button>
+
+                </ng-container>
+                
+                <button class="text-uppercase mr-8" 
+                    type="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+    
+                <button class="text-uppercase mat-close-btn" 
+                    type="button"
+                    nz-button 
+                    nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+    <!-- SIDEBAR FILTER -->
+    <fuse-sidebar class="sidebar" 
+        name="children-list-manage-master-roll-sidebar" 
+        position="left">
+
+        <batch-update-attendance-sidenav [children]="children"></batch-update-attendance-sidenav>
+        
+    </fuse-sidebar>
+    <!-- / SIDEBAR FILTER -->
+
+</div>

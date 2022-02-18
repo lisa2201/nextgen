@@ -1,0 +1,372 @@
+<div class="loading-bar" *ngIf="weekCalendarLoading" [@fadeMotion]>
+    <div class="__inner">
+        <img src="assets/loading/gears_c1.svg">
+        <span>Loading! Please Wait...</span>
+    </div>
+</div>
+
+<!-- CONTENT TOOLBAR -->
+<div class="toolbar">
+
+    <div class="px-24 pt-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span></span>
+
+        <span class="week-title">
+
+            <button type="button" class="b-nav blank mr-8"
+                nz-button 
+                nzType="default"
+                (click)="calendarPrevious($event)">
+                <i class="chevron left icon"></i>
+            </button>
+            
+            <span class="date-input-wrapper" (click)="toggleCalendar($event)">
+
+                <span class="date-label">
+                    <img src="assets/icons/flat/ui_set/custom_icons/child/calendar.svg" alt="date">
+                    <span class="text">
+                        <p class="sub">{{ getCalendarTitle().week }}</p>
+                        <p class="big">Week {{ getCalendarTitle().weekNumber }}</p>
+                    </span>
+                </span>
+
+                <span #weekPicker>
+                    <nz-week-picker class="date-input"
+                        [formControl]="calendarWeek"
+                        [nzInputReadOnly]="true"
+                        nzPlaceHolder="select week"></nz-week-picker>
+                </span>                    
+                
+            </span>
+
+            <button type="button" class="b-nav blank ml-8"
+                nz-button 
+                nzType="default"
+                (click)="calendarNext($event)">
+                <i class="chevron right icon"></i>
+            </button>
+
+        </span>
+
+        <span fxLayout="row" fxLayoutAlign="space-between center">
+
+            <button class="text-uppercase blank"
+                nz-button 
+                nzType="link"
+                (click)="toggleSidebar('master-roll-calendar-filter-sidebar')"
+                [ngClass]="{ 'active' : isFilterOn }">
+                <i class="filter icon"></i>
+            </button>
+
+            <button class="text-uppercase blank"
+                nz-button 
+                nzType="link"
+                (click)="clearFilter($event)"
+                *ngIf="isFilterOn" [@fadeMotion]>
+                <i class="times icon" [ngStyle]="{'font-size': '20px'}"></i>
+            </button>
+
+        </span>
+
+    </div>
+
+    <nz-divider nzText="Weekly Bookings" nzOrientation="left" class="mt-4 mb-8"></nz-divider>
+
+    <booking-master-roll-filter-view 
+        [isFilterOn]="filterFormChanged"
+        [filterData]="filterBy"
+        [filterDefaultValues]="defaultFilterValues"
+        [fees]="fees"
+        [children]="children"
+        [rooms]="rooms">
+    </booking-master-roll-filter-view>
+
+</div>
+<!-- / CONTENT TOOLBAR -->
+
+<div class="content"
+    #calendarViewPort
+    fusePerfectScrollbar
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+    scrollEvent (onscroll)="getInnerScrollPosition($event)"
+    [@animate]="{ value:'*', params:{ delay: '200ms', y:'15px' } }">
+
+    <div class="calender-week-view">
+
+        <ul class="master-view">
+
+            <li class="calender-week-header no-select" *ngIf="this.bookingCalendar.length > 0">
+
+                <span class="child-selector" fxLayoutAlign="center center">
+
+                    <label nz-checkbox
+                        [(nzChecked)]="allChildrenChecked"
+                        [nzIndeterminate]="indeterminateChildren"
+                        (nzCheckedChange)="selectAllChildren($event)"
+                        [nzDisabled]="bookingCalendar.length < 1"></label>
+                        
+                </span>
+
+                <span class="child-view" fxLayoutAlign="center center">
+
+                    <div fxLayout="column" fxLayoutAlign="center start" fxFlexFill>
+
+                        <nz-select [formControl]="roomSelect" nzPlaceHolder="select ..." [nzDisabled]="bookingCalendar.length < 1">
+
+                            <!-- <nz-option nzValue="0" nzLabel="All" *ngIf="!isChildrenViewLimited"></nz-option> -->
+                            <nz-option nzValue="0" nzLabel="All"></nz-option>
+
+                            <nz-option
+                                *ngFor="let item of rooms; trackBy: trackByFn;"
+                                [nzLabel]="item.title"
+                                [nzValue]="item.id">
+                            </nz-option>
+
+                        </nz-select>
+
+                        <a class="sort-selection mt-8" 
+                            *ngIf="bookingCalendar.length > 0" [@fadeMotion]
+                            nz-dropdown 
+                            [nzDropdownMenu]="sortMenu">
+                            <i class="sort icon mr-4"></i> {{ getSortLabel(sortSelect.value) }}
+                        </a>
+        
+                        <nz-dropdown-menu #sortMenu="nzDropdownMenu">
+                            <ul nz-menu>
+                                <li nz-menu-item 
+                                    [ngClass]="{ 'disabled': sortSelect.value === item.value }"
+                                    *ngFor="let item of mapOfSort; trackBy: trackByFn;" 
+                                    (click)="sortList($event, item)">
+                                    <span class="font-weight-600">{{ item.name }}</span>
+                                </li>
+                            </ul>
+                        </nz-dropdown-menu>
+
+                    </div>
+                    
+                </span>
+
+                <span class="week-view">
+
+                    <span class="calendar-day"
+                        *ngFor="let item of bookingCalendarTitle; trackBy: trackByFn;" 
+                        [ngClass]="{ 'is-week-end': hideWeekEnd }">
+
+                        <div class="calendar-day-content">
+
+                            <div class="calender-day-heading">
+                                <span class="day">{{ item.day }}</span>
+                                <span class="date">{{ item.date | SetGlobalDTFormat:true:false }}</span>
+                            </div>
+
+                            <ul class="week-booking-info mt-4 px-4 text-center">
+                                <li><span class="standard">{{ item.weekSummary.bookings }}</span></li>
+                                <li><span class="attendance">{{ item.weekSummary.attended }}</span></li>
+                                <li><span class="absence">{{ item.weekSummary.absences }}</span></li>
+                                <li><span class="holiday">{{ item.weekSummary.holidays }}</span></li>
+                                <li><span class="casual">{{ item.weekSummary.casual }}</span></li>
+                                <!-- <li><span class="incomplete">{{ item.weekSummary.incomplete }}</span></li> -->
+                                <!-- <li><span class="missing">{{ item.weekSummary.missing }}</span></li> -->
+                            </ul>
+
+                            <div class="room-capacity mt-8" fxLayoutAlign="center center">
+                                <span class="px-4">
+                                    <i class="user circle outline icon mr-4"></i>
+                                    <span class="text">{{ item.weekSummary.bookings }}</span>
+                                </span>
+                                <span class="px-4">
+                                    <i class="home icon mr-4"></i>
+                                    <span class="text">{{ item.weekSummary.capacity }}</span>
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </span>
+
+                </span>
+
+            </li>
+
+            <ng-container #calendarViewPortContainer></ng-container>
+            
+        </ul>
+
+    </div>
+
+    <ng-template #listViewItem let-weekItem="weekItem">
+
+        <li class="no-select">
+
+            <span class="child-selector">
+                <label class="mt-8" 
+                    nz-checkbox
+                    [(nzChecked)]="weekItem.selected"
+                    (nzCheckedChange)="checkChildrenSelectionStatus()"></label>
+            </span>
+    
+            <span class="child-view">
+    
+                <nz-list-item-meta 
+                    [nzTitle]="nzTitle"
+                    [nzDescription]="nzDescription">
+    
+                    <!-- <ng-template #nzAvatar>
+    
+                        <nz-avatar 
+                            [nzSize]="56" 
+                            nzSrc="{{ getChildProfileImage(weekItem.child) }}"
+                            class="child-list-img img-bg"></nz-avatar>
+                        
+                    </ng-template> -->
+    
+                    <ng-template #nzTitle>
+                        
+                        <a (click)="openChildProfile($event, weekItem.child.id)">
+                            <h4 class="child-list-title text-truncate">{{ weekItem.child.getShortName() }}</h4>
+                        </a>
+    
+                    </ng-template>
+    
+                    <ng-template #nzDescription>
+    
+                        <p class="m-0 d-in-blk danger-button-style border-radius-16 px-8 py-2" *ngIf="weekItem.child.isWaitList()">Waitlist</p>
+    
+                        <p class="m-0">
+                            <span class="font-weight-600">Date of Birth</span>: 
+                            {{ weekItem.child.dob | SetGlobalDTFormat:true:false }}
+                        </p>   
+    
+                        <p class="m-0">
+                            <span class="font-weight-600">Age</span>: 
+                            {{ weekItem.child.age }}
+                        </p>  
+    
+                    </ng-template>
+    
+                </nz-list-item-meta>
+    
+            </span>
+    
+            <span class="week-view">
+    
+                <span class="calendar-day" 
+                    *ngFor="let bookingItem of weekItem.items; trackBy: trackByFn;"
+                    [ngClass]="{ 'is-week-end': hideWeekEnd }">
+    
+                    <div class="calendar-day-content">
+    
+                        <div class="calendar-day-inner">
+            
+                            <ng-container *ngIf="bookingItem.booking.length > 0">
+            
+                                <ng-container *ngFor="let slot of bookingItem.booking; trackBy: trackByFn;">
+            
+                                    <div class="slot {{ slot.status }}"
+                                        [ngClass]="{ 'error' : !slot.hasRemovedRoomLinked() && slot.hasError(weekItem.child.rooms, fees).hasError && !(slot.isAbsent() || slot.isHoliday()) }"
+                                        [@fadeMotion]
+                                        (click)="editSlot($event, bookingItem, slot, weekItem.child)">
+            
+                                        <div class="inner">
+            
+                                            <p class="mb-0 text-truncate time" [ngClass]="{ 'in-completed' : slot.hasCompleteAttendance() }">
+                                                <span>
+                                                    <i class="bus icon mx-2" *ngIf="slot.hasAttendance() && slot.attendance.hasBusInfo()" tooltip="{{ slot.getAttendanceBusInfo().name || 'N/A' }}" placement="top" display-mobile="false" hide-delay="50"></i>
+                                                    {{ slot?.sessionStart | convertTimeString }} - {{ slot?.sessionEnd | convertTimeString }}
+                                                </span>
+                                            </p>
+                
+                                            <div class="py-4 px-8">
+                
+                                                <p class="mb-0 text-truncate">
+                                                    <i class="home icon mr-8 ic"></i>
+                                                    <span>{{ slot?.room?.title }}</span>
+                                                </p>
+            
+                                                <p class="mb-0 text-truncate">
+                                                    <i class="dollar sign icon mr-8 ic"></i>
+                                                    <span>{{ slot?.fee?.name }} ({{ slot?.getBookingFeeAmount() | currency: client.currency :'symbol':'1.2-2' }})</span>
+                                                </p>
+            
+                                            </div>
+            
+                                        </div>
+                                        
+                                        <span class="mb-0 border-bar" [ngClass]="{ 'casual': slot.isCasual }"></span>
+            
+                                        <!-- <span class="completed-check"
+                                            *ngIf="slot.hasCompleteAttendance()">
+                                            <img src="assets/icons/flat/ui_set/custom_icons/child/day-completed.svg" alt="completed attendance">
+                                        </span> -->
+            
+                                    </div>
+            
+                                </ng-container>
+                                
+                                <div class="slot add bottom" 
+                                    (click)="createBooking($event, bookingItem, weekItem.child)">
+                                    <i class="plus icon"></i>
+                                </div>
+            
+                            </ng-container>
+            
+                            <div class="slot add" 
+                                *ngIf="bookingItem.booking.length === 0"
+                                (click)="createBooking($event, bookingItem, weekItem.child)">
+                                <i class="plus icon"></i>
+                            </div>
+                            
+                        </div>
+            
+                    </div>
+    
+                </span>
+    
+            </span>
+
+        </li>
+
+    </ng-template>
+    
+    <!-- LOADER VIEW -->
+    <ng-template #indicatorTemplate>
+        <div class="is-loading">
+            <span class="btn-spinner card-loader"></span>
+        </div>
+    </ng-template>
+    <!-- / LOADER VIEW -->
+
+    <!-- EMPTY VIEW -->
+    <ng-template #emptyBlock>
+
+        <li class="no-select center">
+
+            <nz-empty class="pt-24 pb-24 m-0"
+                [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl"
+                [@fadeInOnEnter]>
+    
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+    
+            </nz-empty>
+
+        </li>
+
+    </ng-template>
+    <!-- / EMPTY VIEW -->
+
+</div>
+
+<!-- SIDEBAR -->
+<fuse-sidebar class="sidebar"
+    name="master-roll-calendar-filter-sidebar"
+    position="right">
+
+    <manager-master-roll-calender-filter [@animate]="{ value:'*', params:{ delay: '200ms', x:'30px' } }"></manager-master-roll-calender-filter>
+
+</fuse-sidebar>
+<!-- / SIDEBAR -->

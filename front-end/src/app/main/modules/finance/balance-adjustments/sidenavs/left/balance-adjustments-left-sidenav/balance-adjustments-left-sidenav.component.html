@@ -1,0 +1,42 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32" style="padding-top: 32px !important;">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0">
+
+    <form fxLayout="column" fxFlex [formGroup]="balanceAdjustmentsFilterForm">
+
+        <div class="mb-16">
+
+            <label class="filter-label">Date</label>
+
+            <nz-date-picker class="block" nzPlaceHolder="Select Date" nzSize="small" nzAllowClear="false" formControlName="date" 
+            [nzInputReadOnly]="true" [nzDisabled]="balanceAdjustmentsFilterForm.controls['date'].disabled"></nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+        
+            <label class="filter-label">Adjustment Type</label>
+            
+            <nz-radio-group formControlName="type" [nzDisabled]="balanceAdjustmentsFilterForm.controls['type'].disabled">
+            
+                <label nz-radio nzValue="0" class="_filter">All</label>
+                <label nz-radio nzValue="credit" class="_filter">Credit</label>
+                <label nz-radio nzValue="debit" class="_filter">Debit</label>
+            
+            </nz-radio-group>
+        
+        </div>
+
+        <button nz-button nzType="default" *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button>
+
+    </form>
+
+
+</div>
+<!-- / SIDEBAR CONTENT -->

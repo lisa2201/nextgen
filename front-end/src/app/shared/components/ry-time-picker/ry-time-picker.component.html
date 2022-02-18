@@ -1,0 +1,25 @@
+<div class="ant-picker-input">
+
+    <input
+        #inputElement
+        nzType="text"
+        readonly="readonly"
+        [placeholder]="ryPlaceHolder"
+        [(ngModel)]="modelValue"
+        [ryFormatTime]="ryFormat"
+        (focus)="onFocus(true)"
+        (blur)="onFocus(false)"
+        [attr.disabled]="ryDisabled ? '' : null"
+    />
+
+    <span class="ant-picker-suffix">
+        <i nz-icon nzType="clock-circle"></i>
+    </span>
+
+    <span class="ant-picker-clear"
+        *ngIf="ryShowClear && modelValue"  
+        (click)="onClickClearBtn($event)">
+        <i nz-icon nzType="close-circle" nzTheme="fill"></i>
+    </span>
+
+</div>

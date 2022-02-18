@@ -1,0 +1,89 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Adjust Payment</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form nz-form name="paymentAdjustmentForm" fxLayout="column" [formGroup]="paymentAdjustmentForm" [nzLayout]="'vertical'"
+        (ngSubmit)="onSubmit()" novalidate>
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Amount</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="amountErrorTpl">
+    
+                            <input nz-input formControlName="amount" placeholder="Amount" type="number" />
+    
+                        </nz-form-control>
+    
+                        <ng-template #amountErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input the amount
+                            </ng-container>
+                        </ng-template>
+    
+                    </nz-form-item>
+
+                </div>
+               
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label>Comments</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback>
+    
+                            <input nz-input formControlName="comments" placeholder="Comments" type="text" />
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8" type="submit" *hasPermission="['AC1']; belongsTo 'N27'" nz-button
+                    nzType="primary" [disabled]="!paymentAdjustmentForm.valid" [promiseBtn]="buttonLoading">
+                    <i class="plus icon mr-8"></i> Save
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Cancel
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

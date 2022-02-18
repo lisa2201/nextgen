@@ -1,0 +1,114 @@
+<fuse-widget class="widget" fxLayout="column">
+
+    <!-- Front -->
+    <div class="fuse-widget-front">
+
+        <nz-spin
+            [nzSpinning]="widgetLoader"
+            [nzIndicator]="indicatorTemplate">
+
+            <div class="px-16 border-bottom" fxLayout="row wrap" fxLayoutAlign="space-between center">
+
+                <div fxFlex class="py-16 h3">Utilisation  <span id="calander-date">(week starts {{ weektext }})</span></div>
+    
+                <h5 id="week_picker">
+                    <span class="date-input-wrapper" (click)="toggleWeekPicker($event)">
+    
+                        <span class="date-label">
+                            <img id="calander-img"
+                                src="assets/icons/flat/ui_set/custom_icons/child/calendar.svg">
+                        </span>
+    
+                        <nz-date-picker [(ngModel)]="date" class="date-input"
+                            (ngModelChange)="getWeek($event)"
+                            [nzOpen]="openWeekPicker"
+                            nzShowToday = false
+                            nzAutoFocus = true
+                            nzAllowClear = false
+                            [nzInputReadOnly]="true">
+                        </nz-date-picker>
+    
+                    </span>
+                </h5>
+    
+                <button class="refresh-button" nz-button nzType="link" nzSize="small" (click)="updateWidget()">
+                        <i class="sync vertical icon"></i>
+                </button>
+                
+            </div>
+    
+            <div [hidden]="room_filter" fxLayout="row wrap" fxLayoutAlign="start start">
+    
+                <div class="h-420 my-16" fxFlex fxLayout="row">
+    
+                    <ngx-charts-bar-vertical-stacked
+                        *fuseIfOnDom
+                        [scheme]="utilizationConfig.scheme"
+                        [results]="utilization.mainChart"
+                        [gradient]="utilizationConfig.gradient"
+                        [xAxis]="utilizationConfig.xAxis"
+                        [yAxis]="utilizationConfig.yAxis"
+                        [legend]="utilizationConfig.legend"
+                        [showXAxisLabel]="utilizationConfig.showXAxisLabel"
+                        [showYAxisLabel]="utilizationConfig.showYAxisLabel"
+                        [xAxisLabel]="utilizationConfig.xAxisLabel"
+                        [yAxisLabel]="utilizationConfig.yAxisLabel"
+                        (select)="utilizationConfig.onSelect($event)">
+
+                        <ng-template #tooltipTemplate let-model="model" class="tooltip">
+                            {{ model.name }}: {{ model.value }} {{ model.percentage }}
+                          </ng-template>
+
+                    </ngx-charts-bar-vertical-stacked>
+    
+                </div>
+    
+            </div>
+    
+            <div [hidden]="!room_filter" fxLayout="row wrap" fxLayoutAlign="start start">
+               
+                <span class="go-back-link" (click)="onBack()" fxLayout="row">
+                    <i class="long arrow alternate left icon"></i>
+                    <span>Go Back</span>
+                </span>
+    
+                <div class="h-420 my-16" fxFlex fxLayout="row">
+    
+                    <ngx-charts-bar-vertical-stacked
+                        *fuseIfOnDom
+                        [scheme]="utilizationSubConfig.scheme"
+                        [results]="utilizationsub.mainChart"
+                        [gradient]="utilizationSubConfig.gradient"
+                        [xAxis]="utilizationSubConfig.xAxis"
+                        [yAxis]="utilizationSubConfig.yAxis"
+                        [legend]="utilizationSubConfig.legend"
+                        [showXAxisLabel]="utilizationSubConfig.showXAxisLabel"
+                        [showYAxisLabel]="utilizationSubConfig.showYAxisLabel"
+                        [xAxisLabel]="utilizationSubConfig.xAxisLabel"
+                        [yAxisLabel]="utilizationSubConfig.yAxisLabel"
+                        (select)="utilizationSubConfig.onSelect($event)">
+
+                        <ng-template #tooltipTemplate let-model="model" class="tooltip">
+                            {{ model.name }}: {{ model.value }} {{ model.percentage }}
+                          </ng-template>
+                          
+                    </ngx-charts-bar-vertical-stacked>
+    
+                </div>
+    
+            </div>
+            
+        </nz-spin>
+
+    </div>
+    <!-- / Front -->
+
+</fuse-widget>
+
+<!-- LOADER VIEW -->
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+<!-- / LOADER VIEW -->

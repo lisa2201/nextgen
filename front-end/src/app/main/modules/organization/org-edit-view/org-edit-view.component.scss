@@ -1,0 +1,53 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+organization-edit-view {
+
+    .org-edit-view {
+        box-shadow: 0 0 8px 0px rgba(0, 0, 0, 0.15);
+    }
+
+    .content {
+        background: white;
+        border-radius: 10px;
+    }
+
+    .View {
+        padding-left: 3%;
+        padding-top: 1%;
+        padding-bottom: 1%;
+
+        border-radius: 10px;
+        margin-top: 1%;
+    }
+
+    .branchTable {
+        box-shadow: 0 0 8px 0px rgba(0, 0, 0, 0.15);
+        margin: 1%;
+        padding: 2%;
+        border-radius: 10px;
+    }
+
+    .details {
+        padding: 2%;
+        box-shadow: 0 0 8px 0px rgba(0, 0, 0, 0.15);
+        margin-top: 1%;
+        margin: 1%;
+        border-radius: 10px;
+    }
+
+    .s-title {
+        min-height: 40px;
+    }
+}
+
+vertical-layout-3 #main > .container > .container {
+    position: relative;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-flex: 1;
+    flex: 1 0 auto;
+    width: 100%;
+    min-width: 0;
+    padding: 0px;
+}

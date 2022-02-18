@@ -1,0 +1,25 @@
+@mixin invitation-auth-theme($theme) {
+
+    $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
+    $is-dark: map-get($theme, is-dark);
+
+    invitation-auth {
+
+        #auth-invitation {
+
+            #invitation-auth-form-wrapper {
+
+                #invitation-auth-form {
+                    @if ($is-dark) {
+                        background: mat-color($fuse-navy, 600);
+                    }
+
+                    @else {
+                        background: map-get($background, card);
+                    }
+                }
+            }
+        }
+    }
+}

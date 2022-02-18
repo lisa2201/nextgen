@@ -1,0 +1,550 @@
+<div id="provider-personnel-view" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-12 pb-12" fxLayout="row" fxLayoutAlign="start center">
+
+            <!-- <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Edit Branch -
+                <span>Provider Name</span></h1> -->
+
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="text-uppercase go-back-link" (click)="onBack($event)">
+                    <i class="long arrow alternate left icon"></i>
+                    <span>Go Back</span>
+                </span>
+
+                <ng-container *ngIf="providerPersonnel.isSynced === '2'">
+                    <nz-alert nzType="warning" nzCloseable [nzMessage]="syncError" (nzOnClose)="afterClose()">
+                    </nz-alert>
+                </ng-container>
+
+                <span class="text-right">
+                   
+                    <button nz-button nzType="primary" (click)="edit($event, providerPersonnel)"
+                        [promiseBtn]="buttonLoader">
+                        <i class="edit outline icon primary-color"></i>
+                        Edit
+                    </button>
+                </span>
+
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24 pt-16" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+
+                <nz-tabset [nzSize]="'large'">
+
+                    <nz-tab [nzTitle]="titleTemplateBasic">
+                        <div class="pl-12 pr-4 pt-24 pb-12"
+                            style="background: #2e8b574d; border-radius: 5px; border: solid 2px #858a83;">
+
+                            <div nz-row [nzGutter]="6">
+                                <div nz-col [nzSpan]="4">
+                                    <th>First Name</th>
+                                    <br />
+
+                                    <td>{{ providerPersonnel.firstName || 'N/A'}}</td>
+                                </div>
+                                <div nz-col [nzSpan]="4">
+                                    <th>Last Name</th>
+                                    <br />
+                                    <td>{{ providerPersonnel.lastName || 'N/A'}}</td>
+                                </div>
+                                <div nz-col [nzSpan]="4">
+                                    <th>Phone Number</th>
+                                    <br />
+
+                                    <td>{{ providerPersonnel.phone || 'N/A'}}</td>
+                                </div>
+                                <div nz-col [nzSpan]="4">
+                                    <th>Email</th>
+                                    <br />
+                                    <td>{{ providerPersonnel.email || 'N/A'}}</td>
+                                </div>
+                                <div nz-col [nzSpan]="4">
+                                    <th *ngIf="providerPersonnel.identity === '0'; else PersonIdTpl">Proda Id</th>
+                                    <ng-template #PersonIdTpl>
+                                        <th>person Id </th>
+                                    </ng-template>
+                                    <br />
+                                    <td>{{ providerPersonnel.prodaId || 'N/A'}}</td>
+                                </div>
+
+                                <div nz-col [nzSpan]="3">
+                                    <th>Action</th>
+                                    <br />
+                                    <td>
+                                        <button class="text-uppercase pr-8 pl-8" type="button" nz-button nzType="link"
+                                            (click)="editDialogName($event, providerPersonnel)">
+                                            <i class="edit outline icon primary-color"></i>
+                                        </button>
+                                        
+                                    </td>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="mb-24 pt-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+                            <h3 class="header mb-0">Personnel Declarations</h3>
+
+                            <ng-container [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                                <button class="text-uppercase blank" type="button" nz-button nzType="link"
+                                    (click)="addRole($event, providerPersonnel)">
+                                    <i class="edit icon mr-8"></i>
+                                    Edit
+                                </button>
+
+                            </ng-container>
+
+                        </div>
+
+                        <div class="pl-4 pr-4 pt-24">
+                            <nz-list class="enrolment-list" [nzBordered]="true" [nzNoResult]="emptyEnrolmentBlock"
+                                [nzDataSource]="providerPersonnel.personnelDeclaration" [nzRenderItem]="item3">
+
+                                <ng-template #item3 let-item>
+
+                                    <nz-list-item [nzContent]="nzContent">
+
+                                        <ng-template #nzContent>
+
+                                            <nz-skeleton [nzAvatar]="true" [nzActive]="true" [nzTitle]="false"
+                                                [nzParagraph]="{ rows: 3 }" [nzLoading]="item.isLoading">
+
+                                                <nz-list-item-meta [nzTitle]="nzTitle" [nzAvatar]="nzAvatar"
+                                                    [nzDescription]="nzDescription">
+
+                                                    <ng-template #nzTitle>
+                                                        {{providerPersonnel.getPersonnelDeclarationTitle(item.item)}}
+                                                        <span class="help-text"
+                                                            tooltip="{{providerPersonnel.getHelperText(item.item)}}"
+                                                            display-mobile="false" hide-delay="50">
+                                                            <img class="mr-8"
+                                                                src="assets/icons/flat/ui_set/custom_icons/question2.svg"
+                                                                alt="female icon">
+                                                        </span>
+                                                    </ng-template>
+
+                                                    <ng-template #nzAvatar>
+
+                                                        <img class="status-icon"
+                                                            [src]="'assets/icons/flat/ui_set/custom_icons/child/execution.svg'"
+                                                            alt="icon">
+
+                                                    </ng-template>
+
+                                                    <ng-template #nzDescription>
+
+                                                        <p class="lbl">
+                                                            <!-- <span class="status">
+                                                                {{servicePersonnel.getPersonnelDeclarationTitle(item.item)}}
+                                                            </span> -->
+
+                                                            <span class="error-status ml-12"
+                                                                tooltip="{{providerPersonnel.getHelperText('DEC', item.value)}}"
+                                                                display-mobile="false" hide-delay="50"
+                                                                style="float: right!important">
+                                                                <img src="{{providerPersonnel.getPersonnelDeclarationStatusImage(item.value)}}"
+                                                                    alt="icon" title="error found">
+                                                            </span>
+                                                        </p>
+
+                                                    </ng-template>
+
+                                                </nz-list-item-meta>
+
+                                            </nz-skeleton>
+
+                                        </ng-template>
+
+                                    </nz-list-item>
+
+                                </ng-template>
+
+                            </nz-list>
+
+                            <ng-template #emptyEnrolmentBlock>
+
+                                <nz-empty class="m-0"
+                                    [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                                    [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                                    <ng-template #contentTpl>
+                                        <h4 class="mt-24">No Data Found</h4>
+                                        <span>Please click on add button to add enrolment</span>
+                                    </ng-template>
+
+                                </nz-empty>
+
+                            </ng-template>
+
+                            <div class="mb-24 pt-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+                                <h3 class="header mb-0">Role information</h3>
+
+                                <ng-container [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                                    <button class="text-uppercase blank" type="button" nz-button nzType="link"
+                                        (click)="addRole($event, providerPersonnel)">
+                                        <i class="plus icon mr-8"></i>
+                                        Add
+                                    </button>
+
+                                </ng-container>
+
+                            </div>
+
+                            <nz-list class="child-item-list" [nzNoResult]="emptyEnrolmentBlock"
+                                [nzDataSource]="providerPersonnel.roles" [nzRenderItem]="item"
+                                [nzGrid]="{ gutter: 16, xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 8 }">
+
+                                <ng-template #item let-item>
+
+                                    <nz-list-item [nzContent]="nzRoleContent">
+
+                                        <ng-template #nzRoleContent>
+
+                                            <nz-card>
+
+                                                <nz-list-item-meta [nzAvatar]="nzRoleAvatar" [nzTitle]="nzRoleTitle"
+                                                    [nzDescription]="nzRoleDescription">
+
+                                                    <ng-template #nzRoleAvatar>
+                                                        <nz-avatar [nzSize]="48"
+                                                            nzSrc="assets/icons/flat/ui_set/custom_icons/user-profiles.svg"
+                                                            class="item-img img-bg">
+                                                        </nz-avatar>
+                                                    </ng-template>
+
+                                                    <ng-template #nzRoleTitle>
+
+                                                        <h4 class="text-truncate mb-4">
+                                                            <span>
+                                                                {{providerPersonnel.getRoleType(item.type)}}
+                                                            </span>
+                                                        </h4>
+
+                                                    </ng-template>
+
+                                                    <ng-template #nzRoleDescription>
+
+                                                        <p class="m-0">
+                                                            <span class="font-weight-600">Position</span>:
+                                                            {{providerPersonnel.getPotision(item.position)}}
+                                                        </p>
+
+                                                        <p class="m-0">
+                                                            <span class="font-weight-600">Start Date</span>:
+                                                            {{item.startDate}}
+                                                        </p>
+
+                                                        <a class="action-btn remove" (click)="comeSoon(item, $event)"
+                                                            style="color: #e90000;">
+                                                            <i class="trash alternate outline icon mr-4"
+                                                                style="color: #e90000;"></i>
+                                                            remove
+                                                        </a>
+                                                        <a class="action-btn remove" (click)="comeSoon(item, $event)"
+                                                            style="color: #0662ad;">
+                                                            <i class="edit outline icon primary-color"></i>
+                                                            <!-- <i class="pencil alternate outline icon mr-4"
+                                                                style="color: #0662ad;"></i> -->
+                                                            edit
+                                                        </a>
+
+                                                    </ng-template>
+
+                                                </nz-list-item-meta>
+
+                                            </nz-card>
+
+                                        </ng-template>
+
+                                    </nz-list-item>
+
+                                </ng-template>
+
+                            </nz-list>
+
+                            <!-- WWCC -->
+                            <div class="mb-24 pt-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+                                <h3 class="header mb-0">WWCC information</h3>
+
+                                <ng-container [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                                    <button class="text-uppercase blank" type="button" nz-button nzType="link"
+                                        (click)="addWWCC($event, providerPersonnel)">
+                                        <i class="plus icon mr-8"></i>
+                                        Add
+                                    </button>
+
+                                </ng-container>
+
+                            </div>
+
+                            <nz-list class="child-item-list" [nzNoResult]="wwccemptyRoomBlock"
+                                [nzDataSource]="providerPersonnel.wwcc" [nzRenderItem]="item1"
+                                [nzGrid]="{ gutter: 16, xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 8 }">
+
+                                <ng-template #item1 let-item>
+
+                                    <nz-list-item [nzContent]="nzWWCCContent">
+
+                                        <ng-template #nzWWCCContent>
+
+                                            <nz-card>
+
+                                                <nz-list-item-meta [nzAvatar]="nzWWCCAvatar" [nzTitle]="nzWWCCTitle"
+                                                    [nzDescription]="nzWWCCDescription">
+
+                                                    <ng-template #nzWWCCAvatar>
+                                                        <nz-avatar [nzSize]="48"
+                                                            nzSrc="assets/icons/flat/ui_set/custom_icons/child/enrolment-error.svg"
+                                                            class="item-img img-bg">
+                                                        </nz-avatar>
+                                                    </ng-template>
+
+                                                    <ng-template #nzWWCCTitle>
+
+                                                        <h4 class="text-truncate mb-4">{{ item.cardNumber }}</h4>
+
+                                                    </ng-template>
+
+                                                    <ng-template #nzWWCCDescription>
+
+                                                        <p class="m-0">
+                                                            <span class="font-weight-600">Expiry date</span>:
+                                                            {{item.expiryDate}}
+                                                        </p>
+
+                                                        <p class="m-0">
+                                                            <span class="font-weight-600">Issuing stae</span>:
+                                                            {{providerPersonnel.getRoleState(item.issuingState)}}
+                                                        </p>
+
+                                                        <a class="action-btn remove" (click)="comeSoon(item, $event)"
+                                                            style="color: #e90000;">
+                                                            <i class="trash alternate outline icon mr-4"
+                                                                style="color: #e90000;"></i>
+                                                            remove
+                                                        </a>
+
+                                                    </ng-template>
+
+                                                </nz-list-item-meta>
+
+                                            </nz-card>
+
+                                        </ng-template>
+
+                                    </nz-list-item>
+
+                                </ng-template>
+
+                            </nz-list>
+
+                            <!-- Supporting Doc -->
+
+                            <div class="mb-24 pt-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+                                <h3 class="header mb-0">Supporting Documents</h3>
+
+                                <ng-container [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                                    <button class="text-uppercase blank" type="button" nz-button nzType="link"
+                                        (click)="addDoc($event, providerPersonnel)">
+                                        <i class="plus icon mr-8"></i>
+                                        Add
+                                    </button>
+
+                                </ng-container>
+
+                            </div>
+
+                            <nz-list class="child-item-list" [nzNoResult]="wwccemptyRoomBlock"
+                                [nzDataSource]="providerPersonnel.supportingDocuments" [nzRenderItem]="item2"
+                                [nzGrid]="{ gutter: 16, xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 8 }">
+
+                                <ng-template #item2 let-item>
+
+                                    <nz-list-item [nzContent]="nzDocontent">
+
+                                        <ng-template #nzDocontent>
+
+                                            <nz-card>
+
+                                                <nz-list-item-meta [nzAvatar]="nzDocAvatar" [nzTitle]="nzDocTitle"
+                                                    [nzDescription]="nzDocescription">
+
+                                                    <ng-template #nzDocAvatar>
+                                                        <nz-avatar [nzSize]="38"
+                                                            nzSrc="assets/icons/flat/ui_set/custom_icons/document_yes.svg"
+                                                            class="item-img img-bg">
+                                                        </nz-avatar>
+                                                    </ng-template>
+
+                                                    <ng-template #nzDocTitle>
+
+                                                        <h4 class="text-truncate mb-4">{{providerPersonnel.getDocumentType(item.documentType)}}</h4>
+
+                                                    </ng-template>
+
+                                                    <ng-template #nzDocescription>
+
+                                                        <p class="m-0">
+                                                            <span class="font-weight-600">Name</span>:
+                                                            {{item.fileName}}
+                                                        </p>
+
+                                                        <p class="m-0">
+                                                            <span class="font-weight-600">MIME Type</span>:
+                                                            {{item.MIMEType}}
+                                                        </p>
+
+                                                        <a class="action-btn remove" (click)="comeSoon(item, $event)"
+                                                            style="color: #e90000;">
+                                                            <i class="trash alternate outline icon mr-4"
+                                                                style="color: #e90000;"></i>
+                                                            remove
+                                                        </a>
+                                                        <a 
+                                                            class="action-btn ml-8" 
+                                                            (click)="download($event, item)">
+                                                            <i nz-icon nzType="download" nzTheme="outline"></i>
+                                                            download
+                                                        </a>
+
+                                                    </ng-template>
+
+                                                </nz-list-item-meta>
+
+                                            </nz-card>
+
+                                        </ng-template>
+
+                                    </nz-list-item>
+
+                                </ng-template>
+
+                            </nz-list>
+
+                            <!-- EMPTY VIEW -->
+                            <ng-template #emptyRoomBlock>
+
+                                <nz-empty class="m-0"
+                                    [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                                    [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                                    <ng-template #contentTpl>
+                                        <h4 class="mt-24">No Data Found</h4>
+                                        <span>Please click on add button to add rooms to this child</span>
+                                    </ng-template>
+
+                                </nz-empty>
+
+
+
+                            </ng-template>
+
+                            <ng-template #wwccemptyRoomBlock>
+
+                                <nz-empty class="m-0"
+                                    [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                                    [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                                    <ng-template #contentTpl>
+                                        <h4 class="mt-24">No Data Found</h4>
+                                        <span>Please click on add button to add rooms to this child</span>
+                                    </ng-template>
+
+                                </nz-empty>
+
+
+
+                            </ng-template>
+                            <!-- / EMPTY VIEW -->
+
+                        </div>
+                    </nz-tab>
+
+                    <nz-tab [nzTitle]="roleTemplateContact" [nzDisabled]="true">
+
+                        <div class="pl-4 pr-4">
+
+                            <div nz-row [nzGutter]="24">
+
+                            </div>
+                        </div>
+
+                    </nz-tab>
+
+                    <nz-tab [nzTitle]="titleTemplateImage" [nzDisabled]="true">
+
+                        <div class="pl-4 pr-4">
+
+                            coming soon . . .
+
+
+                        </div>
+
+                    </nz-tab>
+
+
+
+                </nz-tabset>
+
+                <ng-template #titleTemplateBasic>
+                    <div class="tab-image-view" fxLayoutAlign="center center">
+                        <img src="assets/icons/flat/ui_set/custom_icons/branch/basic.svg" alt="img">
+                        <span>Basic</span>
+                    </div>
+                </ng-template>
+
+                <ng-template #roleTemplateContact>
+                    <div class="tab-image-view" fxLayoutAlign="center center">
+                        <img src="assets/icons/flat/ui_set/custom_icons/branch/contact.svg" alt="img">
+                        <span>Role</span>
+                    </div>
+                </ng-template>
+
+                <ng-template #titleTemplateImage>
+                    <div class="tab-image-view" fxLayoutAlign="center center">
+                        <img src="assets/icons/flat/ui_set/custom_icons/branch/image.svg" alt="img">
+                        <span>Others</span>
+                    </div>
+                </ng-template>
+
+                <!-- <ng-template #titleTemplateOther>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/business-and-office/svg/007-gears.svg" alt="img">
+                            <span>Others</span>
+                        </div>
+                    </ng-template> -->
+
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

@@ -1,0 +1,70 @@
+<!-- HEADER -->
+<div class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Waitlist-Dashboard</h1>
+        <span>
+            <button nz-button nz-dropdown
+                    nzType="primary"
+                    class="mr-8 text-uppercase"
+                    [nzDropdownMenu]="menu">
+                <i class="plus icon mr-8"></i>Add New
+            </button>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu>
+                    <!--   <li nz-menu-item
+                           class="text-uppercase">
+                           <i class="plus icon mr-8"></i>create new
+                       </li>-->
+                    <li nz-menu-item (click)="addNew($event,'enquiry')"
+                        class="text-uppercase">
+                        Enquiry
+                    </li>
+                    <li nz-menu-item (click)="addNew($event,'waitlist')"
+                        class="text-uppercase">
+                        Waitlist
+                    </li>
+                    <li nz-menu-item (click)="addNew($event,'enrolment')"
+                        class="text-uppercase">
+                        Enrolment
+                    </li>
+
+                </ul>
+            </nz-dropdown-menu>
+            <button nz-button
+                    nzType="primary"
+                    class="text-uppercase"
+                    (click)="showFilter()"
+                    [hidden]="true"
+            >
+                <i class="plus icon mr-8"></i>Print
+            </button>
+        </span>
+    </div>
+
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="table-sidebar" position="left">
+
+            <app-sidenav [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">
+            </app-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <app-list-view class="center p-24 pt-0"
+                       fusePerfectScrollbar
+                       [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+        >
+        </app-list-view>
+        <!-- / CENTER -->
+    </div>
+</div>
+
+<!-- / CONTENT -->

@@ -1,0 +1,123 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Generate Parent Statement</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form nz-form name="generateParentStatementForm" fxLayout="column" [formGroup]="generateParentStatementForm" [nzLayout]="'vertical'" novalidate>
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Start Date</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="startdateErrorTpl">
+    
+                            <nz-date-picker [nzInputReadOnly]="true" formControlName="start_date" nzPlaceHolder="Start Date" class="block"></nz-date-picker>
+    
+                            <ng-template #startdateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input start date</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>End Date</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="enddateErrorTpl">
+    
+                            <nz-date-picker [nzInputReadOnly]="true" formControlName="end_date" nzPlaceHolder="End Date" class="block"></nz-date-picker>
+    
+                            <ng-template #enddateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input end date</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label>
+                            Payment Date
+                        </nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="paymentdateErrorTpl">
+    
+                            <nz-date-picker [nzInputReadOnly]="true" formControlName="payment_date" nzPlaceHolder="Payment Date" class="block"></nz-date-picker>
+    
+                            <ng-template #paymentdateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input payment date</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <!-- <button class="text-uppercase mr-8" type="submit" *hasPermission="['AC1']; belongsTo 'N27'" nz-button
+                    nzType="primary" [disabled]="!generateParentStatementForm.valid" [promiseBtn]="buttonLoading">
+                    <i class="plus icon mr-8"></i> Preview
+                </button> -->
+
+                <button class="text-uppercase mr-8" type="button" *hasPermission="['AC1']; belongsTo 'N36'" nz-button
+                    nzType="primary" [disabled]="!generateParentStatementForm.valid" [promiseBtn]="downloadPDFLoading" (click)="downloadPdf($event)">
+                    <i class="file pdf icon mr-8"></i> Download PDF
+                </button>
+
+                <button class="text-uppercase mr-8" type="button" *hasPermission="['AC1']; belongsTo 'N36'" nz-button
+                    nzType="primary" [disabled]="!generateParentStatementForm.valid" [promiseBtn]="sendEmailLoading" (click)="sendStatement($event)">
+                    <i class="paper plane icon mr-8"></i> Send Email
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Cancel
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

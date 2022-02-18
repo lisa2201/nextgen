@@ -1,0 +1,41 @@
+<div id="query-payments-component" class="page-layout simple left-sidebar inner-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter] [@fadeOutOnLeave]>
+    
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Query Remittance by Payee request</h1>
+
+        <ng-container>
+    
+        </ng-container>
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- SIDEBAR -->
+        <fuse-sidebar class="sidebar" name="query-filter-sidebar" position="left" lockedOpen="gt-md"
+            style="min-width: 280px;">
+
+            <manage-payment-query-left-sidenav [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }" 
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+                (updateTableScroll)="updateScroll($event)">
+            </manage-payment-query-left-sidenav>
+
+        </fuse-sidebar>
+        <!-- / SIDEBAR -->
+
+        <!-- CENTER -->
+        <query-payments-list-view class="center p-24 pt-32" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+            (updateTableScroll)="updateScroll($event)"
+            [@animate]="{ value:'*', params:{ delay: '200ms', x:'15px' } }">
+        </query-payments-list-view>
+        <!-- / CENTER -->
+
+    </div>
+    <!-- / CONTENT -->
+</div>

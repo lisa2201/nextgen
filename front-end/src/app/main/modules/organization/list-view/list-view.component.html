@@ -1,0 +1,256 @@
+<!-- CONTENT CARD -->
+<div class="content" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+    <!-- CONTENT TOOLBAR -->
+    <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <!-- <span fxLayout="row" fxLayoutAlign="space-between center" fxHide.gt-md [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <button class="text-uppercase" nz-button nzType="link" (click)="toggleSidebar('organization-sidebar')">
+                <i class="filter icon"></i>
+            </button>
+
+            <nz-divider nzType="vertical" class="mr-16"></nz-divider>
+
+        </span> -->
+
+        <span fxLayout="row" fxLayoutAlign="space-between center" fxHide.gt-md [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <button class="text-uppercase blank" nz-button nzType="link"
+                (click)="toggleSidebar('organization-sidebar')">
+                <i class="filter icon"></i>
+            </button>
+
+        </span>
+
+        <nz-input-group class="search-container" [nzSuffix]="suffixTemplate" [nzPrefix]="prefixTemplate">
+            <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+        </nz-input-group>
+
+        <ng-template #prefixTemplate>
+            <i nz-icon nzType="search" class="search-icon"></i>
+        </ng-template>
+
+        <ng-template #suffixTemplate>
+            <i class="times circle outline icon ant-input-clear-icon" *ngIf="searchInput.value" [@fadeInOnEnter]
+                [@fadeOutOnLeave] (click)="clearSearch($event)">
+            </i>
+        </ng-template>
+
+    </div>
+    <!-- / CONTENT TOOLBAR -->
+
+
+    <ng-container *ngIf="numberOf != 0">
+        
+        <div class="operate p-16" *hasPermission="['AC3', 'AC4']; belongsTo 'N02'" fxLayout="row" fxLayoutAlign="start center">
+    
+            <button class="action-bar-btn action-bar-btn-delete mr-8" nz-button  nzType="danger"
+                [nzLoading]="deleteLoading" (click)="deleteMultiple($event)">
+                <i class="trash approve-bar-icon alternate outline icon mr-8"></i>
+                Delete
+            </button>
+    
+    
+            <ng-container *hasPermission="['AC4']; belongsTo 'N02'">
+                <button class="action-bar-btn .action-bar-btn-approve mr-8" nz-button (click)="approveEmail()"
+                     nzType="primary" [nzLoading]="approveLoading">
+                    <i class="edit outline approve-bar-icon icon mr-8"></i>
+                    <!-- <nz-spin nzSimple [nzIndicator]="indicatorTemplate" [class.spinner]="loading" *ngIf="loading === true"> -->
+                    <!-- </nz-spin> -->
+                    Approve
+                </button>
+            </ng-container>
+            <!-- *ngIf="!numberOfChecked == 0" -->
+    
+            <span *ngIf="numberOfChecked">Selected {{ numberOf }} items</span>
+        </div>
+
+    </ng-container>
+
+    <ng-container>
+
+        <!-- DATA TABLE VIEW -->
+        <nz-table [nzShowSizeChanger]="pageSizeChanger" [nzShowTotal]="totalTemplate" [nzFrontPagination]="false"
+            [nzData]="organizationList" [nzLoading]="tableLoading" [nzTotal]="total" [(nzPageIndex)]="pageIndex"
+            [(nzPageSize)]="pageSize" [nzPageSizeOptions]="pageSizeOptions" (nzPageIndexChange)="onTableChange()"
+            (nzPageSizeChange)="onTableChange(true)" [nzNoResult]="emptyBlock" [nzLoadingIndicator]="indicatorTemplate"
+            [nzSimple]="mobilePagination" (nzCurrentPageDataChange)="currentPageDataChange($event)">
+
+            <thead>
+                <tr>
+
+                    <th nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" [nzIndeterminate]="isIndeterminate"
+                        (nzCheckedChange)="checkAll($event)"></th>
+
+                    <th nzWidth="200px" nzShowSort [(nzSort)]="mapOfSort.company_name"
+                        (nzSortChange)="sortColumns('company_name', $event)">Name</th>
+
+                    <th nzShowSort [(nzSort)]="mapOfSort.no_of_branches"
+                        (nzSortChange)="sortColumns('no_of_branches', $event)">Branch</th>
+
+                    <!-- <th nzShowSort [(nzSort)]="mapOfSort.first_name" (nzSortChange)="sortColumns('first_name', $event)">
+                        Admin/Contact</th> -->
+
+                    <th>Created Date</th>
+
+                    <!-- <th nzShowSort [(nzSort)]="mapOfSort.cdate" (nzSortChange)="sortColumns('cdate', $event)">Created
+                        Date</th> -->
+
+                    <th>Status</th>
+
+                    <th *hasPermission="['AC2', 'AC3', 'AC4', 'AC5']; belongsTo 'N02'">Action</th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+                <ng-template ngFor let-data [ngForOf]="organizationList" [ngForTrackBy]="trackByFn">
+                    <tr>
+
+                        <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" (nzCheckedChange)="refreshStatus()">
+                        </td>
+
+                        <td nzBreakWord>
+                            <ng-container *hasPermission="['AC0']; belongsTo 'N02'">
+                                {{ data.companyName }}
+                            </ng-container>
+                        </td>
+
+                        <td>{{ data.noOfBranches }}</td>
+
+                        <!-- <td>{{ data.first_name }} {{data.data.last_name }}</td> -->
+
+                        <td>{{ data.cdate }}</td>
+
+                        <td>
+
+                            <nz-tag *ngIf="data.status == 'pending'" [nzColor]="'#f50'">
+                                VERIFICATION</nz-tag>
+
+                            <nz-tag *ngIf="data.status == 'email_verification'" [nzColor]="'#2db7f5'">
+                                APPROVAL</nz-tag>
+
+                            <nz-tag *ngIf="data.status == 'quotation_acceptance'" [nzColor]="'#F9A825'">
+                                QUOTATION ACCEPTANCE</nz-tag>
+
+                            <nz-tag *ngIf="data.status == 'active'" [nzColor]="'#87d068'">
+                                {{ data.status | uppercase}}</nz-tag>
+
+                            <nz-tag *ngIf="data.status == 'deactivate'" [nzColor]="'#108ee9'">
+                                {{ data.status | uppercase}}</nz-tag>
+
+                            <!-- <nz-tag *ngIf="data.status == 'active'" [nzColor]="'#87d068'">
+                                {{ data.status }}</nz-tag>
+
+                            <nz-tag *ngIf="data.status == 'deactivate'  [nzColor]="'#108ee9'">
+                                {{ data.status }}</nz-tag> -->
+
+                        </td>
+
+                        <td [nzAlign]="'center'" *hasPermission="['AC2', 'AC3', 'AC4', 'AC5']; belongsTo 'N02'">
+
+                            <button [disabled]="numberOf != 0" nz-button nzType="link" nzSize="large"
+                                [matMenuTriggerFor]="menu">
+                                <i class="ellipsis vertical icon"></i>
+                            </button>
+
+                            <mat-menu #menu="matMenu">
+
+                                <ng-container *hasPermission="['AC2']; belongsTo 'N02'">
+                                    <button mat-menu-item [routerLink]="['/manage-subscription/' + data.id + '/view']">
+                                        <i class="edit outline icon primary-color"></i>
+                                        <span class="font-weight-600">Edit Organisation</span>
+                                    </button>
+                                </ng-container>
+
+                                <ng-container *hasPermission="['AC4']; belongsTo 'N02'">
+                                    <button mat-menu-item *ngIf="data.status == 'quotation_acceptance'"
+                                        (click)="editQuoteDialog(data, $event)">
+                                        <i class="mail outline icon primary-color"></i>
+                                        <span class="font-weight-600">Edit Quotation</span>
+                                    </button>
+                                </ng-container>
+
+                                <ng-container *hasPermission="['AC4']; belongsTo 'N02'">
+                                    <button *ngIf="data.status == 'email_verification'" mat-menu-item
+                                        (click)="approveSingle(data, $event, data.standard)">
+                                        <i class="send alternate outline icon danger-color"></i>
+                                        <span class="font-weight-600">Approve</span>
+                                    </button>
+                                </ng-container>
+
+                                <ng-container *hasPermission="['AC5']; belongsTo 'N02'">
+                                    <button *ngIf="data.status == 'active' " mat-menu-item>
+                                        <i class="send alternate outline icon danger-color"></i>
+                                        <span class="font-weight-600">Deactivate</span>
+                                    </button>
+                                </ng-container>
+
+                                <ng-container *ngIf="data.status == 'deactivate' ">
+                                    <button *hasPermission="['AC4']; belongsTo 'N02'" mat-menu-item>
+                                        <i class="send alternate outline icon danger-color"></i>
+                                        <span class="font-weight-600">Activate</span>
+                                    </button>
+                                </ng-container>
+
+                                <ng-container *hasPermission="['AC3']; belongsTo 'N02'">
+                                    <button mat-menu-item (click)="delete(data, $event)">
+                                        <i class="trash alternate outline icon danger-color"></i>
+                                        <span class="font-weight-600">Delete</span>
+                                    </button>
+                                </ng-container>
+
+                                <!-- <ng-container *hasPermission="['AC0']; belongsTo 'N02'">
+                                    <button mat-menu-item [routerLink]="['/manage-subscription/' + data.id + '/edit']">
+                                        <i class="edit outline icon primary-color"></i>
+                                        <span class="font-weight-600">Analytics</span>
+                                    </button>
+                                </ng-container>-->
+
+                            </mat-menu>
+
+                        </td>
+
+                    </tr>
+                </ng-template>
+            </tbody>
+
+        </nz-table>
+
+        <ng-template #totalTemplate let-range="range" let-total>
+            <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ range[0] }}
+                to {{ range[1] }} of {{ total }} entries</span>
+            <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} -
+                {{ range[1] }} of {{ total }} entries</span>
+        </ng-template>
+        <!-- / DATA TABLE VIEW -->
+
+        <!-- LOADER VIEW -->
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+        <!-- / LOADER VIEW -->
+
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+
+    </ng-container>
+
+</div>
+<!-- / CONTENT CARD -->

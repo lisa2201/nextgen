@@ -1,0 +1,57 @@
+<ng-progress id="sessionSummaryProgress" (started)="updateLoaderStatus(true)" (completed)="updateLoaderStatus(false)"></ng-progress>
+
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Session Summary View</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR FILTER -->
+<div class="content p-24 py-0">
+
+    <nz-date-picker [nzMode]="yearSelection ? 'year' : 'month'" 
+        [formControl]="calendarInput"
+        [nzPlaceHolder]="yearSelection ? 'select year' : 'select month'"
+        [nzInputReadOnly]="true"
+        [nzFormat]="yearSelection ? 'yyyy' : 'MMMM yyyy'"
+        [nzDisabled]="viewLoading">
+    </nz-date-picker>
+
+    <a class="font-size-13 font-weight-600"
+        [ngClass]="{ 'disabled' : viewLoading }" 
+        (click)="toggleCalenderView($event)">
+        <ng-container *ngIf="yearSelection else elseBlock">Switch to month view</ng-container>
+        <ng-template #elseBlock>Switch to year view</ng-template>
+    </a>
+
+    <nz-alert class="mt-8" *ngIf="yearSelection && viewLoading" [@fadeMotion] 
+        nzType="info" nzMessage="Please be patient! This might take some time to load"></nz-alert>
+
+</div>
+<!-- / SIDEBAR FILTER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 py-0" 
+    fusePerfectScrollbar 
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <ul>
+        <li *ngFor="let item of formattedList; trackBy: trackByFn;" [@fadeMotion]
+            [ngClass]="{ 'active' : item.selected}"
+            (click)="toggleWeek($event, item)">
+
+            <label>Week {{ item.week.number }} ({{ item.week.start | SetGlobalDTFormat:true:false }} to {{ item.week.end | SetGlobalDTFormat:true:false }})</label>
+                
+            <nz-badge nzStatus="success" nzText="Submitted: {{ item.submitted.valid }}"></nz-badge>
+
+            <nz-badge nzStatus="error" nzText="Submitted Errors: {{ item.submitted.error }}"></nz-badge>
+
+            <nz-badge nzStatus="warning" nzText="Waiting List: {{ item.waiting.error }}"></nz-badge>
+
+            <nz-badge nzStatus="default" nzText="Ready for Submission: {{ item.waiting.valid }}"></nz-badge>
+
+        </li>
+    </ul>
+
+</div>
+<!-- / SIDEBAR CONTENT -->

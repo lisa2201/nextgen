@@ -1,0 +1,35 @@
+
+
+app-service-settings {
+
+    .header {
+        display: flex;
+        align-items: center;
+    }
+
+    .content {
+
+        .mat-tab-nav-bar {
+    
+            border-top: 1px solid rgba(0,0,0,0.12);
+            background-color: #fdfdfd;
+
+            .mat-tab-link-container {
+
+                .mat-tab-links {
+                    a {
+                        &:hover {
+                            text-decoration: none !important;
+                        }
+
+                    }
+
+                }
+
+            }
+    
+        }
+
+    }
+
+}

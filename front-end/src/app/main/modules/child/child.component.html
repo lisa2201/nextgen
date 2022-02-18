@@ -1,0 +1,108 @@
+<div id="children" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Manage Children</h1>
+
+            <ng-container *hasPermission="['AC1']; belongsTo 'N07'" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <button class="text-uppercase"
+                    nz-button 
+                    nzType="primary"
+                    (debounceClick)="addDialog($event)">
+                    <i class="plus icon mr-8"></i> Create New
+                </button>
+
+            </ng-container>
+
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card ps"
+            [ngClass]="{ 'current-item-selected' : currentChild }"
+            [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="mr-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <button class="text-uppercase blank"
+                        [ngClass]="{ 'active' : filterActive }"
+                        nz-button nzType="link"
+                        [disabled]="disableFilterButton"
+                        (click)="toggleSidebar('children-list-filter-sidebar')">
+                        <i class="filter icon"></i>
+                    </button>
+
+                    <button class="text-uppercase blank"
+                        nz-button nzType="link"
+                        (click)="refreshList($event)">
+                        <i class="sync alternate icon"></i>
+                    </button>
+            
+                </span>
+
+                <nz-input-group class="search-container"
+                    [nzSuffix]="suffixTemplate" 
+                    [nzPrefix]="prefixTemplate">
+                    <input type="text" nz-input placeholder="Search ... (first name, last name, middle name, dob)" [formControl]="searchInput" />
+                </nz-input-group>
+
+                <ng-template #prefixTemplate>
+                    <i nz-icon nzType="search" class="search-icon"></i>
+                </ng-template>
+
+                <ng-template #suffixTemplate>
+                    <i class="times circle outline icon ant-input-clear-icon"
+                        (click)="clearSearch($event)"
+                        *ngIf="searchInput.value" [@fadeInOnEnter] [@fadeOutOnLeave]>
+                    </i>
+                </ng-template>
+
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content" fxLayout="row">
+
+                <child-list-view></child-list-view>
+
+                <child-details-view></child-details-view>
+
+            </div>
+            <!-- / CONTENT -->
+
+            <!-- SIDEBAR FILTER -->
+            <fuse-sidebar class="sidebar" 
+                name="children-list-filter-sidebar" 
+                position="left">
+
+                <children-filters [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }"
+                    (updateFilterActiveStatus)="updateFilterActiveStatus($event)"></children-filters>
+
+            </fuse-sidebar>
+            <!-- / SIDEBAR FILTER -->
+
+            <!-- SIDEBAR NAV -->
+            <fuse-sidebar class="sidebar" 
+                name="child-detail-navigation-sidebar"
+                position="right">
+
+                <child-detail-navigation-sidebar [@animate]="{ value:'*', params:{ delay: '200ms', x:'30px' } }"></child-detail-navigation-sidebar>
+
+            </fuse-sidebar>
+            <!-- / SIDEBAR NAV -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

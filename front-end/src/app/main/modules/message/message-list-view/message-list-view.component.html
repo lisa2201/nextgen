@@ -1,0 +1,143 @@
+<!-- CONTENT CARD -->
+
+<div class="content" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+    <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center" fxHide.gt-md>
+
+        <span fxLayout="row" fxLayoutAlign="space-between center" fxHide.gt-md [@fadeInOnEnter] [@fadeOutOnLeave]>
+            <button class="text-uppercase blank" nz-button nzType="link" (click)="toggleSidebar('message-filter-sidebar')">
+                <i class="filter icon"></i>
+            </button>
+        </span>
+
+        <span fxLayout="row" fxLayoutAlign="space-between center" fxHide.gt-md [@fadeInOnEnter] [@fadeOutOnLeave]>
+            <button 
+                nz-button 
+                nzType="default"
+                [disabled]="tableLoading"
+                (click)="queryData($event)"
+                [@animate]="{ value:'*', params:{ delay: '100ms', x:'15px' } }">
+                <i class="sync left icon pr-8"></i>
+                Query Messages
+            </button>
+        </span>
+
+    </div>
+
+    <ng-container>
+
+        <nz-table 
+            #messageTable 
+            [nzData]="messageList" 
+            [nzShowPagination]="false" 
+            [nzLoading]="tableLoading" 
+            [nzNoResult]="emptyBlock"
+            [nzLoadingIndicator]="indicatorTemplate">
+
+            <thead>
+                <tr>
+                    <th>Message Id</th>
+                    <th>Generated Date</th>
+                    <th>Source</th>
+                    <th>Source Id</th>
+                    <th>Type</th>
+                    <th>Date of Effect</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <ng-template ngFor let-data [ngForOf]="messageTable.data">
+                    <tr>
+                        <td>{{ data.MessageId}}</td>
+                        <td > {{ data.Generated}}</td>
+                        <td>{{ data.Source }}</td>
+                        <td>{{ data.SourceId }}</td>
+                        <td>{{ data.Type }}</td>
+                        <td>{{ data.DateOfEffect }}</td>
+                        <td>{{ data.Comments }}</td>
+                    </tr>
+                </ng-template>
+            </tbody>
+
+        </nz-table>
+        <!-- TOTAL LABEL VIEW -->
+        <ng-template #totalTemplate let-range="range" let-total>
+            <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ range[0] }} to {{ range[1] }} of {{ total }} entries</span>
+            <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} - {{ range[1] }} of {{ total }} entries</span>
+        </ng-template>
+        <!-- / TOTAL LABEL VIEW -->
+
+
+        <!-- LOADER VIEW -->
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+        <!-- / LOADER VIEW -->
+
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no messages to display here, please selecte start and end data</span>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+
+    </ng-container>
+
+    <div class="pagination-row p-16" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="messageList.length > 0">
+
+        <div>
+            <nz-pagination 
+                [nzPageIndex]="1" 
+                [nzTotal]="10" 
+                nzShowSizeChanger 
+                [nzPageSize]="pageSize" 
+                [nzPageSizeOptions]="defaultPageSizeOptions"
+                (nzPageSizeChange)="onPageSizeChange($event)"
+            ></nz-pagination>
+        </div>
+
+        <div class="pagination-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <button 
+                class="mr-8" 
+                nz-button 
+                type="button" 
+                nzType="primary" 
+                nzSize="small" 
+                [disabled]="messageList.length === 0 || currentPage <= 1 || tableLoading"
+                (click)="previousPage($event)"
+            >Previous</button>
+
+            <div class="page-indicator" [ngClass]="{'page-indicator-disabled': messageList.length === 0 || tableLoading}">
+                {{ currentPage }}
+            </div>
+
+            <button 
+                class="ml-8" 
+                nz-button 
+                type="button" 
+                nzType="primary" 
+                nzSize="small" 
+                [disabled]="messageList.length === 0 || lastPage === true || tableLoading"
+                (click)="nextPage($event)"
+            >Next</button>
+            
+        </div>
+
+    </div>
+
+
+</div>
+<!-- / CONTENT CARD -->

@@ -1,0 +1,210 @@
+<div id="import-parents" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Bulk Operation</h1>
+
+            <ng-container *hasPermission="['AC1']; belongsTo 'N54'">
+                
+
+            </ng-container>
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card ps" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+                <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span></span>
+
+                <span fxLayout="row" fxLayoutAlign="space-between center" class="text-right">
+                    <button class="text-uppercase mr-8"
+                            nz-button
+                            nzType="primary"
+                            (click)="addDialog($event)"
+                            [promiseBtn]="buttonLoader">
+                            <i class="save outline icon b-i mr-8"></i> Script
+                    </button>
+
+                    <button class="text-uppercase"
+                            *hasPermission="['AC2']; belongsTo 'N07'"
+                            nz-button
+                            nzType="primary"
+                            (click)="onFormSubmit($event)"
+                            [disabled]="!snsForm.valid"
+                            [promiseBtn]="buttonLoader">
+                            <i class="save outline icon b-i mr-8"></i> Sync
+                        </button>
+                </span>
+
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24 pt-16"
+                fusePerfectScrollbar 
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <form name="snsForm" [nzLayout]="'vertical'" [formGroup]="snsForm" nz-form>
+                    <div class="pl-4 pr-4">
+                
+                        <div nz-row [nzGutter]="24">
+                
+                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                
+                                <nz-form-item>
+
+                                    <nz-form-label nzRequired>Organisation</nz-form-label>
+                            
+                                    <nz-form-control nzHasFeedback [nzErrorTip]="orgErrorTpl">
+                            
+                                        <nz-select  
+                                            formControlName="org"
+                                            nzPlaceHolder="select organisation">
+                            
+                                            <nz-option 
+                                                *ngFor="let org of organizations; trackBy: trackByFn;" 
+                                                nzValue="{{ org.id }}" 
+                                                nzLabel="{{ org.companyName }}"></nz-option>
+                                            
+                                        </nz-select>
+                            
+                                        <ng-template #orgErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('required')">Please select a organisation</ng-container>
+                                        </ng-template>
+                            
+                                    </nz-form-control>
+                            
+                                </nz-form-item>
+                            </div>
+                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                <nz-form-item>
+        
+                                    <nz-form-label nzRequired>Branch</nz-form-label>
+                            
+                                    <nz-form-control nzHasFeedback [nzErrorTip]="branchErrorTpl">
+                            
+                                        <nz-select  
+                                            formControlName="branch"
+                                            nzPlaceHolder="select branch"
+                                            [nzDisabled]="!snsForm.get('org').value || branches.length < 1">
+                            
+                                            <nz-option 
+                                                *ngFor="let item of branches; trackBy: trackByFn;" 
+                                                nzValue="{{ item.id }}" 
+                                                nzLabel="{{ item.name }}"></nz-option>
+                                            
+                                        </nz-select>
+                            
+                                        <ng-template #branchErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('required')">Please select a branch</ng-container>
+                                        </ng-template>
+                            
+                                    </nz-form-control>
+                            
+                                </nz-form-item>
+                            </div>
+                            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                <nz-form-item>
+
+                                    <nz-form-label nzRequired>Type </nz-form-label>
+                        
+                                    <nz-form-control [nzErrorTip]="genderErrorTpl">
+                                            
+                                        <nz-radio-group formControlName="type" nzButtonStyle="solid" class="has-img">
+                                
+                                            <label nz-radio-button nzValue="CHILD">
+                                                <img class="mr-8" src="assets/icons/flat/business-and-office/svg/030-team.svg" alt="male icon">
+                                                <span class="font-size-14">Child</span>
+                                            </label>
+                                
+                                            <label nz-radio-button nzValue="USER">
+                                                <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/children.svg" alt="female icon">
+                                                <span class="font-size-14">User</span>
+                                            </label>
+                                
+                                        </nz-radio-group>
+                                
+                                        <ng-template #genderErrorTpl let-control>
+                                            <ng-container *ngIf="control.hasError('required')">Please select an option</ng-container>
+                                        </ng-template>
+                                
+                                    </nz-form-control>
+                                </nz-form-item>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <ng-container *ngIf="fc.type.value === 'CHILD'">
+                    <nz-list nzItemLayout="horizontal" [nzLoading]="pageLoading">
+                        <nz-list-item *ngFor="let item of child">
+                            <nz-list-item-meta nzAvatar="{{item.getImage()}}"
+                                nzDescription="">
+                                <nz-list-item-meta-title>
+                                    {{ item.getFullName() }}
+                                </nz-list-item-meta-title>
+                            </nz-list-item-meta>
+                        </nz-list-item>
+                        <nz-list-empty *ngIf="child.length === 0"></nz-list-empty>
+                    </nz-list>
+                </ng-container>
+
+                <ng-container *ngIf="fc.type.value === 'USER'">
+                    <nz-list nzItemLayout="horizontal" [nzLoading]="pageLoading">
+                        <nz-list-item *ngFor="let item of user">
+                            <nz-list-item-meta nzAvatar="{{item.getImage()}}"
+                                nzDescription="">
+                                <nz-list-item-meta-title>
+                                    <a href="">{{ item.getFullName() }}</a>
+                                </nz-list-item-meta-title>
+                            </nz-list-item-meta>
+                        </nz-list-item>
+                        <nz-list-empty *ngIf="child.length === 0"></nz-list-empty>
+                    </nz-list>
+                </ng-container>
+                
+                
+                <!-- EMPTY VIEW -->
+                <ng-template #emptyBlock>
+                
+                    <nz-empty class="pt-24 pb-24 m-0"
+                        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                        [nzNotFoundContent]="contentTpl"
+                        [@fadeInOnEnter]>
+                
+                        <ng-template #contentTpl>
+                            <h4 class="mt-24">No Data Found</h4>
+                            <span>Looks like there's no information to display here</span>
+                        </ng-template>
+                
+                    </nz-empty>
+                
+                </ng-template>
+
+                <!-- <import-ccs-enrollments-list-view (updateScroll)="updateScroll()"></import-ccs-enrollments-list-view> -->
+
+            </div>
+            <!-- / CONTENT --> 
+            
+
+        </div>
+        <!-- / CONTENT CARD --> 
+
+    </div>
+    <!-- / CENTER -->
+
+</div>
+
+<ng-template #indicatorTpl>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>

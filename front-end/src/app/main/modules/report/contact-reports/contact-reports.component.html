@@ -1,0 +1,60 @@
+
+<div class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <div id="care_provided_vacancy_wrapper" class="center">
+
+        <div class="header pt-24 pb-24 p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">
+
+                <span class="h2">
+                    Contact Reports
+                </span>
+
+            </h1>
+
+            <ng-container [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <button class="text-uppercase mr-8 custom-btn" fxLayoutAlign="center center" nz-button nzType="default"
+                (click)="toggleSidebar('report-side-nav')" tooltip="Manage" placement="bottom" display-mobile="false"
+                    hide-delay="50">
+                    <i class="list icon"></i>
+                </button>
+
+                <!-- <button class="text-uppercase"
+                    nz-button 
+                    nzType="default"
+                    (click)="toggleSidebar('report-side-nav')">
+                    <i class="plus icon mr-8"></i> Manage
+                </button> -->
+
+            </ng-container>
+
+        </div>
+
+        <fuse-sidebar class="sidebar" name="report-side-nav" position="right">
+            
+            <report-side-nav [@animate]="{ value:'*', params:{ delay: '200ms', x:'-30px' } }">
+            </report-side-nav>
+        </fuse-sidebar>
+        
+        <!-- <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <div class="content p-24 pt-16" fxLayout="column" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+                <report-filter></report-filter>
+                <report-list-view></report-list-view>
+            </div>
+        </div> -->
+
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <div class="content p-24 pt-16" fxLayout="column" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+    
+                <report-filter></report-filter>
+                <report-list-view></report-list-view>
+    
+            </div>
+
+        </div>
+    </div>
+</div>

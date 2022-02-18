@@ -1,0 +1,79 @@
+
+<div fxLayout="row" fxLayoutAlign="space-between center">
+
+    <div fxLayout="row" fxLayoutAlign="start center">
+        
+        <h3 class="my-16 mx-0">
+            <i class="calendar times left icon mr-8"></i>
+            Finance Exclusions
+        </h3>
+
+        <button class="text-uppercase blank ml-12" nz-button nzType="link" (click)="reloadTable($event)">
+            <i class="sync alternate icon"></i>
+        </button>
+
+    </div>
+
+    <button
+        *hasPermission="['AC1']; belongsTo 'N58'"
+        nz-button 
+        nzType="primary"
+        class="add-button"
+        (click)="openAddExclusionDialog($event)">
+        <i nz-icon nzType="plus"></i>
+        Add Exclusion
+    </button>
+
+</div>
+
+<nz-table #exclusionsListTable nzBordered [nzData]="exclusionList" [nzLoadingIndicator]="indicatorTemplate"
+    [nzShowPagination]="false" [nzLoading]="exclusionsLoader">
+    <thead>
+        <tr>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Booking Fee</th>
+            <th>Parent Payment</th>
+            <th>CCS Payment</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of exclusionsListTable.data">
+            <td>{{ data.startDate }}</td>
+            <td>{{ data.endDate }}</td>
+            <td class="text-center">
+                <nz-tag [nzColor]="'green'" *ngIf="data.bookingFee">Excluded</nz-tag>
+                <nz-tag [nzColor]="'red'" *ngIf="!data.bookingFee">Not Excluded</nz-tag>
+            </td>
+            <td class="text-center">
+                <nz-tag [nzColor]="'green'" *ngIf="data.parentPayment">Excluded</nz-tag>
+                <nz-tag [nzColor]="'red'" *ngIf="!data.parentPayment">Not Excluded</nz-tag>
+            </td>
+            <td class="text-center">
+                <nz-tag [nzColor]="'green'" *ngIf="data.ccsPayment">Excluded</nz-tag>
+                <nz-tag [nzColor]="'red'" *ngIf="!data.ccsPayment">Not Excluded</nz-tag>
+            </td>
+            <td>
+                <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="menu">
+                    <i class="ellipsis vertical icon"></i>
+                </button>
+
+                <mat-menu #menu="matMenu" backdropClass="tlp-more">
+                    <button *hasPermission="['AC3']; belongsTo 'N58'" mat-menu-item (click)="deleteExclusion($event, data.id)">
+                        <i class="trash icon danger-color"></i>
+                        <span class="font-weight-600">Delete</span>
+                    </button>
+                </mat-menu>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+
+<!-- LOADER VIEW -->
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+<!-- / LOADER VIEW -->

@@ -1,0 +1,106 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0"
+    fusePerfectScrollbar
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex [formGroup]="queryFiltersForm" style="width: 100%;">
+        <div class="mb-4">
+
+            <nz-form-item nz-col>
+                <nz-form-label style="padding: 8px;">Select Child <small style="visibility: hidden;">(make sure sunday is selected)</small></nz-form-label>
+                <nz-form-control nzHasFeedback>
+
+                    <nz-select formControlName="child" nzShowSearch nzPlaceHolder="select Child">
+
+                        <nz-option nzValue="ServiceID"
+                                   nzLabel="All Children" title="All Children">
+                        </nz-option>
+                        <ng-container *ngFor="let item of this.childrenList">
+                            <nz-option *ngIf="item.id" nzValue="{{ item.id }}"
+                                       nzLabel="{{ item.firstName }} {{ item.lastName}} ({{ (item.enrollments[0])? item.enrollments[0].enrolId : 'No Enrolment ID'}})" title="{{ item.firstName }} {{ item.lastName}} ({{ (item.enrollments[0])? item.enrollments[0].enrolId : 'No Enrolment ID'}})">
+                            </nz-option>
+                        </ng-container>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+
+        <div class="mb-4">
+
+            <nz-form-item nz-col>
+                    <nz-form-label style="padding: 8px;">Session Report Start Date &nbsp;&nbsp; <small style="visibility: hidden;">(make sure monday is selected)</small></nz-form-label>
+                    <nz-form-control nzHasFeedback>
+
+                        <nz-date-picker [nzInputReadOnly]="true" [nzSize]="size" (ngModelChange)="setMinDate($event)" formControlName="dateInputStart" [nzDisabledDate]="disabledDateOnlyMonday" nzPlaceHolder="select date" class="block">
+                        </nz-date-picker>
+                    </nz-form-control>
+            </nz-form-item>
+
+        </div>
+
+        <div class="mb-4">
+
+            <nz-form-item nz-col>
+                <nz-form-label style="padding: 8px;">Updated Since &nbsp;&nbsp; <small style="visibility: hidden;">(make sure monday is selected)</small></nz-form-label>
+                <nz-form-control nzHasFeedback>
+
+                    <nz-date-picker [nzInputReadOnly]="true" [nzSize]="size" (ngModelChange)="setMinDate($event)" formControlName="updatedSince" nzPlaceHolder="select date" class="block">
+                    </nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+
+        <div class="mb-4">
+
+            <nz-form-item nz-col>
+                <nz-form-label style="padding: 8px;">Include History &nbsp;&nbsp; <small style="visibility: hidden;">(make sure monday is selected)</small></nz-form-label>
+                <nz-form-control nzHasFeedback>
+                    <nz-switch [nzSize]="size" formControlName="includeHistory"></nz-switch>
+                </nz-form-control>
+            </nz-form-item>
+
+        </div>
+       <!-- <div class="mb-4">
+
+            <nz-form-item nz-col>
+                    <nz-form-label style="padding: 8px;">Select Week Ending &nbsp;&nbsp; <small style="visibility: hidden;">(make sure sunday is selected)</small></nz-form-label>
+                    <nz-form-control nzHasFeedback>
+
+                        <nz-date-picker [nzInputReadOnly]="true" [nzSize]="size" formControlName="dateInputEnd" [nzFormat]="yyyy-MM-dd" [nzDisabledDate]="disabledDateOnlySunday" nzPlaceHolder="select date" class="block" [nzDisabled]='tableLoading'>
+                        </nz-date-picker>
+                    </nz-form-control>
+            </nz-form-item>
+
+        </div>-->
+
+
+        <button class="mb-16" *hasPermission="['AC0']; belongsTo: 'N48'" nz-button (click)="filter($event)"
+                    nzType="primary" [promiseBtn]="buttonLoading"> Get Session Report
+            </button>
+
+                    <button nz-button nz-dropdown [nzDropdownMenu]="menu">
+                        <i nz-icon nzType="download"></i>Download</button>
+                    <nz-dropdown-menu #menu="nzDropdownMenu">
+                        <ul nz-menu>
+                            <!--<li nz-menu-item (click)="showTheme($event, true)">
+                                <i nz-icon nzType="file-pdf" nzTheme="outline"></i> <a>PDF</a>
+                            </li>-->
+                            <li nz-menu-item (click)="downloadPdf($event, false)">
+                                <i nz-icon nzType="file-text" nzTheme="outline"></i><a>CSV</a>
+                            </li>
+                        </ul>
+                    </nz-dropdown-menu>
+        <button nz-button nzType="default" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button>
+
+    </form>
+</div>
+<!-- / SIDEBAR CONTENT -->

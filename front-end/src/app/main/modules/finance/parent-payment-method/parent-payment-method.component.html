@@ -1,0 +1,275 @@
+
+<div id="parent-payment-methods" class="page-layout simple fullwidth" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{value:'*',params:{delay:'100ms', x:'-25px'}}">Manage Payment Methods {{ user ? '- ' + user.getFullName() : '' }}</h1>
+
+        <div *hasPermission="['AC1']; belongsTo 'N44'" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <button class="text-uppercase mr-12" *ngIf="!parentLevel" nz-button nzType="default" (click)="onBack($event)">
+                <i nz-icon nzType="arrow-left"></i> Go Back
+            </button>
+
+            <button class="text-uppercase" nz-button
+                nzType="primary" (click)="addDialog($event)" [nzLoading]="buttonLoader">
+                <i nz-icon nzType="plus"></i> Create
+            </button>
+
+        </div>
+
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content p-24 pt-0">
+
+        <nz-list [nzNoResult]="emptyBlock" [nzDataSource]="paymentMethodsList" [nzRenderItem]="item"
+            [nzGrid]="{ gutter: 16, xs: 24, sm: 12, md: 8, lg: 8, xl: 6, xxl: 5 }">
+
+            <ng-template #item let-item let-index="index">
+
+                <nz-list-item [nzContent]="nzContent" *ngIf="item.synced">
+
+                    <ng-template #nzContent>
+
+                        <nz-spin [nzSpinning]="item.isLoading" [nzIndicator]="indicatorTemplate">
+
+                            <nz-card 
+                                *ngIf="item.type === 'bpay'" 
+                                [nzBordered]="false"
+                                [nzActions]="item.status === true ? [actionDeactivate] : [actionDefault]"
+                                [@animate]="{ value:'*', params:{ delay: (item.isNew ? 100 : ((index + 1) * 100)) + 'ms', x: '-25px' } }">
+
+                                <div class="color-bar {{ item.status ? 'active' : 'inactive' }}"></div>
+                                <img class="bpay" src="assets/images/payment_types/bpay/BPAY_2012_PORT_BLK.png" alt="BPAY">
+                                <p class="text-truncate"><span class="font-weight-600">Type</span> <br>
+                                    BPAY</p>
+                                <p class="text-truncate"><span class="font-weight-600">Biller Code</span> <br>
+                                    {{ item.instrument }}</p>
+                                <p class="reference">
+                                    <span class="font-weight-600">CRN</span>
+                                    <br>
+                                    {{ item.reference }}
+                                </p>
+                                <p class="text-truncate"><span class="font-weight-600">Billing Address</span> <br>
+                                    <span>{{ item.fullname }}</span><br>
+                                    <span>{{ item.address1 }}</span><br>
+                                    <ng-container *ngIf="item.address2 !== null">
+                                        <span>{{ item.address2 }}</span><br>
+                                    </ng-container>
+                                    <span>{{ item.city }}</span><br>
+                                    <span>{{ item.state }}</span><br>
+                                    <span>{{ item.zipCode }}</span><br>
+                                    <span>{{ item.country }}</span><br>
+                                </p>
+
+                                <p class="text-truncate">
+                                    <span class="font-weight-600">
+                                        Created On
+                                    </span> 
+                                    <br>
+                                    {{ item.createdAt | date:'medium'}}
+                                </p>
+
+                                <p class="text-truncate">
+                                    <span class="font-weight-600">
+                                        Last updated on
+                                    </span> 
+                                    <br>
+                                    {{ item.updatedAt | date:'medium'}}
+                                </p>
+
+                                <p class="text-truncate">
+                                    <span class="font-weight-600">
+                                        Status
+                                    </span> 
+                                    <br>
+                                    <nz-tag *ngIf="item.status === true" [nzColor]="'green'">Active</nz-tag>
+                                    <nz-tag *ngIf="item.status === false" [nzColor]="'red'">Inactive</nz-tag>
+                                </p>
+
+                            </nz-card>
+
+                            <nz-card *ngIf="item.type !== 'bpay'" [nzBordered]="false"
+                                [nzActions]="item.status === true ? [actionDeactivate, actionDelete] : [actionDefault, actionDelete]"
+                                [@animate]="{ value:'*', params:{ delay: (item.isNew ? 100 : ((index + 1) * 100)) + 'ms', x: '-25px' } }">
+
+                                <div class="color-bar {{ item.status ? 'active' : 'inactive' }}"></div>
+                                <span class="payment-type-icon">
+                                    <i class="icon"
+                                        [ngClass]="{'credit card outline': item.mode === 'card', 'university': item.mode === 'bank'}"></i>
+                                    <!-- <i nz-icon [nzType]="item.mode === 'card' ? 'credit-card' : 'bank'" nzTheme="outline"></i> -->
+                                </span>
+                                <p class="text-truncate"><span class="font-weight-600">Type</span> <br>
+                                    {{ item.mode == 'bank' ? 'Bank Account' : 'Credit/Debit Card'}}</p>
+                                <p class="text-truncate"><span class="font-weight-600">Number</span> <br>
+                                    {{ item.instrument }}</p>
+                                <p class="text-truncate" *ngIf="item.mode === 'card'"><span class="font-weight-600">Card
+                                        expiry</span> <br> {{ item.expiry }}</p>
+                                <p class="text-truncate" *ngIf="item.mode === 'bank'"><span
+                                        class="font-weight-600">Account Name</span> <br> {{ item.accountName }}</p>
+                                <p class="reference">
+                                    <span class="font-weight-600">Reference</span>
+                                    <br>
+                                    {{ item.reference }}
+                                </p>
+                                <p class="text-truncate"><span class="font-weight-600">Billing Address</span> <br>
+                                    <span>{{ item.fullname }}</span><br>
+                                    <span>{{ item.address1 }}</span><br>
+                                    <ng-container *ngIf="item.address2 !== null">
+                                        <span>{{ item.address2 }}</span><br>
+                                    </ng-container>
+                                    <span>{{ item.city }}</span><br>
+                                    <span>{{ item.state }}</span><br>
+                                    <span>{{ item.zipCode }}</span><br>
+                                    <span>{{ item.country }}</span><br>
+                                </p>
+
+                                <p class="text-truncate">
+                                    <span class="font-weight-600">
+                                        Created On
+                                    </span> 
+                                    <br>
+                                    {{ item.createdAt | date:'medium'}}
+                                </p>
+
+                                <p class="text-truncate">
+                                    <span class="font-weight-600">
+                                        Last updated on
+                                    </span> 
+                                    <br>
+                                    {{ item.updatedAt | date:'medium'}}
+                                </p>
+
+                                <p class="text-truncate">
+                                    <span class="font-weight-600">
+                                        Status
+                                    </span> 
+                                    <br>
+                                    <nz-tag *ngIf="item.status === true" [nzColor]="'green'">Active</nz-tag>
+                                    <nz-tag *ngIf="item.status === false" [nzColor]="'red'">Inactive</nz-tag>
+                                </p>
+
+                            </nz-card>
+
+                            <ng-template #actionDefault>
+                                <span tooltip="Make Default" class="pr-8 pl-8" (click)="setDefault($event, item, index)"
+                                    *hasPermission="['AC2']; belongsTo 'N44'">
+                                    <i placement="bottom"
+                                        class="check circle outline icon success-color"></i> Make Default </span>
+                            </ng-template>
+
+                            <ng-template #actionDelete>
+                                <span class="pr-8 pl-8" (click)="delete($event, item, index)"
+                                    *hasPermission="['AC3']; belongsTo 'N44'">
+                                    <span tooltip="Delete payment method" placement="bottom"><i
+                                            class="trash alternate outline icon danger-color"></i> Delete</span>
+                                </span>
+                            </ng-template>
+
+                            <ng-template #actionDeactivate>
+                                <span class="pr-8 pl-8" (click)="deactivate($event, item, index)"
+                                    *hasPermission="['AC3']; belongsTo 'N44'">
+                                    <span tooltip="Deactivate payment method" placement="bottom"><i
+                                            class="minus circle icon danger-color"></i> Deactivate</span>
+                                </span>
+                            </ng-template>
+
+                        </nz-spin>
+
+                        <ng-template #indicatorTemplate>
+                            <div class="is-loading">
+                                <span class="btn-spinner card-loader"></span>
+                            </div>
+                        </ng-template>
+
+                    </ng-template>
+
+                </nz-list-item>
+
+                <nz-list-item [nzContent]="nzContent" *ngIf="!item.synced">
+
+                    <ng-template #nzContent>
+
+                        <nz-spin [nzSpinning]="item.isLoading" [nzIndicator]="indicatorTemplate">
+
+                            <nz-card [nzBordered]="false"
+                                [nzActions]="[actionDefault, actionDelete]"
+                                [@animate]="{ value:'*', params:{ delay: (item.isNew ? 100 : ((index + 1) * 100)) + 'ms', x: '-25px' } }">
+
+                                <div class="color-bar grey"></div>
+                                <span class="payment-type-icon">
+                                    <i class="icon question circle outline"></i>
+                                </span>
+                                <p class="text-truncate">
+                                    <span class="font-weight-600">Pending Sync</span>
+                                </p>
+                                <p class="reference">
+                                    <span class="font-weight-600">Reference</span>
+                                    <br>
+                                    {{ item.reference }}
+                                </p>
+                            </nz-card>
+
+                            <ng-template #actionDefault>
+                                <span class="pr-8 pl-8" (click)="syncPaymentMethod($event, item)"
+                                    *hasPermission="['AC2']; belongsTo 'N44'">
+                                    <i tooltip="Sync payment method" placement="bottom"
+                                        class="sync alternate icon primary-color"></i> Sync
+                                </span>
+                            </ng-template>
+
+                            <ng-template #actionDelete>
+                                <span class="pr-8 pl-8" (click)="delete($event, item, index)"
+                                    *hasPermission="['AC3']; belongsTo 'N44'">
+                                    <span tooltip="Delete payment method" placement="bottom"><i
+                                            class="trash alternate outline icon danger-color"></i> Delete</span>
+                                </span>
+                            </ng-template>
+
+                        </nz-spin>
+
+                        <ng-template #indicatorTemplate>
+                            <div class="is-loading">
+                                <span class="btn-spinner card-loader"></span>
+                            </div>
+                        </ng-template>
+
+                    </ng-template>
+
+                </nz-list-item>
+
+            </ng-template>
+
+        </nz-list>
+
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+
+            <nz-empty class="mb-16" [nzNotFoundImage]="'assets/icons/flat/ui_set/navigation-maps/svg/location3.svg'"
+                [nzNotFoundContent]="contentTpl" [nzNotFoundFooter]="footerTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Please click on add button to create payment method.</span>
+                </ng-template>
+
+                <ng-template #footerTpl>
+                    <button *hasPermission="['AC1']; belongsTo 'N44'" class="text-uppercase" nz-button nzType="primary"
+                        (click)="addDialog($event)" [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Create Now
+                    </button>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+
+    </div>
+    <!-- / CONTENT -->
+
+
+</div>

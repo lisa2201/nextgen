@@ -1,0 +1,191 @@
+<!-- CONTENT CARD -->
+<div class="content" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+    <!-- CONTENT TOOLBAR -->
+    <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span fxLayout="row" fxLayoutAlign="space-between center" fxHide.gt-md [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <button class="text-uppercase blank"
+                nz-button nzType="link"
+                (click)="toggleSidebar('immunisation-sidenav-left')">
+                <i class="filter icon"></i>
+            </button>
+    
+        </span>
+
+        <nz-input-group class="search-container"
+            [nzSuffix]="suffixTemplate" 
+            [nzPrefix]="prefixTemplate">
+            <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+        </nz-input-group>
+
+        <ng-template #prefixTemplate>
+            <i nz-icon nzType="search" class="search-icon"></i>
+        </ng-template>
+
+        <ng-template #suffixTemplate>
+            <i class="times circle outline icon ant-input-clear-icon"
+                *ngIf="searchInput.value" [@fadeInOnEnter] [@fadeOutOnLeave]
+                (click)="clearSearch($event)">
+            </i>
+        </ng-template>
+
+    </div>
+    <!-- / CONTENT TOOLBAR -->
+
+    <ng-container>
+
+        <!-- DATA TABLE VIEW -->
+        <nz-table
+        #permissionTable 
+        [nzLoading]="tableLoading" 
+        [nzFrontPagination]="false"
+        [nzShowTotal]="totalTemplate"
+        [nzShowPagination]="true" 
+        [nzData]="immunisation" 
+        [nzNoResult]="emptyBlock"
+        [nzLoadingIndicator]="indicatorTemplate" 
+        [nzSimple]="mobilePagination" 
+        [nzTotal]="total"
+        [(nzPageIndex)]="pageIndex" 
+        [(nzPageSize)]="pageSize" 
+        [nzPageSizeOptions]="pageSizeOptions"
+        (nzPageIndexChange)="onTableChange()" 
+        (nzPageSizeChange)="onTableChange(true)"
+        [ngClass]="{ 'ant-table-empty': immunisation.length === 0 }">
+    
+            <thead>
+                <tr>
+                    <th nzAlign="center" [nzWidth]="'50px'"></th>
+                    <th>Immunisation Type</th>
+                    <th>Description</th>
+                    <th>Created By</th>
+                    <th *ngIf="isOwnerView">Branch</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+    
+            <tbody>
+                <ng-template ngFor let-data [ngForOf]="immunisation" let-index="index">
+    
+                    <tr>
+                        <td [(nzExpand)]="data.expand"></td>
+                        <td>{{ data.name }}</td>
+                        <td>{{ data.desc || 'N/A'}}</td>
+                        <td>{{ data.creator.getFullName() || 'N/A'}}</td>
+                        <td *ngIf="isOwnerView">{{ data.branch.name || 'N/A'}}</td>
+                        <td>
+                            <p class="mb-0" *hasPermission="['AC1']; belongsTo 'N60'">
+                                <nz-switch [(ngModel)]="data.status" [nzControl]="true"
+                                    (click)="updateStatus(data, index, $event)" [nzLoading]="data.statusLoading"
+                                    nzCheckedChildren="Active" nzUnCheckedChildren="Inactive"></nz-switch>
+    
+    
+                            </p>
+                        </td>
+    
+                        <td *hasPermission="['AC2', 'AC3']; belongsTo 'N09'" class="tbl-style">
+    
+                            <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="menu">
+                                <i class="ellipsis vertical icon"></i>
+                            </button>
+    
+                            <mat-menu #menu="matMenu" backdropClass="tlp-more">
+    
+                                <ng-container *hasPermission="['AC2']; belongsTo 'N60'">
+    
+                                    <button mat-menu-item (click)="editDialog(data, $event)">
+                                        <i class="edit outline icon primary-color"></i>
+                                        <span class="font-weight-600">Edit</span>
+                                    </button>
+    
+                                </ng-container>
+    
+                                <ng-container *hasPermission="['AC3']; belongsTo 'N60'">
+    
+                                    <button mat-menu-item (click)="delete(data, $event)">
+                                        <i class="trash alternate outline icon danger-color"></i>
+                                        <span class="font-weight-600">Delete</span>
+                                    </button>
+    
+                                </ng-container>
+    
+                            </mat-menu>
+    
+                        </td>
+                    </tr>
+    
+                    <tr [nzExpand]="data.expand">
+    
+                        <nz-table class="mt-24 mb-24 mr-24 ml-0" #roleSelectData [nzData]="data.schedule"
+                            [nzShowPagination]="false" nzSize="small">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">Schedule</th>
+                                </tr>
+                            </thead>
+            <tbody>
+                <ng-container *ngFor="let control of data.schedule; let i = index;">
+                    <ng-container>
+                        <tr>
+    
+                            <td class="ant-table-selection-column">
+                                <nz-form-label class="f-left" style="float: left;"> Schedule {{i+ 1}}</nz-form-label>
+                            </td>
+                            <td style="width: 300px;">
+                                {{control.number}} {{control.getScheduleTitle()}}
+                            </td>
+                        </tr>
+                    </ng-container>
+    
+                </ng-container>
+            </tbody>
+    
+        </nz-table>
+        </tr>
+    
+        </ng-template>
+        </tbody>
+    
+        </nz-table>
+        <!-- / DATA TABLE VIEW -->
+
+        <!-- TOTAL LABEL VIEW -->
+        <ng-template #totalTemplate let-range="range" let-total>
+            <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ range[0] }} to {{ range[1] }} of {{ total }} entries</span>
+            <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} - {{ range[1] }} of {{ total }} entries</span>
+        </ng-template>
+        <!-- / TOTAL LABEL VIEW -->
+
+        <!-- LOADER VIEW -->
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+        <!-- / LOADER VIEW -->
+
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0"
+                [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl"
+                [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+
+    </ng-container>
+    
+</div>
+<!-- / CONTENT CARD -->

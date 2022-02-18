@@ -1,0 +1,145 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+client-login {
+
+    #login {
+        width: 100%;
+        background: url('assets/images/backgrounds/2020-06-01.png') no-repeat;
+        background-color: #1BB0B4;
+        background-size: cover;
+        align-items: center;
+
+        #login-form-wrapper {
+            flex: 1 0 auto;
+            padding: 32px;
+
+            @include media-breakpoint('xs') {
+                padding: 16px;
+            }
+
+            #login-form {
+                position: relative;
+                width: 450px;
+                overflow: hidden;
+                text-align: center;
+                box-shadow: $custom-box-inner-shadow;
+                background: rgba(244, 244, 244);
+                border: 1px solid $layout-border-color;
+                border-radius: 16px;
+
+                @include media-breakpoint('xs') {
+                    width: 100%;
+                }
+
+                .bg-inner-wrapper {
+                    @include media-breakpoint('xs') {
+                        padding: 12px !important;
+                    }
+
+                    .auto-login-view {
+                        flex: 1;
+
+                        .processing {
+                            max-width: 128px;
+                            max-height: 128px;
+                            border-radius: 100%;
+                            background: rgba(244, 244, 244);
+                            border: 2px solid $layout-border-color;
+                            box-shadow: $custom-box-inner-shadow;
+                        }
+
+                        .done {
+                            max-width: 64px;
+                            max-height: 64px;
+                        }
+
+                        h2 {
+                            margin: 1.8rem 0 0.8rem;
+                            font-size: 16px;
+                        }
+                    }
+                }
+
+                h2 {
+                    margin: 0;
+                    display: block;
+                    overflow: hidden;
+                    font-weight: normal;
+
+                    .first {
+                        font-size: 3.2rem;
+                        color: #009ce6;
+                        text-align: center;
+                    }
+
+                    .last {
+                        text-align: center;
+                        color: #009ce6;
+                        font-size: 2rem;
+                        display: inherit;
+                        //margin-top: 25px;
+                        margin-left: 5px;
+                        //border-radius: 10px;
+                    }
+                }
+
+                .desc {
+                    font-size: 15px;
+                    margin-top: 16px;
+                    margin-bottom: 20px;
+                }
+
+                .logo {
+                    width: 128px;
+                    margin: 32px auto;
+                }
+
+                .title {
+                    font-size: 20px;
+                    margin: 16px 0 32px 0;
+                }
+
+                form {
+                    width: 100%;
+                    text-align: left;
+
+                    mat-form-field {
+                        width: 100%;
+                    }
+
+                    mat-checkbox {
+                        margin: 0;
+                    }
+
+                    .remember-forgot-password {
+                        font-size: 13px;
+                        margin-bottom: 8px;
+
+                        .remember-me {
+                            margin-bottom: 16px
+                        }
+
+                        .forgot-password {
+                            font-size: 13px;
+                            font-weight: 600;
+                            color: #0072a7;
+
+                        }
+                    }
+
+                    .copyright {
+                        display: block;
+                        overflow: hidden;
+                        padding: 16px 10px 0;
+                        text-align: center;
+                    }
+                }
+
+                
+            }
+        }
+
+    }
+
+}

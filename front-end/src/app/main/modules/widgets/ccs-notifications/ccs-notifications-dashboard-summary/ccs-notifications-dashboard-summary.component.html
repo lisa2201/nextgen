@@ -1,0 +1,53 @@
+<fuse-widget class="widget" fxLayout="column">
+
+    <!-- Front -->
+    <div class="fuse-widget-front">
+
+        <nz-spin
+            [nzSpinning]="widgetLoader"
+            [nzIndicator]="indicatorTemplate">
+          
+            <div class="fuse-widget-front">
+
+                <div class="p-16 h-52" fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <div class="h3">CCS Notifications</div>
+                    
+                    <button class="refresh-button" nz-button nzType="link" nzSize="small" (click)="updateCCSNotificationWidget()">
+                        <i class="sync vertical icon"></i>
+                    </button>
+
+                </div>
+
+                <div class="pt-8 pb-32" [ngClass]="{'waitlist_count': !is_sitemanager}" fxLayout="column" fxLayoutAlign="center center" (click)=navigateDay($event) style="cursor: pointer">
+                    <div class="font-size-72 line-height-72" [ngClass]="'blue-grey-fg'">
+                        {{ccsNotificationData.CCSEntitlementVariedForDay}}
+                    </div>
+                    <div class="h3 secondary-text font-weight-500">Entitlements
+                    </div>
+                </div>
+
+                <div class="p-16 border-top" fxLayout="row" fxLayoutAlign="start center" (click)=navigateWeek($event) style="cursor: pointer">
+                    <span class="h4 secondary-text text-truncate">
+                        Total Entitlement Variations
+                    </span>
+                    <span class="h4 ml-8" >
+                        {{ccsNotificationData.CCSEntitlementVariedTotal}}
+                    </span>
+                </div>
+            </div>
+
+        </nz-spin>
+
+    </div>
+    <!-- / Front -->
+
+</fuse-widget>
+
+<!-- LOADER VIEW -->
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+<!-- / LOADER VIEW -->

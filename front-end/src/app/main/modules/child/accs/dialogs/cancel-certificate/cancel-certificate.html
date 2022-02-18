@@ -1,0 +1,88 @@
+<div class="dialog-content-wrapper">
+    
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{dialogTitle}}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                    aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+        
+    </mat-toolbar>
+
+    <form
+        name="invitationForm"
+        class="compose-form"
+        fxLayout="column"
+        [nzLayout]="'vertical'" [formGroup]="cancelCertificateForm"
+        nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <div nz-col [nzXs]="24"  *ngIf="certificateOrDetermination.cancel_reason && certificateOrDetermination.isSynced == '2'">
+                    <nz-alert class="mb-8" nzCloseable nzType="warning"
+                                nzMessage="{{ (this.certificateOrDetermination.syncerror.message) ? this.certificateOrDetermination.syncerror.message : 'Error Occured' }}"></nz-alert>
+                </div>
+
+                <!-- date no longer at risk-->
+                <div nz-col [nzXs]="24">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Cancellation Reason</nz-form-label>
+
+                        <nz-form-control [nzErrorTip]="dateNoLongerAtRiskErrorTpl">
+                            <input nz-input formControlName="cancellation_reason" placeholder="Cancellation Reason" type="text" />
+                        </nz-form-control>
+    
+                        <ng-template #dateNoLongerAtRiskErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please enter a reason</ng-container>
+                            <ng-container *ngIf="control.hasError('maxlength')">Please keep the characters under 1000</ng-container>
+                        </ng-template>
+    
+                    </nz-form-item>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+            <ng-container *ngIf="!editMode">
+                <button
+                    class="text-uppercase mr-8"
+                    *hasPermission="['AC1']; belongsTo 'N21'"
+                    nz-button
+                    nzType="primary"
+                    [disabled]="!cancelCertificateForm.valid || this.alreadySubmitted"
+                    [promiseBtn]="buttonLoader">
+                    <i class="plus icon mr-8"></i> Submit
+                </button>
+            </ng-container>
+
+            <button
+                class="text-uppercase mat-close-btn"
+                type="button"
+                nz-button nzType="danger"
+                (click)="matDialogRef.close()">
+                Close
+            </button>
+
+        </span>
+
+        </div>
+
+    </form>
+
+</div>

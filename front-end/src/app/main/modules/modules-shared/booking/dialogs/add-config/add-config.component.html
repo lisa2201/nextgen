@@ -1,0 +1,177 @@
+<div class="dialog-content-wrapper">
+
+    <div mat-dialog-content class="px-24 pt-16 m-0" 
+        fusePerfectScrollbar 
+        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <h4>{{ title }}</h4>
+
+        <form name="bookingConfigForm" class="compose-form"
+            [formGroup]="bookingConfigForm"
+            nz-form [nzLayout]="'vertical'">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Room</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="roomErrorTpl">
+
+                            <nz-select  
+                                formControlName="room"
+                                nzShowSearch
+                                nzAllowClear
+                                nzPlaceHolder="select a room"
+                                (ngModelChange)="selectFeeOnRoomChange($event)">
+        
+                                <nz-option *ngFor="let item of rooms; trackBy: trackByFn;" nzValue="{{ item.id }}" nzLabel="{{ item.title }}"></nz-option>
+                                
+                            </nz-select>
+        
+                            <ng-template #roomErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a room</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Fee</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="feesErrorTpl">
+
+                            <nz-select  
+                                formControlName="fee"
+                                nzShowSearch
+                                nzAllowClear
+                                nzPlaceHolder="select a fee"
+                                [nzDropdownClassName]="'session-select'"
+                                [nzCustomTemplate]="custom"
+                                [nzDisabled]="filteredFees.length < 1"
+                                [nzOptionHeightPx]="filteredFees.length < 4 ? 78 : 32">
+        
+                                <nz-option *ngFor="let item of filteredFees | orderBy: 'name'; trackBy: trackByFn;"
+                                    nzValue="{{ item.id }}"
+                                    nzLabel="{{ item.name }} ({{ item.getFeeAmount() | currency: client.currency :'symbol':'1.2-2' }})"
+                                    nzCustomContent>
+
+                                    <p class="title mb-4">
+                                        <span class="type" *ngIf="item.vendor === '0'">CCS</span>
+                                        {{ item.name }}
+                                    </p>
+
+                                    <p class="sub mb-0">
+                                        <i class="dollar sign icon ic"></i>
+                                        {{ item.getFeeAmount() | currency: client.currency :'symbol':'1.2-2' }}
+                                        <ng-container *ngIf="item.getCurrentAdjusted()">({{ item.getCurrentAdjusted().effectiveDate }})</ng-container>
+                                    </p>
+
+                                    <p class="sub mb-0" *ngIf="item.frequency === '0'; else hourlyBlock">
+                                        <i class="clock outline icon ic"></i>
+                                        {{ item.sessionStart | convertTimeString }} to
+                                        {{ item.sessionEnd | convertTimeString }}
+                                    </p>
+
+                                    <ng-template #hourlyBlock>
+                                        <p class="sub mb-0">
+                                            <i class="clock outline icon ic"></i>
+                                            Hourly Basis
+                                        </p>
+                                    </ng-template>
+
+                                </nz-option>
+
+                                <ng-template #custom let-selected>
+                                    <i class="circle icon session-type-color-code casual mr-8" *ngIf="getFeeInfo(selected.nzValue).type === '1'"></i>
+                                    <span>{{ selected.nzLabel }}</span>
+                                </ng-template>
+                                
+                            </nz-select>
+        
+                            <ng-template #feesErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a fee</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12" *ngIf="checkFeeHasSessionTime()" [@fadeInOnEnter]>
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Session Time</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="sessionTimeErrorTpl">
+
+                            <ry-time-picker 
+                                #timePicker
+                                formControlName="session_time"
+                                ryFormat="h:mm A"
+                                [ryType]="'range'"
+                                [ryMinuteStep]="5"
+                                [ryPlaceHolder]="'select session'">
+                            </ry-time-picker>
+
+                            <ng-template #sessionTimeErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input session time</ng-container>
+                            </ng-template>
+                        
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div class="error-msg" 
+                    nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24"
+                    *ngIf="validateFeeSessionOverlap()" 
+                    [@slideMotion]="'bottom'">
+                    Session overlapped, Please select another fee (session)
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span></span>
+
+        <span class="text-right">
+
+            <button class="text-uppercase mr-8" 
+                type="button"
+                nz-button 
+                nzType="default"
+                [disabled]="!bookingConfigForm.valid || validateFeeSessionOverlap()"
+                (click)="apply($event)">
+                Apply
+            </button>
+
+            <button class="text-uppercase" 
+                type="button"
+                nz-button 
+                nzType="danger"
+                (click)="matDialogRef.close()">
+                Close
+            </button>
+
+        </span>
+
+    </div>
+
+</div>

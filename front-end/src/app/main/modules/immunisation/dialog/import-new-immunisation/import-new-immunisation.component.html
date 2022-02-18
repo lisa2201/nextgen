@@ -1,0 +1,119 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="immunisationForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="immunisationForm" nz-form (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label> Organisation</nz-form-label>
+
+                        <nz-form-control [nzErrorTip]="statusErrorTpl">
+                        
+                            <nz-select nzMode="multiple" formControlName="org" nzShowSearch nzPlaceHolder="select a organisation">
+                        
+                                <nz-option *ngFor="let item of organization; trackBy: trackByFn;" nzValue="{{ item.id }}"
+                                    nzLabel="{{ item.companyName}}"> branches
+                                </nz-option>
+                        
+                            </nz-select>
+                        
+                            <ng-template #statusErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select organisation</ng-container>
+                            </ng-template>
+                        
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div class="mt-100" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    <ng-container *ngIf="selectedOrg.length > 0; else emptyBlock">
+                        <nz-collapse>
+                            <nz-collapse-panel *ngFor="let org of selectedOrg" [nzHeader]="org.companyName" [nzActive]="false" [nzDisabled]="false">
+                              <p style="margin:0;" *ngFor="let item of org.branch">
+                                {{item.name}} - {{item.link}}
+                              </p>
+                            </nz-collapse-panel>
+                          </nz-collapse>
+                    </ng-container>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span>
+            </span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8"
+                    *hasPermission="['AC1']; belongsTo 'N60'"
+                    nz-button 
+                    nzType="primary" 
+                    [disabled]="!immunisationForm.valid"
+                    [promiseBtn]="buttonLoader">
+                    <i class="plus icon mr-8"></i>Import
+                </button>
+    
+                <button class="text-uppercase mr-8" 
+                    type="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+    
+                <button class="text-uppercase mat-close-btn" 
+                    type="button"
+                    nz-button 
+                    nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+    <ng-template #emptyBlock>
+
+        <nz-empty class="pt-24 pb-24 m-0"
+            [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+            [nzNotFoundContent]="contentTpl"
+            [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <ng-template #contentTpl>
+                <h4 class="mt-24">No Organisation  Selected</h4>
+                <span>Looks like there's no information to display here</span>
+            </ng-template>
+
+        </nz-empty>
+
+    </ng-template>
+</div>

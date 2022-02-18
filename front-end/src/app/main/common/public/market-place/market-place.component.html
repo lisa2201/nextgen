@@ -1,0 +1,97 @@
+<div class="container p-24" fxLayout="column">
+
+    <div class="header p-8 mb-16 text-center">
+        <img src="../../../../../assets/images/logos/KMLOGO.png" alt="kinderm8_logo">
+        <h1>KICK START WITH KINDER M8</h1>
+    </div>
+
+    <div fxLayout="column">
+
+        <div class="sub-header text-center mb-16">
+            <h2 class="h2">Featured Management Apps</h2>
+        </div>
+
+        <div nz-row nzJustify="center" nzAlign="top" [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+    
+    
+            <div 
+                class="addon-card-container" 
+                nz-col
+                *ngFor='let addon of addons; let i = index;' 
+                [@animate]="{ value:'*', params:{ duration:'1000ms', y:'100px', opacity: 0, delay:'300ms' }}"
+            >
+    
+    
+                <nz-card class="text-center" [nzCover]="coverTemplate2"> <br>
+    
+                    <nz-rate ngModel="4" nzDisabled></nz-rate>
+                    <nz-card-meta nzTitle={{addon.title}} nzDescription={{addon.description}}>
+                    </nz-card-meta> <br>
+    
+                    <div class="trial" *ngIf="addon.trial_period != null">
+                        <p>Free {{ addon.trial_period }} day trial </p>
+                    </div>
+    
+                    <div *ngIf="!addon.split_pricing">
+                        <p>
+                            <span>{{ addon.price | currency:'AUD':'code' }} </span>
+                            <span *ngIf="addon.unit_type === 'child'">/ Month Per Child</span>
+                            <span *ngIf="addon.unit_type === 'branch'">/ Month Per Branch</span>
+                            <span *ngIf="addon.unit_type === 'educator'">/ Month Per Educator</span>
+                            <span *ngIf="addon.unit_type === 'fixed'">/ Month</span>
+                        </p>
+                        <p *ngIf="addon.minimum_price" class="addon-start">Starting at {{ addon.minimum_price | currency:'AUD':'code'}} / Month</p>
+                    </div>
+    
+                    <ng-container *ngIf="addon.split_pricing">
+    
+                        <p>Choose your subscription type</p>
+    
+                        <nz-radio-group class="mb-8" [(ngModel)]="radioValue" (ngModelChange)="changePrice($event, i)">
+                            <label nz-radio-button nzValue="monthly">Monthly</label>
+                            <label nz-radio-button nzValue="annually">Annually</label>
+                        </nz-radio-group>
+    
+                        <div *ngIf="addon.split_pricing && addon.price == 0">
+                            <p>{{ addon.properties['monthly_price'] | currency:'AUD':'code' }} / Month Per Child</p>
+                            <p>Starting at {{ addon.properties['monthly_price'] * 10 | currency:'AUD':'code'}} / Month</p>
+                        </div>
+    
+                        <div *ngIf="addon.split_pricing && addon.price != 0">
+                            <p>{{ addon.price | currency:'AUD':'code' }} / Month Per Child</p>
+                            <p>Starting at {{ addon.price * 10 | currency:'AUD':'code'}} / Month</p>
+                        </div>
+    
+                    </ng-container>
+    
+                    <div>
+                        
+                        <button class="addbtn" nz-button nzType="primary" [routerLink]="['/subscribe']"
+                            [queryParams]="{product: addon.id, subscription_cycle: radioValue}">
+                            Buy Now
+                        </button>
+        
+                        <!-- <button *ngIf="addon.custom === true" class="trybtn" nz-button nzType="primary"
+                            [routerLink]="['/cust_plan']" [queryParams]="{product: addon.id}">Custom Plan</button> -->
+    
+                    </div>
+    
+                    <!-- <p *ngIf="addon.custom === true"></p> -->
+                    <div *ngIf="addon.custom === true" class="mt-8">
+                        <a [routerLink]="['/cust_plan']" [queryParams]="{product: addon.id, subscription_cycle: radioValue}">I want different pricing</a>
+                    </div>
+                </nz-card>
+    
+    
+                <ng-template #coverTemplate2>
+                    <img alt="example2" class="addon-image px-20 pt-20 " [src]="addon.imageUrl">
+                </ng-template>
+    
+                <br><br>
+            </div>
+    
+        </div>
+
+    </div>
+
+</div>

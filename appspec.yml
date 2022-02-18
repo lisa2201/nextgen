@@ -1,0 +1,29 @@
+version: 0.2
+env:
+  variables:
+    S3_BUCKET: "kinderm8nextgencode"
+phases:
+  install:
+    runtime-versions:
+      nodejs: 12
+  pre_build:
+    commands:
+      - echo Installing source NPM dependencies...
+      - cd front-end
+      - npm install
+      - npm install -g @angular/cli
+      - aws s3 cp s3://${S3_BUCKET}/environment.prod.ts.stg src/environments/environment.prod.ts --recursive
+  build:
+    commands:
+      - echo Build started on `date`
+      - node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --stats-json
+  post_build:
+     commands:
+      - aws s3 cp dist s3://${S3_BUCKET} --recursive
+      - cd ..
+      - aws s3 cp server-api s3://${S3_BUCKET}/server-api --recursive
+      - echo Build completed on `date`
+artifacts:
+  files:
+      - '**/*'
+  discard-paths: yes

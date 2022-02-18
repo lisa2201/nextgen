@@ -1,0 +1,23 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+child-enrolment-entitlement {
+
+    .section {
+        position: relative;
+        display: block;
+        margin-bottom: 24px;
+
+        h1 {
+            font-size: 23px;
+            font-weight: 600;
+            margin-bottom: 0px;
+        }
+
+        h3 {
+            font-size: 14px;
+            margin-bottom: 0px;
+            color: rgba(34, 34, 34, 0.4);
+        }
+    }
+}

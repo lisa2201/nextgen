@@ -1,0 +1,300 @@
+
+<h3 class="my-16 mx-0"><i class="file alternate outline left icon mr-8"></i>Generate Report</h3>
+
+<form name="branchForm" [nzLayout]="'vertical'" [formGroup]="filterForm" nz-form>
+
+    <div class="px-4">
+
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                <nz-form-item>
+
+                    <nz-form-label nzRequired>Report Type</nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="typeErrorTpl">
+
+                        <nz-select formControlName="report_ype" nzShowSearch nzPlaceHolder="Select a report type">
+
+                            <nz-option 
+                                *ngFor="let item of reportTypes; trackBy: trackByFn;"
+                                nzValue="{{ item.value }}" 
+                                nzLabel="{{ item.name }}">
+                            </nz-option>
+
+                        </nz-select>
+
+                        <ng-template #typeErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please select a report type
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+            </div>
+
+            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                <nz-form-item>
+
+                    <div fxLayout="row" fxLayoutAlign="space-between center" class="h-24">
+                        
+                        <nz-form-label>
+                            Rooms
+                        </nz-form-label>
+
+                        <div fxFlex="40" fxLayoutAlign="end center" class="select-actions">
+
+                            <button 
+                                nz-button nzType="link" 
+                                class="p-0"
+                                (click)="toggleSelectAllRoom(true)">Select All</button>
+
+                            <span class="pl-4 pr-4">|</span>
+
+                            <button nz-button nzType="link" class="p-0"
+                                (click)="toggleSelectAllRoom(false)">Select None</button>
+
+                        </div>
+                    </div>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="parentErrorTpl">
+
+                        <nz-select nzMode="multiple" formControlName="room" nzShowSearch nzAllowClear
+                            nzPlaceHolder="select room">
+
+                            <nz-option *ngFor="let item of roomList; trackBy: trackByFn;" nzValue="{{ item.id }}"
+                                nzLabel="{{item.title}}">
+                            </nz-option>
+
+                        </nz-select>
+
+                        <ng-template #parentErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please selecte a parent
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+            </div>
+
+            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                <nz-form-item>
+
+                    <nz-form-label >Type</nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="EnrolTypeErrorTpl">
+
+                        <nz-select formControlName="enrolment_type" nzShowSearch nzPlaceHolder="type" nzAllowClear>
+
+                            <nz-option 
+                                *ngFor="let item of arrangementTypes; trackBy: trackByFn;"
+                                nzValue="{{ item.value }}" 
+                                nzLabel="{{ item.name }}">
+                            </nz-option>
+
+                        </nz-select>
+
+                        <ng-template #EnrolTypeErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please select a report type
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+            </div>
+
+            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                <nz-form-item>
+
+                    <nz-form-label >Status</nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="EnrolTypeErrorTpl">
+
+                        <nz-select formControlName="enrolment_status" nzShowSearch nzPlaceHolder="status" nzAllowClear>
+
+                            <nz-option *ngFor="let item of ccsFilters | keyvalue; trackBy: trackByFn;" nzValue="{{ item.key }}" nzLabel="{{ item.value }}"></nz-option>
+
+                        </nz-select>
+
+                        <ng-template #EnrolTypeErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please select a report type
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+            </div>
+
+            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                <nz-form-item>
+
+                    <nz-form-label >Created Date From</nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="EnrolTypeErrorTpl">
+
+                        <nz-date-picker
+                            [nzAllowClear]="true" 
+                            formControlName="created_date_start"
+                            nzPlaceHolder="created date" 
+                            class="block">
+                        </nz-date-picker>
+
+                        <ng-template #EnrolTypeErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please select a report type
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+            </div>
+
+            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                <nz-form-item>
+
+                    <nz-form-label >Created Date To</nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="EnrolTypeErrorTpl">
+
+                        <nz-date-picker
+                            [nzAllowClear]="true" 
+                            formControlName="created_date_end"
+                            nzPlaceHolder="created date" 
+                            class="block">
+                        </nz-date-picker>
+
+                        <ng-template #EnrolTypeErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please select a report type
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+            </div>
+
+            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                <nz-form-item>
+
+                    <nz-form-label >Enrolment Start Date From</nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="EnrolTypeErrorTpl">
+
+                        <nz-date-picker
+                            [nzAllowClear]="true" 
+                            formControlName="enrolment_date_start"
+                            nzPlaceHolder="created date" 
+                            class="block">
+                        </nz-date-picker>
+
+                        <ng-template #EnrolTypeErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please select a report type
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+            </div>
+
+            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                <nz-form-item>
+
+                    <nz-form-label >Enrolment Start Date To</nz-form-label>
+
+                    <nz-form-control nzHasFeedback [nzErrorTip]="EnrolTypeErrorTpl">
+
+                        <nz-date-picker
+                            [nzAllowClear]="true" 
+                            formControlName="enrolment_date_end"
+                            nzPlaceHolder="created date" 
+                            class="block">
+                        </nz-date-picker>
+
+                        <ng-template #EnrolTypeErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please select a report type
+                            </ng-container>
+                        </ng-template>
+
+                    </nz-form-control>
+
+                </nz-form-item>
+
+            </div>
+
+            
+            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    
+                <nz-form-item>
+                
+                    <nz-form-label>Show Inactive</nz-form-label>
+                
+                    <nz-form-control>
+                
+                        <nz-switch formControlName="status_toggle" nzCheckedChildren="Yes" nzUnCheckedChildren="No"></nz-switch>
+                
+                    </nz-form-control>
+                
+                </nz-form-item>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="text-right px-4 mt-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span></span>
+
+        <span class="text-right">
+
+            <button class="mr-8" nz-button nzType="primary" [disabled]="!filterForm.valid"
+                (click)="viewReport($event, true, false)" [promiseBtn]="buttonLoader">
+                <i nz-icon nzType="eye" nzTheme="outline"></i>
+                <span>View</span>
+            </button>
+
+            <button 
+                nz-button 
+                nz-dropdown 
+                [nzDropdownMenu]="menu" 
+                [disabled]="!filterForm.valid"
+                [promiseBtn]="buttonLoaderDownload">
+                Download
+                <i nz-icon nzType="down"></i>
+            </button>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu>
+                    <li nz-menu-item (click)="viewReport($event, false, true)">
+                        <i nz-icon nzType="file-pdf" nzTheme="outline"></i>PDF
+                    </li>
+                    <li nz-menu-item (click)="viewReport($event, false, false)">
+                        <i nz-icon nzType="file-excel" nzTheme="outline"></i>CSV
+                    </li>
+                </ul>
+            </nz-dropdown-menu>
+        </span>
+
+    </div>
+
+</form>

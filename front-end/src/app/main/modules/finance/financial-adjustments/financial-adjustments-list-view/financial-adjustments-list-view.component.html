@@ -1,0 +1,157 @@
+<!-- CONTENT CARD -->
+<div class="content" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+    <!-- CONTENT TOOLBAR -->
+    <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span fxLayout="row" fxLayoutAlign="space-between center" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <button class="text-uppercase blank" nz-button nzType="link"
+                (click)="toggleSidebar('financial-adjustments-sidebar')">
+                <i class="filter icon"></i>
+            </button>
+
+            <nz-divider nzType="vertical" class="mr-16"></nz-divider>
+
+        </span>
+
+        <nz-input-group class="search-container" [nzSuffix]="suffixTemplate" [nzPrefix]="prefixTemplate">
+            <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+        </nz-input-group>
+
+        <ng-template #prefixTemplate>
+            <i nz-icon nzType="search" class="search-icon"></i>
+        </ng-template>
+
+        <ng-template #suffixTemplate>
+            <i class="times circle outline icon ant-input-clear-icon" *ngIf="searchInput.value" [@fadeInOnEnter]
+                [@fadeOutOnLeave] (click)="clearSearch($event)">
+            </i>
+        </ng-template>
+
+        <span>
+            <button class="text-uppercase blank" nz-button nzType="link"
+                (click)="reloadTable()">
+                <i class="sync alternate icon"></i>
+            </button>
+        </span>
+
+    </div>
+    <!-- / CONTENT TOOLBAR -->
+
+    <ng-container>
+
+        <!-- DATA TABLE VIEW -->
+        <nz-table #financialAdjustmentsTable [nzShowSizeChanger]="pageSizeChanger" [nzShowTotal]="totalTemplate"
+            [nzFrontPagination]="false" [nzData]="financialAdjustmentsList" [nzLoading]="tableLoading" [nzTotal]="total"
+            [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" [nzPageSizeOptions]="pageSizeOptions"
+            (nzPageIndexChange)="onTableChange()" (nzPageSizeChange)="onTableChange(true)" [nzNoResult]="emptyBlock"
+            [nzLoadingIndicator]="indicatorTemplate" [nzSimple]="mobilePagination">
+
+            <thead>
+                <tr>
+                    <th nzShowSort [(nzSort)]="mapOfSort.start_date" (nzSortChange)="sortColumns('start_date', $event)">Date</th>
+                    <th nzWidth="400px">Children</th>
+                    <th>Adjustment Item</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.amount" (nzSortChange)="sortColumns('amount', $event)">Amount</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.type" (nzSortChange)="sortColumns('type', $event)">Type</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.created_at" (nzSortChange)="sortColumns('created_at', $event)">Created On</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <ng-template ngFor let-data [ngForOf]="financialAdjustmentsTable.data" [ngForTrackBy]="trackByFn">
+                    <tr>
+                        <td>
+                            {{ getDate(data) }} 
+                            {{ data.scheduled && !data.executed ? '(Scheduled)' : '' }} {{ data.reversed ? '(Reversed)' : ''}}
+                            <p *ngIf="data?.properties?.days" class="m-0">({{ getDays(data) }})</p>
+                        </td>
+                        <td>
+                            <nz-tag class="mr-8 mb-8 child-tag" *ngFor="let detail of getChildItems(data, true)" (click)="goToChildPage($event, detail?.child.id)" [nzColor]="'blue'">{{ detail?.child.getFullName() }}</nz-tag>
+                            <nz-tag *ngIf="data.details?.length > 3" class="mr-8 mb-8 child-tag" [nzColor]="'blue'" (click)="expandChildren($event, data.id)">
+                                <span *ngIf="!expandSet.has(data.id)">+ {{ data.details.length - 3 }} more</span>
+                                <span *ngIf="expandSet.has(data.id)">-</span>
+                            </nz-tag>
+                        </td>
+                        <td>{{ data.item?.name }}</td>
+                        <td>{{ data.amount | currency  }}</td>
+                        <td>{{ data.type == 'discount' ? 'Debit (+)' : 'Credit (-)' }}</td>
+                        <td>{{ data.createdAt | date }}</td>
+                        <td>
+                            <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="menu">
+                                <i class="ellipsis vertical icon"></i>
+                            </button>
+                            
+                            <mat-menu #menu="matMenu" backdropClass="tlp-more" yPosition="below">
+                            
+                                <ng-container>
+                                    <button mat-menu-item (click)="reverseAdjustment($event, data.id)" *ngIf="((data.scheduled && data.executed && !data.reversed) || (!data.scheduled && !data.reversed))">
+                                        <i class="sync icon primary-color"></i>
+                                        <span class="font-weight-600">Reverse</span>
+                                    </button>
+                                    <button mat-menu-item (click)="deleteAdjustment($event, data.id)" *ngIf="data.scheduled && !data.executed">
+                                        <i class="trash icon danger-color"></i>
+                                        <span class="font-weight-600">Delete</span>
+                                    </button>
+                                    <button mat-menu-item [disabled]="true" *ngIf="!data.scheduled || data.executed">
+                                        <i class="ban icon danger-color"></i>
+                                        <span class="font-weight-600">None</span>
+                                    </button>
+
+                                </ng-container>
+                            
+                            </mat-menu>
+                        </td>
+                    </tr>
+                    <tr [nzExpand]="expandSet.has(data.id)">
+                        <span>
+                            <nz-tag class="mr-8 mb-8 child-tag" *ngFor="let detail of getChildItems(data, false)" (click)="goToChildPage($event, detail?.child.id)" [nzColor]="'blue'">{{ detail?.child.getFullName() }}</nz-tag>
+                        </span>
+                    </tr>
+                </ng-template>
+            </tbody>
+
+        </nz-table>
+        <!-- / DATA TABLE VIEW -->
+
+        <!-- TOTAL LABEL VIEW -->
+        <ng-template #totalTemplate let-range="range" let-total>
+            <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ range[0] }}
+                to
+                {{ range[1] }} of {{ total }} entries</span>
+            <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} -
+                {{ range[1] }} of
+                {{ total }} entries</span>
+        </ng-template>
+        <!-- / TOTAL LABEL VIEW -->
+
+        <!-- LOADER VIEW -->
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+        <!-- / LOADER VIEW -->
+
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+
+    </ng-container>
+
+</div>
+<!-- / CONTENT CARD -->

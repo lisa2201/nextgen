@@ -1,0 +1,84 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0" 
+    fusePerfectScrollbar 
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex [formGroup]="filtersForm">
+
+        <div class="mb-16" *ngIf="children.length > 0">
+
+            <label class="filter-label">Child</label>
+
+            <ng-container *hasPermission="['AC0']; belongsTo 'N07'">
+
+                <nz-select  
+                    formControlName="child"
+                    nzShowSearch
+                    nzPlaceHolder="select a child">
+    
+                    <nz-option nzValue="0" nzLabel="All"></nz-option>
+        
+                    <nz-option *ngFor="let item of children; trackBy: trackByFn;" nzValue="{{ item.id }}" nzLabel="{{ item.getFullName() }}"></nz-option>
+                    
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16" *ngIf="fees.length > 0">
+
+            <ng-container *hasPermission="['AC0']; belongsTo 'N24'">
+
+                <label class="filter-label">Fee</label>
+    
+                <nz-select  
+                    formControlName="fee"
+                    nzShowSearch
+                    nzPlaceHolder="select a fee">
+    
+                    <nz-option nzValue="0" nzLabel="All"></nz-option>
+        
+                    <nz-option *ngFor="let item of fees; trackBy: trackByFn;" nzValue="{{ item.id }}" nzLabel="{{ item.name }}"></nz-option>
+                    
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16" *ngIf="rooms.length > 0">
+
+            <label class="filter-label">Room</label>
+
+            <ng-container *hasPermission="['AC0']; belongsTo 'N21'">
+
+                <nz-select  
+                    formControlName="room"
+                    nzShowSearch
+                    nzPlaceHolder="select a room">
+    
+                    <nz-option nzValue="0" nzLabel="All"></nz-option>
+        
+                    <nz-option *ngFor="let item of rooms; trackBy: trackByFn;" nzValue="{{ item.id }}" nzLabel="{{ item.title }}"></nz-option>
+                    
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <button nz-button nzType="default" 
+            *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button>
+
+    </form>
+
+</div>
+<!-- / SIDEBAR CONTENT -->

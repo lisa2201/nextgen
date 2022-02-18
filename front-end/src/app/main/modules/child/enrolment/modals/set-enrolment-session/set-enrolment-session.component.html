@@ -1,0 +1,101 @@
+<form name="sessionFrom" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="sessionFrom" nz-form>
+
+    <div nz-row [nzGutter]="24">
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="checkFeeHasSessionTime() ? 12 : 24">
+
+            <nz-form-item>
+        
+                <nz-form-label nzRequired>Session</nz-form-label>
+        
+                <nz-form-control nzHasFeedback [nzErrorTip]="feesErrorTpl">
+        
+                    <nz-select
+                        formControlName="session"
+                        nzShowSearch
+                        nzAllowClear
+                        nzPlaceHolder="select a session"
+                        [nzDropdownClassName]="'session-select'"
+                        [nzCustomTemplate]="custom"
+                        [nzDisabled]="filteredFees.length < 1"
+                        [nzOptionHeightPx]="filteredFees.length < 4 ? 78 : 32">
+        
+                        <nz-option *ngFor="let item of filteredFees | filterBy: ['type']: '0' | orderBy: 'name'; trackBy: trackByFn;"
+                            nzValue="{{ item.id }}"
+                            nzLabel="{{ item.name }} ({{ item.getFeeAmount() | currency: client.currency :'symbol':'1.2-2' }})"
+                            nzCustomContent>
+        
+                            <p class="title mb-4">
+                                <span class="type" *ngIf="item.vendor === '0'">CCS</span>
+                                {{ item.name }}
+                            </p>
+        
+                            <p class="sub mb-0">
+                                <i class="dollar sign icon ic"></i>
+                                {{ item.getFeeAmount() | currency: client.currency :'symbol':'1.2-2' }}
+                                <ng-container *ngIf="item.getCurrentAdjusted()">({{ item.getCurrentAdjusted().effectiveDate }})</ng-container>
+                            </p>
+        
+                            <p class="sub mb-0" *ngIf="item.frequency === '0'; else hourlyBlock">
+                                <i class="clock outline icon ic"></i>
+                                {{ item.sessionStart | convertTimeString }} to
+                                {{ item.sessionEnd | convertTimeString }}
+                            </p>
+        
+                            <ng-template #hourlyBlock>
+                                <p class="sub mb-0">
+                                    <i class="clock outline icon ic"></i>
+                                    Hourly Basis
+                                </p>
+                            </ng-template>
+        
+                        </nz-option>
+        
+                        <ng-template #custom let-selected>
+                            <span>{{ selected.nzLabel }}</span>
+                        </ng-template>
+                        
+                    </nz-select>
+        
+                    <ng-template #feesErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please select a session</ng-container>
+                        <ng-container *ngIf="control.hasError('overlapped')">Session overlapped</ng-container>
+                    </ng-template>
+        
+                </nz-form-control>
+        
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12" *ngIf="checkFeeHasSessionTime()" [@fadeInOnEnter]>
+    
+            <nz-form-item>
+        
+                <nz-form-label nzRequired>Session Time</nz-form-label>
+        
+                <nz-form-control nzHasFeedback [nzErrorTip]="sessionTimeErrorTpl">
+        
+                    <ry-time-picker 
+                        #timePicker
+                        formControlName="session_time"
+                        ryFormat="h:mm A"
+                        [ryType]="'range'"
+                        [ryMinuteStep]="5"
+                        [ryPlaceHolder]="'select session'">
+                    </ry-time-picker>
+        
+                    <ng-template #sessionTimeErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input session time</ng-container>
+                        <ng-container *ngIf="control.hasError('overlapped')">Session overlapped</ng-container>
+                    </ng-template>
+                
+                </nz-form-control>
+        
+            </nz-form-item>
+
+        </div>
+    
+    </div>
+
+</form>

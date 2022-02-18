@@ -1,0 +1,133 @@
+<div id="waitlist" fxLayout="column">
+
+    <div id="waitlist-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+
+        <div id="waitlist-form"
+             [@animate]="{ value:'*', params:{ duration:'500ms', y:'100px', opacity: 0, delay:'300ms' }}"
+             *ngIf="!isSubmitted">
+
+            <div class="logo">
+                <img class="logoImage" src="{{branchLogo?branchLogo:'assets/images/logos/KMLOGO.png'}}"
+                     alt="Kinder m8 Logo">
+            </div>
+
+            <p *ngIf="orgName"><b>Organisation : {{orgName | titlecase}}</b></p>
+            <p *ngIf="branchName"><b>Branch : {{branchName | titlecase}}</b></p>
+            <h2><b>Waitlist Form</b></h2>
+
+            <div nz-row nzJustify="center" [nzGutter]="24" *ngIf="siteManagerMode">
+
+                <div nz-col [nzMd]="24" [nzLg]="12">
+
+                    <nz-select class="mb-8" nzMode="default" [nzLoading]="formLoading" [nzDisabled]="formLoading"
+                               [formControl]="branchSelect" [nzAllowClear]="false" nzPlaceHolder="Select a branch">
+
+                        <nz-option *ngFor="let branch of branches" [nzValue]="branch.id"
+                                   [nzLabel]="branch.name | titlecase"></nz-option>
+
+                    </nz-select>
+
+                </div>
+
+            </div>
+
+            <!--            <div class="subtitle">Child Details</div>-->
+
+            <form nz-form name="waitlistForm" *ngIf="sections.length > 0" [nzLayout]="'vertical'"
+                  [formGroup]="waitlistForm"
+                  (ngSubmit)="onFormSubmit($event)">
+                <div nz-row [nzGutter]="24" *ngFor="let section of sections">
+
+                    <div nz-col [nzMd]="24" [nzLg]="24" *ngIf="!section.section_hide">
+
+                        <div class="subtitle" nz-col [nzMd]="24" [nzLg]="24">{{ section.title }}</div>
+
+                    </div>
+                    <waitlist-section
+                        nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24"
+                        *ngIf="!section.section_hide"
+                        [section]="section"
+                        [uploadSwitchInputs]="uploadSwitchInputs"
+                        [signaturesList]="signaturesList"
+                        [formGroup]="waitlistForm.get(section.section_code)"
+                        [attendanceMandatory]="attendanceMandatory"
+                        (uploadFileChanged)="handleUploadChange($event)"
+                        (checkBoxes)="checkedFieldsGet($event)"
+                        (attendanceMarked)="checkedAttendanceMarked($event)"
+                        (uploadsValidate)="checkedUploadsValidate($event)"
+                        (signatureFill)="checkedSignatures($event)"
+                    >
+
+                    </waitlist-section>
+                </div>
+
+                <div class="tems-box">
+                    <div class="mt-20" fxLayout="row wrap" fxLayoutAlign="center center">
+                        <ngx-recaptcha2 #captchaElem [siteKey]="recaptchaSiteKey" [useGlobalDomain]="false"
+                                        formControlName="recaptcha">
+                        </ngx-recaptcha2>
+                    </div>
+                </div>
+                <!-- [disabled]="!enrollmentForm.valid" -->
+                <button nz-button nzType="primary" type="submit" [nzBlock]="true"
+                        [disabled]="false"
+                        [nzLoading]="buttonLoader"
+                >
+                    Submit To {{branchName}}
+                </button>
+                <div *ngIf="staggeringInvalids.length>0" style="margin-top: 10px">
+
+                    <nz-alert
+                        nzType="error"
+                        *ngFor="let error of staggeringInvalids;let i = index"
+                        (@flyInOut.done)="doNext()"
+                        [@flyInOut]="'in'"
+                        nzMessage="{{error.text}}"
+                        (click)="trackField(error.id)"
+                        style="cursor: pointer"
+                        nzShowIcon>
+                    </nz-alert>
+
+                </div>
+                <!--                <button nz-button nzType="primary" type="submit" [nzBlock]="true" [nzLoading]="buttonLoader">-->
+                <!--                    Submit To Kinder m8-->
+                <!--                </button>-->
+                <!--                {{waitlistForm.value|json}}-->
+                <p class="mt-24 copyright">
+                    Copyright © {{ currentYear }} <strong>Kinder M8</strong>, All rights reserved.
+                </p>
+
+            </form>
+        </div>
+
+        <div id="mail-confirm-form"
+             [@animate]="{ value:'*', params:{ duration:'500ms', y:'100px', opacity: 0, delay:'300ms' }}"
+             *ngIf="isSubmitted">
+
+            <div class="logo">
+                <img src="assets/images/logos/KMLOGO.png" alt="Kinder m8 Logo">
+            </div>
+
+            <div class="title">Thank You !</div>
+
+            <div class="logo mt-20">
+                <img class="mail-confirm" src="assets/icons/flat/svgset_3/100-envelope-1.svg" height="120px"
+                     alt="Mail Confirmation">
+            </div>
+
+            <div class="subtitle">
+                <p>
+                    Your information has been submitted successfully.
+                    Your child's centre will contact you soon.
+                </p>
+            </div>
+
+            <p class="mt-24 copyright">
+                Copyright © {{ currentYear }} <strong>Kinder M8</strong>, All rights reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>

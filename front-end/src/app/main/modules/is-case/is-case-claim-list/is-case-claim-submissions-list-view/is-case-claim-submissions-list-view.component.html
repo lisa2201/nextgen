@@ -1,0 +1,168 @@
+<!-- CONTENT CARD -->
+
+<nz-divider *ngIf="submissionList.length > 0" nzText="Failed Submissions" nzOrientation="center"></nz-divider>
+
+<div
+    class="content"
+    [@animate]="{ value: '*', params: { delay: '100ms', y: '15px' } }"
+    *ngIf="submissionList.length > 0"
+>
+    <!-- CONTENT TOOLBAR -->
+    <div
+        class="toolbar px-8 py-8"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+    >
+        <nz-input-group
+            class="search-container"
+            [nzSuffix]="suffixTemplate"
+            [nzPrefix]="prefixTemplate"
+        >
+            <input
+                type="text"
+                nz-input
+                placeholder="Search ..."
+                [formControl]="searchInput"
+            />
+        </nz-input-group>
+
+        <ng-template #prefixTemplate>
+            <i nz-icon nzType="search" class="search-icon"></i>
+        </ng-template>
+
+        <ng-template #suffixTemplate>
+            <i
+                class="times circle outline icon ant-input-clear-icon"
+                *ngIf="searchInput.value"
+                [@fadeInOnEnter]
+                [@fadeOutOnLeave]
+                (click)="clearSearch($event)"
+            >
+            </i>
+        </ng-template>
+    </div>
+    <!-- / CONTENT TOOLBAR -->
+
+    <ng-container>
+        <!-- DATA TABLE VIEW -->
+        <nz-table
+            #submissionsTable
+            [nzShowSizeChanger]="pageSizeChanger"
+            [nzShowTotal]="totalTemplate"
+            [nzFrontPagination]="false"
+            [nzData]="submissionList"
+            [nzLoading]="tableLoading"
+            [nzTotal]="total"
+            [(nzPageIndex)]="pageIndex"
+            [(nzPageSize)]="pageSize"
+            [nzPageSizeOptions]="pageSizeOptions"
+            (nzPageIndexChange)="onTableChange()"
+            (nzPageSizeChange)="onTableChange(true)"
+            [nzNoResult]="emptyBlock"
+            [nzLoadingIndicator]="indicatorTemplate"
+            [nzSimple]="mobilePagination"
+        >
+            <thead>
+                <tr>
+                    <th>IS Case ID</th>
+                    <th>Claim Reference</th>
+                    <th>Week Ending</th>
+                    <th>Fail Reason</th>
+                    <th>Created Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <ng-template
+                    ngFor
+                    let-data
+                    [ngForOf]="submissionsTable.data"
+                    [ngForTrackBy]="trackByFn"
+                >
+                    <tr>
+                        <td>{{ data.case_id }}</td>
+                        <td>{{ data.case_claim_reference }}</td>
+                        <td>{{ data.week_ending }}</td>
+                        <td>{{ data.fail_reason }}</td>
+                        <td>{{ data.created_at | date:'mediumDate' }}</td>
+                        <td>
+                            <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="menu">
+                                <i class="ellipsis vertical icon"></i>
+                            </button>
+                            
+                            <mat-menu #menu="matMenu" backdropClass="tlp-more">
+                            
+                                <ng-container>
+                                    <button mat-menu-item (click)="editClaim($event, data)">
+                                        <i class="pencil icon primary-color"></i>
+                                        <span class="font-weight-600">Edit & Submit</span>
+                                    </button>
+
+                                    <button mat-menu-item (click)="deleteSubmission($event, data.id)">
+                                        <i class="trash icon danger-color"></i>
+                                        <span class="font-weight-600">Delete</span>
+                                    </button>
+                                </ng-container>
+                            
+                            </mat-menu>
+                        </td>
+                    </tr>
+                </ng-template>
+            </tbody>
+        </nz-table>
+        <!-- / DATA TABLE VIEW -->
+
+        <!-- TOTAL LABEL VIEW -->
+        <ng-template #totalTemplate let-range="range" let-total>
+            <span
+                fxHide
+                fxShow.gt-sm
+                [@fadeInOnEnter]
+                [@fadeOutOnLeave]
+                class="font-weight-600"
+                >Showing {{ range[0] }}
+                to
+                {{ range[1] }} of {{ total }} entries</span
+            >
+            <span
+                fxHide.gt-sm
+                [@fadeInOnEnter]
+                [@fadeOutOnLeave]
+                class="font-weight-600"
+                >{{ range[0] }} - {{ range[1] }} of {{ total }} entries</span
+            >
+        </ng-template>
+        <!-- / TOTAL LABEL VIEW -->
+
+        <!-- LOADER VIEW -->
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+        <!-- / LOADER VIEW -->
+
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+            <nz-empty
+                class="pt-24 pb-24 m-0"
+                [nzNotFoundImage]="
+                    'assets/icons/flat/ui_set/custom_icons/empty.svg'
+                "
+                [nzNotFoundContent]="contentTpl"
+                [@fadeInOnEnter]
+                [@fadeOutOnLeave]
+            >
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span
+                        >Looks like there's no information to display here</span
+                    >
+                </ng-template>
+            </nz-empty>
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+    </ng-container>
+</div>
+<!-- / CONTENT CARD -->

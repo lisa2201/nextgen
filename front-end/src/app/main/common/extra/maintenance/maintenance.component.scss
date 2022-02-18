@@ -1,0 +1,80 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+maintenance {
+
+    #maintenance {
+        position: relative;
+        width: 100%;
+        background-color: $default-background-color;
+
+        &::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            opacity: 0.18;
+            background-image: url('assets/patterns/bg-pattern-login.svg');
+            background-size: 50%;
+            background-repeat: repeat;
+            background-position: center;
+        }
+
+        #maintenance-form-wrapper {
+            flex: 1 0 auto;
+            padding: 32px;
+
+            @include media-breakpoint('xs') {
+                padding: 16px;
+            }
+
+            #maintenance-form {
+                position: relative;
+                max-width: 384px;
+                padding: 48px;
+                text-align: center;
+                box-shadow: $custom-box-inner-shadow;
+                background: rgba(244, 244, 244);
+                border: 1px solid $layout-border-color;
+                border-radius: 16px;
+
+                @include media-breakpoint('xs') {
+                    padding: 24px;
+                    width: 100%;
+                }
+
+                .logo {
+                    width: 300px;
+                    margin: 0 auto 24px;
+                }
+
+                .title {
+                    font-size: 28px;
+                    line-height: normal;
+                    margin-top: 16px;
+                }
+
+                .subtitle {
+                    margin: 16px 0;
+                    max-width: 300px;
+                    color: rgba(0, 0, 0, 0.54);
+                    font-size: 15px;
+                }
+            }
+        }
+    }
+
+    .page-layout {
+        &.flex {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    nz-result {
+        width: 500px;
+    }
+}

@@ -1,0 +1,845 @@
+<ng-template #tplContent>
+    Click on OK to agree <br>
+    I declare that:
+    <ul>
+        <li>The information I have provided is true and correct</li>
+    </ul>
+    I understand that:
+    <ul>
+        <li>Giving false or misleading information is a serious offense.</li>
+        <li>I must notify the Australian Government Department of Human Services of any change(s) to this information.</li>
+        <li>I have kept records of observations and evidence to support my certifying that the child is at risk.</li>
+    </ul>
+
+</ng-template>
+
+<div class="dialog-content-wrapper">
+
+    
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{dialogTitle}}</span>
+   
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                    aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form
+        name="invitationForm"
+        class="compose-form"
+        fxLayout="column"
+        [nzLayout]="'vertical'" [formGroup]="determinationForm"
+        nz-form (ngSubmit)="onFormSubmit($event, tplContent)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24"  *ngIf="createError">
+                    <nz-alert class="mb-8" nzCloseable nzType="warning"
+                                nzMessage="{{ (determination.syncerror.message) ? determination.syncerror.message : 'Error Occured' }}"></nz-alert>
+                    <nz-alert class="mb-8" nzType="error" nzMessage="Please Resubmit the Determination with correct data"></nz-alert>
+                </div>
+                <div nz-col [nzXs]="24" *ngIf="stateTerritoryError">
+                    <nz-alert class="mb-8" nzCloseable nzType="warning"
+                                nzMessage="{{ (determination.syncerror.message) ? determination.syncerror.message : 'Error Occured' }}"></nz-alert>
+                    <nz-alert class="mb-8" nzType="error" nzMessage="Please Resubmit the State Territory Body Details with correct data"></nz-alert>
+                </div>
+
+                <!-- child -->
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item >
+
+                        <nz-form-label nzRequired>Child</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="childErrorTpl">
+
+                            <nz-select [(ngModel)]="child.id" formControlName="child" nzShowSearch nzPlaceHolder="Child">
+
+                                <nz-option nzValue="{{ child.id }}"
+                                            nzLabel="{{ child.firstName }} {{ child.lastName}}" title="{{ child.firstName }} {{ child.lastName}}">
+                                </nz-option>
+
+                            </nz-select>
+
+                            <ng-template #childErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a child</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <!-- Start Date -->
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Start Date</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="startdateErrorTpl">
+
+                            <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledFourMondaysBefore" formControlName="determination_start_date"
+                                            class="block"></nz-date-picker>
+                            <ng-template #startdateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')"> Start Date Required
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+                </div>
+
+                <!-- Center  -->
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                    <nz-form-item >
+
+                        <nz-form-label nzRequired>Center</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="centerErrorTpl">
+
+                            <nz-select [(ngModel)]="branchDetails.id" formControlName="center" nzShowSearch nzPlaceHolder="Child">
+
+                                <nz-option nzValue="{{ branchDetails.id }}"
+                                            nzLabel="{{ branchDetails.name}}" title="{{ branchDetails.name }}">
+                                </nz-option>
+
+                            </nz-select>
+
+                            <ng-template #centerErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a Center</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+                </div>
+
+                <!-- weeks at risk-->
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Please select Weeks at Risk</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="weeksAtRiskErrorTpl">
+
+                            <nz-select formControlName="weeksAtRisk" nzShowSearch nzPlaceHolder="Select the number of Weeks the child is at Risk">
+
+                                <nz-option *ngFor="let number of riskWeekArray" nzValue="{{ number }}"
+                                            nzLabel="{{ number}}" title="{{ number }}">
+                                </nz-option>
+
+                            </nz-select>
+
+                            <ng-template #weeksAtRiskErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select the number of weeks at risk</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" *ngIf="editMode">
+                    <nz-form-item>
+
+                        <nz-form-label>Decision Making Agency</nz-form-label>
+
+    
+                        <nz-form-control>
+    
+                            <input nz-input [value]="getAgency()" [disabled]="true" />
+    
+                        </nz-form-control>
+    
+
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzXs]="24" *ngIf="determinationForm.get('exceptionalReason').enabled">
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Exceptional Circumstance Reason</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="expReasonErrorTpl">
+
+                            <nz-select formControlName="exceptionalReason" nzPlaceHolder="Exceptional Circumstance Reason">
+
+                                <nz-option *ngFor="let reason of exceptionalReasonValues" [nzValue]="reason.value" [nzLabel]="reason.name">
+                                </nz-option>
+
+                            </nz-select>
+
+                            <ng-template #expReasonErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select an exceptional circumstance reason</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzXs]="24" *ngIf="determinationForm.get('exceptionalReasonText').enabled">
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Exceptional Circumstance Reason (If Other selected)</nz-form-label>
+
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="expReasonTextErrorTpl">
+    
+                            <input nz-input formControlName="exceptionalReasonText" placeholder="Exceptional Circumstance Reason" />
+    
+                        </nz-form-control>
+
+                        <ng-template #expReasonTextErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please input an exceptional circumstance reason</ng-container>
+                        </ng-template>
+    
+
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzXs]="24" *ngIf="determinationForm.get('extensionReasons').enabled">
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Extension Reasons</nz-form-label>
+
+                        <nz-form-control nzHasFeedback>
+
+                            <nz-select nzMode="multiple" formControlName="extensionReasons" nzPlaceHolder="Extension Reasons">
+
+                                <nz-option *ngFor="let reason of extensionReasonValues" [nzValue]="reason.value" [nzLabel]="reason.name">
+                                </nz-option>
+
+                            </nz-select>
+
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col [nzXs]="24">
+                    <nz-divider nzText="Details"></nz-divider>
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <ng-container *ngIf="!linkedCertificates.length">
+
+                        <nz-alert nzType="info" class="mb-8" nzMessage="No Linked Certificate found!" nzShowIcon></nz-alert>
+                        <nz-alert nzType="info" class="mb-8" nzMessage="There are still 6 weeks of certificate left for this child/service, a Certificate should be first created for these weeks before applying for determination" nzShowIcon></nz-alert>
+                        <!-- <h4 class="mt-24">No Linked Certificate found!</h4>
+                        <h5 class="mt-24" style="color:red">
+                            <ul>
+
+
+                                <li>-There are still 6 weeks of certificate left for this child/service, a Certificate should be first created for these weeks before applying for determination</li>
+
+                            </ul>
+                        </h5> -->
+
+                    </ng-container>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item >
+
+                        <nz-form-label nzRequired>Certificate</nz-form-label>
+    
+                        <nz-form-control>
+    
+                            <nz-select formControlName="certificateLink" nzShowSearch nzPlaceHolder="select Certificate">
+                                <ng-container *ngFor="let item of linkedCertificates">
+                                    <nz-option *ngIf="item.certificateID" nzValue="{{ item.certificateID }}"
+                                                nzLabel="Certificate ID: {{ item.certificateID }}, Start Date: {{ item.certificateStartDate}}" title="Certificate ID: {{ item.certificateID }}, Start Date: {{ item.certificateStartDate}}">
+                                    </nz-option>
+                                </ng-container>
+                            </nz-select>
+    
+                            <ng-template #certificateLinkErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a certificate</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+                    <nz-divider nzText="Determination Details"></nz-divider>
+                </div>
+
+                <!-- Risk Reasons -->
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item >
+
+                        <nz-form-label nzRequired>Risk Reasons</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="centerErrorTpl">
+
+                            <nz-select nzMode="multiple" formControlName="riskReasons" nzShowSearch nzPlaceHolder="Risk Reasons" nzSize="large">
+
+                                <nz-option *ngFor="let item of riskReasons" nzValue="{{ item.key }}"
+                                            nzLabel="{{ item.value }}" title="{{ item.value }}">
+                                </nz-option>
+
+                            </nz-select>
+
+                            <ng-template #centerErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select atleast one risk reason</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+                    
+                    
+                </div>
+                
+                <!-- Risk To Date-->
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Risk to Date (Indicative)</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="weeksToRiskErrorTpl">
+                            <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledPastDates" formControlName="risk_to_date"
+                                            nzPlaceHolder="Select Date" class="block"></nz-date-picker>
+                            <ng-template #weeksToRiskErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')"> Risk To Date Required
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <!-- additional info -->
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item >
+
+                        <nz-form-label>Additional Info</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="additionalInfoErrorTpl">
+
+                            <textarea rows="6" nz-input formControlName="additional_info"></textarea>
+
+                            <ng-template #additionalInfoErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('maxlength')">Please keep the number of characters under 1000</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+                
+                <!-- reason no 3rd party -->
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label>Reason No Third party</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="noThirdPartyErrorTpl">
+    
+                            <textarea rows="4" nz-input formControlName="reason_no_third_party"></textarea>
+    
+                            <ng-template #noThirdPartyErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('maxlength')">Please keep the number of characters under 1000</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <!-- supporting documents ACC002-->
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Supporting Documents</nz-form-label>
+    
+                        <nz-table class="mt-4" #supportingDocData [nzData]="supportingDoc" [nzShowPagination]="false"
+                                    [nzSize]="'small'" formArrayName="documentCheck">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <ng-container *ngIf="editMode">
+                                    <th style="padding-left: 90px;">Current File</th>
+                                </ng-container>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let item of supportingDocData.data">
+                                <ng-container *ngIf="item.value!='ACC003'">
+                                    <!-- <td nzWidth="30px" class="ant-table-selection-column">
+                                        <label nz-checkbox [formControlName]="item.index"></label>
+                                    </td> -->
+                                    <td class="ant-table-selection-column">
+                                        <nz-form-label>
+                                            {{item.name}}
+                                        </nz-form-label>
+                                    </td>
+                                    <td>
+                                        <div class="image-upload">
+                                            <input name="imageUrl" type="file" accept=".pdf"
+                                                    (change)="handleInputChange($event, item)" class="inputfile inputfile-2" />
+                                            <span>
+                                                <nz-progress *ngIf="item.showBar" [nzPercent]="item.progress"
+                                                                nzSize="small"></nz-progress>
+                                            </span>
+    
+                                            <span class="text-right">
+                                                <a class="action-btn remove" *ngIf="item.progress === 100"
+                                                    style="color: #e90000;" (click)="romoveFile(item)">
+                                                    <i class="trash alternate outline icon mr-4"
+                                                        style="color: #e90000;"></i>
+                                                    remove
+                                                </a>
+                                            </span>
+    
+                                        </div>   
+    
+                                    </td>
+                                    <td>
+                                        <ng-container *ngIf="editMode">
+                                            <ng-container *ngIf="this.determination.SupportingDocuments">
+                                                <ng-container *ngIf="this.determination.SupportingDocuments[0]">
+                                                    <ng-container *ngFor="let doc of this.determination.SupportingDocuments">
+                                                        <ng-container *ngIf="doc.documentType == item.value">
+                                                            <a class="action-btn ml-8" (click)="download($event, doc)">
+                                                                <i nz-icon nzType="download" nzTheme="outline"></i> {{ doc.fileName }}
+                                                            </a>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </ng-container>
+                                        </ng-container>
+                                    </td>
+                                </ng-container>
+                            </tr>
+                            </tbody>
+    
+                        </nz-table>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+                    <nz-form-item >
+
+                        <nz-form-label>Update State Territory Details</nz-form-label>
+
+                        <nz-form-control>
+
+                            <nz-switch formControlName="stateTerritorySwitch" nzCheckedChildren="Yes"
+                                        nzUnCheckedChildren="No">
+                            </nz-switch>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+                </div>
+
+                <!-- show/hide this div according to switch value above -->
+                <ng-container *ngIf="showStateTerritory" [@expandCollapse]>
+
+                    <div nz-col [nzXs]="24">
+                        <nz-divider nzText="State/Territory Details"></nz-divider>
+                    </div>
+
+                    <!-- by StateTerritory/ to StateTerritory -->
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                        <nz-form-item >
+                            <nz-form-label nzRequired>Select one</nz-form-label>
+                            <nz-form-control>
+                                <nz-radio-group formControlName="byToStateTerritory" (ngModelChange)="checktoStateTerritory($event)">
+                                    <label nz-radio nzValue="byState_Territory">By State/Terr</label>
+                                    <label nz-radio nzValue="toState_Territory">To State/Terr</label>
+                                </nz-radio-group>
+                            </nz-form-control>
+
+                        </nz-form-item>
+                    </div>
+
+                    <!-- date of notice -->
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                        <nz-form-item>
+                            <nz-form-label nzRequired>Date of Notice</nz-form-label>
+                            <nz-form-control [nzErrorTip]="dateOfNoticeErrorTpl">
+                                <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledPastDates" formControlName="dateNoticeGiven"
+                                                class="block"></nz-date-picker>
+                            </nz-form-control>
+
+                            <ng-template #dateOfNoticeErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a Date</ng-container>
+                            </ng-template>
+
+                        </nz-form-item>
+                    </div>
+
+                    <div nz-col [nzXs]="24">
+                        <nz-divider nzText="State and Territory Body Details"></nz-divider>
+                    </div>
+
+                    <!-- body type -->
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                        <nz-form-item >
+
+                            <nz-form-label nzRequired>Body Type</nz-form-label>
+
+                            <nz-form-control nzHasFeedback [nzErrorTip]="bodyTypeErrorTpl">
+
+                                <nz-select formControlName="bodyType" nzShowSearch nzPlaceHolder="State/Territory body type">
+
+                                    <nz-option *ngFor="let item of StateTerBodyType" nzValue="{{ item.key }}"
+                                                nzLabel="{{ item.value }}" title="{{ item.value }}">
+                                    </nz-option>
+
+                                </nz-select>
+
+                                <ng-template #bodyTypeErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please select a value</ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+                    </div>
+
+                    <!-- org name -->
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                        <nz-form-item >
+
+                            <nz-form-label nzRequired>Org Name</nz-form-label>
+
+                            <nz-form-control nzHasFeedback [nzErrorTip]="orgNameErrorTpl">
+
+                                <input nz-input formControlName="orgName" placeholder="Organisation name" type="text" />
+
+                                <ng-template #orgNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please enter the organisation name</ng-container>
+                                    <ng-container *ngIf="control.hasError('maxlength')">Organisation name cannot be longer than 255 characters
+                                    </ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+                    </div>
+
+                    <!-- ref no -->
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                        <nz-form-item >
+
+                            <nz-form-label>Ref No</nz-form-label>
+
+                            <nz-form-control nzHasFeedback [nzErrorTip]="refNoErrorTpl">
+
+                                <input nz-input formControlName="refNo" placeholder="Reference Number" type="text" />
+                                <ng-template #refNoErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">Reference Number cannot be longer than 20 characters
+                                    </ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                        <nz-form-item style="visibility: hidden">
+
+                            <nz-form-label>State Territory Response</nz-form-label>
+
+                            <nz-form-control nzHasFeedback>
+
+                                <textarea [disabled]="true" rows="1" nz-input formControlName="state_territory_response"></textarea>
+
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <!-- state/person name id -->
+                    <div nz-col [nzXs]="24">
+
+                        <nz-form-item>
+    
+                            <nz-form-label>State Person Name / ID</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="statePersonNameIdErrorTpl">
+    
+                                <input nz-input formControlName="statePersonNameOrID" placeholder="State Person Name or ID" type="text" />
+                                <ng-template #statePersonNameIdErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">State Person Name / ID cannot be longer than 40 characters
+                                    </ng-container>
+                                </ng-template>
+                            </nz-form-control>
+    
+                        </nz-form-item>
+
+                    </div>
+
+                    <!-- phone number -->
+                    <div nz-col [nzXs]="24">
+
+                        <nz-form-item>
+    
+                            <nz-form-label>Phone No</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="statePersonPhoneErrorTpl">
+    
+                                <input nz-input formControlName="statePersonContact" placeholder="State Person Contact Number" type="text" />
+                                <ng-template #statePersonPhoneErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">State Person Contact Number cannot be longer than 30 characters
+                                    </ng-container>
+                                    <ng-container *ngIf="control.hasError('minlength')">State Person Contact Number should be atleast 10 numbers
+                                    </ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+
+                    </div>
+
+                    <!-- email -->
+                    <div nz-col [nzXs]="24">
+
+                        <nz-form-item  nz-col [nzMd]="24" [nzLg]="24">
+    
+                            <nz-form-label>Email</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="statePersonEmailErrorTpl">
+    
+                                <input nz-input formControlName="statePersonEmail" placeholder="State Person Email" type="text" />
+                                <ng-template #statePersonEmailErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">State Person Email cannot be longer than 255 characters
+                                    </ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24">
+                        <nz-divider nzText="Details of Person at Provider/Service who Provided Notice"></nz-divider>
+                    </div>
+
+                    <!-- first name -->
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                        <nz-form-item >
+
+                            <nz-form-label>First Name</nz-form-label>
+
+                            <nz-form-control nzHasFeedback [nzErrorTip]="notifiedByPersonFirstNameErrorTpl">
+
+                                <input nz-input formControlName="notifiedByPersonFirstName" placeholder="First name of person at provider/service who provided notice" type="text" />
+
+                                <ng-template #notifiedByPersonFirstNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">First name cannot be longer than 40 characters
+                                    </ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+                    </div>
+
+                    <!-- Last name-->
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+                        <nz-form-item >
+
+                            <nz-form-label>Last Name</nz-form-label>
+
+                            <nz-form-control nzHasFeedback [nzErrorTip]="notifiedByPersonLastNameErrorTpl">
+
+                                <input nz-input formControlName="notifiedByPersonLastName" placeholder="Last name of person at provider/service who provided notice" type="text" />
+
+                                <ng-template #notifiedByPersonLastNameErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('maxlength')">Last name cannot be longer than 40 characters
+                                    </ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+                    </div>
+
+                    <!-- supporting documents -->
+                    <div nz-col [nzXs]="24">
+
+                        <nz-form-item>
+    
+                            <nz-form-label>Supporting Documents</nz-form-label>
+    
+                            <nz-table class="mt-4" #supportingDocData [nzData]="supportingDoc" [nzShowPagination]="false"
+                                        [nzSize]="'small'" formArrayName="documentCheck">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <ng-container *ngIf="editMode">
+                                        <th style="padding-left: 25px;">Current File</th>
+                                    </ng-container>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let item of supportingDocData.data">
+                                    <ng-container *ngIf="item.value=='ACC003'">
+
+                                        <td class="ant-table-selection-column">
+                                            <nz-form-label>
+                                                {{item.name}}
+                                            </nz-form-label>
+                                        </td>
+                                        <td>
+                                            <div class="image-upload">
+                                                <input name="imageUrl" type="file" accept=".pdf"
+                                                        (change)="handleInputChange($event, item)" class="inputfile inputfile-2" />
+                                                <span>
+                                                <nz-progress *ngIf="item.showBar" [nzPercent]="item.progress"
+                                                                nzSize="small"></nz-progress>
+                                            </span>
+    
+                                                <span class="text-right">
+                                                <a class="action-btn remove" *ngIf="item.progress === 100"
+                                                    style="color: #e90000;" (click)="romoveFile(item)">
+                                                    <i class="trash alternate outline icon mr-4"
+                                                        style="color: #e90000;"></i>
+                                                    remove
+                                                </a>
+                                            </span>
+    
+                                            </div>
+    
+    
+                                        </td>
+                                        <td>
+                                            <ng-container *ngIf="editMode">
+                                                <ng-container *ngIf="this.determination.stateTerritoryData">
+                                                    <ng-container *ngIf="this.determination.stateTerritoryData.SupportingDocument204K">
+                                                        <a class="action-btn ml-8" (click)="download($event, this.determination.stateTerritoryData.SupportingDocument204K)">
+                                                            <i nz-icon nzType="download" nzTheme="outline"></i> {{ this.determination.stateTerritoryData.SupportingDocument204K.fileName }}
+                                                        </a>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </ng-container>
+                                        </td>
+                                    </ng-container>
+                                </tr>
+                                </tbody>
+    
+                            </nz-table>
+    
+                        </nz-form-item>
+                        
+                    </div>
+
+                    <div nz-col [nzXs]="24">
+                        <ng-container *ngIf="editMode">
+                            <button
+                                type="button"
+                                class="text-uppercase mr-8"
+                                *hasPermission="['AC1']; belongsTo 'N21'"
+                                nz-button
+                                nzType="primary"
+                                [disabled]="!determinationForm.valid || this.checkIfDocumentAttached"
+                                (click)="updateStateTerritory(tplContent)"
+                                [promiseBtn]="buttonLoader">
+                                Submit State/Territory Data
+                            </button>
+                        </ng-container>
+                    </div>
+                </ng-container>
+
+               
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+            <ng-container *ngIf="!editMode">
+                <button
+                    type="button"
+                    class="text-uppercase mr-8"
+                    *hasPermission="['AC1']; belongsTo 'N21'"
+                    nz-button
+                    nzType="primary"
+                    [disabled]="!determinationForm.valid"
+                    (click)="saveAsDraft(tplContent)">
+                    <i class="plus icon mr-8"></i> Save as Draft
+                </button>
+            </ng-container>
+            <ng-container *ngIf="!editMode">
+                <button
+                    class="text-uppercase mr-8"
+                    *hasPermission="['AC1']; belongsTo 'N21'"
+                    nz-button
+                    nzType="primary"
+                    [disabled]="!determinationForm.valid || !this.selectedDoc.length"
+                    [promiseBtn]="buttonLoader">
+                    <i class="plus icon mr-8"></i> Submit
+                </button>
+            </ng-container>
+
+            <ng-container *ngIf="editMode">
+                <ng-container *ngIf="createError  || determination.draft == true">
+                    <button
+                        class="text-uppercase mr-8"
+                        *hasPermission="['AC2']; belongsTo 'N21'"
+                        nz-button
+                        nzType="primary"
+                        [disabled]="!determinationForm.valid || !this.selectedDoc.length"
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> {{ (determination.draft == true)? 'Submit Determination' : 'Update Determination' }}
+                    </button>
+                </ng-container>
+            </ng-container>
+
+            <button
+                class="text-uppercase mat-close-btn"
+                type="button"
+                nz-button nzType="danger"
+                (click)="matDialogRef.close()">
+                Close
+            </button>
+
+        </span>
+
+        </div>
+
+    </form>
+
+</div>

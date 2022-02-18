@@ -1,0 +1,149 @@
+<div class="booking-calendar"
+    fusePerfectScrollbar
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <div class="p-24 pt-8 ps">
+
+        <div fxLayout="row" fxLayoutAlign="space-between center" class="mb-24">
+
+            <span class="child-info">
+
+                <nz-avatar [nzSize]="56" nzSrc="{{ getChildProfileImage(child) }}" class="child-img img-bg"></nz-avatar>
+
+                <span class="child-name text-truncate">{{ child.getFullName() }}</span>
+
+            </span>
+
+            <span class="view-title">
+    
+                <button type="button" class="b-nav blank mr-8"
+                    nz-button 
+                    nzType="default"
+                    (click)="calendarPrevious($event)">
+                    <i class="chevron left icon"></i>
+                </button>
+                
+                <span class="date-input-wrapper" fxLayout="row" fxLayoutAlign="center center" (click)="toggleCalendar($event)">
+
+                    <span class="date-label">
+                        <img src="assets/icons/flat/ui_set/custom_icons/child/calendar.svg" alt="date">
+                        <span>
+                            {{ getCalendarTitle() }}
+                        </span>
+                    </span>
+                   
+                    <span #monthView>
+                        <nz-month-picker class="date-input" 
+                            [formControl]="calendarDate"
+                            [nzInputReadOnly]="true"
+                            nzPlaceHolder="select month"></nz-month-picker>
+                    </span>
+                    
+                </span>
+    
+                <button type="button" class="b-nav blank ml-8"
+                    nz-button 
+                    nzType="default"
+                    (click)="calendarNext($event)">
+                    <i class="chevron right icon"></i>
+                </button>
+    
+            </span>
+
+        </div>
+
+        <ul class="calendar">
+
+            <li class="calendar-day no-select"
+                *ngFor="let bookingItem of bookingCalendar; let i = index; trackBy: trackByFn;"
+                [ngClass]="{ 'hide-week': hideWeekEnd }">
+
+                <div class="calendar-day-content">
+
+                    <div class="calendar-day-heading" [ngClass]="{ 'not-month' : !bookingItem.current_month }">
+                        <span class="number mr-4">{{ bookingItem.day_number }}</span>
+                        <span class="day">
+                            {{ bookingItem.day_name }}
+                            <span *ngIf="!bookingItem.current_month" class="not-month-lbl">
+                                ({{ bookingItem.day_month }})
+                            </span>
+                        </span>
+                    </div>
+
+                    <div class="calendar-day-inner">
+
+                        <ng-container *ngIf="bookingItem.booking.length > 0">
+
+                            <ng-container *ngFor="let slot of bookingItem.booking; trackBy: trackByFn;">
+
+                                <div class="slot {{ slot.status }}" 
+                                    [@fadeMotion]
+                                    [ngClass]="{ 'error' : !slot.hasRemovedRoomLinked() && slot.hasError(child.rooms, fees).hasError }"
+                                    (click)="editSlot($event, bookingItem, slot)">
+
+                                    <div class="inner">
+
+                                        <p class="mb-0 text-truncate time" [ngClass]="{ 'in-completed' : slot.hasCompleteAttendance() }">
+                                            <span>
+                                                <i class="bus icon mx-2" *ngIf="slot.hasAttendance() && slot.attendance.hasBusInfo()" tooltip="{{ slot.getAttendanceBusInfo().name || 'N/A' }}" placement="top" display-mobile="false" hide-delay="50"></i>
+                                                {{ slot?.sessionStart | convertTimeString }} - {{ slot?.sessionEnd | convertTimeString }}
+                                            </span>
+                                        </p>
+            
+                                        <div class="py-4 px-8">
+            
+                                            <p class="mb-0 text-truncate">
+                                                <i class="home icon mr-8 ic"></i>
+                                                <span>{{ slot?.room?.title }}</span>
+                                            </p>
+    
+                                            <p class="mb-0 text-truncate">
+                                                <i class="dollar sign icon mr-8 ic"></i>
+                                                <span>{{ slot?.fee?.name }} ({{ slot?.getBookingFeeAmount() | currency: client.currency :'symbol':'1.2-2' }})</span>
+                                            </p>
+        
+                                        </div>
+
+                                    </div>
+                                    
+                                    <span class="mb-0 border-bar" [ngClass]="{ 'casual': slot.isCasual }"></span>
+
+                                    <!-- <span class="completed-check"
+                                        *ngIf="slot.hasCompleteAttendance()">
+                                        <img src="assets/icons/flat/ui_set/custom_icons/child/day-completed.svg" alt="completed attendance">
+                                    </span> -->
+
+                                </div>
+
+                            </ng-container>
+                            
+                            <div class="slot add bottom" 
+                                (click)="createBooking($event, bookingItem)">
+                                <i class="plus icon"></i>
+                            </div>
+
+                        </ng-container>
+
+                        <div class="slot add" 
+                            *ngIf="bookingItem.booking.length === 0"
+                            (click)="createBooking($event, bookingItem)">
+                            <i class="plus icon"></i>
+                        </div>
+                        
+                    </div>
+
+                </div>
+
+            </li>
+
+        </ul>
+
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+
+    </div>
+
+</div>

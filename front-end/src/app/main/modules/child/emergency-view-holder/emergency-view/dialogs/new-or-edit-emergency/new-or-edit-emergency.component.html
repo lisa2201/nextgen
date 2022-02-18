@@ -1,0 +1,370 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{dialogTitle}}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                    aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form
+        name="emergencyForm"
+        class="compose-form"
+        fxFlex
+        [nzLayout]="'vertical'"
+        [formGroup]="emergencyForm"
+        nz-form
+        (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+             [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <div nz-col [nzXs]="24" *ngIf="!editMode">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Select Existing User</nz-form-label>
+
+                        <nz-form-control nzHasFeedback>
+
+                            <nz-select formControlName="user_id"
+                                       nzShowSearch
+                                       nzAllowClear
+                                       (ngModelChange)="onUserSelect($event)"
+                                       nzPlaceHolder="Select...">
+
+                                <nz-option *ngFor="let item of users" nzValue="{{ item.id }}"
+                                           nzLabel="{{ item.firstName }} {{ item.lastName }}"></nz-option>
+
+                            </nz-select>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>First Name</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="fnameErrorTpl">
+
+                            <input nz-input formControlName="first_name" placeholder="First Name" type="text"/>
+
+                            <ng-template #fnameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input first name
+                                </ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">First name can't be more than 150
+                                    characters
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Last Name</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="lnameErrorTpl">
+
+                            <input nz-input formControlName="last_name" placeholder="Last Name" type="text"/>
+
+                            <ng-template #lnameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input last name</ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">Last name can't be more than 150
+                                    characters
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Mobile Number</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="mobileErrorTpl">
+
+                            <input nz-input formControlName="phone" placeholder="Mobile Number" type="text"/>
+
+                            <ng-template #mobileErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input mobile number
+                                </ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength') || control.hasError('minlength')">Mobile Number need to have 10
+                                    characters
+                                </ng-container>
+                                <ng-container *ngIf="control.hasError('exists')">This number already exists in the system for {{ control.getError('type') }} '{{ control.getError('name') }}'</ng-container>
+                                <ng-container *ngIf="control.hasError('pattern')">Please input a valid Number
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Phone Number</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="phoneErrorTpl">
+
+                            <input nz-input formControlName="phone2" placeholder="Phone Number" type="text"/>
+
+                            <ng-template #phoneErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('maxlength') || control.hasError('minlength')">Phone Number need to have 10
+                                    characters
+                                </ng-container>
+                                <ng-container *ngIf="control.hasError('pattern')">Please input a valid Number
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Address</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="addressErrorTpl">
+
+                            <input nz-input formControlName="address" placeholder="Address" type="text"/>
+
+                            <ng-template #addressErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('maxlength')">Address can't be more than 500
+                                    characters
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Email</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl">
+
+                            <input nz-input formControlName="email" placeholder="Email" type="text"/>
+
+                            <ng-template #emailErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('email')">Please input valid email address
+                                </ng-container>
+                                <ng-container *ngIf="control.hasError('exists')">Email already exists</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Relationship</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="relationshipErrorTpl">
+
+                            <input nz-input formControlName="relationship" placeholder="Relationship" type="text"/>
+
+                            <ng-template #relationshipErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input relationship
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="12" *ngIf="editMode">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Pincode <a class="ml-8" *ngIf="editMode && !pincodenull"
+                                                  (click)="resetPincode($event)">(Reset Pincode)</a></nz-form-label>
+
+                        <nz-form-control nzHasFeedback>
+
+                            <input nz-input formControlName="pincode" placeholder="Pincode" type="text"/>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+                <div nz-col [nzXs]="24" [nzSm]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Priority</nz-form-label>
+
+                        <nz-form-control nzHasFeedback>
+
+                            <!--<input nz-input formControlName="call_order" placeholder="Call Order" type="text"/>-->
+                            <nz-select formControlName="call_order" nzPlaceHolder="Select Priority" >
+                                <nz-option *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]" nzValue="{{ i }}" nzLabel="{{ i }}"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+                <!--                {{emergencyForm.value|json}}-->
+                <!-- <span *ngIf="editMode && !pincodenull">
+                    <label></label>
+                    <button
+                        class="text-lowercase pinreset"
+                        nz-button
+                        (click)="resetPincode($event)">
+                       Reset Pincode
+                    </button>
+                </span> -->
+
+                <div nz-col [nzXs]="24" class="mb-8">
+
+                    <label nz-checkbox formControlName="consentDropOffAndPickUp">
+                        <span><b>I consent to be an authorised nominee to drop off & pick up this child using Kiosk app.</b></span>
+                    </label>
+
+                </div>
+
+                <div nz-col [nzXs]="24" class="mb-8">
+
+                    <label nz-checkbox formControlName="consentEmergencyContact">
+                        <span>I consent for this person to be an emergency contact.</span>
+                    </label>
+
+                </div>
+
+                <div nz-col [nzXs]="24" class="mb-8">
+
+                    <label nz-checkbox formControlName="consentCollectChild">
+                        <span>I consent for this person to be an authorised nominee to collect this child.</span>
+                    </label>
+
+                </div>
+
+                <div nz-col [nzXs]="24" class="mb-8">
+
+                    <label nz-checkbox formControlName="consentMakeMedicalDecision">
+                        <span>I consent for this person to be an authorised nominee to make medical decisions on behalf of this child.</span>
+                    </label>
+
+                </div>
+
+                <div nz-col [nzXs]="24" class="mb-8">
+
+                    <label nz-checkbox formControlName="consentIncursion">
+                        <span>I consent for this person to be an authorised nominee for this child's incursions and excursions.</span>
+                    </label>
+
+                </div>
+
+                <div nz-col [nzXs]="24" class="mb-8">
+
+                    <label nz-checkbox formControlName="consentTransportationArrange">
+                        <span>I consent to be an authorised nominee to authorise the child being transported by the service or on transportation arranged by the service.</span>
+                    </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row"
+             fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+                <ng-container *ngIf="!editMode">
+                    <button
+                        class="text-uppercase mr-8"
+                        *hasPermission="['AC1']; belongsTo 'N30'"
+                        nz-button
+                        nzType="primary"
+                        [disabled]="!emergencyForm.valid"
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Save
+                    </button>
+                </ng-container>
+
+                <ng-container *ngIf="editMode">
+                    <button
+                        class="text-uppercase mr-8"
+                        *hasPermission="['AC2']; belongsTo 'N30'"
+                        nz-button
+                        nzType="primary"
+                        [disabled]="!emergencyForm.valid"
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Update
+                    </button>
+                </ng-container>
+
+                <ng-container *ngIf="!editMode">
+                <button
+                    class="text-uppercase mr-8"
+                    type="button"
+                    nz-button nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+                </ng-container>
+
+                <button
+                    class="text-uppercase mat-close-btn"
+                    type="button"
+                    nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

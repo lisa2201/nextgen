@@ -1,0 +1,79 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.child-manage-bulk-booking {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 759px;
+    }
+
+    .selected-count {
+        font-size: 14px;
+        background: $layout-border-color;
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-weight: 600;
+        box-shadow: $custom-box-shadow-high;
+        margin-left: 8px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+        .compose-form {
+
+            .status-lbl {
+                font-size: 13px;
+                font-weight: 600;
+                padding: 3px 8px 4px;
+                border-radius: 16px;
+                color: #fff;
+
+                &.booked {
+                    background-color: rgba(255, 149, 0, 0.9) !important;
+                }
+
+                &.attendance {
+                    background-color: rgba(76, 175, 80, 0.8) !important;
+                }
+
+                &.absence {
+                    background-color: rgba(96, 125, 139, 0.7) !important;
+                }
+
+                &.holiday {
+                    background-color: rgba(158, 158, 158, 0.7) !important;
+                }
+
+                &.casual {
+                    background-color: rgba(126, 87, 194, 0.68) !important;
+                }
+            }
+
+            .overlapped {
+                pointer-events: none;
+                opacity: 0.5;
+            }
+
+            .ccs-edit {
+                cursor: pointer;
+                height: 20px;
+                width: 20px;
+                margin-left: 4px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+        }
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+}

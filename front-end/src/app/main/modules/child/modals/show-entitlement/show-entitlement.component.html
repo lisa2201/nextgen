@@ -1,0 +1,59 @@
+<p>
+    <span class="font-weight-600">Date of Entitlement</span> :
+    {{ entitlement.dateOfEntitlement }}
+</p>
+
+<p>
+    <span class="font-weight-600">CCS Percentage</span> :
+    {{ entitlement.percentage }}%
+</p>
+
+<p>
+    <span class="font-weight-600">CCS Withholding Percentage</span> :
+    {{ entitlement.withholdingPercentage + '%' || 'N/A' }}
+</p>
+
+<p>
+    <span class="font-weight-600">CCS Total Hours Per Fortnight</span> :
+    {{ entitlement.totalHoursPerFortnight }}
+</p>
+
+<p>
+    <span class="font-weight-600">Apportioned Hours Per Fortnight</span> :
+    {{ entitlement.apportionedHoursPerFortnight }}
+</p>
+
+<p>
+    <span class="font-weight-600">ACCS Hourly Rate Cap Increase Percentage</span> :
+    {{ entitlement.hourlyRateCapIncreasePercentage + '%' || 'N/A' }}
+</p>
+
+<p>
+    <span class="font-weight-600">Annual Cap Reached</span> :
+    {{ entitlement.annualCapReached }}
+</p>
+
+<p>
+    <span class="font-weight-600">Absence Count</span> :
+    {{ entitlement.absenceCount || 'N/A' }}
+</p>
+
+<p>
+    <span class="font-weight-600">Preschool Exemption</span> :
+    {{ entitlement.getPreschoolExemptionLabel() }}
+</p>
+
+<p>
+    <span class="font-weight-600">Paid Absences</span> :
+    {{ entitlement.paidAbsences }}
+</p>
+
+<p>
+    <span class="font-weight-600">Unpaid Absences</span> :
+    {{ entitlement.unpaidAbsences }}
+</p>
+
+<p>
+    <span class="font-weight-600">Absences Available No Evidence</span> :
+    {{ entitlement.absencesAvailableNoEvidence }}
+</p>

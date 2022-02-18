@@ -1,0 +1,406 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ enrolment.enrolStart }}
+                ({{ enrolment.arrangementType }})
+                ({{ enrolment.sessionTypeLabel }})</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+
+    <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+        <ng-container *ngIf="showAgreement; else sessionRoutinesTpl">
+            <div class="info-box general" fxLayout="column" nzLoading="true">
+                <header>
+                    <div class="title title-agreement">
+                        <div mat-dialog-actions class="m-0 p-0" fxLayout="row" fxLayoutAlign="space-between center">
+                            <span>Complying Written Agreement</span>
+
+                        </div>
+                    </div>
+
+                </header>
+
+                <div class="content">
+                    <ng-container>
+                        <div class="info-line">
+                            <p>
+                                CWA is an agreement between the care providers and
+                                parent/guardian which establishes
+                                the basis on which care will be provided to a child.You will
+                                need to approve this agreement
+                                and any future changes to
+                                your routine sessions.
+                            </p>
+                        </div>
+
+                    </ng-container>
+
+                </div>
+                <header>
+                    <div class="title title-agreement">
+                        <div mat-dialog-actions class="m-0 p-0" fxLayout="row" fxLayoutAlign="space-between center">
+                            <span>Parties to the Agreement</span>
+                        </div>
+                    </div>
+
+                </header>
+
+                <div class="content" fxLayout="column">
+                    <ng-container>
+                        <div class="info-line">
+
+                            <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 24, lg: 24, xl: 36, xxl: 36 }">
+
+                                <div nz-col [nzMd]="12" [nzLg]="12" class="p-12">
+                                    <nz-card>
+
+                                        <nz-list-item-meta [nzAvatar]="branchAvatar" [nzTitle]="branchTitleTpl">
+
+                                            <ng-template #branchAvatar>
+
+                                                <nz-avatar [nzSize]="48"
+                                                    nzSrc="assets/icons/flat/ui_set/custom_icons/child/room.svg"
+                                                    class="item-img img-bg">
+                                                </nz-avatar>
+
+                                            </ng-template>
+
+                                            <ng-template #branchTitleTpl>
+
+                                                <h4 class="text-truncate mb-4">
+                                                    Service Name: {{client.name}}
+                                                </h4>
+
+                                            </ng-template>
+
+                                            <!-- <ng-template #branchDescription>
+                
+                                                    <p class="m-0">
+                                                        <span class="font-weight-600">desc</span>:
+                                                        desc
+                                                    </p>
+                                                </ng-template> -->
+
+                                        </nz-list-item-meta>
+
+                                    </nz-card>
+                                </div>
+
+                                <div nz-col [nzMd]="12" [nzLg]="12" class="p-12">
+                                    <nz-card>
+
+                                        <nz-list-item-meta [nzAvatar]="parentAvatar" [nzTitle]="parentTitleTpl">
+
+                                            <ng-template #parentAvatar>
+
+                                                <nz-avatar [nzSize]="48"
+                                                    nzSrc="assets/icons/flat/ui_set/custom_icons/child/room.svg"
+                                                    class="item-img img-bg">
+                                                </nz-avatar>
+
+                                            </ng-template>
+
+                                            <ng-template #parentTitleTpl>
+
+                                                <h4 class="text-truncate mb-4">
+                                                    Parent Name:
+                                                </h4>
+
+                                            </ng-template>
+
+                                            <!-- <ng-template #parentDescription>
+                
+                                                    <p class="m-0">
+                                                        <span class="font-weight-600">desc</span>:
+                                                        desc
+                                                    </p>
+                                                </ng-template> -->
+
+                                        </nz-list-item-meta>
+
+                                    </nz-card>
+                                </div>
+
+                                <div nz-col [nzMd]="24" [nzLg]="12" class="p-12">
+                                    <nz-card>
+
+                                        <nz-list-item-meta [nzAvatar]="childAvatar" [nzTitle]="childTitleTpl">
+
+                                            <ng-template #childAvatar>
+
+                                                <nz-avatar [nzSize]="48"
+                                                    nzSrc="assets/icons/flat/ui_set/custom_icons/child/room.svg"
+                                                    class="item-img img-bg">
+                                                </nz-avatar>
+
+                                            </ng-template>
+
+                                            <ng-template #childTitleTpl>
+
+                                                <h4 class="text-truncate mb-4">
+                                                    Child Name: {{child.getFullName()}}
+                                                </h4>
+
+                                            </ng-template>
+
+                                            <!-- <ng-template #childDescription>
+                
+                                                    <p class="m-0">
+                                                        <span class="font-weight-600">desc</span>:
+                                                        desc
+                                                    </p>
+                                                </ng-template> -->
+
+                                        </nz-list-item-meta>
+
+                                    </nz-card>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </ng-container>
+
+                </div>
+                <header>
+                    <div class="title title-agreement">
+                        <div mat-dialog-actions class="m-0 p-0" fxLayout="row" fxLayoutAlign="space-between center">
+                            <span>Routine Sessions</span>
+                        </div>
+                    </div>
+
+                </header>
+
+                <div class="content">
+                    <ng-container>
+                        <div class="info-line">
+                            <p>
+                                Below are the details of routine sessions with starttime,
+                                end times and the daily ratesof
+                                sessions of care provided.
+                                This does not include any casual sessions.Your care is
+                                provided on a weekly schedule:
+                            </p>
+                        </div>
+
+                    </ng-container>
+                    <ul class="session-routine" *ngIf="sessionRoutines.length > 0" [@fadeMotion]>
+
+                        <ng-container *ngFor="let item of sessionRoutines; let i = index; trackBy: trackByFn;">
+            
+                            <li class="session-row-space"
+                                *ngIf="!hideWeekEnd ? (sessionRoutines.length > 7 && i == 7) : (sessionRoutines.length > 5 && i == 5)">
+                            </li>
+            
+                            <li class="session-row-label"
+                                *ngIf="!hideWeekEnd ? (sessionRoutines.length > 7 && i == 0) : (sessionRoutines.length > 5 && i == 0)">
+                                <span>Week 1</span></li>
+            
+                            <li class="session-row-label"
+                                *ngIf="!hideWeekEnd ? (sessionRoutines.length > 7 && i == 7) : (sessionRoutines.length > 5 && i == 5)">
+                                <span>Week 2</span></li>
+            
+                            <li class="session-row" [ngClass]="{ 'hide-week' : hideWeekEnd }">
+            
+                                <div class="session-content">
+            
+                                    <div class="session-label">
+                                        {{ item.day }}
+                                    </div>
+            
+                                    <div class="session-inner">
+            
+                                        <div class="session-item no-select"
+                                            *ngFor="let slot of item.sessions; let idx = index; trackBy: trackByFn;">
+            
+                                            <div>{{ slot.session.start | convertTimeString }} -
+                                                {{ slot.session.end | convertTimeString }}
+                                            </div>
+            
+                                            <div class="fee">{{ slot.standardAmount | currency: client.currency :'symbol':'1.2-2' }}
+                                            </div>
+            
+                                        </div>
+            
+                                    </div>
+            
+                                </div>
+            
+                            </li>
+            
+                        </ng-container>
+            
+                    </ul>
+                </div>
+
+                <header>
+                    <div class="title title-agreement">
+                        <div mat-dialog-actions class="m-0 pt-8" fxLayout="row" fxLayoutAlign="space-between center">
+                            <!-- <span>Fees</span> -->
+                        </div>
+                    </div>
+
+                </header>
+
+                <div class="content">
+                    <ng-container>
+                        <div class="info-line">
+                            <p>
+                                Signing the CWA is the first step to complete a child's CCS
+                                enrolment. The date the CWA is
+                                agreed to will be the start
+                                date of the CCS enrolment. If this is the wrong start date,
+                                let the centre admins know and
+                                they can help revise the
+                                start date.
+                            </p>
+                        </div>
+
+                    </ng-container>
+
+                </div>
+
+
+                <header>
+                    <div class="title title-agreement">
+                        <div mat-dialog-actions class="m-0 p-0" fxLayout="row" fxLayoutAlign="space-between center">
+                            <span>Declaration</span>
+                        </div>
+                    </div>
+
+                </header>
+
+                <div class="content">
+                    <ng-container>
+                        <div class="info-line">
+                            <p>
+                                I understand by clicking this button below: <br>
+                            </p>
+                            <ol>
+                                <li>
+                                    I confirm the above correctly reflects my child’s
+                                    expected regular schedule.
+                                </li>
+
+                                <li>
+                                    I agree to the fee attached to schedule.
+                                </li>
+
+                                <li>
+                                    I understand care may be provided on a casual or
+                                    flexible basis where available at my
+                                    service(s) at my request.
+                                </li>
+
+                                <li>
+                                    I understand that the fee schedule may vary from time to
+                                    time as notified by my child
+                                    care service provider and
+                                    reflected in an updated fee schedule.
+                                </li>
+
+                            </ol>
+                        </div>
+
+                    </ng-container>
+
+                </div>
+            </div>
+        </ng-container>
+        <ng-template #sessionRoutinesTpl>
+            <ul class="session-routine" *ngIf="sessionRoutines.length > 0" [@fadeMotion]>
+
+                <ng-container *ngFor="let item of sessionRoutines; let i = index; trackBy: trackByFn;">
+    
+                    <li class="session-row-space"
+                        *ngIf="!hideWeekEnd ? (sessionRoutines.length > 7 && i == 7) : (sessionRoutines.length > 5 && i == 5)">
+                    </li>
+    
+                    <li class="session-row-label"
+                        *ngIf="!hideWeekEnd ? (sessionRoutines.length > 7 && i == 0) : (sessionRoutines.length > 5 && i == 0)">
+                        <span>Week 1</span></li>
+    
+                    <li class="session-row-label"
+                        *ngIf="!hideWeekEnd ? (sessionRoutines.length > 7 && i == 7) : (sessionRoutines.length > 5 && i == 5)">
+                        <span>Week 2</span></li>
+    
+                    <li class="session-row" [ngClass]="{ 'hide-week' : hideWeekEnd }">
+    
+                        <div class="session-content">
+    
+                            <div class="session-label">
+                                {{ item.day }}
+                            </div>
+    
+                            <div class="session-inner">
+    
+                                <div class="session-item no-select"
+                                    *ngFor="let slot of item.sessions; let idx = index; trackBy: trackByFn;">
+    
+                                    <div>{{ slot.session.start | convertTimeString }} -
+                                        {{ slot.session.end | convertTimeString }}
+                                    </div>
+    
+                                    <div class="fee">{{ slot.standardAmount | currency: client.currency :'symbol':'1.2-2' }}
+                                    </div>
+    
+                                </div>
+    
+                            </div>
+    
+                        </div>
+    
+                    </li>
+    
+                </ng-container>
+    
+            </ul>
+        </ng-template>
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span>
+            <label 
+                nz-checkbox 
+                [(ngModel)]="acceptcwa" 
+                *ngIf="enrolment.parentApprovedStatus !== '2'">
+                Agree
+            </label>
+        </span>
+
+        <span class="text-right">
+            <button class="text-uppercase mr-8" 
+                    nz-button 
+                    nzType="primary" 
+                    (click)="accept($event, enrolment)"
+                    *ngIf="enrolment.parentApprovedStatus !== '2'"
+                    [disabled]="!acceptcwa"
+                    [promiseBtn]="buttonLoader">
+                <i class="plus icon mr-8"></i> Accept
+            </button>
+
+            <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                (click)="matDialogRef.close()">
+                Close
+            </button>
+
+        </span>
+
+    </div>
+
+
+</div>

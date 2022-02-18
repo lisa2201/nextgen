@@ -1,0 +1,113 @@
+<fuse-widget class="widget" fxLayout="column">
+
+    <!-- Front -->
+    <div class="fuse-widget-front">
+
+        <nz-spin
+            [nzSpinning]="widgetLoader"
+            [nzIndicator]="indicatorTemplate">
+
+            <div class="px-16 border-bottom" fxLayout="row wrap" fxLayoutAlign="space-between center">
+
+                <div fxFlex class="py-16 h3">Attendance  <span id="calander-date"> ({{ daytext }})</span></div>
+
+                <span id="room_select" *ngIf="!isSitemanager">
+                <nz-select  
+                    [(ngModel)]="selectedRoom" 
+                    (ngModelChange)="getDayRecordsByRoom($event)"
+                    nzPlaceHolder="All Rooms"
+                    nzAllowClear = true>
+
+                    <nz-option *ngFor="let room of rooms"
+                        nzValue="{{ room.id }}" nzLabel="{{ room.title }}">
+                    </nz-option>
+
+                </nz-select>
+                </span>
+             
+                <h5 id="day_picker">
+                    <span class="date-input-wrapper" (click)="toggleDatePicker($event)">
+    
+                        <span class="date-label">
+                            <img id="calander-img"
+                                src="assets/icons/flat/ui_set/custom_icons/child/calendar.svg">
+                        </span>
+    
+                        <nz-date-picker [(ngModel)]="date" class="date-input"
+                            (ngModelChange)="getDayRecords($event)"
+                            [nzOpen]="openDatePicker"
+                            nzShowToday = false
+                            nzAutoFocus = true
+                            nzAllowClear = false
+                            [nzInputReadOnly]="true">
+                        </nz-date-picker>
+    
+                    </span>
+                </h5>
+
+                <button class="refresh-button" nz-button nzType="link" nzSize="small" (click)="updateWidget()">
+                    <i class="sync vertical icon"></i>
+                </button>
+            </div>
+
+            <table class="simple p-40 h-72">
+
+                <tbody>
+                    <tr>
+                        <td class="p-20" style="line-height: 122px !important" [ngClass]="'blue-900-fg'">
+                            <div class="font-size-72" style="font-size: 45px !important; font-weight: 400" >
+                                {{ data.bookings }}
+                            </div>
+                            <div class="font-size-12 label">
+                                <i class="child icon"></i> Booked In
+                            </div>
+                        </td>
+                        <td class="p-20" style="line-height: 122px !important" [ngClass]="'green-900-fg'">
+                            <div class="font-size-72" style="font-size: 45px !important; font-weight: 400">
+                               {{ data.child_in }}
+                            </div>
+                            <div class="font-size-12 label">
+                                <i nz-icon nzType="login" nzTheme="outline"></i> In
+                            </div>
+                        </td>
+                        <td class="p-20" style="line-height: 122px !important" [ngClass]="'purple-900-fg'">
+                            <div class="font-size-72" style="font-size: 45px !important; font-weight: 400">
+                                {{ data.child_out }}
+                            </div>
+                            <div class="font-size-12 label">
+                                <i nz-icon nzType="logout" nzTheme="outline"></i> Out
+                            </div> 
+                       </td>
+                        <td class="p-20" style="line-height: 122px !important" [ngClass]="'blue-grey-fg'">
+                            <div class="font-size-72" style="font-size: 45px !important; font-weight: 400">
+                                {{ data.absent }}
+                            </div>
+                            <div class="font-size-12 label">
+                                <i class="user icon"></i> Absent
+                            </div> 
+                        </td>
+                        <td class="p-20" style="line-height: 122px !important" [ngClass]="'red-900-fg'">
+                            <div class="font-size-72" style="font-size: 45px !important; font-weight: 400">
+                                {{ data.unknown }}
+                            </div>
+                            <div class="font-size-12 label">
+                                <i nz-icon nzType="question-circle" nzTheme="outline"></i> Unknown
+                            </div> 
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </nz-spin>
+
+    </div>
+    <!-- / Front -->
+
+</fuse-widget>
+
+<!-- LOADER VIEW -->
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+<!-- / LOADER VIEW -->

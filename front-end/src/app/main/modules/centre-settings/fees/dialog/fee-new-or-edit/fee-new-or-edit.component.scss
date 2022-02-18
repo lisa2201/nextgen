@@ -1,0 +1,122 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.fee-new-dialog {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 749px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+        .compose-form {
+
+            .mat-form-field {
+                width: 100%;
+            }
+
+            .show-hide-extra-fields {
+                text-align: right;
+                cursor: pointer;
+                font-size: 12px;
+            }
+
+            .attachment-list {
+                font-size: 13px;
+
+                .attachment {
+                    border: 1px solid;
+                    border-radius: 20px;
+                    padding-left: 16px;
+                    margin-top: 8px;
+
+                    .filename {
+                        font-weight: 600;
+                    }
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    nz-select {
+        width: 100%;
+    }
+
+    .loading-icon {
+        margin-right: 8px;
+    }
+
+    .ant-advanced-search-form {
+        padding: 24px;
+        background: #fbfbfb;
+        border: 1px solid #d9d9d9;
+        border-radius: 6px;
+    }
+
+    .search-result-list {
+        margin-top: 16px;
+        border: 1px dashed #e9e9e9;
+        border-radius: 6px;
+        background-color: #fafafa;
+        min-height: 200px;
+        text-align: center;
+        padding-top: 80px;
+    }
+
+    [nz-form-label] {
+        overflow: visible;
+    }
+
+    .collapse {
+        margin-left: 8px;
+        font-size: 12px;
+    }
+
+    .search-area {
+        text-align: right;
+    }
+
+    .child-item-list {
+
+        .ant-card-body {
+            padding: 16px;
+
+            .item-img {
+                border: 4px solid $ant-border-color;
+                box-shadow: $custom-box-shadow-high;
+            }
+
+            .remove-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                color: $danger-color;
+                font-size: 13px;
+                font-weight: 600;
+                line-height: 10px;
+                margin-top: 8px;
+                text-decoration: none!important;
+
+                i {
+                    color: $danger-color;
+                }
+            }
+        }
+
+    }
+
+}

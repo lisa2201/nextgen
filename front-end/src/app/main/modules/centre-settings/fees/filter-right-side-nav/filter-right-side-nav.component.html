@@ -1,0 +1,38 @@
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<div class="content p-24 pt-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+    <form fxLayout="column" fxFlex [formGroup]="feesFiltersForm">
+
+        <!-- <nz-radio-group formControlName="status" [nzDisabled]="feesFiltersForm.controls['status'].disabled"
+            [nzSize]="'small'" [nzButtonStyle]="'solid'">
+            <div class="mb-16">
+                <label nz-radio nzValue="0" class="_filter">All</label>
+                <label nz-radio nzValue="1" class="_filter">Active</label>
+                <label nz-radio nzValue="2" class="_filter">Archive</label>
+            </div>
+        </nz-radio-group> -->
+
+        <nz-radio-group formControlName="status" nzButtonStyle="solid" class="has-img">
+    
+            <label nz-radio-button nzValue="0" class="mr-10-custom">
+                <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/child/inactive.svg"
+                    alt="male icon">
+                <span>All</span>
+            </label>
+
+            <label nz-radio-button nzValue="1" class="mr-10-custom">
+                <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/checked.svg"
+                    alt="female icon">
+                <span>Active</span>
+            </label>
+
+            <label nz-radio-button nzValue="2" class="mr-10-custom">
+                <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/archive.svg"
+                    alt="female icon">
+                <span>Archive</span>
+            </label>
+
+        </nz-radio-group>
+    </form>
+</div>

@@ -1,0 +1,51 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Form Preview</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                    aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+    <div class="compose-form" fxLayout="column">
+
+        <div id="waitlist-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+
+            <div id="waitlist-form" class="p-24 pt-16 m-0" mat-dialog-content fusePerfectScrollbar
+                 [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+                 [@animate]="{ value:'*', params:{ duration:'500ms', y:'100px', opacity: 0, delay:'300ms' }}"
+                 *ngIf="!isSubmitted">
+
+                <form nz-form name="waitlistForm" [nzLayout]="'vertical'"
+                      [formGroup]="waitlistForm"
+                >
+                    <div nz-row [nzGutter]="24" *ngFor="let section of sections"
+                    >
+
+                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24"
+                             [nzXXl]="24" *ngIf="!section.section_hide">
+
+                            <div class="subtitle" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24"
+                                 [nzXXl]="24">{{ section.title }}</div>
+
+                        </div>
+                        <waitlist-section nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24"  [nzXXl]="24" *ngIf="!section.section_hide" [section]="section"
+                                          [formGroup]="waitlistForm.get(section.section_code)"
+                                          [signaturesList]="signaturesList"
+                        >
+
+                        </waitlist-section>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+@import "src/@fuse/scss/fuse";
+
+#user-base-view-administration {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+}

@@ -1,0 +1,71 @@
+<fuse-widget class="widget" fxLayout="column">
+
+    <!-- Front -->
+    <div class="fuse-widget-front">
+
+        <nz-spin
+                [nzSpinning]="widgetLoader"
+                [nzIndicator]="indicatorTemplate">
+
+            <div class="fuse-widget-front">
+
+                <div class="p-16 h-52" fxLayout="row" fxLayoutAlign="space-between center">
+                    <div class="h3">Session Submission</div>
+
+                    <span fxLayout="row" fxLayoutAlign="center center">
+
+                        <span class="date-input-wrapper mr-8" (click)="toggleCalendar($event)">
+        
+                            <span class="date-label">
+                                <img src="assets/icons/flat/ui_set/custom_icons/child/calendar.svg">
+                            </span>
+        
+                            <span #weekPicker>
+                                <nz-week-picker class="date-input"
+                                    [formControl]="calendarWeek"
+                                    [nzInputReadOnly]="true"
+                                    nzPlaceHolder="select week"></nz-week-picker>
+                            </span>
+        
+                        </span>
+    
+                        <button class="refresh-button" nz-button nzType="link" nzSize="small" (click)="updateSessionSubmissionWidget()">
+                            <i class="sync vertical icon"></i>
+                        </button>
+
+                    </span>
+
+                </div>
+
+                <div class="pt-8 pb-32" [ngClass]="{ 'waitlist_count': !isSiteManager }" fxLayout="column" fxLayoutAlign="center center" (click)=navigate($event)>
+                    <div class="font-size-72 line-height-72" [ngClass]="'red-900-fg'">
+                        {{ getWaitingSessionSummary().error }}
+                    </div>
+                    <div class="h3 secondary-text font-weight-500">Warnings
+                    </div>
+                </div>
+
+                <div class="p-16 border-top" fxLayout="row" fxLayoutAlign="start center">
+                    <span class="h4 secondary-text text-truncate">
+                        Ready for Submission
+                    </span>
+                    <span class="h4 ml-8">
+                        {{ getWaitingSessionSummary().valid }}
+                    </span>
+                </div>
+            </div>
+
+        </nz-spin>
+
+    </div>
+    <!-- / Front -->
+
+</fuse-widget>
+
+<!-- LOADER VIEW -->
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+<!-- / LOADER VIEW -->

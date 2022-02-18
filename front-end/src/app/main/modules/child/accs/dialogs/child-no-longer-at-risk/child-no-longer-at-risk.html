@@ -1,0 +1,223 @@
+<ng-template #tplContent>
+    Click on OK to agree to the Certificate information and submit the Certificate details. <br>
+    I declare that:
+    <ul>
+        <li>The information I have provided is true and correct.</li>
+
+        <li>That this certificate is provided under “A New Tax System(Family Assistance) Act 1999”</li>
+    </ul>
+    I understand that:
+    <ul>
+        <li>The Provider must give an appropriate State/Territory body notice that this provider considers the child to whom this certificate relates is or was at risk of serious harm of abuse or neglect no later than (6) weeks after the day this certificate takes effect.</li>
+
+        <li>Giving false or misleading information is a serious offense.</li>
+
+        <li>I must notify the Australian Government Department of Human Services of any change(s) to this information.</li>
+
+        <li>I have kept records of observations and evidence to support my certifying that the child is at risk.</li>
+    </ul>
+</ng-template>
+
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{dialogTitle}}</span>
+    
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                    aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form
+        name="invitationForm"
+        class="compose-form"
+        fxLayout="column"
+        [nzLayout]="'vertical'" [formGroup]="childNoLongerAtRiskForm"
+        nz-form (ngSubmit)="onFormSubmit($event, tplContent)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24"  *ngIf="certificateOrDetermination.child_no_longer_at_risk_data && certificateOrDetermination.child_no_longer_at_risk_data.is_synced == '2'">
+                    <nz-alert class="mb-8" nzCloseable nzType="warning"
+                        nzMessage="{{ (this.certificateOrDetermination.child_no_longer_at_risk_data.syncerror.message) ? this.certificateOrDetermination.child_no_longer_at_risk_data.syncerror.message : 'Error Occured' }}"></nz-alert>
+                </div>
+
+                <!-- date no longer at risk-->
+                <div nz-col [nzXs]="24">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Date No Longer At Risk</nz-form-label>
+
+                        <nz-form-control [nzErrorTip]="dateNoLongerAtRiskErrorTpl">
+                            <nz-date-picker [nzInputReadOnly]="true" [nzDisabledDate]="disabledPastDates" formControlName="date_no_longer_at_risk"
+                                            class="block"></nz-date-picker>
+                        </nz-form-control>
+    
+                        <ng-template #dateNoLongerAtRiskErrorTpl let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please select a Date</ng-container>
+                        </ng-template>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Reason</nz-form-label>
+                        <nz-form-control [nzErrorTip]="noLongerAtRiskReason">
+                            <input nz-input formControlName="no_longer_at_risk_reason" type="text" />
+                        </nz-form-control>
+    
+                        <ng-template #noLongerAtRiskReason let-control>
+                            <ng-container *ngIf="control.hasError('required')">Please enter a reason</ng-container>
+                            <ng-container *ngIf="control.hasError('maxlength')">Please keep the characters under 255</ng-container>
+                        </ng-template>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+                    
+                    <nz-form-item>
+                        <nz-form-label nzRequired>Do you have record to support that child is no longer at risk? </nz-form-label>
+                        <nz-form-control>
+                            <nz-switch formControlName="record_to_support_no_longer_at_risk" nzCheckedChildren="Yes"
+                                       nzUnCheckedChildren="No">
+                            </nz-switch>
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label>Supporting Documents</nz-form-label>
+    
+                        <nz-table class="mt-4" #supportingDocData [nzData]="supportingDoc" [nzShowPagination]="false"
+                                  [nzSize]="'small'" formArrayName="documentCheck">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Current file</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let item of supportingDocData.data;" >
+                                    <!-- <td nzWidth="30px" class="ant-table-selection-column">
+                                        <label nz-checkbox [formControlName]="item.index"></label>
+                                    </td> -->
+                                    <td class="ant-table-selection-column">
+                                        <nz-form-label>
+                                            {{item.name}}
+                                        </nz-form-label>
+                                    </td>
+                                    <td>
+                                        <div class="image-upload">
+                                            <input name="imageUrl" type="file" accept=".pdf"
+                                                   (change)="handleInputChange($event, item)" class="inputfile inputfile-2" />
+                                            <span>
+                                                    <nz-progress *ngIf="item.showBar" [nzPercent]="item.progress"
+                                                                 nzSize="small"></nz-progress>
+                                                </span>
+    
+                                            <span class="text-right">
+                                                    <a class="action-btn remove" *ngIf="item.progress === 100"
+                                                       style="color: #e90000;" (click)="romoveFile(item)">
+                                                        <i class="trash alternate outline icon mr-4"
+                                                           style="color: #e90000;"></i>
+                                                        remove
+                                                    </a>
+                                                </span>
+    
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        <ng-container *ngIf="this.certificateOrDetermination.child_no_longer_at_risk_data">
+                                            <ng-container *ngIf="this.certificateOrDetermination.child_no_longer_at_risk_data.api_data">
+                                                <ng-container *ngIf="this.certificateOrDetermination.child_no_longer_at_risk_data.api_data.SupportingDocuments">
+                                                    <ng-container *ngFor="let doc of this.certificateOrDetermination.child_no_longer_at_risk_data.api_data.SupportingDocuments">
+                                                        <ng-container *ngIf="doc.documentType == item.value">
+                                                            <a class="action-btn ml-8" (click)="download($event, doc)">
+                                                                <i nz-icon nzType="download" nzTheme="outline"></i> {{ doc.fileName }}
+                                                            </a>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </ng-container>
+                                        </ng-container>
+                                    </td>
+                            </tr>
+                            </tbody>
+    
+                        </nz-table>
+    
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+            <ng-container *ngIf="!editMode">
+                <button
+                    type="button"
+                    class="text-uppercase mr-8"
+                    *hasPermission="['AC1']; belongsTo 'N21'"
+                    nz-button
+                    nzType="primary"
+                    [disabled]="!childNoLongerAtRiskForm.valid || this.alreadySubmitted"
+                    (click)="saveAsDraft(tplContent)">
+                    <i class="plus icon mr-8"></i> Save as Draft
+                </button>
+            </ng-container>
+            <ng-container *ngIf="!editMode">
+                <button
+                    class="text-uppercase mr-8"
+                    *hasPermission="['AC1']; belongsTo 'N21'"
+                    nz-button
+                    nzType="primary"
+                    [disabled]="!childNoLongerAtRiskForm.valid || this.alreadySubmitted"
+                    [promiseBtn]="buttonLoader">
+                    <i class="plus icon mr-8"></i> Submit
+                </button>
+            </ng-container>
+
+            <button
+                class="text-uppercase mat-close-btn"
+                type="button"
+                nz-button nzType="danger"
+                (click)="matDialogRef.close()">
+                Close
+            </button>
+
+        </span>
+
+        </div>
+
+    </form>
+
+</div>

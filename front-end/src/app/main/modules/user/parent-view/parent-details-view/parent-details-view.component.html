@@ -1,0 +1,222 @@
+<div *ngIf="!user" fxLayout="column" fxLayoutAlign="center" fxFlex [@fadeInOnEnter]>
+
+    <nz-empty class="mb-16"
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/state/' + (!hasUsers ? 'support' : 'clicking') + '.svg'"
+        [nzNotFoundContent]="contentTpl" [nzNotFoundFooter]="footerTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <ng-template #contentTpl>
+            <ng-container *ngIf="hasUsers; else createBlock">
+                <h4 class="mt-24">Select a Parent</h4>
+                <span class="hint-txt">Looks like there's no information to display here</span>
+            </ng-container>
+
+            <ng-template #createBlock>
+                <span *hasPermission="['AC0', 'AC1']; belongsTo 'N09'; else emptyDesc">Please click on below button to
+                    send
+                    invitations</span>
+                <ng-template #emptyDesc>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+            </ng-template>
+
+        </ng-template>
+
+        <ng-template #footerTpl>
+
+            <ng-container *ngIf="!hasUsers">
+
+                <button *hasPermission="['AC0', 'AC1']; belongsTo 'N09'" class="text-uppercase" nz-button
+                        nzType="primary" (click)="goToInvitation($event)">
+                    <i class="paper plane icon mr-8"></i> Go To Invitation
+                </button>
+
+            </ng-container>
+
+        </ng-template>
+
+    </nz-empty>
+
+</div>
+
+<div class="child-detail" *ngIf="user" [@animate]="{ value:'*', params:{ delay: '150ms', x:'15px' } }">
+
+    <div class="child-profile-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span>
+
+            <button class="text-uppercase blank" *ngIf="user" fxHide.gt-sm nz-button nzType="link"
+                    (click)="deselectCurrentUser($event)">
+                <i class="arrow left icon"></i>
+            </button>
+
+        </span>
+
+        <span>
+
+            <ng-container *hasPermission="['AC2']; belongsTo 'N04'">
+                <sync-kinder-connect-profile [id]="user.id" [type]="'user'"></sync-kinder-connect-profile>
+            </ng-container>
+
+            <button class="text-uppercase blank" type="button" 
+                nz-button nzType="link" 
+                (click)="resetPassword($event, user)"
+                *hasPermission="['AC2']; belongsTo 'N04'">
+                <i class="unlock alternate icon"></i>
+            </button>
+
+            <ng-container *hasPermission="['AC2']; belongsTo 'N07'">
+
+                <button class="text-uppercase blank" type="button" nz-button nzType="link" (click)="edit(user, $event)"
+                        *hasPermission="['AC1']; belongsTo 'N04'">
+                    <i class="edit outline icon"></i>
+                </button>
+
+            </ng-container>
+
+            <ng-container *hasPermission="['AC3']; belongsTo 'N04'">
+
+                <button class="text-uppercase blank" type="button" (click)="delete(user,$event)" nz-button
+                        nzType="link">
+                    <i class="trash alternate outline icon"></i>
+                </button>
+
+            </ng-container>
+
+        </span>
+
+    </div>
+
+    <div class="child-profile-info" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <div class="section">
+
+            <h3 class="header">Basic information</h3>
+
+            <p>
+                <span class="lbl font-weight-600">First Name</span>
+                {{ user.firstName || 'N/A'}}
+            </p>
+
+            <p>
+                <span class="lbl font-weight-600">Last Name</span>
+                {{ user.lastName || 'N/A'}}
+            </p>
+
+            <p>
+                <span class="lbl font-weight-600">Mobile Number</span>
+                {{ user.mobileNumber || 'N/A'}}
+            </p>
+
+            <p>
+                <span class="lbl font-weight-600">Phone Number</span>
+                {{ user.phoneNumber || 'N/A'}}
+            </p>
+
+            <p>
+                <span class="lbl font-weight-600">Email</span>
+                {{ user.email || 'N/A' }}
+            </p>
+
+            <p>
+                <span class="lbl font-weight-600">Date of Birth</span>
+                {{ user.dob || 'N/A'}}
+            </p>
+
+
+            <p>
+                <span class="lbl font-weight-600">Profile Created Date</span>
+                {{ user.created || 'N/A'}}
+            </p>
+
+            <p>
+                <span class="lbl font-weight-600">Status</span>
+                {{ user.getStatus()}}
+            </p>
+
+
+            <p>
+                <span class="lbl font-weight-600">Login Access</span>
+                {{ user.getLoginAccess()}}
+            </p>
+        </div>
+
+        <div class="section mb-16">
+            <div class="mb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <h3 class="header mb-0">Children information</h3>
+
+            </div>
+            <nz-list class="child-item-list" [nzNoResult]="emptyRoomBlock" [nzDataSource]="user?.children"
+                     [nzRenderItem]="item" [nzGrid]="{ gutter: 16, xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 8 }">
+
+                <ng-template #item let-item>
+                    <nz-list-item [nzContent]="item.isLoading ? '' : nzContent"
+                                  [routerLink]="['/manage-children/child/'+item.id]" style="cursor:pointer!important;">
+
+                        <ng-template #nzContent>
+
+                            <nz-card>
+                                <div class="color-bar {{item.status =='1'? 'active' : 'inactive' }}"></div>
+                                <nz-list-item-meta [nzAvatar]="nzAvatar" [nzTitle]="nzTitle"
+                                                   [nzDescription]="nzDescription">
+
+                                    <ng-template #nzAvatar>
+
+                                        <nz-avatar [nzSize]="48"
+                                                   nzSrc="{{ getChildProfileImage(item) }}"
+                                                   class="item-img img-bg">
+                                        </nz-avatar>
+
+                                    </ng-template>
+
+                                    <ng-template #nzTitle>
+
+                                        <h4 class="text-truncate mb-4">{{ item.f_name + ' ' + item.m_name + ' ' + item.l_name}}</h4>
+
+                                    </ng-template>
+
+                                    <ng-template #nzDescription>
+
+                                        <p class="m-0">
+                                            <span class="font-weight-600">Status</span>:
+                                            {{ item.status === '1' ? 'Active' : 'InActive'}}
+                                        </p>
+
+                                        <p class="m-0">
+                                            <span class="font-weight-600">Date of Birth</span>:
+                                            {{ item.dob}}
+                                        </p>
+
+                                    </ng-template>
+
+                                </nz-list-item-meta>
+
+                            </nz-card>
+
+                        </ng-template>
+
+                    </nz-list-item>
+                </ng-template>
+
+            </nz-list>
+
+            <!-- EMPTY VIEW -->
+            <ng-template #emptyRoomBlock>
+
+                <nz-empty class="m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                          [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                    <ng-template #contentTpl>
+                        <h4 class="mt-24">No Data Found</h4>
+                        <span>Please click on add button to add rooms to this child</span>
+                    </ng-template>
+
+                </nz-empty>
+
+            </ng-template>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,106 @@
+<div id="login" fxLayout="column">
+
+    <div id="login-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+
+        <div id="login-form" [@animate]="{ value:'*', params:{ delay:'300ms', y:'-15px', opacity: 0 }}">
+
+            <div class="bg-pattern-wrapper" [ngStyle]="{ 'background-image': 'url(assets/patterns/bg-pattern-login-2.svg)', 'height': '200px' }"></div>
+
+            <div class="bg-inner-wrapper p-24">
+
+                <!-- <h2>
+                    <span class="first">Welcome to KinderPay</span>
+                    <span class="last">{{ clientObj.name || '' }} branch - {{ clientObj.organization || '' }} Center</span>
+                </h2> -->
+                
+                <h2>Welcome to Kinder m8</h2>
+
+                <!--<p class="desc">KinderPay allows to setup invoices, financing and manage all CCS/CCMS related operations.</p>-->
+
+                <ng-container *ngIf="!autoLoginView else autoLoginContent">
+
+                    <form name="loginForm" [formGroup]="loginForm" novalidate>
+    
+                        <mat-form-field appearance="outline">
+                            <mat-label>Email</mat-label>
+                            <input matInput formControlName="email">
+                            <mat-icon matSuffix class="secondary-text">mail</mat-icon>
+                            <mat-error *ngIf="loginForm.get('email').hasError('required')">
+                                Email is required
+                            </mat-error>
+                            <mat-error *ngIf="!loginForm.get('email').hasError('required') && loginForm.get('email').hasError('email')">
+                                Please enter a valid email address
+                            </mat-error>
+                        </mat-form-field>
+    
+                        <mat-form-field appearance="outline">
+                            <mat-label>Password</mat-label>
+                            <input matInput type="password" formControlName="password">
+                            <mat-icon matSuffix class="secondary-text">vpn_key</mat-icon>
+                            <mat-error>
+                                Password is required
+                            </mat-error>
+                        </mat-form-field>
+    
+                        <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center">
+                            <label nz-checkbox>
+                                <span style="font-weight: 500">Remember me</span>
+                            </label>
+
+                            <a class="forgot-password" (click)="goForgotPassword($event)">
+                                Forgot Password?
+                            </a>
+                        </div>
+    
+                        <button nz-button
+                                nzBlock
+                                nzType="primary"
+                                nzSize="large"
+                                [promiseBtn]="isLoading"
+                                [disabled]="loginForm.invalid"
+                                (click)="onSubmit()">LOG IN</button>
+    
+                        <div class="copyright">
+                            Copyright © {{ copyRightYear }}
+                            <strong>Kinder m8</strong>, All rights reserved.
+                        </div>
+    
+                    </form>
+
+                </ng-container>
+
+                <ng-template #autoLoginContent>
+                    
+                    <div class="auto-login-view">
+
+                        <ng-container [ngSwitch]="autoLoginStatus">
+
+                            <div *ngSwitchCase="1">
+                                <img src="assets/icons/flat/icons1/svg/003-goal.svg" class="done" alt="done"/>
+                                <h2>Login successfully! Redirecting...</h2>
+                            </div>
+
+                            <div *ngSwitchCase="2">
+                                <img src="assets/icons/flat/ui_set/custom_icons/404_3.svg" class="done" alt="done"/>
+                                <h2>Token expired. Please try again</h2>
+                                <a (click)="backToLoginPage($event)"><i class="long arrow alternate left icon"></i> Back to login</a>
+                            </div>
+
+                            <div *ngSwitchDefault>
+                                <img src="assets/loading/magnify.svg" class="processing" alt="processing"/>
+                                <h2>Processing... Please wait</h2>
+                            </div>
+
+                        </ng-container>
+
+                    </div>
+
+                </ng-template>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

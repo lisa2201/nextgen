@@ -1,0 +1,22 @@
+<form name="enrolmentForm" 
+    fxLayout="column" fxFlex nz-form [nzLayout]="'vertical'" 
+    [formGroup]="enrolmentForm" >
+
+    <nz-form-item>
+
+        <nz-form-label nzRequired>Enrolment ID</nz-form-label>
+
+        <nz-form-control nzHasFeedback [nzErrorTip]="enrolmentIdErrorTpl">
+
+            <input nz-input formControlName="enrolment" placeholder="enrolment id" type="text" />
+        
+            <ng-template #enrolmentIdErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">Please input enrolment id</ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">Enrolment id can't be longer than 20 characters</ng-container>
+            </ng-template>
+        
+        </nz-form-control>
+
+    </nz-form-item>
+
+</form>

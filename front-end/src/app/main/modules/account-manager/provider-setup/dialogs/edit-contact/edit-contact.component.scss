@@ -1,0 +1,33 @@
+ @import "src/@fuse/scss/fuse";
+
+ app-edit-contact {
+    flex-direction: column;
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 640px;
+    }
+
+    form{
+        width: 100%;
+        text-align: left;
+    }
+
+}
+.contact-edit-dialog {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 640px;
+    }
+
+    form{
+        width: 100%;
+        text-align: left;
+    }
+}

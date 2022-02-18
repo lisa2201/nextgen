@@ -1,0 +1,393 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title" fxLayout="row" fxLayoutAlign="space-between center">
+        Action 
+        <span *ngIf="selected" class="ml-8 font-size-13 font-weight-600">({{ selected.getTypeLabel() }})</span>
+    </span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0" fxLayout="column" fxFlex 
+    fusePerfectScrollbar 
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <ng-container *ngIf="selected">
+
+        <form name="actionForm" 
+            [formGroup]="actionForm" nz-form 
+            [nzLayout]="'vertical'">
+
+            <nz-form-item>
+    
+                <nz-form-label nzRequired>{{ selected.hasEndDate() ? 'Date Range' : 'Date' }}</nz-form-label>
+    
+                <nz-form-control nzHasFeedback [nzErrorTip]="dateErrorTpl">
+    
+                    <nz-date-picker *ngIf="!selected.hasEndDate() else dateRangeBlock"
+                        formControlName="date"
+                        [nzPlaceHolder]="'select date'"
+                        [nzInputReadOnly]="true"
+                        [nzDisabled]="true">
+                    </nz-date-picker>
+            
+                    <ng-template #dateRangeBlock>
+            
+                        <nz-range-picker 
+                            formControlName="date_range"
+                            [nzRanges]="dateRanges"
+                            [nzInputReadOnly]="true"
+                            [nzDisabled]="true">
+                        </nz-range-picker>
+                        
+                    </ng-template>
+    
+                    <ng-template #dateErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please select a {{ selected.hasEndDate() ? 'date range' : 'date' }}</ng-container>
+                    </ng-template>
+    
+                </nz-form-control>
+    
+            </nz-form-item>
+            
+            <ng-container *ngIf="!errorType else showBookingErrorMessage">
+
+                <ng-container *ngIf="!selected.isBookingUpdateType()">
+
+                    <nz-form-item>
+        
+                        <nz-form-label nzRequired>Room</nz-form-label>
+            
+                        <nz-form-control nzHasFeedback [nzErrorTip]="roomErrorTpl">
+            
+                            <nz-select  
+                                formControlName="room"
+                                nzShowSearch
+                                nzAllowClear
+                                nzPlaceHolder="select a room"
+                                (ngModelChange)="selectFeeOnRoomChange($event)">
+            
+                                <nz-option *ngFor="let item of (selected.isCasual() ? selected.child.rooms : rooms); trackBy: trackByFn;" nzValue="{{ item.id }}" nzLabel="{{ item.title }}" nzCustomContent>
+                                    <span fxLayout="row" fxLayoutAlign="space-between center">
+                                        {{ item.title }}
+                                        <i *ngIf="isRoomLinked(item)" class="linkify icon"></i>
+                                    </span>
+                                </nz-option>
+                                
+                            </nz-select>
+            
+                            <ng-template #roomErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a room</ng-container>
+                            </ng-template>
+            
+                        </nz-form-control>
+            
+                    </nz-form-item>
+            
+                    <nz-form-item>
+            
+                        <nz-form-label nzRequired>Fees</nz-form-label>
+            
+                        <nz-form-control nzHasFeedback [nzErrorTip]="feesErrorTpl">
+            
+                            <nz-select  
+                                formControlName="fees"
+                                nzShowSearch
+                                nzAllowClear
+                                nzPlaceHolder="select a fee"
+                                [nzDropdownClassName]="'session-select'"
+                                [nzCustomTemplate]="custom"
+                                [nzDisabled]="filteredFees.length < 1"
+                                [nzOptionHeightPx]="filteredFees.length < 4 ? 78 : 32">
+            
+                                <nz-option 
+                                    *ngFor="let item of filteredFees | orderBy: 'name'; trackBy: trackByFn;"
+                                    nzValue="{{ item.id }}"
+                                    nzLabel="{{ item.name }} ({{ item.getFeeAmount() | currency: client.currency : 'symbol':'1.2-2' }})"
+                                    nzCustomContent
+                                    [nzDisabled]="item.isArchived()">
+            
+                                    <p class="title mb-4">
+                                        <span class="type" *ngIf="item.vendor === '0'">CCS</span>
+                                        <span>{{ item.name + ' (' + (item.isCasual() ? 'C' : 'R') + ')'}}</span>
+                                    </p>
+            
+                                    <p class="sub mb-0">
+                                        <i class="dollar sign icon ic"></i>
+                                        {{ item.getFeeAmount() | currency: client.currency :'symbol':'1.2-2' }}
+                                        <ng-container *ngIf="item.getCurrentAdjusted()">({{ item.getCurrentAdjusted().effectiveDate }})</ng-container>
+                                    </p>
+            
+                                    <p class="sub mb-0" *ngIf="item.frequency === '0'; else hourlyBlock">
+                                        <i class="clock outline icon ic"></i>
+                                        {{ item.sessionStart | convertTimeString }} to
+                                        {{ item.sessionEnd | convertTimeString }}
+                                    </p>
+            
+                                    <ng-template #hourlyBlock>
+                                        <p class="sub mb-0">
+                                            <i class="clock outline icon ic"></i>
+                                            Hourly Basis
+                                        </p>
+                                    </ng-template>
+            
+                                </nz-option>
+            
+                                <ng-template #custom let-selected>
+                                    <i class="circle icon session-type-color-code casual mr-8" *ngIf="getFeeInfo(selected.nzValue).type === '1'"></i>
+                                    <span>{{ selected.nzLabel }}</span>
+                                </ng-template>
+                                
+                            </nz-select>
+            
+                            <ng-template #feesErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a fee</ng-container>
+                            </ng-template>
+            
+                        </nz-form-control>
+            
+                    </nz-form-item>
+
+                </ng-container>
+                
+                <ng-container *ngIf="selected.isAbsence()">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>CCS Absence Reason</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="ccsAbsErrorTpl">
+
+                            <nz-select  
+                                formControlName="absence"
+                                nzAllowClear
+                                nzPlaceHolder="select a absence reason">
+        
+                                <nz-option *ngFor="let item of absReasons | keyvalue; trackBy: trackByFn;" nzValue="{{ item.key }}" nzLabel="{{ item.value }}"></nz-option>
+                                
+                            </nz-select>
+        
+                            <ng-template #ccsAbsErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a absence reason (CCS)</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                    <nz-form-item>
+
+                        <nz-form-label>Absence Document Held</nz-form-label>
+
+                        <nz-form-control>
+
+                            <nz-switch formControlName="absent_document_held" nzCheckedChildren="Yes" nzUnCheckedChildren="No"></nz-switch>
+                
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </ng-container>
+                
+                <ng-container *ngIf="selected.isLateType()">
+    
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Late {{ selected.isPickup() ? 'Pick Up' : 'Drop Off' }} Time</nz-form-label>
+                
+                        <nz-form-control nzHasFeedback [nzErrorTip]="lateTimeErrorTpl">
+                
+                            <ry-time-picker 
+                                #timePicker
+                                formControlName="late_time"
+                                ryFormat="h:mm A"
+                                [ryType]="'single'"
+                                [ryMinuteStep]="1"
+                                [ryPlaceHolder]="'select ...'">
+                            </ry-time-picker>
+                
+                            <ng-template #lateTimeErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input a time</ng-container>
+                            </ng-template>
+                        
+                        </nz-form-control>
+                
+                    </nz-form-item>
+    
+                    <nz-form-item>
+    
+                        <nz-form-label>Late Description</nz-form-label>
+        
+                        <nz-form-control [nzErrorTip]="lateDescChangeErrorTpl">
+        
+                            <textarea formControlName="late_desc" nz-input rows="3" placeholder="late description"></textarea>
+        
+                            <ng-template #lateDescChangeErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input reason for late change</ng-container>
+                            </ng-template>
+        
+                        </nz-form-control>
+        
+                    </nz-form-item>
+    
+                </ng-container>
+    
+                <nz-form-item *ngIf="preview && preview.length > 0">
+    
+                    <nz-form-label>
+                        <div fxFlex="1 0 auto" fxLayoutAlign="space-between end">
+                            Booking Preview
+                            <span>
+                                <nz-tag nzColor="success">Valid: {{ getPreviewHeader().ok }}</nz-tag>
+                                <nz-tag nzColor="error" class="m-0">Conflict: {{ getPreviewHeader().conflict }}</nz-tag>
+                            </span>
+                        </div>
+                    </nz-form-label>
+    
+                    <nz-form-control>
+    
+                        <nz-list class="preview-list" nzBordered>
+    
+                            <nz-list-header class="py-4">
+                                <div fxLayout="row" fxLayoutAlign="space-between center">
+                                    <p class="m-0" fxLayout="row" fxLayoutAlign="start center"
+                                        nz-checkbox 
+                                        [(nzChecked)]="isAllPreviewDataChecked"
+                                        [nzIndeterminate]="isPreviewIndeterminate"
+                                        (nzCheckedChange)="checkAllPreviews($event)">
+                                        <span class="font-size-13 font-weight-600">Select all</span>
+                                    </p>
+                                    <span *ngIf="preview">{{ getSelectedPreviewSlotItems().length }} / {{ preview.length }}</span>
+                                </div>
+                            </nz-list-header>
+                            
+                            <nz-list-item 
+                                *ngFor="let item of preview; trackBy: trackByFn;"
+                                [ngClass]="{ 'disabled' : item.disabled }">
+        
+                                <div fxLayout="column" fxFlex>
+        
+                                    <p class="mb-4 font-weight-600" fxLayout="row" fxLayoutAlign="start center">
+                                        <label class="mr-8"
+                                            nz-checkbox
+                                            [(nzChecked)]="item.selected"
+                                            [nzDisabled]="item.disabled"
+                                            (nzCheckedChange)="refreshPreviewStatus()"></label>
+                                        {{ item.date }} ({{ item.day | titlecase }})
+                                    </p>
+        
+                                    <p class="m-0">
+                                        <i class="home icon mr-8 ic"></i>{{ getRoomInfo(item.room).title }}
+                                    </p>
+
+                                    <ng-container *ngIf="getFeeInfo(item.fee) else emptyFee">
+
+                                        <p class="m-0" >
+                                            <i class="dollar sign icon mr-8 ic"></i>{{ getFeeInfo(item.fee).name }} 
+                                        </p>
+    
+                                        <p class="m-0 font-weight-600 font-size-13" *ngIf="getFeeInfo(item.fee)">
+                                            <i class="dollar sign icon mr-8 ic" [ngStyle]="{'opacity': 0}"></i>(<ng-container *ngIf="getFeeInfo(item.fee).getCurrentAdjusted()">{{ getFeeInfo(item.fee).getCurrentAdjusted().effectiveDate }}<i class="arrows alternate horizontal icon px-4"></i> </ng-container> {{ getFeeInfo(item.fee).getFeeAmount() | currency: client.currency :'symbol':'1.2-2' }})
+                                        </p>
+
+                                    </ng-container>
+                                    
+                                    <ng-template #emptyFee><p class="m-0">fee not found</p></ng-template>
+        
+                                    <p class="m-0">
+                                        <i class="clock outline icon mr-8 ic"></i>{{ item.start | convertTimeString }} - {{ item.end | convertTimeString }}
+                                    </p>
+            
+                                </div>
+        
+                            </nz-list-item>
+                            
+                        </nz-list>
+    
+                    </nz-form-control>
+    
+                </nz-form-item>
+
+            </ng-container>
+
+            <ng-template #showBookingErrorMessage>
+
+                <nz-alert class="mb-16" nzType="error" [nzMessage]="syncError">
+        
+                    <ng-template #syncError>
+                        <div fxLayout="row" fxLayoutAlign="start center">
+                            <!-- <img src="assets/icons/flat/ui_set/custom_icons/child/enrolment-error.svg" alt="img"> -->
+                            <p class="mb-0">{{ errorType.message }}</p>
+                        </div>
+                    </ng-template>
+        
+                </nz-alert>
+
+            </ng-template>
+            
+            <div fxLayout="row" fxLayoutAlign="end center">
+
+                <ng-container *hasPermission="['AC2']; belongsTo 'N31'">
+
+                    <ng-container *ngIf="!errorType else rejectOption">
+
+                        <button class="text-uppercase mr-8" 
+                            nz-button 
+                            nzType="primary"
+                            nz-dropdown 
+                            [nzTrigger]="'click'"
+                            [nzBackdrop]="false" 
+                            [nzDropdownMenu]="menu"
+                            [promiseBtn]="buttonLoader"
+                            [disabled]="!actionForm.valid">
+                            Action <i class="chevron down icon ml-8"></i>
+                        </button>
+    
+                        <nz-dropdown-menu #menu="nzDropdownMenu">
+                            <ul nz-menu>
+                                <li nz-menu-item (click)="update($event)" [ngClass]="{ 'disabled': !hasPreviewSlotSelected() }">
+                                    <span class="_icon mr-8"><i class="check circle outline icon"></i></span>
+                                    <span class="font-weight-600">Accept</span>
+                                </li>
+                                <li nz-menu-item (click)="update($event, '1')">
+                                    <span class="_icon mr-8"><i class="times circle outline icon"></i></span>
+                                    <span class="font-weight-600">Reject</span>
+                                </li>
+                            </ul>
+                        </nz-dropdown-menu>
+
+                    </ng-container>
+                    
+                    <ng-template #rejectOption>
+
+                        <button class="text-uppercase mr-8" 
+                            type="button"
+                            nz-button 
+                            nzType="danger"
+                            [promiseBtn]="buttonLoader"
+                            [disabled]="!actionForm.valid"
+                            (click)="update($event, '1')">
+                            Reject
+                        </button>
+
+                    </ng-template>
+                    
+                </ng-container>
+                
+                <button class="text-uppercase" 
+                    type="button"
+                    nz-button 
+                    nzType="default"
+                    [disabled]="buttonLoader"
+                    (click)="close($event)">
+                    Close
+                </button>
+
+            </div>
+        
+        </form>
+
+    </ng-container>
+    
+</div>
+<!-- / SIDEBAR CONTENT -->

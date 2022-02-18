@@ -1,0 +1,64 @@
+<fuse-widget class="widget" fxLayout="column">
+
+    <!-- Front -->
+    <div class="fuse-widget-front">
+
+        <nz-spin
+            [nzSpinning]="widgetLoader"
+            [nzIndicator]="indicatorTemplate">
+
+            <div class="p-16 h-52" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <div fxFlex class="py-16 h3">YTD </div>
+                                    
+                <span *ngIf="show_child_select" class="child-selection">
+                    <mat-icon role="img" nz-dropdown nzTrigger="click" [nzDropdownMenu]="child_list" class="mat-icon notranslate secondary-text material-icons mat-icon-no-color" aria-hidden="true">menu</mat-icon>
+
+                    <nz-dropdown-menu #child_list="nzDropdownMenu">
+                        <ul class="top-bar-menu" nz-menu nzSelectable>
+                            
+                            <li *ngFor="let child of children" nz-menu-item (click)="getYTD(child.id)">
+                                <i class="user circle icon"></i>
+                                <span>{{ child.f_name }}</span>
+                            </li>    <!--                         
+                            <li nz-menu-divider></li> -->
+                        </ul>
+                    </nz-dropdown-menu>
+                </span>
+                
+                <button class="refresh-button" nz-button nzType="link" nzSize="small" (click)="getYTD()">
+                    <i class="sync vertical icon"></i>
+                </button>
+
+            </div>
+
+            <div class="pt-8 pb-24" fxLayout="column" fxLayoutAlign="center center">
+                <div class="font-size-42 line-height-36" [ngClass]="'blue-grey-fg'">
+                    {{ ytdData.absence_count}}
+                </div>
+                <div class="h3 secondary-text font-weight-500">Absence count
+                </div>
+            </div>
+
+            <div class="p-16 border-top line-height-16" fxLayout="row" fxLayoutAlign="start center">
+                <span class="h4 secondary-text text-truncate">
+                    Remaining :
+                </span>
+                <span class="h4 ml-8">
+                    {{ytdData.remaining_count}}
+                </span>
+            </div>
+        </nz-spin>
+
+    </div>
+    <!-- / Front -->
+
+</fuse-widget>
+
+<!-- LOADER VIEW -->
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+<!-- / LOADER VIEW -->

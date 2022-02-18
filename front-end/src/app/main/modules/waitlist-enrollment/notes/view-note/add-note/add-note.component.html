@@ -1,0 +1,56 @@
+<div fxLayout="column" fxLayoutAlign="space-around stretch">
+    <form [formGroup]="noteForm" nz-form fxLayout="column" fxLayoutAlign="space-around stretch">
+
+        <div class="p-16">
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Note</nz-form-label>
+
+                <nz-form-control nzHasFeedback>
+                            <textarea formControlName="note" nz-input
+                                      rows="5" cols="80"
+                                      placeholder="Note">
+                            </textarea>
+                </nz-form-control>
+
+            </nz-form-item>
+        </div>
+
+        <div fxLayout="row" class="m-0 py-16 px-24 fm-border-top"
+             fxLayoutAlign="space-between center">
+            <span></span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8"
+                        *hasPermission="['AC1']; belongsTo 'N57'"
+                        nz-button
+                        nzType="primary"
+                        [disabled]="!noteForm.valid"
+                        [promiseBtn]="buttonLoader"
+                        (click)="saveNote($event)">
+                    <i class="plus icon mr-8"></i> {{(this.editData?.note !== undefined) ? 'Update' : 'Add' }}
+                </button>
+
+                <button class="text-uppercase mr-8"
+                        type="button"
+                        nz-button
+                        nzType="default"
+                        (click)="resetForm($event)">
+                    Reset
+                </button>
+
+                <button class="text-uppercase mat-close-btn"
+                        type="button"
+                        nz-button
+                        nzType="danger"
+                        (click)="viewList()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+</div>

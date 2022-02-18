@@ -1,0 +1,21 @@
+<div class="header p-24" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
+    fxLayoutAlign.gt-sm="space-between end">
+
+    <div class="user-info" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
+        fxLayoutAlign.gt-sm="start center">
+        <img class="profile-image avatar huge" src="{{ getStaffProfileImage(userData) }}"
+            [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+        <div class="name" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+            {{userData.getFullName()}} <br>
+            <div class="room" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                {{userData.email}}
+            </div>
+            <!-- <div class="attendance" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                <span *ngFor="let baby of child">
+                    {{ baby.first_name}} |
+                </span> 
+            </div> -->
+        </div>
+
+    </div>
+</div>

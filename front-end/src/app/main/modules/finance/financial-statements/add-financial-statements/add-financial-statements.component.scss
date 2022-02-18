@@ -1,0 +1,130 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+app-add-financial-statements {
+
+    .toolbar {
+        .go-back-link {
+            flex: none;
+        }
+    }
+
+    .sidebar {
+        max-width: 600px;
+        width: auto;
+    }
+
+    .content {
+
+        form {
+
+            .statement-list {
+
+                display: flex;
+                flex-direction: column;
+
+                .statement-list-item {
+                    border: 1px solid #e5e8eb;
+                    border-radius: 4px;
+                }
+
+            }
+
+            nz-transfer {
+
+                display: flex;
+                justify-content: space-between;
+
+                nz-transfer-list {
+                    padding-top: 0px;
+                    flex-basis: 45%;
+                    height: 300px;
+
+                    .ant-transfer-list-header {
+                        position: relative;
+                        height: 15%;
+                    }
+
+                    .ant-transfer-list-body {
+                        padding-top: 0px;
+                        height: 85%;
+
+                        .ant-transfer-list-body-search-wrapper {
+                            position: relative;
+                            padding: 8px;
+                            height: 19%;
+                        }
+
+                        .ant-transfer-list-content {
+                            height: 81%;
+                        }
+
+                        input {
+                            &.ant-input {
+                                height: 32px !important;
+                            }
+                        }
+
+                        .ant-transfer-list-search-action {
+
+                            i {
+                                &.anticon {
+                                    height: 100% !important;
+                                    vertical-align: middle !important;
+                                }
+                            }
+
+                        }
+
+                    }
+
+
+                }
+
+                .ant-transfer-operation {
+                    display: flex;
+                    justify-content: center;
+                    flex-direction: column-reverse;
+                    flex-basis: 6%;
+                    margin: 0px;
+                    align-items: center;
+
+                    button {
+                        margin: 8px 0px !important;
+                        height: 40px;
+                        width: 32px;
+                    }
+                }
+
+            }
+
+            @include media-breakpoint("xs") {
+
+                 nz-transfer {
+
+                    flex-wrap: wrap;
+                    display: flex;
+
+                    nz-transfer-list {
+                        flex-basis: 100%;
+                    }
+
+                    .ant-transfer-operation {
+                        display: flex;
+                        flex-direction: column-reverse;
+                        flex-basis: 100%;
+
+                        button {
+                            margin: 8px 0px !important;
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+}

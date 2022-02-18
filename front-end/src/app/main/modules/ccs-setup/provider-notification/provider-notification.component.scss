@@ -1,0 +1,22 @@
+@import "src/@fuse/scss/fuse";
+
+provider-notification-main {
+
+    .content {
+        flex: 1;
+        
+        mat-tab-group {
+            height: 100%;
+            
+            .toolbar {
+                background-color: white;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+            }
+            
+            .mat-tab-body-wrapper {
+                flex-grow: 1;
+            }
+        }
+    }
+}

@@ -1,0 +1,112 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex [formGroup]="filtersForm">
+
+        <div class="mb-16" *ngIf="isSiteManager">
+
+            <ng-container>
+
+                <label class="filter-label">Provider</label>
+
+                <nz-select formControlName="provider" nzMode="default" [nzAllowClear]="false" nzPlaceHolder="Select Provider">
+
+                    <nz-option *ngFor="let provider of providers" nzValue="{{ provider.id }}" nzLabel="{{ provider.providerId }}">
+                    </nz-option>
+    
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16">
+
+            <ng-container>
+
+                <label class="filter-label"> Start Date</label>
+
+                <nz-date-picker [nzSize]="size" formControlName="sdate"  nzPlaceHolder="select date" class="block">
+                </nz-date-picker>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16">
+
+            <ng-container>
+
+                <label class="filter-label"> End Date</label>
+
+                <nz-date-picker [nzDisabled]="filtersForm.get('sdate').value === ''" [nzSize]="size" formControlName="edate"  nzPlaceHolder="select date" class="block" [nzDisabledDate]="disabledDate">
+                </nz-date-picker>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16">
+
+            <ng-container>
+
+                <label class="filter-label">Type</label>
+
+                <nz-select formControlName="type" nzShowSearch nzAllowClear nzPlaceHolder="Select Status">
+
+                    <nz-option *ngFor="let item of type" nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                    </nz-option>
+
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+        <div class="mb-16">
+
+            <ng-container>
+
+                <label class="filter-label">Source</label>
+
+                <nz-select formControlName="source" nzShowSearch nzAllowClear nzPlaceHolder="Select Priority">
+
+                    <nz-option *ngFor="let item of source" nzValue="{{ item.value }}" nzLabel="{{ item.name }}">
+                    </nz-option>
+
+                </nz-select>
+
+            </ng-container>
+
+        </div>
+
+
+
+        <button nz-button nzType="default" *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button>
+
+    </form>
+
+</div>
+<!-- / SIDEBAR CONTENT -->
+
+<!-- SIDEBAR ACTION -->
+<nz-button-group class="filter-action px-24 py-16">
+
+    <button nz-button 
+    (click)="clearFilter($event)" 
+    [disabled]="!filtersForm.valid">Clear</button>
+
+<button nz-button nzType="primary" 
+    [promiseBtn]="buttonLoader"
+    [disabled]="!filtersForm.valid"
+    (click)="submitFilter($event)">Filter</button>
+
+</nz-button-group>
+<!-- / SIDEBAR ACTION -->

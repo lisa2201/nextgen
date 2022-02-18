@@ -1,0 +1,25 @@
+@import "src/@fuse/scss/fuse";
+report-theme-select{
+    @include media-breakpoint('xs') {
+        .custom-size{
+            height: 48px!important;
+            width: 80px!important;
+        }
+        .custom-height{
+            width: 105px!important;
+            height: 88px!important;
+        }
+    }
+
+    @include media-breakpoint('gt-xs') {
+        .custom-height{
+            width: 160px!important;
+            height: 88px!important;
+        }
+        .custom-size{
+            height: 48px!important;
+            width: 100px!important;
+        }
+    }
+
+}

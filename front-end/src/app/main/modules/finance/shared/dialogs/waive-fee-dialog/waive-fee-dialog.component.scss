@@ -1,0 +1,41 @@
+@import "src/@fuse/scss/fuse";
+
+.financial-payment-waive-dialog {
+
+    @include media-breakpoint("xs") {
+        width: 100%;
+    }
+
+    @include media-breakpoint("gt-xs") {
+        width: 750px;
+    }
+
+    .mat-dialog-container {
+
+        padding: 0px;
+
+        .detail-link {
+            color: #319fe9;
+
+            &:hover {
+                color: #8ec5ea;
+                cursor: pointer;
+            }
+        }
+
+        .ant-select-selection-search-input {
+            padding: 0px;
+        }
+
+        .ant-table-small {
+            margin: 0px !important;
+        }
+
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+}

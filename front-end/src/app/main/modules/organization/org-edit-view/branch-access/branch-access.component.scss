@@ -1,0 +1,22 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+org-branch-access {
+
+    .badge {
+        top: 4px !important;
+
+        > svg {
+            font-size: 21px;
+            color: $danger-color;
+        }
+
+        &.active {
+            > svg {
+                color: $success-color;
+            }
+        }
+        
+    }
+
+}

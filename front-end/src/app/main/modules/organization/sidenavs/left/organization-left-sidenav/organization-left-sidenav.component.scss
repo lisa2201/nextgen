@@ -1,0 +1,54 @@
+// app-organization-left-sidenav {
+//     //         .mat-form-field.mat-form-field-type-mat-select .mat-form-field-infix {
+//     //             display: -webkit-inline-box;
+//     //             display: inline-flex;
+//     //             width: 130px;
+//     //         }
+
+//     //     .filterbar{
+//     //         background-color: white;
+//     //         border-radius: 10px;
+//     //         margin-left: 2%;
+//     //         margin-right: 2%;
+//     //         margin-bottom: 1%;
+//     //         padding-top: 1%;
+
+//     //             .filters{
+//     //                 padding-right: 10%;
+//     //                 padding-left: 24px;
+//     //                 width: 25%;
+//     //             }
+
+//     //             .filter{
+
+//     //                 padding-left: 2%;
+//     //                 width: 25%;
+//     //             }
+
+//     //             .resetButton{
+//     //                 margin-left: 24px;
+//     //                 margin-right: 24px;
+//     //                 position: absolute;
+//     //                 right: 0px;
+//     //                 top: 98px;
+//     //                 margin-right: 3%;
+//     //             }
+
+//     //     }
+//     // }
+
+//     // vertical-layout-3 #main > .container > .container {
+//     //     position: relative;
+//     //     display: -webkit-box;
+//     //     display: flex;
+//     //     -webkit-box-flex: 1;
+//     //     flex: 1 0 auto;
+//     //     width: 100%;
+//     //     min-width: 0;
+//     //     padding: 0;
+// }
+
+span.ant-radio + * {
+    padding-right: 40px;
+    padding-left: 8px;
+}

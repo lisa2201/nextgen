@@ -1,0 +1,59 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32" style="padding-top: 32px !important;">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0">
+
+    <form fxLayout="column" fxFlex [formGroup]="queryFiltersForm">
+
+        <div class="mb-16">
+
+            <label class="filter-label">Date Paid From</label>
+
+            <nz-date-picker [nzInputReadOnly]="true" [nzAllowClear]="true" class="block" nzPlaceHolder="Date Payed From" nzSize="small" formControlName="datePayedFrom"></nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Date Paid To</label>
+
+            <nz-date-picker [nzInputReadOnly]="true" [nzAllowClear]="true" class="block" nzPlaceHolder="Date Paid To" nzSize="small" formControlName="datePayedTo"></nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">
+                Clearing Number 
+                <i nz-tooltip nzTooltipTitle="The clearing number on the DSS payment system" class="question circle icon primary-color"></i>
+            </label>
+            
+            <input nz-input formControlName="clearingNumber" placeholder="Clearing Number" type="text" />
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">
+                Payment Line Item
+                <i nz-tooltip nzTooltipTitle="The Payment Request Line Item Id on the DSS system" class="question circle icon primary-color"></i>
+            </label>
+
+            <input nz-input formControlName="paymentLineItem" placeholder="Payment Line Item" type="text" />
+
+        </div>
+
+        <button  class="mb-16" nz-button nzType="default" (click)="filter($event)"
+                 [disabled]="buttonLoader" [@fadeInOnEnter] [@fadeOutOnLeave]>
+            <i class="sync left icon pr-8"></i>
+            Query Remittance
+        </button>
+
+    </form>
+
+</div>
+<!-- / SIDEBAR CONTENT -->

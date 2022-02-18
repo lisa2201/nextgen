@@ -1,0 +1,36 @@
+<div id="profile" class="page-layout simple tabbed" [@fadeInOnEnter]>
+
+    <!-- HEADER -->
+    <user-profile-header></user-profile-header>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <mat-tab-group dynamicHeight="true">
+
+            <mat-tab label="Personal Info">
+                <user-personal-Info></user-personal-Info>
+            </mat-tab>
+            <ng-container>
+                <mat-tab label="Profile Image" *ngIf="userData.isAdministrativeType()">
+                    <user-profile-image></user-profile-image>
+                </mat-tab>
+                <mat-tab label="Email Notifications" *ngIf="userData.isAdministrativeType() || isSiteManager">
+                    <email-notifications></email-notifications>
+                </mat-tab>
+            </ng-container>
+            <!-- <mat-tab label="Notification">
+                <user-notification></user-notification>
+            </mat-tab>
+
+            <mat-tab label="Photos & Videos">
+                Coming Soon!
+            </mat-tab> -->
+
+        </mat-tab-group>
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

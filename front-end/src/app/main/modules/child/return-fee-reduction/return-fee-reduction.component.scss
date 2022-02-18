@@ -1,0 +1,34 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+child-return-fee-reduction {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .child-info {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+
+        .child-img {
+            border: 4px solid $ant-border-color;
+            box-shadow: $custom-box-shadow-high;
+            margin-right: 16px;
+        }
+
+        .child-name {
+            font-size: 21px;
+            max-width: 300px;
+
+            @media only screen and (max-width: 670px) {
+                display: none;
+            }
+        }
+    }
+}

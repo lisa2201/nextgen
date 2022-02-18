@@ -1,0 +1,188 @@
+<div class="bg-pattern-wrapper" [ngStyle]="{ 'background-image': 'url(assets/patterns/' + (type === 'single' ? 'single-time-pattern' : 'range-time-pattern') + '.svg)' }"></div>
+
+<div class="bg-inner-wrapper p-24">
+
+    <div class="time-picker-inner">
+    
+        <ng-container *ngIf="type === 'single'">
+
+            <div fxLayout="row" fxLayoutAlign="center center" class="display-time-viewer">
+
+                <div class="clock single">
+                    <span class="time">{{ (getSingleValue().hours < 10 ? '0' : '') + getSingleValue().hours }}</span>
+                    <span class="separator">:</span>
+                    <span class="time">{{ (getSingleValue().minutes < 10 ? '0' : '') + getSingleValue().minutes }}</span>
+                </div>
+
+            </div>
+    
+            <div>
+                <nz-slider 
+                    [nzTooltipVisible]="'never'" 
+                    [nzMin]="minSingleValue" 
+                    [nzMax]="maxSingleValue"
+                    [nzStep]="minStep"
+                    [(ngModel)]="singleValue"
+                    (ngModelChange)="onSingleValueChanges($event)"></nz-slider>
+            </div>
+    
+            <div class="slider-action-bar">
+
+                <button type="button" class="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="toggleStep($event, 'plus')">
+                    <img src="assets/icons/flat/ui_set/custom_icons/datetime-picker/plus.svg" alt="icon">
+                </button>
+    
+                <span class="mx-4">
+                    <nz-radio-group class="has-img"
+                        nzButtonStyle="solid" 
+                        [nzSize]="'small'"
+                        [(ngModel)]="mandarinValue"
+                        (ngModelChange)="onMandarinToggle($event)">
+                
+                        <label nz-radio-button nzValue="0">
+                            <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/morning.svg" alt="active icon">
+                            <span>AM</span>
+                        </label>
+                
+                        <label nz-radio-button nzValue="1">
+                            <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/night.svg" alt="inactive icon">
+                            <span>PM</span>
+                        </label>
+                    </nz-radio-group>
+                </span>
+
+                <button type="button" class="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="toggleStep($event)">
+                    <img src="assets/icons/flat/ui_set/custom_icons/datetime-picker/minus.svg" alt="icon">
+                </button>
+    
+            </div>
+    
+        </ng-container>
+    
+        <ng-container *ngIf="type === 'range'">
+    
+            <div fxLayout="row" fxLayoutAlign="center center" class="display-time-viewer">
+    
+                <span class="clock">
+                    <span class="time">{{ (getRangeValues().start.hours < 10 ? '0' : '') + getRangeValues().start.hours }}</span>
+                    <span class="separator">:</span>
+                    <span class="time">{{ (getRangeValues().start.minutes < 10 ? '0' : '') + getRangeValues().start.minutes }}</span>
+                    <span class="mandarin">{{ getRangeValues().start.mandarin }}</span>
+                </span>
+    
+                <img class="separator-icon px-8" src="assets/icons/flat/ui_set/custom_icons/datetime-picker/double-arrow.svg" alt="range icon">
+    
+                <span class="clock">
+                    <span class="time">{{ (getRangeValues().end.hours < 10 ? '0' : '') + getRangeValues().end.hours }}</span>
+                    <span class="separator">:</span>
+                    <span class="time">{{ (getRangeValues().end.minutes < 10 ? '0' : '') + getRangeValues().end.minutes }}</span>
+                    <span class="mandarin">{{ getRangeValues().end.mandarin }}</span>
+                </span>
+    
+            </div>
+    
+            <div>
+                <nz-slider 
+                    nzRange
+                    [nzTooltipVisible]="'never'"  
+                    [nzStep]="minStep" 
+                    [nzMin]="minTimeRange"
+                    [nzMax]="maxTimeRange"
+                    [(ngModel)]="timeRangeValue"
+                    (nzOnAfterChange)="onRangeValueChanges($event)"></nz-slider>
+            </div>
+    
+            <div class="slider-action-bar">
+    
+                <button type="button" class="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="toggleStep($event, 'plus')">
+                    <img src="assets/icons/flat/ui_set/custom_icons/datetime-picker/plus.svg" alt="icon">
+                </button>
+    
+                <span class="mx-4">
+                    <nz-radio-group class="has-img"
+                        nzButtonStyle="solid" 
+                        [nzSize]="'small'"
+                        [(ngModel)]="timeRangeOption">
+                
+                        <label nz-radio-button nzValue="0">
+                            <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/form/clock.svg" alt="active icon">
+                            <span>Start</span>
+                        </label>
+                
+                        <label nz-radio-button nzValue="1">
+                            <span>End</span>
+                            <img class="ml-8" src="assets/icons/flat/ui_set/custom_icons/form/clock.svg" alt="inactive icon">
+                        </label>
+                
+                    </nz-radio-group>
+                </span>
+    
+                <button type="button" class="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="toggleStep($event)">
+                    <img src="assets/icons/flat/ui_set/custom_icons/datetime-picker/minus.svg" alt="icon">
+                </button>
+    
+            </div>
+    
+        </ng-container>
+    
+        <div class="error-wrapper">
+    
+            <div class="error-msg" 
+                *ngIf="validateTime()"
+                [@slideMotion]="'bottom'">
+        
+                <ng-container *ngIf="type === 'single'">
+        
+                    <ng-container *ngIf="validationTypes.GREATER_THAN_VALUE; else lessThankBlock">
+                        End time should not be greater than start time.
+                    </ng-container>
+        
+                    <ng-template #lessThankBlock>
+                        Start time should not be less than end time.
+                    </ng-template>
+        
+                </ng-container>
+        
+                <ng-container *ngIf="type === 'range'">
+                    Time overlapped.
+                </ng-container>
+        
+            </div>
+            
+        </div>
+    
+    </div>
+    
+    <div fxLayout="row" fxLayoutAlign="space-between center" class="mt-24">
+    
+        <span>
+            <button nz-button 
+                *ngIf="type === 'single'" 
+                (click)="now($event)">Now</button>
+        </span>
+    
+        <nz-button-group>
+    
+            <button nz-button nzType="primary" 
+                (click)="applyValues($event)"
+                [disabled]="validateTime()">Set</button>
+    
+            <button nz-button (click)="close($event)">Cancel</button>
+            
+        </nz-button-group>
+    
+    </div>
+
+</div>

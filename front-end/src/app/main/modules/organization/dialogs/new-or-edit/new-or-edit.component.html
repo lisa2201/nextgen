@@ -1,0 +1,152 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <form name="organizationForm" class="compose-form" 
+        fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="organizationForm" nz-form
+        (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+                        <nz-form-label nzRequired>Email</nz-form-label>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl">
+                            <input nz-input formControlName="email" placeholder="email" type="email" />
+        
+                            <ng-template #emailErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your email</ng-container>
+                                <ng-container *ngIf="control.hasError('email')">Please enter a valid email address
+                                </ng-container>
+                                <ng-container *ngIf="control.hasError('exists')">Email already exists</ng-container>
+                            </ng-template>
+        
+                        </nz-form-control>
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+                        <nz-form-label nzRequired>Organisation Name</nz-form-label>
+                        <nz-form-control nzHasFeedback [nzErrorTip]="company_nameErrorTpl">
+                            <input nz-input formControlName="company_name" placeholder="company name" type="text" />
+                            <ng-template #company_nameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your Organisation Name
+                                </ng-container>
+                            </ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                </div>
+    
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+                        <nz-form-label>Phone number</nz-form-label>
+                        <nz-form-control nzHasFeedback>
+                            <input nz-input formControlName="phone_number" placeholder="phone number" type="text" />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                </div>
+    
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+                        <nz-form-label>Address 1</nz-form-label>
+                        <nz-form-control nzHasFeedback>
+                            <input nz-input formControlName="address_1" placeholder="address one" type="text" />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                </div>
+    
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+                        <nz-form-label>Address 2</nz-form-label>
+                        <nz-form-control nzHasFeedback>
+                            <input nz-input formControlName="address_2" placeholder="address two" type="text" />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+                        <nz-form-label>City</nz-form-label>
+                        <nz-form-control nzHasFeedback>
+                            <input nz-input formControlName="city" placeholder="city" type="text" />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                </div>
+    
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+                        <nz-form-label>Country Code</nz-form-label>
+                        <nz-form-control nzHasFeedback>
+                            <input nz-input formControlName="country" placeholder="country" type="text" />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                </div>
+    
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <ng-container *ngIf="!editMode">
+                    <button class="text-uppercase mr-8" *hasPermission="['AC1']; belongsTo 'N09'" nz-button
+                        nzType="primary" [disabled]="!organizationForm.valid" [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Save
+                    </button>
+                </ng-container>
+
+                <ng-container *ngIf="editMode">
+                    <button class="text-uppercase mr-8" *hasPermission="['AC1']; belongsTo 'N09'" nz-button
+                        nzType="primary" [disabled]="!organizationForm.valid" [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Update
+                    </button>
+                </ng-container>
+
+                <button class="text-uppercase mr-8" type="button" nz-button nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

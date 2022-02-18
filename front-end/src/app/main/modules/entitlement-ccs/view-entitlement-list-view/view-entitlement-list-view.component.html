@@ -1,0 +1,105 @@
+<div class="content" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+    <!-- CONTENT TOOLBAR -->
+    <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span fxLayout="row" fxLayoutAlign="space-between center" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <button class="text-uppercase blank" nz-button nzType="link"
+                (click)="toggleSidebar('entitlement-filter-sidebar')">
+                <i class="filter icon"></i>
+            </button>
+
+            <nz-divider nzType="vertical" class="mr-16"></nz-divider>
+
+        </span>
+
+    </div>
+    <!-- / CONTENT TOOLBAR -->
+
+    <ng-container>
+
+        <nz-table 
+            #headerTable 
+            [nzFrontPagination]="true"
+            [nzData]="resultList" 
+            [nzNoResult]="emptyBlock"
+            [nzLoading]="tableLoading" 
+            [nzLoadingIndicator]="indicatorTemplate">
+
+
+            <thead>
+                <tr>
+                    <th nzWidth="150px">Enrolment ID</th>
+                    <th nzWidth="150px">Child</th>
+                    <th nzWidth="150px">Date Of Entitlement</th>
+                    <th nzWidth="150px">CCS Percentage</th>
+                    <th nzWidth="150px">CCS Withholding Percentage</th>
+                    <th nzWidth="150px">CCS Total Hours Per Fortnight</th>
+                    <th nzWidth="150px">ACCS Hourly Rate Cap Increase Percentage</th>
+                    <th nzWidth="150px">Annual Cap Reached</th>
+                    <th nzWidth="150px">Absence Count</th>
+                    <th nzWidth="150px">Paid Absences</th>
+                    <th nzWidth="150px">Unpaid Absences</th>
+                    <th nzWidth="150px">Absences Available No Evidence</th>
+                    <th nzWidth="150px">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let item of headerTable.data">
+                    <td> {{ item.enrolmentID }}</td>
+                    <td> {{ item.childName }}</td>
+                    <td> {{ item.dateOfEntitlement }}</td>
+                    <td> {{ item.CCSPercentage }} </td>
+                    <td> {{ item.CCSWithholdingPercentage }} </td>
+                    <td> {{ item.CCSTotalHoursPerFortnight }} </td>
+                    <td> {{ item.ACCSHourlyRateCapIncreasePercentage }} </td>
+                    <td> {{ (item.annualCapReached=='true')? 'Yes' : 'No' }} </td>
+                    <td> {{ item.absenceCount }} </td>
+                    <td> {{ item.paidAbsences }} </td>
+                    <td> {{ item.unpaidAbsences }} </td>
+                    <td> {{ item.absencesAvailableNoEvidence }} </td>
+                    <td>
+                        <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="menu">
+                            <i class="ellipsis vertical icon"></i>
+                        </button>
+
+                        <mat-menu #menu="matMenu" backdropClass="tlp-more">
+
+                            <ng-container>
+                                <button mat-menu-item (click)="goToDetail($event, item)">
+                                    <i class="eye icon primary-color"></i>
+                                    <span class="font-weight-600">View Details</span>
+                                </button>
+                            </ng-container>
+
+                        </mat-menu>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                      [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+
+    </ng-container>
+
+</div>

@@ -1,0 +1,125 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Sign in / out </span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="signForm" class="compose-form" fxLayout="column" fxFlex nz-form [nzLayout]="'vertical'"
+        [formGroup]="signForm" (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+    
+            <div class="header p-8 mb-16 text-center">
+    
+                <nz-avatar [nzSize]="100" nzIcon="user" nzSrc="{{getProfile()}}"></nz-avatar>
+    
+                <h3> {{child?.full_name | uppercase}}</h3>
+
+                <h5>{{getFeeData()}}</h5>
+                <h5>{{getBookingData()}}</h5>
+    
+            </div>
+    
+            <div nz-row [nzGutter]="24">
+    
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+    
+                    <nz-form-item>
+    
+                        <!-- <nz-form-label>Description <small class="pl-4">(Max 250 characters)</small></nz-form-label> -->
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="descErrorTpl">
+    
+                            <textarea formControlName="desc" nz-input rows="4" placeholder="description"></textarea>
+    
+                            <ng-template #descErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('maxlength')">Description can't be longer than 250
+                                    characters</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+    
+                    <nz-form-item>
+
+                        <nz-form-label>
+                            <ng-container *ngIf="getLable(true) === 'SIGN IN'">Drop time</ng-container>
+                            <ng-container *ngIf="getLable(true) === 'SIGN OUT'">Pick Time</ng-container>
+                         </nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="sStartErrorTpl">
+
+                            <ry-time-picker 
+                                #timePicker
+                                formControlName="time"
+                                ryFormat="h:mm A"
+                                [ryType]="'single'"
+                                [ryMinuteStep]="5"
+                                [ryPlaceHolder]="'time'">
+                            </ry-time-picker>
+
+                            <ng-template #sStartErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your session start & time
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+            </div>
+    
+        </div>
+    
+
+    <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span>
+            <button class="text-uppercase mat-close-btn " 
+                type="button"
+                nz-button 
+                nzType="danger"
+                (click)="matDialogRef.close()">
+                Close
+            </button>
+        </span>
+
+        <span class="text-right">
+            <!-- <button class="text-uppercase mat-close-btn" 
+                type="button"
+                nz-button 
+                nzType="primary"
+                [disabled]="!signForm.valid">
+                Sign in
+            </button> -->
+
+            <button class="text-uppercase mr-8"
+            nz-button 
+            nzType="primary" 
+            [disabled]="!signForm.valid || getLable(false)"
+            [promiseBtn]="buttonLoader">
+            <i class="plus icon mr-8"></i> {{getLable(true)}}
+        </button>
+
+        </span>
+
+    </div>
+</form>
+
+</div>

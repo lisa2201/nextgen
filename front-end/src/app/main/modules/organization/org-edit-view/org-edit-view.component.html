@@ -1,0 +1,423 @@
+<div id="org-edit-view" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="start center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Subscriber Detailed View</h1>
+
+        </div>
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="text-uppercase go-back-link" 
+                    (click)="onBack($event)">
+                    <i class="long arrow alternate left icon"></i>
+                    <span>Go Back</span>
+                </span>
+
+                <span class="text-right">
+
+                </span>
+
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24 pt-16" 
+                fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <nz-tabset 
+                    [nzSize]="'large'"
+                    [nzSelectedIndex]="current"
+                    (nzSelectedIndexChange)="updatePosition($event)">
+
+                    <nz-tab [nzTitle]="titleTemplateOrgInfo">
+
+                        <div class="pl-4 pr-4">
+
+                            <div fxLayout="row" fxLayoutAlign="space-between center">
+    
+                                <div class="" fxFlex.lt-sm="100" fxFlex.lt-md="38" fxFlex.lt-lg="38" fxFlex.lt-xl="38">
+                                    <h3>Organisation Name : <span><button mat-stroked-button>{{ organization.companyName }}</button></span></h3>
+                                </div>
+        
+                                <div class="" fxFlex.lt-sm="100" fxFlex.lt-md="38" fxFlex.lt-lg="38" fxFlex.lt-xl="38">
+                                    <h3>Main Contact : <span><button mat-stroked-button>{{ organization.user.getFullName() }}</button></span></h3>
+                                </div>
+        
+                                <div class="" fxFlex.lt-sm="100" fxFlex.lt-md="22" fxFlex.lt-lg="22" fxFlex.lt-xl="22">
+                                    <button nz-button nzType="primary" (click)="editDialog(organization, $event)">
+                                        <i class="edit outline icon mr-8"></i>
+                                        <span class="font-weight-600">Edit Organisation</span>
+                                    </button>
+                                </div>
+                                
+                            </div>
+        
+                            <div class="text-center mt-16" fxLayout="column">
+                                <h3 class="mb-8 font-weight-600">Details Collected in the Subscriber Registration Form</h3>
+                                <p> Company Name: {{organization.companyName}}</p>
+                                <p> Email: {{organization.email}}</p>
+                                <p> Address: {{organization.address1}}, {{organization.address2}}, {{organization.city}}</p>
+                                <p> Contact No: {{organization.country}} {{organization.phoneNumber}}</p>
+                                <p> Number of Branches: {{organization.branch.length }}</p>
+                                <p> Status: {{organization.status}}</p>
+                            </div>
+        
+                            <div>
+                                <h3>Branches</h3><br>
+        
+                                <nz-table class="branchTable" [nzData]="branches">
+        
+                                    <thead>
+                                        <tr>
+                                            <th>Branch Name</th>
+                                            <th>Administrator</th>
+                                            <th>Status</th>
+                                            <th>Children</th>
+                                        </tr>
+                                    </thead>
+        
+                                    <tbody>
+                                        <ng-template ngFor let-item [ngForOf]="branches">
+                                            <tr>
+                                                <td>
+                                                    {{ item.name }}
+                                                </td>
+        
+                                                <td>
+                                                    <span *ngFor="let data of admins">
+                                                        {{ data.first_name }} {{ data.last_name }}<br>
+                                                    </span>
+                                                </td>
+        
+                                                <td>{{ item.status }}</td>
+        
+                                                <td>
+                                                    {{ amount }}
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </tbody>
+        
+                                </nz-table>
+                            </div>
+        
+                            <div class="adminTable">
+                                <h3>Administrators</h3>
+                                <br>
+        
+                                <nz-table #adminsTable class="branchTable" [nzData]="admins">
+        
+        
+                                    <thead>
+                                        <tr>
+                                            <th>Admin Name</th>
+                                            <th>Role</th>
+                                            <th>Branches</th>
+                                            <th>Enrolment</th>
+                                        </tr>
+                                    </thead>
+        
+                                    <tbody>
+                                        <ng-template ngFor let-data [ngForOf]="adminsTable.data">
+                                            <tr>
+        
+                                                <td>{{ data.first_name }} {{ data.last_name }}</td>
+        
+                                                <td>
+                                                    <span *ngFor="let role of data.role_types">
+                                                        <nz-tag *ngIf="role.name == 'portal-admin' " [nzColor]="'#f50'">
+                                                            {{ role.name }}</nz-tag>
+                                                        <nz-tag *ngIf="role.name == 'org-admin' " [nzColor]="'#87d068'">
+                                                            {{ role.name }}</nz-tag>
+                                                        <nz-tag *ngIf="role.name == 'portal-org-admin' " [nzColor]="'#2db7f5'">
+                                                            {{ role.name }}</nz-tag>
+                                                        <nz-tag *ngIf="role.name == 'portal-assistant' " [nzColor]="'#108ee9'">
+                                                            {{ role.name }}</nz-tag>
+        
+                                                    </span>
+                                                </td>
+        
+                                                <td> <span *ngFor="let data of branches">
+                                                        {{ data.name }}<br>
+                                                    </span>
+                                                </td>
+        
+                                                <td> {{ data.status }}</td>
+                                            </tr>
+                                        </ng-template>
+                                    </tbody>
+        
+                                </nz-table>
+                            </div>
+
+                        </div>
+
+                    </nz-tab>
+
+                    <nz-tab [nzTitle]="titleTemplateAddons">
+
+                        <div class="pl-4 pr-4">
+
+                        </div>
+
+                    </nz-tab>
+                    
+                    <nz-tab [nzTitle]="titleTemplatePaymentHistory">
+
+                        <div class="pl-4 pr-4">
+
+                        </div>
+                        
+                    </nz-tab>
+
+                    <nz-tab [nzTitle]="titleTemplateBranchAccess" [nzDisabled]="tabViewItem">
+
+                        <div class="pl-4 pr-4">
+
+                            <ng-template nz-tab>
+
+                                <org-branch-access [selected]="organization"></org-branch-access>
+
+                            </ng-template>
+
+                        </div>
+                        
+                    </nz-tab>
+                    
+                </nz-tabset>
+
+                <div class="text-right pl-4 pr-4 mt-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <button nz-button nzType="default" (click)="pre()" [disabled]="current < 1">
+                        <i class="arrow alternate circle left outline icon b-i mr-8"></i>
+                        <span>Previous</span>
+                    </button>
+
+                    <button nz-button nzType="default" (click)="next()" [disabled]="current === 3">
+                        <span>Next</span>
+                        <i class="arrow alternate circle right outline icon b-i ml-8"></i>
+                    </button>
+
+                </div>
+
+                <ng-template #titleTemplateOrgInfo>
+                    <div class="tab-image-view inline" fxLayoutAlign="center center">
+                        <img src="assets/icons/flat/ui_set/custom_icons/organization/info.svg" alt="img">
+                        <span>Organisation</span>
+                    </div>
+                </ng-template>
+
+                <ng-template #titleTemplateAddons>
+                    <div class="tab-image-view inline" fxLayoutAlign="center center">
+                        <img src="assets/icons/flat/ui_set/custom_icons/organization/web-plugin.svg" alt="img">
+                        <span>Add Ons</span>
+                    </div>
+                </ng-template>
+
+                <ng-template #titleTemplatePaymentHistory>
+                    <div class="tab-image-view inline" fxLayoutAlign="center center">
+                        <img [src]="(tabViewItem && tabViewItem === 2) ? 'assets/loading/dual-ring.svg' : 'assets/icons/flat/ui_set/custom_icons/organization/history.svg'" alt="img">
+                        <span>Payment History</span>
+                    </div>
+                </ng-template>
+
+                <ng-template #titleTemplateBranchAccess>
+                    <div class="tab-image-view inline" fxLayoutAlign="center center">
+                        <img [src]="(tabViewItem && tabViewItem === 3) ? 'assets/loading/dual-ring.svg' : 'assets/icons/flat/ui_set/custom_icons/organization/teamwork.svg'" alt="img">
+                        <span>Branch Access</span>
+                    </div>
+                </ng-template>
+
+                <ng-template #titleTemplateMore>
+                    <div class="tab-image-view inline" fxLayoutAlign="center center">
+                        <img src="assets/icons/flat/ui_set/custom_icons/more.svg" alt="img">
+                        <span>More</span>
+                    </div>
+                </ng-template>
+
+                <!-- <mat-tab-group>
+    
+                    <mat-tab>
+    
+                        <ng-template mat-tab-label>
+                            <mat-icon class="example-tab-icon"> contact_mail</mat-icon>
+                            Organization Info
+                        </ng-template>
+    
+                        <div fxLayout="row wrap" fxLayoutAlign="space-between">
+    
+                            <div class="View" fxFlex.lt-sm="100" fxFlex.lt-md="38" fxFlex.lt-lg="38" fxFlex.lt-xl="38">
+                                <h3>Organization Name : <span>
+                                        <b> {{organization.data.company_name}} </b>
+                                        <button mat-stroked-button>{{organization.companyName}}</button>
+                                    </span></h3>
+                            </div>
+    
+    
+                            <div class="View" fxFlex.lt-sm="100" fxFlex.lt-md="38" fxFlex.lt-lg="38" fxFlex.lt-xl="38">
+                                <h3>Main Contact : <span>
+                                        <button mat-stroked-button>Name </button>
+                                        <b>{{organization.data.first_name}} {{organization.data.last_name}}</b>
+                                    </span></h3>
+                            </div>
+    
+                            <div class="View" fxFlex.lt-sm="100" fxFlex.lt-md="22" fxFlex.lt-lg="22" fxFlex.lt-xl="22">
+                                <button nz-button nzType="primary" (click)="editDialog(organization, $event)">
+                                    <i class="edit outline icon primary-color"></i>
+                                    <span class="font-weight-600">Edit Organization</span>
+                                </button>
+                            </div>
+                            
+    
+                        </div>
+    
+                        <div class="details" align="middle" Row type="flex" nz-row nzJustify="center">
+                            <h3><b>Details Collected in the Subscriber Registration Form</b></h3>
+                            <br>
+                            <h3> Contact Person: {{organization.firstName}} {{organization.lastName}}</h3>
+    
+                            <h3> Company Name: {{organization.companyName}}</h3>
+                            <h3> Email: {{organization.email}}</h3>
+                            <h3> Address: {{organization.address1}}, {{organization.address2}},
+                                {{organization.city}}</h3>
+                            <h3> Contact No: {{organization.country}} {{organization.phoneNumber}}</h3>
+                            <h3> Number of Branches: {{organization.noOfBranches}}</h3>
+                            <h3> Status: {{organization.status}}</h3>
+                        </div> <br><br>
+    
+                        <div>
+                            <h3>Branches</h3><br>
+    
+                            <nz-table class="branchTable" [nzData]="branches">
+    
+                                <thead>
+                                    <tr>
+                                        <th>Branch Name</th>
+                                        <th>Administrator</th>
+                                        <th>Status</th>
+                                        <th>Children</th>
+                                    </tr>
+                                </thead>
+    
+                                <tbody>
+                                    <ng-template ngFor let-item [ngForOf]="branches">
+                                        <tr>
+                                            <td>
+                                                {{ item.name }}
+                                            </td>
+    
+                                            <td>
+                                                <span *ngFor="let data of admins">
+                                                    {{ data.first_name }} {{ data.last_name }}<br>
+                                                </span>
+                                            </td>
+    
+                                            <td>{{ item.status }}</td>
+    
+                                            <td>
+                                                {{ amount }}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </tbody>
+    
+                            </nz-table>
+                        </div>
+    
+                        <div class="adminTable">
+                            <h3>Administrators</h3>
+                            <br>
+    
+                            <nz-table #adminsTable class="branchTable" [nzData]="admins">
+    
+    
+                                <thead>
+                                    <tr>
+                                        <th>Admin Name</th>
+                                        <th>Role</th>
+                                        <th>Branches</th>
+                                        <th>Enrolment</th>
+                                    </tr>
+                                </thead>
+    
+                                <tbody>
+                                    <ng-template ngFor let-data [ngForOf]="adminsTable.data">
+                                        <tr>
+    
+                                            <td>{{ data.first_name }} {{ data.last_name }}</td>
+    
+                                            <td>
+                                                <span *ngFor="let role of data.role_types">
+                                                    <nz-tag *ngIf="role.name == 'portal-admin' " [nzColor]="'#f50'">
+                                                        {{ role.name }}</nz-tag>
+                                                    <nz-tag *ngIf="role.name == 'org-admin' " [nzColor]="'#87d068'">
+                                                        {{ role.name }}</nz-tag>
+                                                    <nz-tag *ngIf="role.name == 'portal-org-admin' " [nzColor]="'#2db7f5'">
+                                                        {{ role.name }}</nz-tag>
+                                                    <nz-tag *ngIf="role.name == 'portal-assistant' " [nzColor]="'#108ee9'">
+                                                        {{ role.name }}</nz-tag>
+    
+                                                </span>
+                                            </td>
+    
+                                            <td> <span *ngFor="let data of branches">
+                                                    {{ data.name }}<br>
+                                                </span>
+                                            </td>
+    
+                                            <td> {{ data.status }}</td>
+                                        </tr>
+                                    </ng-template>
+                                </tbody>
+    
+                            </nz-table>
+                        </div>
+
+                    </mat-tab>
+    
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            <mat-icon class="example-tab-icon">extension</mat-icon>
+                            Add Ons
+                        </ng-template>
+                        Content 2
+                    </mat-tab>
+    
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            <mat-icon class="example-tab-icon">shopping_basket</mat-icon>
+                            Payment History
+                        </ng-template>
+                        Content of Payment History
+                    </mat-tab>
+    
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            <mat-icon class="example-tab-icon">settings_applications</mat-icon>
+                            Dashboards
+                        </ng-template>
+                        Content of Dashboards
+                    </mat-tab>
+    
+                </mat-tab-group> -->
+            
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

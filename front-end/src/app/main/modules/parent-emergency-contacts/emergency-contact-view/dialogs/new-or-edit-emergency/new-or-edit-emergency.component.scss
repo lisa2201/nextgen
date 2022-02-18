@@ -1,0 +1,39 @@
+@import "../../../../../../../@fuse/scss/fuse";
+
+.emergency-new-or-edit-dialog {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 640px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+        .compose-form {
+            nz-select {
+                width: 100%;
+            }
+
+            .loading-icon {
+                margin-right: 8px;
+            }
+
+        }
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        
+        .pinreset{
+            margin-left: 25px;
+            margin-top: 30px;
+            padding: 1px 5px;
+        }
+    }
+}

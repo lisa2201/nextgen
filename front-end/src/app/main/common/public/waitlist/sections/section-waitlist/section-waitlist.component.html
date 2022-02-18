@@ -1,0 +1,633 @@
+<form id="formGlobal">
+    <div nz-row [nzGutter]="24" [formGroup]="formGroup" [@fadeInOnEnter]>
+        <div *ngFor="let input of section.inputs" [hidden]="input.input_name=='dateOfBirth' && !bornOrNotBorn"
+             nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24"
+             [id]="input.input_name"
+             [nzLg]="(input.column_height=== '33')?'8':(input.column_height==='66')?'15':(input.column_height==='50')?'12':(input.column_height==='70')?'16':28"
+             [nzXl]="(input.column_height=== '33')?'8':(input.column_height==='66')?'15':(input.column_height==='50')?'12':(input.column_height==='70')?'16':28"
+             [nzXXl]="(input.column_height=== '33')?'8':(input.column_height==='66')?'15':(input.column_height==='50')?'12':(input.column_height==='70')?'16':28"
+        >
+            <!----------------------------------------------- text box-------------------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}"
+                          *ngIf="(input.input_type=='textbox'|| input.input_type=='email') && !input.hidden && input.input_name!=='parentPC'">
+
+                <span fxLayout="row" fxLayoutAlign="start start">
+                    <nz-form-label class="pr-8" style="float: top"
+                                   [nzRequired]="input.input_mandatory">
+                    </nz-form-label>
+                    <span [innerHTML]="input.question | keepHtml"></span>
+                </span>
+                <nz-form-control nzHasFeedback [nzErrorTip]="newInputName">
+
+                    <input nz-input formControlName="{{input.input_name}}" placeholder="{{input.input_placeholder}}"
+                           type="text"/>
+                    <ng-template #newInputName let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please
+                            input {{input.input_placeholder|lowercase}}
+                        </ng-container>
+                        <ng-container *ngIf="control.hasError('maxlength')">Can't be longer
+                            than {{control.errors.maxlength.requiredLength}}
+                            characters
+                        </ng-container>
+                        <ng-container *ngIf="control.hasError('pattern')">Please enter Valid Input Only
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <!----------------------------------------------- parent postal code -------------------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}"
+                          *ngIf="(input.input_type=='textbox'|| input.input_type=='email') && !input.hidden && input.input_name=='parentPC'">
+
+                <span fxLayout="row" fxLayoutAlign="start start">
+                    <nz-form-label class="pr-8" style="float: top"
+                                   [nzRequired]="input.input_mandatory">
+                    </nz-form-label>
+                    <span [innerHTML]="input.question | keepHtml"></span>
+                </span>
+                <nz-form-control nzHasFeedback [nzErrorTip]="newInputName">
+
+                    <input nz-input formControlName="{{input.input_name}}" placeholder="{{input.input_placeholder}}"
+                           type="number"/>
+                    <ng-template #newInputName let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please
+                            input {{input.input_placeholder|lowercase}}
+                        </ng-container>
+                        <ng-container *ngIf="control.hasError('maxlength')">Can't be longer
+                            than {{control.errors.maxlength.requiredLength}}
+                            characters
+                        </ng-container>
+                        <ng-container *ngIf="control.hasError('pattern')">Please enter Valid Input Only
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+
+            </nz-form-item>
+
+
+            <!----------------------------------------------- richTextBox -------------------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}"
+                          *ngIf="(input.input_type=='richTextBox') && !input.hidden">
+                <span [innerHTML]="input.question | keepHtml"></span>
+            </nz-form-item>
+            <!----------------------------------------------- hyperlink -------------------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}"
+                          *ngIf="(input.input_type=='hyperlink') && !input.hidden">
+                <a (click)="gotoPage(input.types.hyperlink)"><span [innerHTML]="input.question| keepHtml"></span></a>
+            </nz-form-item>
+
+            <!----------------------------------------------- Signature -------------------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}" *ngIf="(input.input_type=='signature') && !input.hidden">
+                <span fxLayout="row" fxLayoutAlign="start start">
+                    <nz-form-label class="pr-8" style="float: top"
+                                   [nzRequired]="input.input_mandatory">
+                    </nz-form-label>
+                    <span [innerHTML]="input.question | keepHtml"></span>
+                </span>
+                <nz-form-control nzHasFeedback class="signatureClass">
+                    <signature-pad disabled="true" #signature
+                                   [options]="{ 'minWidth': 0.7,'maxWidth':2.5, 'canvasWidth':(canvasWidth-5),'canvasHeight': ((canvasWidth-5)/6)}"
+                                   (onEndEvent)="drawComplete(input.input_name)"
+                    ></signature-pad>
+                </nz-form-control>
+                <button (click)="clearSignature(input.input_name)" nz-button nzType="dashed" nzBlock>Clear</button>
+            </nz-form-item>
+
+            <!----------------------------------------------- radio group -------------------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}"
+                          *ngIf="input.input_type=='radio-group'&& !input.hidden && input.input_name == 'childGender' && bornOrNotBorn">
+
+               <span fxLayout="row" fxLayoutAlign="start start">
+                    <nz-form-label class="pr-8" style="float: top"
+                                   [nzRequired]="input.input_mandatory">
+                    </nz-form-label>
+                    <span [innerHTML]="input.question | keepHtml"></span>
+                </span>
+
+                <nz-form-control nzHasFeedback>
+
+                    <nz-radio-group formControlName="{{input.input_name}}"
+                                    nzButtonStyle="solid"
+                                    class="has-img">
+
+                        <label *ngFor="let type of input.types" nz-radio-button
+                               nzValue="{{type.value}}">
+                            <!--                            <img class="mr-8" src="{{type.image}}"-->
+                            <!--                                 alt="{{type.alt}}">-->
+                            <span>{{type.name}}</span>
+                        </label>
+                    </nz-radio-group>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <!----------------------------------------------- child datepicker -------------------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}"
+                          *ngIf="input.input_type=='date-picker' && !input.hidden && input.input_name=='dateOfBirth' && bornOrNotBorn">
+
+                <span fxLayout="row" fxLayoutAlign="start start">
+                    <nz-form-label class="pr-8" style="float: top"
+                                   [nzRequired]="input.input_mandatory">
+                    </nz-form-label>
+                    <span [innerHTML]="input.question | keepHtml"></span>
+                </span>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="newInputName">
+
+                    <nz-date-picker [nzDisabledDate]="disabledDate" formControlName="{{input.input_name}}"
+                                    class="block"></nz-date-picker>
+                    <ng-template #newInputName let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please
+                            input {{input.input_placeholder|lowercase}}
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <!----------------------------------------------- parent datepicker -------------------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}"
+                          *ngIf="input.input_type=='date-picker' && !input.hidden && input.input_name=='parentdateOfBirth'">
+
+                <span fxLayout="row" fxLayoutAlign="start start">
+                    <nz-form-label class="pr-8" style="float: top"
+                                   [nzRequired]="input.input_mandatory">
+                    </nz-form-label>
+                    <span [innerHTML]="input.question | keepHtml"></span>
+                </span>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="newInputName">
+
+                    <nz-date-picker [nzDisabledDate]="disabledDate" formControlName="{{input.input_name}}"
+                                    class="block"></nz-date-picker>
+                    <ng-template #newInputName let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please
+                            input {{input.input_placeholder|lowercase}}
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <!-----------------------------------------------  datepicker -------------------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}"
+                          *ngIf="input.input_type=='date-picker' && !input.hidden && input.input_name!=='parentdateOfBirth' && input.input_name!=='dateOfBirth'">
+
+                <span fxLayout="row" fxLayoutAlign="start start">
+                    <nz-form-label class="pr-8" style="float: top"
+                                   [nzRequired]="input.input_mandatory">
+                    </nz-form-label>
+                    <span [innerHTML]="input.question | keepHtml"></span>
+                </span>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="newInputName">
+
+                    <nz-date-picker formControlName="{{input.input_name}}"
+                                    class="block"></nz-date-picker>
+                    <ng-template #newInputName let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please
+                            input {{input.input_placeholder|lowercase}}
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <!----------------------------------------------- switch-------------------------------------------------------->
+
+            <nz-form-item nz-col [nzXs]="mobile?16:''" formGroupName="{{input.input_name}}"
+                          *ngIf="input.input_type=='switch'&& !input.hidden && input.input_name !== 'child_bornOrNot'">
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <span fxLayout="row" fxLayoutAlign="start start">
+                        <nz-form-label class="pr-8" style="float: top"
+                                       [nzRequired]="input.input_mandatory">
+                        </nz-form-label>
+                        <span [innerHTML]="input.question | keepHtml"></span>
+                    </span>
+                    <span class="text-right" style="padding-left: 30px">
+                                            <nz-switch class="upload-switch"
+                                                       formControlName="{{input.input_name}}"
+                                                       nzCheckedChildren="Yes"
+                                                       nzUnCheckedChildren="No"
+                                            >
+                                            </nz-switch>
+                                     </span>
+                </div>
+
+            </nz-form-item>
+
+
+            <!--            <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24"-->
+            <!--                 *ngFor="let consent of consents ">-->
+            <!--                &lt;!&ndash;                                formControlName="asthma"&ndash;&gt;-->
+            <!--                <nz-form-item>-->
+            <!--                    <div fxLayout="row" fxLayoutAlign="space-between center">-->
+            <!--                        <nz-form-label>{{consent.consent}}</nz-form-label>-->
+            <!--                        <span class="text-right">-->
+            <!--                                            <nz-switch class="upload-switch"-->
+            <!--                                                       (ngModelChange)="changeConsentVal(consent.id,$event)"-->
+            <!--                                                       formControlName="{{consent.id}}"-->
+            <!--                                                       nzCheckedChildren="Yes"-->
+            <!--                                                       nzUnCheckedChildren="No"-->
+            <!--                                            >-->
+            <!--                                            </nz-switch>-->
+            <!--                                         </span>-->
+            <!--                    </div>-->
+
+            <!--                </nz-form-item>-->
+
+
+            <!----------------------------------------------- switch - waitlist-------------------------------------------------------->
+
+            <nz-form-item nz-col [nzXs]="mobile?16:''" formGroupName="{{input.input_name}}"
+                          *ngIf="input.input_type=='switch'&& !input.hidden && input.input_name =='child_bornOrNot'">
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <span fxLayout="row" fxLayoutAlign="start start">
+                    <nz-form-label class="pr-8" style="float: top"
+                                   [nzRequired]="input.input_mandatory">
+                    </nz-form-label>
+                    <span [innerHTML]="input.question | keepHtml"></span>
+                </span>
+                    <span>
+                    <nz-form-control nzHasFeedback>
+                        <nz-switch [(ngModel)]="bornOrNotBorn" (ngModelChange)="onChildBornCheck($event)"
+                                   formControlName="{{input.input_name}}"
+                                   nzCheckedChildren="Yes"
+                                   nzUnCheckedChildren="No"
+                        >
+                        </nz-switch>
+                    </nz-form-control>
+                </span>
+
+                </div>
+            </nz-form-item>
+
+
+            <!----------------------------------------------- text-area-------------------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}"
+                          *ngIf="input.input_type=='text-area'&& !input.hidden">
+
+                <span fxLayout="row" fxLayoutAlign="start start">
+                    <nz-form-label class="pr-8" style="float: top"
+                                   [nzRequired]="input.input_mandatory">
+                    </nz-form-label>
+                    <span [innerHTML]="input.question | keepHtml"></span>
+                </span>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="newInputName">
+
+                                                              <textarea formControlName="{{input.input_name}}" nz-input
+                                                                        rows="4"
+                                                                        placeholder="{{input.input_placeholder}}"></textarea>
+                    <ng-template #newInputName let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please
+                            input {{input.input_placeholder|lowercase}}
+                        </ng-container>
+                        <ng-container *ngIf="control.hasError('maxlength')">Can't be longer
+                            than {{control.errors.maxlength.requiredLength}}
+                            characters
+                        </ng-container>
+                        <ng-container *ngIf="control.hasError('pattern')">Please enter Valid Input Only
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <!----------------------------------------------- select-------------------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}"
+                          *ngIf="input.input_type=='select' && !input.hidden && input.input_name !== 'parentCountry' && input.input_name !== 'additionalCarerCountry'">
+
+               <span fxLayout="row" fxLayoutAlign="start start">
+                    <nz-form-label class="pr-8" style="float: top"
+                                   [nzRequired]="input.input_mandatory">
+                    </nz-form-label>
+                    <span [innerHTML]="input.question | keepHtml"></span>
+                </span>
+
+                <nz-form-control nzHasFeedback>
+                    <nz-select
+                        nzPlaceHolder="{{ (mobile) ? 'Please Select':((input.input_placeholder).length > 10 && input.column_height == '33') ? ((input.input_placeholder) | slice:0:10) + ' ...' : ((input.input_placeholder).length > 25 && input.column_height == '50') ? ((input.input_placeholder) | slice:0:25) + ' ...' : ((input.input_placeholder).length > 62 && input.column_height == '66') ? ((input.input_placeholder) | slice:0:62) + ' ...' : ((input.input_placeholder).length > 84 && input.column_height == '100') ? ((input.input_placeholder) | slice:0:84) + ' ...' : input.input_placeholder }}"
+                        nzAllowClear
+                        formControlName="{{input.input_name}}" nzShowSearch style="height: 48px;">
+                        <nz-option *ngFor="let item of input.types.options" nzValue="{{ item }}"
+                                   nzLabel="{{ item }}" title="{{item}}">
+                        </nz-option>
+                    </nz-select>
+                </nz-form-control>
+
+            </nz-form-item>
+            <!----------------------------------------------- select-multiple -------------------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}"
+                          *ngIf="input.input_type=='select-multiple' && input.input_name!=='emenrgencyType'">
+
+               <span fxLayout="row" fxLayoutAlign="start start">
+                    <nz-form-label class="pr-8" style="float: top"
+                                   [nzRequired]="input.input_mandatory">
+                    </nz-form-label>
+                    <span [innerHTML]="input.question | keepHtml"></span>
+                </span>
+
+                <nz-form-control nzHasFeedback>
+                    <nz-select *ngIf="input.types?.multiple===false || input.types?.multiple===undefined"
+                               formControlName="{{input.input_name}}"
+                               nzPlaceHolder="{{ (mobile) ? 'Please Select':((input.input_placeholder).length > 10 && input.column_height == '33') ? ((input.input_placeholder) | slice:0:10) + ' ...' : ((input.input_placeholder).length > 25 && input.column_height == '50') ? ((input.input_placeholder) | slice:0:25) + ' ...' : ((input.input_placeholder).length > 62 && input.column_height == '66') ? ((input.input_placeholder) | slice:0:62) + ' ...' : ((input.input_placeholder).length > 84 && input.column_height == '100') ? ((input.input_placeholder) | slice:0:84) + ' ...' : input.input_placeholder }}"
+                               nzShowSearch nzAllowClear>
+
+                        <nz-option *ngFor="let item of input.types.options" nzValue="{{ item }}"
+                                   nzLabel="{{ item }}" title="{{item}}">
+                        </nz-option>
+
+                    </nz-select>
+
+                    <nz-select *ngIf="input.types?.multiple"
+                               nzMode="multiple"
+                               [nzMaxTagCount]="3"
+                               [nzMaxTagPlaceholder]="tagPlaceHolder"
+                               nzPlaceHolder="{{ (mobile) ? 'Please Select':((input.input_placeholder).length > 10 && input.column_height == '33') ? ((input.input_placeholder) | slice:0:10) + ' ...' : ((input.input_placeholder).length > 25 && input.column_height == '50') ? ((input.input_placeholder) | slice:0:25) + ' ...' : ((input.input_placeholder).length > 62 && input.column_height == '66') ? ((input.input_placeholder) | slice:0:62) + ' ...' : ((input.input_placeholder).length > 84 && input.column_height == '100') ? ((input.input_placeholder) | slice:0:84) + ' ...' : input.input_placeholder }}"
+                               nzAllowClear
+                               formControlName="{{input.input_name}}"
+                               nzShowSearch
+                               style="height: 48px;">
+
+                        <nz-option *ngFor="let items of  input.types.options" [nzValue]="items"
+                                   [nzLabel]="items" title="{{items}}">
+                        </nz-option>
+
+                    </nz-select>
+                    <ng-template *ngIf="input.types?.multiple" #tagPlaceHolder let-selectedList>
+                        and {{ selectedList.length }} more selected
+                    </ng-template>
+                </nz-form-control>
+
+            </nz-form-item>
+            <!----------------------------------------------- select country-------------------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}"
+                          *ngIf="input.input_type=='select'&& !input.hidden && (input.input_name == 'parentCountry' || input.input_name == 'additionalCarerCountry')">
+
+               <span fxLayout="row" fxLayoutAlign="start start">
+                    <nz-form-label class="pr-8" style="float: top"
+                                   [nzRequired]="input.input_mandatory">
+                    </nz-form-label>
+                    <span [innerHTML]="input.question | keepHtml"></span>
+                </span>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="newInputName">
+                    <nz-select formControlName="{{input.input_name}}"
+                               nzPlaceHolder="{{input.input_placeholder}}" nzShowSearch nzAllowClear>
+
+                        <nz-option *ngFor="let item of countriesList" nzValue="{{ item.code }}"
+                                   nzLabel="{{ item.name }}" title="{{item.name}}">
+                        </nz-option>
+
+                    </nz-select>
+                    <ng-template #newInputName let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please
+                            input {{input.input_placeholder|lowercase}}
+                        </ng-container>
+                    </ng-template>
+                </nz-form-control>
+
+            </nz-form-item>
+
+            <!-- ========================================================== select- multiselect ----------------------------------------------->
+
+            <nz-form-item formGroupName="{{input.input_name}}"
+                          *ngIf="input.input_type=='select-multiple' && input.input_name=='emenrgencyType'">
+
+                <span fxLayout="row" fxLayoutAlign="start start">
+                    <nz-form-label class="pr-8" style="float: top"
+                                   [nzRequired]="input.input_mandatory">
+                    </nz-form-label>
+                    <span [innerHTML]="input.question | keepHtml"></span>
+                </span>
+
+                <nz-form-control nzHasFeedback>
+                    <nz-select nzMode="multiple"
+                               nzPlaceHolder="{{ (mobile) ? 'Please Select':((input.input_placeholder).length > 10 && input.column_height == '33') ? ((input.input_placeholder) | slice:0:10) + ' ...' : ((input.input_placeholder).length > 25 && input.column_height == '50') ? ((input.input_placeholder) | slice:0:25) + ' ...' : ((input.input_placeholder).length > 62 && input.column_height == '66') ? ((input.input_placeholder) | slice:0:62) + ' ...' : ((input.input_placeholder).length > 84 && input.column_height == '100') ? ((input.input_placeholder) | slice:0:84) + ' ...' : input.input_placeholder }}"
+                               nzAllowClear
+                               formControlName="{{input.input_name}}" nzShowSearch
+                               style="height: 48px;">
+
+                        <nz-option *ngFor="let item of emergency" nzValue="{{ item }}"
+                                   nzLabel="{{ item }}" title="{{item}}">
+                        </nz-option>
+
+                    </nz-select>
+                </nz-form-control>
+
+            </nz-form-item>
+
+
+            <!------------------------------------------------- checkbox ------------------------------------------------------------>
+            <div formGroupName="{{input.input_name}}" nz-col [nzMd]="24" [nzLg]="24"
+                 *ngIf="input.input_type=='checkbox'">
+                <div fxLayout="row" fxLayoutAlign="start start">
+                    <!--multiple-->
+                    <div *ngIf="input.types?.multiple">
+                        <div>
+                            <span fxLayout="row" fxLayoutAlign="start start"
+                                  *ngIf="input.types?.multiple">
+                                        <nz-form-label class="pr-8" style="float: top"
+                                                       [nzRequired]="input.input_mandatory">
+                                        </nz-form-label>
+                                        <span [innerHTML]="input.question | keepHtml"></span>
+                            </span>
+                        </div>
+                        <div>
+                            <nz-checkbox-wrapper *ngIf="input.types?.multiple"
+                                                 style="width: 100%;padding-left: 20px">
+                                <div nz-row>
+                                    <div nz-col nzSpan="24" *ngFor="let option of input.types.options">
+                                        <label nz-checkbox nzMode="multiple"
+                                               (nzCheckedChange)="changeMultiChecks(input.input_name,$event,option,section.section_code)"
+                                               nzValue="{{option}}">{{option}}</label>
+                                    </div>
+                                </div>
+                            </nz-checkbox-wrapper>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--normal-->
+                <div fxLayout="row" fxLayoutAlign="start start"
+                     *ngIf="(input.types?.multiple===false || input.types?.multiple===undefined) && (input.types?.fontBold === undefined || input.types.fontBold===false)">
+                    <label
+                        *ngIf="(input.types?.multiple===false || input.types?.multiple===undefined) && (input.types?.fontBold === undefined || input.types.fontBold===false)"
+                        nz-checkbox
+                        formControlName="{{input.input_name}}">
+                        <!--                    <span>{{input.question}}</span>-->
+                    </label>
+                    <span class="checkboxLabel"
+                          *ngIf="(input.types?.multiple===false || input.types?.multiple===undefined) && (input.types?.fontBold === undefined || input.types.fontBold===false)">
+                                  <span fxLayout="row" fxLayoutAlign="start start">
+                                        <nz-form-label class="pr-8" style="float: top"
+                                                       [nzRequired]="input.input_mandatory">
+                                        </nz-form-label>
+                                        <span [innerHTML]="input.question | keepHtml"></span>
+                                </span>
+                    </span>
+                </div>
+
+
+                <!--bold-->
+                <div fxLayout="row" fxLayoutAlign="start start"
+                     *ngIf="(input.types?.fontBold !== undefined && input.types?.fontBold===true) && (input.types?.multiple===false || input.types?.multiple===undefined)">
+                    <label
+                        *ngIf="(input.types?.fontBold !== undefined && input.types?.fontBold===true) && (input.types?.multiple===false || input.types?.multiple===undefined)"
+                        nz-checkbox
+                        formControlName="{{input.input_name}}">
+
+                    </label>
+                    <span class="checkboxLabel"
+                          *ngIf="(input.types?.fontBold !== undefined && input.types?.fontBold===true) && (input.types?.multiple===false || input.types?.multiple===undefined)">
+                                <b>
+                                    <span fxLayout="row" fxLayoutAlign="start start">
+                                        <nz-form-label class="pr-8" style="float: top"
+                                                       [nzRequired]="input.input_mandatory">
+                                        </nz-form-label>
+                                        <span [innerHTML]="input.question | keepHtml"></span>
+                                    </span>
+                                </b>
+                        </span>
+                </div>
+
+
+            </div>
+
+
+            <!----------------------------------------------- upload switch - common -------------------------------------------------------->
+            <nz-card nz-col
+                     *ngIf="input.input_type=='upload-switch'&& !input.hidden && isInArray(input.input_name)"
+                     formGroupName="{{input.input_name}}">
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <span fxLayout="row" fxLayoutAlign="start start">
+                        <nz-form-label class="pr-8" style="float: top"
+                                       [nzRequired]="input.input_mandatory">
+                        </nz-form-label>
+                        <span [innerHTML]="input.question | keepHtml"></span>
+                    </span>
+                    <nz-switch class="upload-switch"
+                               formControlName="{{input.input_name}}"
+                               nzCheckedChildren="Yes"
+                               nzUnCheckedChildren="No"
+                               (ngModelChange)="onUpload($event, input.input_name)"
+                    >
+                    </nz-switch>
+                </div>
+                <!--[nzName]="birth_certificate_upload"-->
+                <div class="mt-16" *ngIf="onUploadChecked[input.input_name]">
+                    <s3-upload [bucket]="s3Bucket"
+                               (uploadedFileListChange)="handleUploadChange($event, input.input_name)"
+                               [uploadTypeLimit]="uploadTypes"
+                               [path]="s3Path">
+                    </s3-upload>
+                </div>
+                <div class="fileUploadValidate"
+                     *ngIf="onUploadChecked[input.input_name] && checkedUploading[input.input_name]">
+                    Please upload file
+                </div>
+            </nz-card>
+
+
+            <!--------------------------------------- atendeance ---------------------------------------------------------------------->
+
+            <div nz-col [nzMd]="24" [nzLg]="24" *ngIf="input.input_name=='attendance'">
+                <nz-form-item>
+                    <nz-form-label [nzRequired]="input.input_mandatory">Preferred days of care</nz-form-label>
+                    <nz-form-control formArrayName="attendance">
+                        <div class="day-selector" *ngFor="let group of attendanceArray.controls; let i = index;"
+                             [formGroupName]="i">
+                            <!--                            <p class="mb-8 chk-lbl-fix">-->
+                            <!--                                <label class="no-select" nz-checkbox [ngModelOptions]="{ standalone: true }"-->
+                            <!--                                       [(ngModel)]="allChecked"-->
+                            <!--                                       [nzIndeterminate]="indeterminate"-->
+                            <!--                                >-->
+                            <!--                                    Select all-->
+                            <!--                                </label>-->
+                            <!--                            </p>-->
+                            <div class="day-selector-inner">
+                                <ng-container>
+                                    <!--                                    <label class="attendance-chk" nz-checkbox formControlName="saturday"-->
+                                    <!--                                           [nzChecked]="allChecked"-->
+                                    <!--                                           tooltip="{{ 'Saturday' }}" placement="top" display-mobile="false"-->
+                                    <!--                                           hide-delay="50"><span [ngClass]="{ weekend : true }"-->
+                                    <!--                                                                 class="attendance-lbl-inner no-select">{{ 'Saturday'| shorten: 2: '' }}</span></label>-->
+                                    <label class="attendance-chk" nz-checkbox formControlName="monday"
+                                           (ngModelChange)="mandatoryChange(i)"
+                                           [nzChecked]="allChecked"
+                                           tooltip="{{ 'Monday' }}" placement="top" display-mobile="false"
+                                           hide-delay="50"><span
+                                        class="attendance-lbl-inner no-select">{{ 'Monday'| shorten: 2: '' }}</span></label>
+                                    <label class="attendance-chk" nz-checkbox formControlName="tuesday"
+                                           (ngModelChange)="mandatoryChange(i)"
+                                           [nzChecked]="allChecked"
+                                           tooltip="{{ 'Tuesday' }}" placement="top" display-mobile="false"
+                                           hide-delay="50"><span
+                                        class="attendance-lbl-inner no-select">{{ 'Tuesday'| shorten: 2: '' }}</span></label>
+                                    <label class="attendance-chk" nz-checkbox formControlName="wednesday"
+                                           (ngModelChange)="mandatoryChange(i)"
+                                           [nzChecked]="allChecked"
+                                           tooltip="{{ 'Wednesday' }}" placement="top" display-mobile="false"
+                                           hide-delay="50"><span
+                                        class="attendance-lbl-inner no-select">{{ 'Wednesday'| shorten: 2: '' }}</span></label>
+                                    <label class="attendance-chk" nz-checkbox formControlName="thursday"
+                                           (ngModelChange)="mandatoryChange(i)"
+                                           [nzChecked]="allChecked"
+                                           tooltip="{{ 'Thursday' }}" placement="top" display-mobile="false"
+                                           hide-delay="50"><span
+                                        class="attendance-lbl-inner no-select">{{ 'Thursday'| shorten: 2: '' }}</span></label>
+                                    <label class="attendance-chk" nz-checkbox formControlName="friday"
+                                           (ngModelChange)="mandatoryChange(i)"
+                                           [nzChecked]="allChecked"
+                                           tooltip="{{ 'Friday' }}" placement="top" display-mobile="false"
+                                           hide-delay="50"><span
+                                        class="attendance-lbl-inner no-select">{{ 'Friday'| shorten: 2: '' }}</span></label>
+                                    <label class="attendance-chk" nz-checkbox formControlName="allDays"
+                                           (ngModelChange)="mandatoryChange(i)"
+                                           [nzChecked]="allChecked"
+                                           tooltip="{{ 'I am fully flexible on days' }}" placement="top"
+                                           display-mobile="false"
+                                           hide-delay="50"><span [ngClass]="{ weekend : true }"
+                                                                 class="attendance-lbl-inner no-select">{{ 'AllDays'| shorten: 3: '' }}</span></label>
+
+                                    <!--                                    <label class="attendance-chk" nz-checkbox formControlName="sunday"-->
+                                    <!--                                           [nzChecked]="allChecked"-->
+                                    <!--                                           tooltip="{{ 'Sunday' }}" placement="top" display-mobile="false"-->
+                                    <!--                                           hide-delay="50"><span [ngClass]="{ weekend : true }"-->
+                                    <!--                                                                 class="attendance-lbl-inner no-select">{{ 'Sunday'| shorten: 2: '' }}</span></label>-->
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div style="color:#f50707;"
+                             *ngIf="input.input_mandatory && !attendanceChecked && this.formGroup.controls.attendance.touched"
+                        >
+                            <ng-container>
+                                Please Select
+                            </ng-container>
+                        </div>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+
+        </div>
+
+
+    </div>
+</form>

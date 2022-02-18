@@ -1,0 +1,70 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Sections</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0"
+     fusePerfectScrollbar
+     [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex *hasPermission="['AC0']; belongsTo 'N57'">
+        <div cdkDropList class="elements-list" (cdkDropListDropped)="drop($event)">
+            <div class="nav material2 elements-box" *ngFor="let section of sections;"
+                 cdkDrag
+            >
+                <div class="nav-item" aria-label="inbox">
+                    <a class="nav-link"
+                       matRipple
+                       (click)="drawSection(section)"
+                       [ngClass]="{'active accent':selectedSection ===section.section_code}"
+                    >
+                    <span
+                        fxFlex
+                        class="title"
+                        fxLayoutAlign="end start">
+                        {{section.title}}
+                        <span fxFlex>
+                        </span>
+                                                <span>
+                                                <span class="material-icons redIcon" *ngIf="deletable[section.id]"
+                                                      (click)="deleteSection($event,section)">delete</span>
+                                                </span>
+                                                 <span class="material-icons blueIcon"
+                                                       (click)="editName(section)">edit</span>
+                    </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div>
+            <section-add [editSection]="editId" [editValues]="editValues" [settingsMaster]="settingsMaster" (sectionAdded)="sectionsAdded($event)">
+            </section-add>
+        </div>
+        <!--        <div>-->
+
+        <!--            <ng-container *hasPermission="['AC0']; belongsTo 'N57'">-->
+        <!--                <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">-->
+        <!--                    <div (click)="drawSection(section)"-->
+        <!--                         class="example-box"-->
+        <!--                         *ngFor="let section of sections;"-->
+        <!--                         cdkDrag-->
+        <!--                         [cdkDragDisabled]="section.section_hide"-->
+        <!--                         [class.accent-300]="section.section_code === selectedSection"-->
+        <!--                    >{{section.title}}</div>-->
+        <!--                </div>-->
+        <!--            </ng-container>-->
+
+        <!--        </div>-->
+
+
+        <!--        <button nz-button nzType="default"-->
+        <!--                *ngIf="false" [@fadeInOnEnter] [@fadeOutOnLeave]-->
+        <!--                (click)="clearFilter($event)">Reset-->
+        <!--        </button>-->
+
+    </form>
+
+</div>
+<!-- / SIDEBAR CONTENT -->

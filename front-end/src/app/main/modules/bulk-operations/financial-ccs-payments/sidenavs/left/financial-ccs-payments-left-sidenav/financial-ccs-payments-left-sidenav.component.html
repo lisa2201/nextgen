@@ -1,0 +1,56 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32" style="padding-top: 32px !important;">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0">
+
+    <form fxLayout="column" fxFlex [formGroup]="ccsPaymentsFilterForm">
+
+        <div class="mb-16">
+
+            <label class="filter-label">Start Date</label>
+
+            <nz-date-picker class="block" nzPlaceHolder="Start Date" nzSize="small" [nzInputReadOnly]="true"
+                formControlName="start_date">
+            </nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">End Date</label>
+
+            <nz-date-picker class="block" [nzDisabledDate]="disabledEndDate" [nzInputReadOnly]="true" nzPlaceHolder="End Date" nzSize="small"
+                formControlName="end_date" [nzDisabled]="!ccsPaymentsFilterForm.controls['start_date'].value">
+            </nz-date-picker>
+
+        </div>
+
+        <div class="mb-16">
+
+            <label class="filter-label">Clearing Document Number</label>
+
+            <input nz-input formControlName="document_number" placeholder="Clearing Document Number" type="text" />
+
+        </div>
+
+        <button class="mb-16" nz-button nzType="default" [nzLoading]="queryLoader" [disabled]="tableLoader || (!ccsPaymentsFilterForm.get('start_date').value && !ccsPaymentsFilterForm.get('end_date').value && !ccsPaymentsFilterForm.get('document_number').value )" (click)="queryData($event)"
+            [@fadeInOnEnter] [@fadeOutOnLeave]>
+            <i class="sync left icon pr-8"></i>
+            Query Payments
+        </button>
+
+        <button class="mb-16" nz-button [nzLoading]="downloadLoader" nzType="default" [disabled]="tableLoader || (!ccsPaymentsFilterForm.get('start_date').value && !ccsPaymentsFilterForm.get('end_date').value && !ccsPaymentsFilterForm.get('document_number').value )" (click)="downloadCsv($event)"
+            [@fadeInOnEnter] [@fadeOutOnLeave]>
+            <i class="file excel left icon pr-8"></i>
+            Download CSV
+        </button>
+
+    </form>
+
+
+</div>
+<!-- / SIDEBAR CONTENT -->

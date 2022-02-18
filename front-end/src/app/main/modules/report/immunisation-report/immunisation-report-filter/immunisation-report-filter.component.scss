@@ -1,0 +1,75 @@
+
+immunisation-report-filter{
+
+    form {
+
+        nz-select {
+            .ant-select-selection__choice {
+                height: 37px;
+                line-height: 35px;
+            }
+
+            .ant-select-arrow {
+                top: 50%;
+            }
+
+            .ant-select-selection {
+                height: auto !important;
+            }
+
+            .ant-select-selection__clear { 
+                top: 50%;
+            }
+
+            .ant-select-selection-search-input {
+                padding: 0;
+            }
+
+            li {
+
+                &.ant-select-search {
+                    width: 50px;
+                    input {
+                        &.ant-select-search__field {
+                            &[disabled] {
+                                opacity: 1;
+                            }
+                            width: 100% !important;
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        .select-actions {
+    
+            height: 26px;
+    
+            button {
+                // font-size: 12px !important;
+                // height: 20px!important;
+    
+                
+                &.ant-btn {
+                    height: 32px !important;
+                }
+        
+                &:disabled {
+                    background: none !important;
+                    border: none !important;
+                }
+            }
+        }
+
+        nz-option {
+            i {
+                .float-right{
+                    float: right!important;
+                }
+            }
+        }
+    }
+
+}

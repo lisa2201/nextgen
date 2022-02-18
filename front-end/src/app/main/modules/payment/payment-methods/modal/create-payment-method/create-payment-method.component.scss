@@ -1,0 +1,137 @@
+@import "src/@fuse/scss/fuse";
+
+.create-payment-method-dialog {
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 640px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+    }
+
+    form {
+        width: 100%;
+        text-align: left;
+
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+
+        nz-form-label {
+            label {
+                color: #353535d9;
+            }
+        }
+
+        .copyright {
+            text-align: center;
+            color: dimgray;
+        }
+
+        .visa {
+            background-image: url('assets/images/payment_types/flat/visa.svg');
+            background-repeat: no-repeat;
+            background-position: right;
+            background-size: 45px;
+        }
+
+        .mastercard {
+            background-image: url('assets/images/payment_types/flat/mastercard.svg');
+            background-repeat: no-repeat;
+            background-position: right;
+            background-size: 45px;
+        }
+
+        .mastercard {
+            background-image: url('assets/images/payment_types/flat/mastercard.svg');
+            background-repeat: no-repeat;
+            background-position: right;
+            background-size: 45px;
+        }
+
+        .maestro {
+            background-image: url('assets/images/payment_types/flat/maestro.svg');
+            background-repeat: no-repeat;
+            background-position: right;
+            background-size: 45px;
+        }
+
+        .amex {
+            background-image: url('assets/images/payment_types/flat/amex.svg');
+            background-repeat: no-repeat;
+            background-position: right;
+            background-size: 45px;
+        }
+
+        .dinersclub {
+            background-image: url('assets/images/payment_types/flat/diners.svg');
+            background-repeat: no-repeat;
+            background-position: right;
+            background-size: 45px;
+        }
+
+        .discover {
+            background-image: url('assets/images/payment_types/flat/discover.svg');
+            background-repeat: no-repeat;
+            background-position: right;
+            background-size: 45px;
+        }
+
+        .unionpay {
+            background-image: url('assets/images/payment_types/flat/unionpay.svg');
+            background-repeat: no-repeat;
+            background-position: right;
+            background-size: 45px;
+        }
+
+        .jcb {
+            background-image: url('assets/images/payment_types/flat/jcb.svg');
+            background-repeat: no-repeat;
+            background-position: right;
+            background-size: 45px;
+        }
+
+        .hidden {
+            display: none;
+        }
+        
+        .ant-radio-wrapper {
+
+            span {
+                text-transform: none;
+            }
+
+            .label {
+                text-transform: none;
+            }
+            
+        }
+
+        .ezidebit-instruction {
+            background-color: #d3d3d359;
+            padding: 20px;
+            border-radius: 10px;
+
+            p {
+                text-align: center;
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+            .ant-form-item {
+                margin: 0px;
+            }
+
+        }
+
+    }
+
+}

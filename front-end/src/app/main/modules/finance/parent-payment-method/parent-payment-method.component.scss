@@ -1,0 +1,48 @@
+@import "src/@fuse/scss/fuse";
+
+app-parent-payment-method {
+    width: 100%;
+
+
+    #parent-payment-methods {
+
+        .content {
+
+            nz-list {
+
+                nz-list-item {
+
+                    .bpay {
+                        opacity: 0.15;
+                        height: 80px;
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                    }
+
+                    .reference { 
+                        word-break: break-all;
+                    }
+
+                    .payment-type-icon {
+         
+                        position: absolute;
+                        top: 10px;
+                        right: 20px;
+                        font-size: 50px;
+
+                        .icon {
+                            color: rgba(0,0,0,0.20);
+                        }
+        
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+    
+}

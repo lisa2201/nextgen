@@ -1,0 +1,272 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+
+    <form 
+        nz-form 
+        name="alternativePaymentArrangementFrom" 
+        [formGroup]="alternativePaymentArrangementFrom"        
+        fxLayout="column" 
+        [nzLayout]="'vertical'" 
+        (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <div nz-col [nzXs]="24" *ngIf="errorMsg">
+
+                    <nz-alert nzCloseable nzType="warning" [nzMessage]="errorMsg?.message || 'Error'"></nz-alert>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Provider ID</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="paymentArrangementProviderIdErrorTpl">
+
+                            <nz-select [nzDisabled]="isReadonly" formControlName="providerID" nzShowSearch
+                                nzAllowClear nzPlaceHolder="Select Provider ID">
+
+                                <nz-option *ngFor="let provider of providers" nzValue="{{ provider.id }}"
+                                    nzLabel="{{ provider.providerId }}" title="{{ provider.providerId }}">
+                                </nz-option>
+
+                            </nz-select>
+
+                            <ng-template #paymentArrangementProviderIdErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your Provider ID
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <ng-container *ngIf="uploadmode">
+                    
+                    <div nz-col [nzXs]="24">
+    
+                        <nz-form-item>
+    
+                            <nz-form-label>Alternative Payment Arrangement ID</nz-form-label>
+    
+                            <nz-form-control nzHasFeedback [nzErrorTip]="alternativePaymentArrangementIDErrorTpl">
+    
+                                <input [disabled]="isReadonly" nz-input
+                                    formControlName="alternativePaymentArrangementID"
+                                    placeholder="Alternative Payment Arrangement ID" type="text" />
+    
+                                <ng-template #alternativePaymentArrangementIDErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input Alternative Payment
+                                        Arrangement ID
+                                    </ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+    
+                        </nz-form-item>
+                        
+                    </div>
+
+                </ng-container>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Payment Arrangement Type</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="paymentArrangementTypeErrorTpl">
+
+                            <nz-select [nzDisabled]="isReadonly" formControlName="paymentArrangementType" nzShowSearch
+                                nzAllowClear nzPlaceHolder="Select Type">
+
+                                <nz-option *ngFor="let items of arrangementType" nzValue="{{ items.value }}"
+                                    nzLabel="{{ items.description }}" title="{{ items.description }}">
+                                </nz-option>
+
+                            </nz-select>
+
+                            <ng-template #paymentArrangementTypeErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your payment arrangement
+                                    type
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Payment Arrangement Start Date</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="paymentArrangementStartDateErrorTpl">
+
+                            <nz-date-picker [nzInputReadOnly]="true" [nzDisabled]="isReadonly" class="block"
+                                formControlName="paymentArrangementStartDate"
+                                nzPlaceHolder="Payment Arrangement Start Date"></nz-date-picker>
+
+                            <ng-template #paymentArrangementStartDateErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your payment arrangement
+                                    start date
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+                    
+                    <nz-form-item>
+
+                        <nz-form-label>Offsetting Arrangement Service ID</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="offsettingArrangementServiceIDErrorTpl">
+
+                            <input [disabled]="isReadonly" nz-input formControlName="offsettingArrangementServiceID"
+                                placeholder="Offsetting Arrangement Service ID" type="text" />
+
+                            <ng-template #offsettingArrangementServiceIDErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your offsetting
+                                    arrangement service ID
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Even Amounts Payment Period</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="evenAmountsPaymentPeriodErrorTpl">
+
+                            <nz-select [nzDisabled]="isReadonly" formControlName="evenAmountsPaymentPeriod" nzShowSearch
+                                nzAllowClear nzPlaceHolder="Select Months">
+
+                                <nz-option *ngFor="let items of paymentPeriod" nzValue="{{ items.value }}"
+                                    nzLabel="{{ items.description }}" title="{{ items.description }}">
+                                </nz-option>
+
+                            </nz-select>
+
+                            <ng-template #evenAmountsPaymentPeriodErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your even amounts
+                                    payment period
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Offsetting Arrangement Percentage</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="offsettingArrangementPercentageErrorTpl">
+
+                            <input [disabled]="isReadonly" nz-input formControlName="offsettingArrangementPercentage"
+                                placeholder="Offsetting Arrangement Percentage" type="number" />
+
+                            <ng-template #offsettingArrangementPercentageErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your offsetting
+                                    arrangement percentage
+                                </ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <ng-container *ngIf="uploadmode">
+
+                    <div nz-col [nzXs]="24">
+
+                        <nz-form-item>
+
+                            <label nz-checkbox (ngModelChange)="onDocCheckBoxChange($event)" formControlName="supportingDocument">Supporting Documents</label>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" *ngIf="showUpload">
+    
+                        <nz-upload [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload">
+                            <button nz-button type="button"><i nz-icon nzType="upload"></i>Select File</button>
+                        </nz-upload>
+
+                    </div>
+
+                </ng-container>
+
+            </div>
+        
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <ng-container>
+                    <button class="text-uppercase mr-8" type="submit" *hasPermission="['AC2']; belongsTo 'N21'" nz-button
+                        nzType="primary" [promiseBtn]="buttonLoader"
+                        [disabled]="!alternativePaymentArrangementFrom.valid || (alternativePaymentArrangementFrom.get('supportingDocument').value === true && fileList.length === 0)" (click)="onFormSubmit($event)">
+                        <i class="plus icon mr-8"></i> {{buttonValue}}
+                    </button>
+                </ng-container>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

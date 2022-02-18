@@ -1,0 +1,286 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">{{ dialogTitle }}</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="roleForm" class="compose-form" fxLayout="column" fxFlex [nzLayout]="'vertical'" 
+        [formGroup]="roleForm" 
+        nz-form 
+        (ngSubmit)="onFormSubmit($event)">
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" 
+            fusePerfectScrollbar 
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Name</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="nameErrorTpl">
+
+                            <input nz-input formControlName="name" placeholder="name" type="text" />
+
+                            <ng-template #nameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your name</ng-container>
+                                <ng-container *ngIf="control.hasError('pattern')">Invalid input name</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Display Name</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="displayErrorTpl">
+
+                            <input nz-input formControlName="display" placeholder="display" type="text" />
+
+                            <ng-template #displayErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input display name</ng-container>
+                                <ng-container *ngIf="control.hasError('pattern')">Invalid input display name</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label>Description <small>(Max 250 characters)</small></nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="descErrorTpl">
+
+                            <textarea formControlName="desc" nz-input rows="4" placeholder="description"></textarea>
+
+                            <ng-template #descErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('maxlength')">Description can't be longer than 250 characters</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Type</nz-form-label>
+
+                        <nz-form-control nzHasFeedback [nzErrorTip]="typeErrorTpl">
+
+                            <nz-select  
+                                formControlName="level"
+                                nzShowSearch
+                                nzAllowClear
+                                nzPlaceHolder="select a role type">
+
+                                <nz-option *ngFor="let item of roleLevels | keyvalue; trackBy: trackByFn;" nzValue="{{ item.key }}" nzLabel="{{ item.value | replace: '-' : ' ' }}"></nz-option>
+                                
+                            </nz-select>
+
+                            <ng-template #typeErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input your role type</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24"
+                    *ngIf="roleForm.get('level').value === 'KM8-AP'" [@fadeInOnEnter]>
+
+                    <nz-form-item>
+
+                        <nz-form-label>Has Administrator Privileges</nz-form-label>
+
+                        <nz-form-control>
+
+                            <nz-switch 
+                                formControlName="admin_privileges" 
+                                nzCheckedChildren="Yes" 
+                                nzUnCheckedChildren="No"></nz-switch>
+
+                        </nz-form-control>
+
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Select Permissions</nz-form-label>
+
+                        <nz-form-control 
+                            [nzValidateStatus]="permissionFormStatus"
+                            [nzErrorTip]="rolePermissionErrorTpl"
+                            *ngIf="permissions.length > 0; else typeEmpty"
+                            [@fadeInOnEnter]>
+
+                            <p class="mb-8">
+                                <label class="no-select"
+                                    nz-checkbox
+                                    [ngModelOptions]="{ standalone: true }"
+                                    [(ngModel)]="allChecked"
+                                    (ngModelChange)="updateAllChecked()"
+                                    [nzIndeterminate]="indeterminate">
+                                    Check all
+                                </label>
+                            </p>
+
+                            <nz-collapse nzAccordion>
+
+                                <nz-collapse-panel *ngFor="let permGroup of permissions | groupBy : 'type' | values; let i = index; trackBy: i;" 
+                                    [nzHeader]="permGroup[0].type"
+                                    [nzActive]="i === 0"
+                                    (nzActiveChange)="onPermissionTabCollapsed($event)"
+                                    formArrayName="perms">
+
+                                    <ng-container *ngFor="let item of permGroup; let j = index; trackBy: item?.index;">
+
+                                        <p [ngClass]="(j === (permGroup.length - 1)) ? 'mb-0' : 'mb-4'">
+                                            
+                                            <label 
+                                                nz-checkbox 
+                                                [formControlName]="item.index"
+                                                (ngModelChange)="onCheckboxChange($event, permGroup, item)"
+                                                [nzDisabled]="checkCheckboxStatus(permGroup, j)">
+
+                                                <span class="lbl-inner">
+                                                    {{ item?.name }}
+                                                    <small *ngIf="item.isParent" class="required-hint">(Required)</small>
+                                                </span>
+
+                                            </label>
+                                        
+                                        </p>
+
+                                    </ng-container>
+
+                                    <ng-template #accordionHeader>
+                                        <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+                                            <span>{{ permGroup[0].type }}</span>
+                                            <nz-switch></nz-switch>
+                                        </div>
+                                    </ng-template>
+                                    
+                                </nz-collapse-panel>
+
+                            </nz-collapse>
+
+                            <ng-template #rolePermissionErrorTpl let-control>
+                                <ng-container>Please select at least one option from the list</ng-container>
+                            </ng-template>
+
+                        </nz-form-control>
+
+                        <ng-template #typeEmpty>
+                            
+                            <nz-empty
+                                class="e-sm-img"
+                                [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                                [nzNotFoundContent]="contentTpl">
+                            </nz-empty>
+
+                            <ng-template #contentTpl>
+                                <div class="mt-16">Please select role type</div>
+                            </ng-template>
+
+                        </ng-template>
+
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span>
+                <fuse-material-color-picker 
+                    class="mr-8 flex-ft"
+                    [(ngModel)]="colorCode"
+                    (colorChanged)="$event.preventDefault;"
+                    [ngModelOptions]="{ standalone: true }">
+                </fuse-material-color-picker>
+            </span>
+
+            <span class="text-right">
+
+                <ng-container *ngIf="!editMode">
+                    <button class="text-uppercase mr-8"
+                        *hasPermission="['AC1']; belongsTo 'N05'"
+                        nz-button 
+                        nzType="primary" 
+                        [disabled]="!roleForm.valid"
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Save
+                    </button>
+                </ng-container>
+                
+                <ng-container *ngIf="editMode">
+                    <button class="text-uppercase mr-8"
+                        *hasPermission="['AC2']; belongsTo 'N05'"
+                        nz-button 
+                        nzType="primary" 
+                        [disabled]="!roleForm.valid"
+                        [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Update
+                    </button>
+                </ng-container>
+    
+                <button class="text-uppercase mr-8" 
+                    type="button"
+                    nz-button 
+                    nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+    
+                <button class="text-uppercase mat-close-btn" 
+                    type="button"
+                    nz-button 
+                    nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

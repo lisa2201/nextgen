@@ -1,0 +1,25 @@
+<form name="pdfThemeSetForm" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="saveReportSetForm" nz-form>
+
+    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    
+        <nz-form-item>
+    
+            <nz-form-label nzRequired>Report Name</nz-form-label>
+
+            <nz-form-control nzHasFeedback [nzErrorTip]="nameErrorTpl">
+
+                <input nz-input formControlName="name" placeholder="report name" type="text" />
+
+                <ng-template #nameErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('exists')">Report name already exists</ng-container>
+                    <ng-container *ngIf="control.hasError('required')">Please input your report name</ng-container>
+                </ng-template>
+
+            </nz-form-control>
+
+        </nz-form-item>
+
+
+    </div>
+
+</form>

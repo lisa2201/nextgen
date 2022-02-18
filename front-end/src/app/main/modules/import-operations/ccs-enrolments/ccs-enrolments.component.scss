@@ -1,0 +1,14 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+#import-enrollments {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+    
+}

@@ -1,0 +1,175 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Import Staff</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form name="userForm" class="compose-form" 
+        fxLayout="column" fxFlex 
+        nz-form 
+        [nzLayout]="'vertical'"
+        [formGroup]="userForm" 
+        (ngSubmit)="onFormSubmit($event)">
+
+        <div class="p-24 pt-16 m-0" 
+            mat-dialog-content  
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="24">
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Table Reference</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="nameErrorTpl">
+    
+                            <input nz-input formControlName="table" placeholder="table name" type="text" />
+    
+                            <ng-template #nameErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input table name</ng-container>
+                                <ng-container *ngIf="control.hasError('pattern')">Invalid input table name</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+
+                        <nz-form-label nzRequired>Organisation</nz-form-label>
+                
+                        <nz-form-control nzHasFeedback [nzErrorTip]="orgErrorTpl">
+                
+                            <nz-select  
+                                formControlName="org"
+                                nzPlaceHolder="select organization">
+                
+                                <nz-option 
+                                    *ngFor="let org of organizations; trackBy: trackByFn;" 
+                                    nzValue="{{ org.id }}" 
+                                    nzLabel="{{ org.companyName }}"></nz-option>
+                                
+                            </nz-select>
+                
+                            <ng-template #orgErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a organisation</ng-container>
+                            </ng-template>
+                
+                        </nz-form-control>
+                
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+        
+                        <nz-form-label nzRequired>Branch</nz-form-label>
+                
+                        <nz-form-control nzHasFeedback [nzErrorTip]="branchErrorTpl">
+                
+                            <nz-select  
+                                formControlName="branch"
+                                nzPlaceHolder="select branch"
+                                [nzDisabled]="!userForm.get('org').value || branches.length < 1">
+                
+                                <nz-option 
+                                    *ngFor="let item of branches; trackBy: trackByFn;" 
+                                    nzValue="{{ item.id }}" 
+                                    nzLabel="{{ item.name }}"></nz-option>
+                                
+                            </nz-select>
+                
+                            <ng-template #branchErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a branch</ng-container>
+                            </ng-template>
+                
+                        </nz-form-control>
+                
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                    <nz-form-item>
+        
+                        <nz-form-label nzRequired>Role</nz-form-label>
+                
+                        <nz-form-control nzHasFeedback [nzErrorTip]="branchErrorTpl">
+                
+                            <nz-select
+                                nzMode="multiple"
+                                formControlName="role"
+                                nzPlaceHolder="select branch"
+                                [nzDisabled]="!userForm.get('org').value || branches.length < 1">
+                
+                                <nz-option 
+                                    *ngFor="let item of roleListForOrg; trackBy: trackByFn;" 
+                                    nzValue="{{ item.id }}" 
+                                    nzLabel="{{ item.name }}"></nz-option>
+                                
+                            </nz-select>
+                
+                            <ng-template #branchErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a branch</ng-container>
+                            </ng-template>
+                
+                        </nz-form-control>
+                
+                    </nz-form-item>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+
+                <button class="text-uppercase mr-8" nz-button nzType="primary"
+                    [disabled]="!userForm.valid" 
+                    [promiseBtn]="buttonLoader">
+                    <i class="plus icon mr-8"></i> Import
+                </button>
+
+                <button class="text-uppercase mr-8" type="button" nz-button nzType="default"
+                    (click)="resetForm($event)">
+                    Reset
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

@@ -1,0 +1,67 @@
+<!-- SIDEBAR HEADER -->
+<div class="header p-24 pt-32">
+    <span class="title">Filters</span>
+</div>
+<!-- / SIDEBAR HEADER -->
+
+<!-- SIDEBAR CONTENT -->
+<div class="content p-24 pt-0"
+    fusePerfectScrollbar
+    [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <form fxLayout="column" fxFlex [formGroup]="usersFiltersForm">
+
+        <div *hasPermission="['AC0']; belongsTo 'N04'" class="mb-16">
+
+            <label class="filter-label">Branch</label>
+
+            <nz-select  
+                formControlName="branch"
+                nzShowSearch
+                nzPlaceHolder="select a branch">
+
+                <nz-option *ngFor="let item of branches" nzValue="{{ item.id }}" nzLabel="{{ item.name }}"></nz-option>
+                
+            </nz-select>
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="filter-label">Status</label>
+
+            <nz-radio-group formControlName="status" [nzDisabled]="usersFiltersForm.controls['status'].disabled">
+
+                <label nz-radio nzValue="" class="_filter">All</label>
+                <label nz-radio nzValue="1" class="_filter">Active</label>
+                <label nz-radio nzValue="0" class="_filter">Inactive</label>
+
+            </nz-radio-group>
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="filter-label">Level</label>
+
+            <nz-radio-group formControlName="level" [nzDisabled]="usersFiltersForm.controls['level'].disabled">
+                
+                <label nz-radio nzValue="0" class="_filter">All</label>
+                
+                <label class="_filter" 
+                    *ngFor="let item of userDependencies.levels | keyvalue; trackBy: trackByFn;"
+                    nz-radio 
+                    nzValue="{{ item.key }}">{{ item.value | replace: '-' : ' ' }}</label>
+        
+            </nz-radio-group>
+
+        </div>
+
+        <button nz-button nzType="default" 
+            *ngIf="showFilterButton" [@fadeInOnEnter] [@fadeOutOnLeave]
+            (click)="clearFilter($event)">Reset</button>
+
+    </form>
+
+</div>
+<!-- / SIDEBAR CONTENT -->

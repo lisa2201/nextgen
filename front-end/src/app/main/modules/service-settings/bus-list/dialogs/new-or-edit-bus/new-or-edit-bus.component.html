@@ -1,0 +1,107 @@
+<div
+        id="center-pincode"
+        class="page-layout simple left-sidebar inner-sidebar inner-scroll"
+        [@fadeInOnEnter]
+        [@fadeOutOnLeave]>
+
+    <div class="dialog-content-wrapper">
+
+        <mat-toolbar class="mat-accent m-0">
+
+            <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="title dialog-title">{{dialogTitle}}</span>
+
+                <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                        aria-label="Close dialog">
+                    <mat-icon>close</mat-icon>
+                </button>
+
+            </mat-toolbar-row>
+
+        </mat-toolbar>
+
+            <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+                <div class="content p-24 pt-16">
+
+                    <form nz-form name="busListForm" [nzLayout]="'vertical'" [formGroup]="busListForm" (ngSubmit)="onFormSubmit($event)">
+
+                        <div class="px-4">
+                            <div nz-row [nzGutter]="24">
+                                <!--<div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                    <nz-form-item>
+
+                                        <nz-form-label>State</nz-form-label><br>
+
+                                        <nz-form-control>
+
+                                            <nz-select formControlName="state" nzShowSearch nzPlaceHolder="select State" (ngModelChange)="displayRatios($event)">
+                                                <ng-container *ngFor="let item of this.states">
+                                                    <nz-option *ngIf="item" nzValue="{{ item.state }}"
+                                                               nzLabel=" {{ item.state }}" title="{{ item.state }}">
+                                                    </nz-option>
+                                                </ng-container>
+                                            </nz-select>
+
+                                        </nz-form-control>
+
+                                    </nz-form-item>
+                                </div>-->
+                                <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                    <nz-form-item>
+
+                                        <nz-form-label nzRequired>Bus Name</nz-form-label><br>
+
+                                        <nz-form-control>
+                                            <input nz-input formControlName="busName" placeholder="Bus name" type="text" />
+
+                                            <ng-template #orgNameErrorTpl let-control>
+                                                <ng-container *ngIf="control.hasError('required')">Please enter a Bus name</ng-container>
+                                                <ng-container *ngIf="control.hasError('maxlength')">Bus name cannot be longer than 255 characters
+                                                </ng-container>
+                                            </ng-template>
+
+                                        </nz-form-control>
+
+                                    </nz-form-item>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+                            <span class="text-right">
+                                <ng-container *ngIf="!editMode">
+
+                                    <button
+                                            class="text-uppercase mr-8"
+                                            *hasPermission="['AC1']; belongsTo 'N59'"
+                                            nz-button
+                                            nzType="primary"
+                                            [disabled]="!busListForm.valid"
+                                            [promiseBtn]="buttonLoader">
+                                        <i class="plus icon mr-8"></i> Save
+                                    </button>
+                                </ng-container>
+                                <ng-container *ngIf="editMode">
+                                    <button
+                                            class="text-uppercase mr-8"
+                                            *hasPermission="['AC2']; belongsTo 'N59'"
+                                            nz-button
+                                            nzType="primary"
+                                            [disabled]="!busListForm.valid"
+                                            [promiseBtn]="buttonLoader">
+                                        <i class="plus icon mr-8"></i> Update
+                                    </button>
+                                </ng-container>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+    </div>
+</div>

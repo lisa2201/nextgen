@@ -1,0 +1,238 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+booking-master-roll-calendar-week-list-tab-view {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 0;
+    overflow: hidden;
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .tab-inner-view {
+        position: relative;
+
+        .tab-help-panel {
+            display: flex;
+            flex: 0 0 100%;
+            padding: 8px 16px;
+            background: $default-background-color;
+            // border-bottom: 1px solid $layout-border-color;
+
+            @media only screen and (max-width: 957px) {
+                align-items: flex-start !important;
+            }
+
+            .booking-summary {
+                display: inline-flex;
+                margin-right: 16px;
+
+                @media only screen and (max-width: 957px) {
+                    flex-direction: column;
+                    flex: 1 0 auto;
+                }
+
+                ul {
+                    @media only screen and (max-width: 957px) {
+                        margin: 0 0 8px;
+
+                        &:last-of-type {
+                            margin-bottom: 0;
+                        }
+                    }
+
+                    li {
+                        @media only screen and (max-width: 957px) {
+                            flex: 1;
+                            justify-content: space-between;
+                        }
+                    }
+                }
+
+            }
+
+            ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                display: inline-flex;
+                margin-right: 16px;
+
+                &:last-of-type {
+                    margin-right: 0;
+                }
+
+                &.booking-types {
+                    margin: 0;
+                    
+                    @media only screen and (max-width: 957px) {
+                        flex-direction: column;
+                        flex: 1 0 auto;
+                    }
+                }
+
+                li {
+                    display: inline-flex;
+                    align-items: center;
+                    margin-right: 8px;
+
+                    &:last-of-type {
+                        margin-right: 0;
+                    }
+
+                    @media only screen and (max-width: 957px) {
+                        margin-bottom: 4px;
+    
+                        &:last-of-type {
+                            margin-bottom: 0;
+                        }
+                    }
+                    
+                    .color-box {
+                        font-size: 21px;
+                    }
+
+                    .label {
+                        font-size: 14px;
+                        font-weight: 600;
+
+                        &.highlight {
+                            padding-left: 6px;
+                            color: $success-color;
+                        }
+                    }
+                }
+            }
+        }
+
+        .check-box-header {
+            display: inline-flex;
+            align-items: center;
+
+            .ant-checkbox + span {
+                padding-left: 16px;
+                font-size: 14px;
+                font-weight: 600;
+            }
+        }
+
+        .child-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+
+            @media screen and (max-width: 1024px) {
+                overflow-x: scroll;
+                overflow-y: hidden;
+                margin-right: 16px;
+            }
+
+            li {
+                display: flex;
+                flex: 0 0 100%;
+                flex-direction: column;
+
+                @media screen and (max-width: 1024px) {
+                    min-width: 1024px;
+                }
+
+                &:last-of-type {
+                    border-bottom: 1px solid #f0f0f0;
+                }
+
+                &.bordered {
+                    margin-bottom: 4px;
+                    border-bottom: 1px solid #f0f0f0;
+
+                    &:last-of-type {
+                        margin-bottom: 0;
+                    }
+                }
+
+                .header {
+                    font-weight: 600;
+                    background: $default-background-color;
+                    padding: 4px 16px 8px;
+
+                    .check-box {
+                        width: 36px;
+                    }
+
+                    .name {
+                        font-size: 16px;
+
+                        a {
+                            color: rgba(0, 0, 0, 0.65);
+                            
+                            &:hover {
+                                color: #009fe9;
+                            }
+                        }
+                    }
+
+                    .sub {
+                        font-size: 12px;
+                        font-weight: 600;
+                        color: rgba(34, 34, 34, 0.4);
+                    }
+
+                    .badge {
+                        display: inline-flex;
+                        margin-top: 4px;
+                    }
+                }
+
+                .content {
+
+                    .ant-table-content {
+                        min-height: auto;
+                        overflow: hidden;
+                    }
+
+                    .status-lbl {
+                        font-size: 13px;
+                        font-weight: 600;
+                        padding: 3px 8px 4px;
+                        border-radius: 16px;
+                        color: #fff;
+        
+                        &.booked {
+                            background-color: rgba(255, 149, 0, 0.9) !important;
+                        }
+        
+                        &.attendance {
+                            background-color: rgba(76, 175, 80, 0.8) !important;
+                        }
+        
+                        &.absence {
+                            background-color: rgba(96, 125, 139, 0.7) !important;
+                        }
+        
+                        &.holiday {
+                            background-color: rgba(158, 158, 158, 0.7) !important;
+                        }
+        
+                        &.casual {
+                            background-color: rgba(126, 87, 194, 0.68) !important;
+                        }
+
+                        &.error {
+                            background-color: rgba(231, 76, 60, 0.6) !important;
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}

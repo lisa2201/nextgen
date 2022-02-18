@@ -1,0 +1,201 @@
+<div class="loading-bar" *ngIf="onViewLoading" [@fadeMotion]>
+    <div class="__inner">
+        <img src="assets/loading/gears_c1.svg">
+        <span>Loading! Please Wait...</span>
+    </div>
+</div>
+    <div class="center">
+    
+        <div class="content-card pt-24" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+    
+    
+            <div class="text-right px-4 mt-8 mb-8" fxLayout="row" fxLayoutAlign="space-between center">
+                <span>
+                    <nz-tag nzColor="blue">Total Records : {{reportData ? reportData.length: 0}}</nz-tag>
+                </span>
+                <span class="text-right">
+
+                    <button class="text-uppercase ml-8"
+                            nz-button 
+                            nzType="primary"
+                            (debounceClick)="reloadTable($event)">
+                            <i class="sync icon mr-8"></i> Refresh
+                        </button>
+
+                    <ng-container *hasPermission="['AC1']; belongsTo 'N66'" [@fadeInOnEnter] [@fadeOutOnLeave]>
+    
+                        <button class="text-uppercase ml-8"
+                            nz-button 
+                            nzType="primary"
+                            (debounceClick)="addReceipt($event)">
+                            <i class="plus icon mr-8"></i> Receipt
+                        </button>
+                
+                    </ng-container>
+    
+                    <ng-container *hasPermission="['AC1']; belongsTo 'N67'" [@fadeInOnEnter] [@fadeOutOnLeave]>
+    
+                        <button class="text-uppercase ml-8"
+                            nz-button 
+                            nzType="primary"
+                            (debounceClick)="addReimbursement($event)">
+                            <i class="plus icon mr-8"></i> Reimbursement
+                        </button>
+    
+                    </ng-container>
+
+                    <button class="text-uppercase ml-8"
+                            *hasPermission="['AC0']; belongsTo 'N64'"
+                            nz-button
+                            nzType="primary"
+                            (click)="print($event)">
+                            <i class="print icon b-i mr-8"></i> Print
+                    </button>
+    
+                </span>
+            </div>
+    
+            <ng-container *ngIf="reportData.length > 0; else emptyBlockBooking">
+                <nz-table #bookingTable nzBordered [nzData]="reportData" [nzShowPagination]="false" [nzLoading]="false"
+                [nzNoResult]="emptyBlockBooking" [nzLoadingIndicator]="indicatorTemplate" [nzFrontPagination]="false">
+    
+                <thead>
+                    <tr>
+                        <th colspan="9">Petty Cash GST Summary {{start_date ? getFormatedDate(start_date)  : getFormatedDate(reportData[0].date) }} to {{end_date?getFormatedDate(end_date) : getFormatedDate(reportData[reportData.length-1].date)}}</th>
+                    </tr>
+                    <tr>
+                        <th colspan="9">Reimbursements & Total by Category</th>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <th>Note</th>
+                        <th>Category</th>
+                        <th>Supplier</th>
+                        <th>GST Amount</th>
+                        <th>Total</th>
+                        <th>Reimburse</th>
+                        <th>Balance</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+    
+                <tbody>
+    
+                    <ng-template ngFor let-data [ngForOf]="bookingTable.data">
+                        <tr *ngIf="data.opening_balance">
+                            <td>{{getFormatedDate(data.date) || ''}}</td>
+                            <td>Balance carried forward</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{data.balance|| 0 | currency}}</td>
+                            <td></td>
+                            
+                        </tr>
+                        <tr *ngIf="!data.opening_balance">
+                            <td>{{getFormatedDate(data.date) || ''}}</td>
+                            <td>{{ getTitle(data.desc)|| ''}}</td>
+                            <td>{{data.data?(data.data.category)? data.data.category.name: '' : ''}}</td>
+                            <td>{{data.data? (data.data.supplier)? data.data.supplier.name: '' : ''}}</td>
+                            <td>{{data.gst_amount || '' | currency}}</td>
+                            <td>{{ data.debit || 0 | currency}}</td>
+                            <td>{{ data.credit|| 0 | currency}}</td>
+                            <td>{{ data.balance|| 0 | currency}}</td>
+                            <td class="tbl-style">
+                                <ng-container *ngIf="data.desc !== 'opening_balance'">
+                                    <button *hasPermission="['AC0']; belongsTo 'N64'" nz-button nzType="link" nzSize="large"
+                                        [matMenuTriggerFor]="menu">
+                                        <i class="ellipsis vertical icon"></i>
+                                    </button>
+    
+                                    <mat-menu #menu="matMenu" backdropClass="tlp-more">
+    
+                                        <ng-container *hasPermission="['AC2']; belongsTo 'N64'">
+                                            <ng-container *ngIf="data.type === 'RECEIPT'">
+                                                <button mat-menu-item (click)="editReceipt($event,data.index)">
+                                                    <i class="edit outline icon primary-color"></i>
+                                                    <span class="font-weight-600">Edit</span>
+                                                </button>
+                                            </ng-container>
+                                        </ng-container>
+    
+                                        <ng-container *hasPermission="['AC2']; belongsTo 'N64'">
+                                            <ng-container *ngIf="data.type === 'REIMBURSEMENT'">
+                                                <button mat-menu-item (click)="editReimbursement($event,data.index)">
+                                                    <i class="edit outline icon primary-color"></i>
+                                                    <span class="font-weight-600">Edit</span>
+                                                </button>
+                                            </ng-container>
+                                        </ng-container>
+    
+    
+                                        <ng-container *hasPermission="['AC3']; belongsTo 'N64'">
+                                            <ng-container *ngIf="data.type === 'RECEIPT'">
+                                                <button mat-menu-item (click)="deleteReceipt($event,data.index)">
+                                                    <i class="trash alternate outline icon danger-color"></i>
+                                                    <span class="font-weight-600">Delete</span>
+                                                </button>
+                                            </ng-container>
+                                        </ng-container>
+    
+                                        <ng-container *hasPermission="['AC3']; belongsTo 'N64'">
+                                            <ng-container *ngIf="data.type === 'REIMBURSEMENT'">
+                                                <button mat-menu-item (click)="deleteReimbursement($event,data.index)">
+                                                    <i class="trash alternate outline icon danger-color"></i>
+                                                    <span class="font-weight-600">Delete</span>
+                                                </button>
+                                            </ng-container>
+                                        </ng-container>
+    
+                                    </mat-menu>
+                                </ng-container>
+    
+                            </td>
+    
+                        </tr>
+    
+                    </ng-template>
+                    <tr>
+                        <td colspan="5" class="text-bold">
+                            Total
+                        </td>
+                        <td class="text-bold">
+                            {{getTotal(false) | currency}}
+                        </td>
+                        <td class="text-bold">
+                            {{getTotal(true) | currency}}
+                        </td>
+                        <td class="text-bold">
+                            {{getTotal(false) - getTotal(true) | currency}}
+                        </td>
+                    </tr>
+                </tbody>
+    
+            </nz-table>
+            </ng-container>
+    
+            <ng-template #emptyBlockBooking>
+    
+                <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                    [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+    
+                    <ng-template #contentTpl>
+                        <h4 class="mt-24">No Data Found</h4>
+                        <span>Looks like there's no information to display here</span>
+                    </ng-template>
+    
+                </nz-empty>
+    
+            </ng-template>
+    
+            <ng-template #indicatorTemplate>
+                <div class="is-loading">
+                    <span class="btn-spinner card-loader"></span>
+                </div>
+            </ng-template>
+    
+        </div>
+    </div>
+

@@ -1,0 +1,20 @@
+<form name="crnFrom" fxLayout="column" fxFlex [nzLayout]="'vertical'" [formGroup]="crnFrom" nz-form>
+
+    <nz-form-item>
+
+        <nz-form-control nzHasFeedback [nzErrorTip]="ccsIdErrorTpl">
+
+            <input class="color-border {{ hasWhiteSpace? 'has-error' : '' }}" nz-input formControlName="crn" placeholder="CRN" type="text" />
+
+            <ng-template #ccsIdErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">Please provide CRN</ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">{{ type === 'child' ? 'Child' : 'Individual (Parent/Guardian)'}} CRN can't be longer than {{ type === 'child' ? 10 : 20 }} characters</ng-container>
+            </ng-template>
+
+            <div *ngIf="hasWhiteSpace" class=" custom-validator-error ng-tns-c292-60 ng-trigger ng-trigger-helpMotion"> CRN cannot contain spaces in between</div>
+
+        </nz-form-control>
+
+    </nz-form-item>
+
+</form>

@@ -1,0 +1,130 @@
+<form name="submissionForm" class="compose-form" fxLayout="column" fxFlex
+    [formGroup]="submissionForm" nz-form
+    [nzLayout]="'vertical'">
+    
+    <div nz-row [nzGutter]="24">
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12">
+                    
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Action</nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="actionsErrorTpl">
+
+                    <nz-select  
+                        formControlName="action"
+                        nzPlaceHolder="select a absence reason">
+
+                        <nz-option 
+                            *ngFor="let item of dependActions | keyvalue; let i = index; trackBy: trackByFn;" 
+                            nzValue="{{ item.key }}" 
+                            nzLabel="{{ item.value }}"
+                            [nzDisabled]="i === 0"></nz-option>
+                        
+                    </nz-select>
+
+                    <ng-template #actionsErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please select an action</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="12" [nzXXl]="12">
+            
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Reason For Change <i class="info circle icon ml-8 hint" nz-popover [nzPopoverContent]="reasonContent"></i></nz-form-label>
+
+                <ng-template #reasonContent>
+
+                    <div class="font-size-13" [ngStyle]="{'max-width': '300px' }">
+
+                        <p><span class="font-weight-600">Administrative error</span>: use where there was a mistake made in the original session report e.g. incorrect session start time</p>
+
+                        <p><span class="font-weight-600">Responding to carer’s dispute</span>: use where a parent has disputed a session report</p>
+
+                        <p><span class="font-weight-600">General amendment</span>: use where changes are being made before Sunday night of the session report week – before report has been processed and CCS paid (e.g. child attends another session after report submitted)</p>
+
+                        <p class="mb-0"><span class="font-weight-600">Responding to 204C</span>: only use if a 204C (compliance) notice has been issued requiring you to make a change to a session report</p>
+
+                    </div>
+
+                </ng-template>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="changeReasonErrorTpl">
+
+                    <nz-select  
+                        formControlName="change_reason"
+                        nzPlaceHolder="select a absence reason"
+                        [nzDisabled]="!(submissionForm.get('action').value === 'VARY')">
+
+                        <nz-option 
+                            *ngFor="let item of dependChangeReason | keyvalue; trackBy: trackByFn;" 
+                            nzValue="{{ item.key }}" 
+                            nzLabel="{{ item.value }}"></nz-option>
+                        
+                    </nz-select>
+
+                    <ng-template #changeReasonErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please select a change reason</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" 
+            *ngIf="submissionForm.get('action').value === 'VARY' && hasValidator('reason_late_change', 'required')" [@fadeInOnEnter]>
+            
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Reason For Late Change<small class="ml-4">(Max 1000 characters)</small></nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="reasonForLateChangeErrorTpl">
+
+                    <textarea formControlName="reason_late_change" nz-input rows="5" placeholder="reason for late change"></textarea>
+
+                    <ng-template #reasonForLateChangeErrorTpl let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please input reason for late change</ng-container>
+                        <ng-container *ngIf="control.hasError('maxlength')">Reason for late change can't be longer than 1000 characters</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+        </div>
+
+        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" *ngIf="submissionForm.get('action').value === 'NOCHG'" [@fadeInOnEnter]>
+            
+            <nz-form-item>
+
+                <nz-form-label nzRequired>Reason For No Change<small class="ml-4">(Max 1000 characters)</small></nz-form-label>
+
+                <nz-form-control nzHasFeedback [nzErrorTip]="reasonForNoChangeErrorTpl">
+
+                    <textarea formControlName="reason_no_change" nz-input rows="5" placeholder="reason for no change"></textarea>
+
+                    <ng-template #reasonForNoChangeErrorTpl let-control>
+                        <!-- <ng-container *ngIf="control.hasError('required')">Please input reason for no change</ng-container> -->
+                        <ng-container *ngIf="control.hasError('maxlength')">Reason for no change can't be longer than 1000 characters</ng-container>
+                    </ng-template>
+
+                </nz-form-control>
+
+            </nz-form-item>
+
+        </div>
+
+
+    </div>
+    
+    
+</form>

@@ -1,0 +1,195 @@
+<!-- <p>room works!</p>-->
+<div id="room" class="page-layout simple fullwidth" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- HEADER -->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <h1 [@animate]="{value:'*',params:{delay:'100ms', x:'-25px'}}">Manage Rooms</h1>
+
+        <ng-container *hasPermission="['AC1']; belongsTo 'N21'">
+
+            <button class="text-uppercase" nz-button nzType="primary" (click)="addDialog($event)"
+                [promiseBtn]="buttonLoader">
+                <i class="plus icon mr-8"></i> Create New
+            </button>
+
+        </ng-container>
+
+    </div>
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="total && total>0">
+
+        <div fxLayout="column">
+            <nz-radio-group #statusFilter [(ngModel)]="filterBy.status" (ngModelChange)="changeFilter('status')">
+                <label nz-radio nzValue="0">All</label>
+                <label nz-radio nzValue="1">Active</label>
+                <label nz-radio nzValue="2">Inactive</label>
+            </nz-radio-group>
+        </div>
+
+
+        <!-- filter -->
+        <div nz-col nzSpan="12">
+            <div class="header p-12" fxLayout="row" fxLayoutAlign="space-between center">
+                <nz-input-group class="search-container" [nzSuffix]="suffixTemplate" [nzPrefix]="prefixTemplate">
+                    <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+                </nz-input-group>
+
+                <ng-template #prefixTemplate>
+                    <i nz-icon nzType="search" class="search-icon"></i>
+                </ng-template>
+
+                <ng-template #suffixTemplate>
+                    <i class="times circle outline icon ant-input-clear-icon" *ngIf="searchInput.value" [@fadeInOnEnter]
+                        [@fadeOutOnLeave] (click)="clearSearch($event)">
+                    </i>
+                </ng-template>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content p-24 pt-0">
+        <nz-spin [nzTip]="'Loading...'" [nzSpinning]="isLoadingData" [nzIndicator]="indicatorTpl">
+
+
+            <nz-list [nzNoResult]="emptyBlock" [nzDataSource]="roomList" [nzRenderItem]="item"
+                [nzGrid]="{ gutter: 16, xs: 24, sm: 12, md: 8, lg: 8, xl: 6, xxl: 5 }" [nzLoading]="tableLoading">
+
+                <ng-template #item let-item let-index="index">
+
+                    <nz-list-item [nzContent]="nzContent">
+
+                        <ng-template #nzContent>
+
+                            <nz-spin [nzSpinning]="item.isLoading" [nzIndicator]="indicatorTemplate">
+
+                                <nz-card [nzBordered]="true"
+                                    [nzActions]="hasActionButton ? [actionEdit,actionDelete ] : []"
+                                    [@animate]="{ value:'*', params:{ delay: (item.isNew ? 100 : ((index + 1) * 100)) + 'ms', x: '-25px' } }">
+
+                                    <div class="color-bar {{ item.status ? 'active' : 'inactive' }}"></div>
+
+                                    <p class="text-truncate">
+                                        <span class="font-weight-600">
+                                            Name
+                                        </span>
+                                        <br>
+                                        {{ item.title }}
+                                    </p>
+                                    <p class="text-truncate"><span class="font-weight-600">Description</span> <br>
+                                        {{ item.desc || 'N/A'}}
+                                    </p>
+                                    <p class="text-truncate">
+                                        <span class="font-weight-600">Capacity : </span>
+                                        {{ item.getRoomCapacity() || 'N/A' }}
+                                    </p>
+                                    <p class="text-truncate">
+                                        <span class="font-weight-600">No of Children : </span>
+                                        {{ active_child_count(item.child) || 'N/A' }}
+                                    </p>
+                                    <p class="text-truncate">
+                                        <span class="font-weight-600">Staff : </span>
+                                        {{item.staff.length || 'N/A'}}
+                                    </p>
+                                    <p class="mb-0" *hasPermission="['AC2']; belongsTo 'N21'">
+                                        <nz-switch [(ngModel)]="item.status" [nzControl]="true"
+                                            [nzLoading]="item.statusLoading" (click)="updateStatus(item, index, $event)"
+                                            nzCheckedChildren="Active" nzUnCheckedChildren="Inactive">
+                                        </nz-switch>
+                                    </p>
+                                </nz-card>
+
+                                <ng-template #actionEdit>
+                                    <span class="pr-8 pl-8" *hasPermission="['AC2']; belongsTo 'N21'"
+                                        (click)="editDialog(item, $event)">
+                                        <i class="edit outline icon primary-color"></i>
+                                    </span>
+                                </ng-template>
+
+                                <!-- <ng-template #actionEllipsis>
+                                    <i nz-icon nzType="usergroup-add" nzTheme="outline"></i>
+                                        {{item.child.length}}
+                            </ng-template> -->
+
+                                <ng-template #actionDelete>
+                                    <span class="pr-8 pl-8" *hasPermission="['AC3']; belongsTo 'N21'"
+                                        (click)="delete(item, $event)">
+                                        <i class="trash alternate outline icon danger-color"></i>
+                                    </span>
+                                </ng-template>
+                            </nz-spin>
+
+                            <ng-template #indicatorTemplate>
+                                <div class="is-loading">
+                                    <span class="btn-spinner card-loader"></span>
+                                </div>
+                            </ng-template>
+
+                        </ng-template>
+
+                    </nz-list-item>
+
+                </ng-template>
+
+            </nz-list>
+
+        </nz-spin>
+
+        <ng-template #indicatorTpl>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0" [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl" [nzNotFoundFooter]="footerTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+                <ng-template #footerTpl>
+                    <!-- <button *hasPermission="['AC0']; belongsTo 'N21'" class="text-uppercase" nz-button nzType="primary"
+                        (click)="addDialog($event)" [promiseBtn]="buttonLoader">
+                        <i class="plus icon mr-8"></i> Create Now
+                    </button> -->
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+
+    </div>
+    <!-- pgination -->
+    <nz-layout *ngIf="roomList && roomList.length > 0">
+        <nz-footer>
+            <nz-pagination class="room-pagination" [(nzPageIndex)]="pageIndex" [nzTotal]="totalDisplay" [nzShowTotal]="totalTemplate"
+                [(nzPageSize)]="pageSize" [nzPageSizeOptions]="pageSizeOptions" (nzPageIndexChange)="onTableChange()"
+                (nzPageSizeChange)="onTableChange(true)" [nzSimple]="mobilePagination" [nzShowSizeChanger]="pageSizeChanger">
+            </nz-pagination>
+
+            <ng-template #totalTemplate let-range="range" let-total>
+                <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing
+                    {{ range[0] }} to
+                    {{ range[1] }} of {{ totalDisplay }} entries</span>
+                <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} -
+                    {{ range[1] }} of
+                    {{ totalDisplay }} entries</span>
+            </ng-template>
+            <!-- <ng-template #totalTemplate let-total>
+                Total {{ total }} items
+            </ng-template> -->
+            <!-- <nz-pagination 
+                [nzPageIndex]="pageIndex" 
+                [nzTotal]="total">
+            </nz-pagination> -->
+
+        </nz-footer>
+    </nz-layout>
+</div>

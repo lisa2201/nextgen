@@ -1,0 +1,163 @@
+ <div class="dialog-content-wrapper" fxLayout="column">
+    <mat-toolbar class="mat-accent m-0">
+        <mat-toolbar-row
+            fxFlex
+            fxLayout="row"
+            fxLayoutAlign="space-between center"
+        >
+            <span class="title dialog-title">Edit Provider Contact</span>
+
+            <button
+                mat-icon-button
+                disableRipple="true"
+                type="button"
+                (click)="matDialogRef.close()"
+                aria-label="Close dialog"
+            >
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+</div>
+
+<form
+    name="providerForm"
+    class="compose-form"
+    fxLayout="column"
+    fxFlex
+    [formGroup]="providerForm"
+    nz-form
+    (ngSubmit)="onFormSubmit($event)"
+>
+    <div
+        mat-dialog-content
+        class="p-24 pt-16 m-0"
+        fusePerfectScrollbar
+        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }"
+    >
+         <!-- <nz-form-item>
+            <nz-form-label nzRequired>Date</nz-form-label>
+
+                <nz-date-picker
+                [nzMode]="dateMode"
+                [nzInputReadOnly]="true"
+                (nzOnOpenChange)="handleDateOpenChange($event)"
+                (nzOnPanelChange)="handleDatePanelChange($event)"
+              >
+              </nz-date-picker>
+                 
+        </nz-form-item>  -->
+
+        <nz-form-item>
+            <nz-form-label nzRequired>Email</nz-form-label>
+
+            <nz-form-control
+                nzHasFeedback
+                [nzErrorTip]="emailErrorTpl"
+                class="ant-form-flex"
+            >
+                <input
+                    nz-input
+                    formControlName="email"
+                    placeholder="email"
+                    type="text"
+                />
+
+                <ng-template #emailErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('required')"
+                        >Please input your email</ng-container
+                    >
+                    <ng-container *ngIf="control.hasError('pattern')"
+                        >Invalid input email</ng-container
+                    >
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label nzRequired>Phone</nz-form-label>
+
+            <nz-form-control
+                nzHasFeedback
+                [nzErrorTip]="phoneErrorTpl"
+                class="ant-form-flex"
+            >
+                <input
+                    nz-input
+                    formControlName="phone"
+                    placeholder="phone"
+                    type="text"
+                />
+
+                <ng-template #phoneErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('required')"
+                        >Please input your Phone</ng-container
+                    >
+                    <ng-container *ngIf="control.hasError('pattern')"
+                        >Invalid input Phone</ng-container
+                    >
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item> 
+
+
+
+        <nz-form-item>
+            <nz-form-label nzRequired>Moble</nz-form-label>
+
+            <nz-form-control
+                nzHasFeedback
+                [nzErrorTip]="mobileErrorTpl"
+                class="ant-form-flex"
+            >
+                <input
+                    nz-input
+                    formControlName="mobile"
+                    placeholder="mobile"
+                    type="text"
+                />
+
+                <ng-template #mobileErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('required')"
+                        >Please input your Mobile</ng-container
+                    >
+                    <ng-container *ngIf="control.hasError('pattern')"
+                        >Invalid input Mobile</ng-container
+                    >
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item> 
+       
+    </div>
+
+    <div
+        mat-dialog-actions
+        class="m-0 p-16 fm-border-top"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+    >
+        <span class="text-right">
+            <ng-container *ngIf="!editMode">
+                <button
+                    class="text-uppercase mr-8"
+                    *hasPermission="['AC2']; belongsTo: 'N20'"
+                    nz-button
+                    nzType="primary"
+                    [disabled]="!providerForm.valid"
+                    [promiseBtn]="buttonLoading"
+                >
+                    <i class="plus icon mr-8"></i> Save
+                </button>
+            </ng-container>
+
+            <button class="text-uppercase mat-close-btn" 
+                type="button"
+                nz-button
+                nzType="danger"
+                (click)="matDialogRef.close()"
+            >
+                Close
+            </button>
+        </span>
+    </div>
+</form>

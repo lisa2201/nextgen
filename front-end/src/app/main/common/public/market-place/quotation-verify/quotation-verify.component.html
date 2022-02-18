@@ -1,0 +1,60 @@
+<div class="container">
+
+    <div class="header" align="middle">
+        <img src="../../../../../assets/images/logos/KMLOGO.png" alt="kinderm8_logo">
+        <h1><b>KICK START WITH KINDER M8</b></h1>
+
+    </div>
+
+
+
+    <div class="row" nz-row>
+
+
+
+        <div class="col2" nz-col [nzXs]="{ span: 24, offset: 0 }" [nzLg]="{ span: 24, offset: 0 }" *ngIf="verifyMode">
+
+            <div class="verify-center-head" align="middle">
+                <h2><b>Quotation Acceptance</b></h2> <br><br>
+
+
+
+                <div class="mail-verify" id="mail-verify"
+                    [@animate]="{ value:'*', params:{ duration:'500ms', y:'100px', opacity: 0, delay:'300ms' }}"
+                    *ngIf="verifyMode">
+                </div>
+
+                <div class="verify-process" *ngIf="verifyProcessing" [@expandCollapse]
+                    [@animate]="{ value:'*', params:{ duration:'500ms', y:'50px', opacity: 0, delay:'300ms' }}">
+
+                    <div class="title">Please Wait</div>
+                    <nz-spin nzSimple nzSize="large" nzTip="Accepting quotation..." [nzSpinning]="true" class="mt-20">
+                    </nz-spin>
+                </div>
+
+                <nz-result nzStatus="success" [nzTitle]="verifyMessage"
+                    [nzSubTitle]="'Thank you for accepting the quotation. Please wait while we forward you to sitemanager.'"
+                    [@animate]="{ value:'*', params:{ duration:'500ms', y:'50px', opacity: 0, delay:'300ms' }}"
+                    [@expandCollapse] *ngIf="verfiySuccess === true">
+                </nz-result>
+
+                <nz-result nzStatus="warning" [nzTitle]="verifyMessage"
+                    [nzSubTitle]="'The requested link does not represent any resource on the server. Please contact the Kinder M8 administration'"
+                    [@animate]="{ value:'*', params:{ duration:'500ms', y:'50px', opacity: 0, delay:'300ms' }}"
+                    [@expandCollapse] *ngIf="verfiySuccess === false">
+
+                </nz-result>
+
+            </div> <br>
+
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <p class="mt-16 copyright">
+                    Copyright © {{ currentYear }} <strong>kinder m8</strong>, All rights reserved.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

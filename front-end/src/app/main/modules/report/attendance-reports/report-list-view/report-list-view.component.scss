@@ -1,0 +1,14 @@
+attendance-report-list-view {
+    .custom-tick {
+        font-size: 25px;
+        font-weight: 600;
+        align-items: center;
+        img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 20px !important;
+            height: 20px !important;
+        }
+    }
+}

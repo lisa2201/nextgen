@@ -1,0 +1,50 @@
+
+<div 
+id="is-cases" 
+class="page-layout simple left-sidebar inner-sidebar inner-scroll" 
+*canViewAuth
+[@fadeInOnEnter] 
+[@fadeOutOnLeave]>
+
+<!-- HEADER -->
+<div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-15px' } }">Innovative Solutions Case Claims</h1>
+
+    <ng-container>
+
+    </ng-container>
+
+</div>
+<!-- / HEADER -->
+
+<!-- CONTENT -->
+<div class="content">
+
+    <!-- SIDEBAR -->
+    <fuse-sidebar class="sidebar" name="innovative-case-claims-filter" position="left" lockedOpen="gt-md">
+
+        <innovative-case-claims-filter
+            [@animate]="{ value:'*', params:{ delay: '200ms', x:'-15px' } }" 
+            fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+            (updateTableScroll)="updateScroll($event)">
+        </innovative-case-claims-filter>
+
+    </fuse-sidebar>
+    <!-- / SIDEBAR -->
+
+    <!-- CENTER -->
+    <innovative-case-claims-list-view 
+        class="center p-24 pt-32" 
+        fusePerfectScrollbar
+        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }" 
+        (updateTableScroll)="updateScroll($event)"
+        [@animate]="{ value:'*', params:{ delay: '200ms', x:'15px' } }">
+    </innovative-case-claims-list-view>
+    <!-- / CENTER -->
+
+</div>
+<!-- / CONTENT -->
+
+</div>

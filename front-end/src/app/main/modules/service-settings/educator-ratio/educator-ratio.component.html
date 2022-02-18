@@ -1,0 +1,126 @@
+<div 
+    id="center-pincode" 
+    class="page-layout simple left-sidebar inner-sidebar inner-scroll" 
+    [@fadeInOnEnter] 
+    [@fadeOutOnLeave]>
+  
+    <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+        <div class="content p-24 pt-16">
+
+            <form nz-form name="pincodeForm" [nzLayout]="'vertical'" [formGroup]="educatorRatioForm" (ngSubmit)="onFormSubmit()">
+
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <div></div>
+                    
+                    <ng-container *hasPermission="['AC0']; belongsTo 'N41'">
+            
+                        <button nz-button class="submit_button" nzType="primary" type="submit" [nzLoading]="buttonLoader">
+                            Update Ratios and State
+                        </button>
+                
+                    </ng-container> 
+
+                </div>
+
+                <div class="px-4">
+                    <div nz-row [nzGutter]="24">
+                        <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                            <nz-form-item>
+
+                                <nz-form-label>State</nz-form-label><br>
+
+                                <nz-form-control>
+
+                                    <nz-select formControlName="state" nzShowSearch nzPlaceHolder="select State" (ngModelChange)="displayRatios($event)">
+                                        <ng-container *ngFor="let item of this.states">
+                                            <nz-option *ngIf="item" nzValue="{{ item.state }}"
+                                                       nzLabel=" {{ item.state }}" title="{{ item.state }}">
+                                            </nz-option>
+                                        </ng-container>
+                                    </nz-select>
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+                        </div>
+
+                        <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12" *ngIf="TASStateSelected">
+                            <nz-form-item >
+
+                            <nz-form-label></nz-form-label><br>
+
+                            <nz-form-control>
+
+                                <label nz-checkbox
+                                       [ngModel]="TASStatePreschoolProgramTickbox"
+                                       [ngModelOptions]="{standalone: true}"
+                                       (nzCheckedChange)="TASStatePreschoolProgram($event)">Children Attending a Preschool Prorgam?</label>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+                        </div>
+
+                        <div nz-col [nzXs]="12" [nzSm]="12" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12" *ngIf="WAStateSelected">
+                            <nz-form-item >
+
+                                <nz-form-label></nz-form-label><br>
+
+                                <nz-form-control>
+
+                                    <label nz-checkbox
+                                           [ngModel]="WAStatePreschoolProgramTickbox"
+                                           [ngModelOptions]="{standalone: true}"
+                                           (nzCheckedChange)="WAStatePreschoolProgram($event)">Kindergarten children are in attendance?</label>
+
+                                </nz-form-control>
+
+                            </nz-form-item>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-4">
+                    <nz-table #headerTable
+                              [nzFrontPagination]="false"
+                              [nzData]="this.filteredStateRatio"
+                              [nzLoadingIndicator]="indicatorTemplate">
+
+                        <thead>
+                        <tr>
+                            <th nzWidth="80px">Age Group</th>
+                            <th nzWidth="80px">Educator Ratio</th>
+                            <th nzWidth="80px">Enabled?</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let item of headerTable.data">
+                            <ng-container *ngIf="item.visibility!=false">
+                            <td nzWidth="80px">{{ item.age_group}}</td>
+                            <td nzWidth="80px">{{ item.ratio_display }}</td>
+                            <td nzWidth="80px"><label
+                                    nz-checkbox
+                                    [ngModel]="item.selected"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (nzCheckedChange)="removeAgeGroup($event, item)"></label></td>
+                            </ng-container>
+                        </tr>
+                        </tbody>
+                    </nz-table>
+
+                    <ng-template #indicatorTemplate>
+                        <div class="is-loading">
+                            <span class="btn-spinner card-loader"></span>
+                        </div>
+                    </ng-template>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>  
+
+</div>

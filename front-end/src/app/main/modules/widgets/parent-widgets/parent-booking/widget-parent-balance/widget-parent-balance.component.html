@@ -1,0 +1,52 @@
+<fuse-widget class="widget" fxLayout="column">
+                                
+    <div class="fuse-widget-front">
+        <nz-spin
+            [nzSpinning]="widgetLoader"
+            [nzIndicator]="indicatorTemplate">
+
+            <div class="p-16 h-52" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <div fxFlex class="py-16 h3">Balance</div>
+                
+                <span *ngIf="show_child_select" class="child-selection">
+                    <mat-icon role="img" nz-dropdown nzTrigger="click" [nzDropdownMenu]="child_list" class="mat-icon notranslate secondary-text material-icons mat-icon-no-color" aria-hidden="true">menu</mat-icon>
+
+                    <nz-dropdown-menu #child_list="nzDropdownMenu">
+                        <ul class="top-bar-menu" nz-menu nzSelectable>
+                            
+                            <li *ngFor="let child of children; let i = index" nz-menu-item (click)="getBalance(child.id)">
+                                <i class="user circle icon"></i>
+                                <span>{{ child.f_name }}</span>
+                            </li>    <!--                         
+                            <li nz-menu-divider></li> -->
+                        </ul>
+                    </nz-dropdown-menu>
+                </span>
+
+                <button class="refresh-button" nz-button nzType="link" nzSize="small" (click)="getBalance()">
+                    <i class="sync vertical icon"></i>
+                </button>
+
+            </div>
+
+            <div class="pt-8 pb-32" fxLayout="column" fxLayoutAlign="center center">
+                <div class="font-size-40 line-height-80" [ngClass]="'light-blue-fg'">
+                    ${{ balance_amount }} 
+                </div>
+                <div class="h3 secondary-text font-weight-500">Current Balance
+                </div>
+            </div>
+        </nz-spin>
+
+    </div>
+    
+</fuse-widget>
+
+<!-- LOADER VIEW -->
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+<!-- / LOADER VIEW -->

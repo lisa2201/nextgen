@@ -1,0 +1,83 @@
+<!-- SIDEBAR CONTENT -->
+<div class="content" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <!-- <nz-list class="demo-loadmore-list" [nzLoading]="false">
+        <nz-list-item *ngFor="let item of reports">
+            <ng-container>
+                <nz-list-item-meta nzAvatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                    nzDescription="{{ item.name}}">
+                    <nz-list-item-meta-title>
+                    </nz-list-item-meta-title>
+                </nz-list-item-meta>
+                <ul nz-list-item-actions>
+                    <nz-list-item-action><a >edit</a></nz-list-item-action>
+                    <nz-list-item-action><a >remove</a></nz-list-item-action>
+                </ul>
+            </ng-container>
+        </nz-list-item>
+    </nz-list> -->
+
+    <nz-list class="child-item-list"
+    [nzDataSource]="reports" 
+    [nzRenderItem]="item" 
+    [nzGrid]="{ gutter: 24, xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 }">
+
+    <ng-template #item let-item>
+
+        <nz-list-item 
+            [nzContent]="item.isLoading ? '' : nzContent">
+
+            <nz-skeleton [nzAvatar]="false" [nzActive]="false" [nzTitle]="false" [nzParagraph]="{ rows: 3 }" [nzLoading]="item.isLoading">
+
+                <ng-template #nzContent>
+
+                    <nz-card>
+
+                        <nz-list-item-meta  
+                            [nzTitle]="nzTitle"
+                            [nzDescription]="nzDescription">
+
+                            <ng-template #nzAvatar>
+
+                                <!-- <nz-avatar 
+                                    [nzSize]="48" 
+                                    nzSrc="{{ item.image }}"
+                                    class="item-img img-bg">
+                                </nz-avatar> -->
+
+                            </ng-template>
+
+                            <ng-template #nzTitle>
+
+                                <h4 class="text-truncate mb-4">{{ item.name}}</h4>
+
+                            </ng-template>
+
+                            <ng-template #nzDescription>
+                                <button class="mr-8 remove-btn" nz-button nzType="danger" [disabled]="item.isDefault" (click)="delete(item, $event)">
+                                    <i class="trash alternate outline icon mr-4"></i>
+                                    <span>remove</span>
+                                </button>
+                                <button class="mr-8 remove-btn" nz-button nzType="primary" [disabled]="item.isDefault" (click)="edit(item, $event)">
+                                    <!-- <i nz-icon nzType="edit" nzTheme="twotone"></i> -->
+                                    <i nz-icon nzType="edit" nzTheme="outline"></i>
+                                    <span>edit</span>
+                                </button>
+
+                            </ng-template>
+
+                        </nz-list-item-meta>
+
+                    </nz-card>
+
+                </ng-template>
+
+            </nz-skeleton>
+
+        </nz-list-item>
+
+    </ng-template>
+
+</nz-list>
+
+</div>

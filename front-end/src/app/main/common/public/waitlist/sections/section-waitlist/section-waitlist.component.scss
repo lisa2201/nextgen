@@ -1,0 +1,32 @@
+
+.panel-title {
+    background-color: #eaeaea;
+}
+
+.upload-switchTest {
+    float: right;
+}
+
+.signatureClass {
+    background-color: #F3F3F3;
+    border: 1px solid #000;
+}
+
+canvas {
+    background-color: #F3F3F3;
+}
+
+pre, p, nz-form-label, span {
+    text-align: justify;
+    text-justify: inter-word;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Lato", "Fira Sans", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.checkboxLabel {
+    padding-left: 5px;
+}
+
+.fileUploadValidate {
+    padding-top: 4px;
+    color: red;
+}

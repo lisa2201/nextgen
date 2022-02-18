@@ -1,0 +1,81 @@
+<!-- SIDEBAR CONTENT -->
+<div class="content" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+    <ul class="nav-links">
+
+        <li id="booking" *hasPermission="['AC0']; belongsTo 'N25'"
+            (click)="onNavClick($event, '/manage-children/child/' + child?.id + '/booking')">
+            <img src="assets/icons/flat/ui_set/custom_icons/child/bookings.svg" alt="bookings">
+            <span>Booking</span>
+        </li>
+
+        <li id="booking-request"
+            (click)="onNavClick($event, '/manage-children/child/' + child?.id + '/booking-request')">
+            <img src="assets/icons/flat/ui_set/custom_icons/child/booking-request.svg" alt="view booking-request">
+            <span>Booking Request</span>
+        </li>
+
+        <li id="attendance" *hasPermission="['AC0']; belongsTo 'N28'"
+            (click)="onNavClick($event, '/manage-children/child/' + child?.id + '/attendance')">
+            <img src="assets/icons/flat/ui_set/custom_icons/child/calendar.svg" alt="attendance">
+            <span>Attendance</span>
+        </li>
+
+        <ng-container *ngIf="ccsExists">
+            <li id="session-submission"
+                *hasPermission="['AC0']; belongsTo 'N33'"
+                (click)="onNavClick($event, '/manage-children/child/' + child?.id + '/session-submission')">
+                <img src="assets/icons/flat/ui_set/custom_icons/child/session-submission.svg" alt="session submission">
+                <span>Session Submission</span>
+            </li>
+        </ng-container>
+
+        <li id="health-medical"
+            (click)="onNavClick($event, '/manage-children/child/' + child?.id + '/health-medical')">
+            <img src="assets/icons/flat/ui_set/custom_icons/child/medical.svg" alt="health & medical">
+            <span>Health & Medical</span>
+        </li>
+
+        <li id="emergency-id"
+            (click)="onNavClick($event, '/manage-children/child/'+child?.id + '/emergency-contact-view')">
+            <img src="assets/icons/flat/ui_set/custom_icons/child/e-call.svg" alt="emergency contacts">
+            <span>Emergency Contacts</span>
+        </li>
+
+        <li *ngIf="ccsExists" id="accs"
+            (click)="onNavClick($event, '/manage-children/child/'+child?.id + '/accs')">
+            <img src="assets/icons/flat/ui_set/custom_icons/child/e-call.svg" alt="ACCS">
+            <span>ACCS</span>
+        </li>
+
+        <li *ngIf="ccsExists" id="return-fee-reduction"
+            (click)="onNavClick($event, '/manage-children/child/' + child?.id + '/return-fee-reduction')">
+            <img src="assets/icons/flat/ui_set/custom_icons/child/accounting.svg" alt="health & medical">
+            <span>Return Fee Reduction</span>
+        </li>
+
+        <li (click)="onNavClick($event, '/manage-children/child/' + child?.id + '/documents')">
+            <img src="assets/icons/flat/ui_set/custom_icons/child/file.svg" alt="documents">
+            <span>Documents</span>
+        </li>
+
+        <li (click)="onNavClick($event, '/manage-children/child/' + child?.id + '/immunisation')"
+            *hasPermission="['AC0']; belongsTo 'N60'">
+            <img src="assets/icons/flat/ui_set/custom_icons/child/immune-system.svg" alt="immunisation">
+            <span>Immunisation</span>
+        </li>
+
+        <li (click)="onNavClick($event, '/manage-children/child/' + child?.id + '/consents')">
+            <img src="assets/icons/flat/ui_set/custom_icons/child/deal.svg" alt="consents">
+            <span>Consents</span>
+        </li>
+
+        <li (click)="onNavClick($event, '/manage-children/child/' + child?.id + '/notes')">
+            <img src="assets/icons/flat/ui_set/custom_icons/child/enrollment.svg" alt="consents">
+            <span>Notes</span>
+        </li>
+
+    </ul>
+
+</div>
+<!-- / SIDEBAR CONTENT -->

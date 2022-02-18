@@ -1,0 +1,449 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">View Incident Form</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+        [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+        <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+            <div class="section" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <td colspan="3">
+                                Details
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">
+                                Full name of team member: {{ incident.staff.firstName }} {{ incident.staff.lastName }}
+                            </td>                                
+                        </tr>
+                        <tr>
+                            <td>Date of birth: {{ incident.staff.dob }}</td>
+                            <td>Age:  {{ getage(incident.staff.dob) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Date of incident/injury</td>
+                            <td colspan="2">{{ incident.date }} </td>
+                        </tr>
+                        <tr>
+                            <td>Time of incident/injury</td>
+                            <td colspan="2">{{ incident.time | convertTimeString }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="section" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                Details of person completing form
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Name: 
+                            </td>   
+                            <td>
+                                {{ (this.completedBy)?this.completedBy.firstName: '' }} {{ (this.completedBy)?this.completedBy.lastName:'' }}
+                            </td>                                
+                        </tr>
+                        <tr>
+                            <td>
+                                Signature: 
+                            </td>   
+                            <td>
+                                <img class="signature" src="{{ incident.recordedPersonSignature }}"/>
+                            </td>                                
+                        </tr>
+                        <tr>
+                            <td colspan="2">Position: Admin</td>
+                        </tr>
+                        <tr>
+                            <td>Date Record was completed: {{ incident.recordedDate }}</td>
+                            <td>Time Record was completed: {{ (incident.recordedTime)? (incident.recordedTime | convertTimeString): '' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="section" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                Details of witness
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Name of Witness:
+                            </td>   
+                            <td>
+                                {{  (this.witnessPerson)?witnessPerson.firstName:'' }} {{ (this.witnessPerson)?witnessPerson.lastName: '' }}
+                            </td>                                
+                        </tr>
+                        <tr>
+                            <td>
+                                Signature of Witness: 
+                            </td>   
+                            <td>
+                                <img class="signature" src="{{ incident.witnessSignature }}"/>
+                            </td>                                
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="section" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                Incient/Injury details
+                <table>
+                    <thead>
+                        <tr>
+                            <td>
+                                Circumstances leading to the Incident/Injury
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {{ incident.incidentCircumstances }}
+                            </td>                                
+                        </tr>                               
+                    </tbody>
+                </table>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <td>
+                                Equipment/Resources involved
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {{ incident.incidentEquipments }}
+                            </td>                                
+                        </tr>                               
+                    </tbody>
+                </table>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <td>
+                                Location
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {{ incident.incidentLocation }}
+                            </td>                                
+                        </tr>                               
+                    </tbody>
+                </table>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <td>
+                                Action taken (Including first aid etc)
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {{ incident.incidentActionTaken }}
+                            </td>                                
+                        </tr>                               
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="section" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <td colspan="4">
+                                Notifications (Including attempted notifications)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Contact
+                            </td>
+                            <td>
+                                Full Name 
+                            </td>
+                            <td>
+                                Time & Date 
+                            </td>
+                            <td>
+                                Successfully Contacted
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Parent/Guardian
+                            </td>  
+                            <td>
+                                {{ incident.notificationParent }}
+                            </td>     
+                            <td>
+                                {{ incident.notificationParentDate }} {{ (incident.notificationParentTime)? (incident.notificationParentTime | convertTimeString) : '' }}
+                            </td> 
+                            <td>
+                                {{ incident.notificationParentContacted }} 
+                            </td>                                   
+                        </tr>     
+                        <tr>
+                            <td>
+                                Supervisor
+                            </td>  
+                            <td>
+                                {{ incident.notificationSupervisor }}
+                            </td>     
+                            <td>
+                                {{ incident.notificationSupervisorDate }} {{ (incident.notificationSupervisorTime)? (incident.notificationSupervisorTime | convertTimeString): '' }}
+                            </td> 
+                            <td>
+                                {{ incident.notificationSupervisorContacted }} 
+                            </td>                                   
+                        </tr>    
+                        <tr>
+                            <td>
+                                Regulatory Authority Officer (if applicable)
+                            </td>  
+                            <td>
+                                {{ incident.notificationOfficer }}
+                            </td>     
+                            <td>
+                                {{ incident.notificationOfficerDate }} {{ (incident.notificationOfficerTime)? (incident.notificationOfficerTime | convertTimeString): '' }}
+                            </td> 
+                            <td>
+                                {{ incident.notificationOfficerContacted }}                 
+                            </td>                                   
+                        </tr>   
+                        <tr>
+                            <td>
+                                Medical Authorities
+                            </td>  
+                            <td>
+                                {{ incident.notificationMedical }}
+                            </td>     
+                            <td>
+                                {{ incident.notificationMedicalDate }} {{ (incident.notificationMedicalTime)? (incident.notificationMedicalTime | convertTimeString): '' }}
+                            </td> 
+                            <td>
+                                {{ incident.notificationMedicalContacted }}                
+                            </td>                                   
+                        </tr>                                 
+                    </tbody>
+                </table>
+        
+                <table>
+                    <tbody>
+                        <tr>                                
+                            <td>
+                                Was the team member transported by ambulance?
+                            </td>
+                            <td class="width20">
+                                {{ incident.transportedByAmbulance }}
+                            </td>                                
+                        </tr>                               
+                    </tbody>
+                </table>
+
+                <table>
+                    <tbody>
+                        <tr>                                
+                            <td>
+                                Does the incident/injury require the team member to be excluded fromshifts?
+                            </td>
+                            <td class="width20">
+                                {{ incident.excludedFromshifts }}
+                            </td>                                
+                        </tr>                               
+                    </tbody>
+                </table>
+
+                <table>
+                    <tbody>
+                        <tr>                                
+                            <td>
+                                Does the incident/injury require notification to the Health Department or other
+                            recognised authorities?
+                            </td>
+                            <td class="width20">
+                                {{ incident.notifiedToAuthorities }}
+                            </td>                                
+                        </tr>                               
+                    </tbody>
+                </table>
+
+                <table>
+                    <tbody>
+                        <tr>                                
+                            <td>
+                                Recommended leave period: {{ incident.recommendedLeave }}
+                            </td>                              
+                        </tr>                               
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="section" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+            
+                <table>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                Follow-up requirments
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Has a medical certificate been provided?
+                            </td>      
+                            <td>
+                                {{ incident.medicalCertificateProvided }}
+                            </td>                           
+                        </tr>    
+                        <tr>
+                            <td>
+                                Has the medical certificate been submitted into the team members file? 
+                            </td>      
+                            <td>
+                                {{ incident.medicalCertificateSubmitted }}
+                            </td>                           
+                        </tr>                               
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="section" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+    
+                <table>
+                    <thead>
+                        <tr>
+                            <td colspan="2">
+                                Supervisors Acknowledgement and comments
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Name
+                            </td>      
+                            <td>
+                                {{ (this.supervisor)?this.supervisor.firstName:'' }} {{ (this.supervisor)?this.supervisor.lastName:'' }}
+                            </td>                           
+                        </tr>    
+                        <tr>
+                            <td>
+                                Signatue
+                            </td>      
+                            <td>
+                                <img class="signature" src="{{ incident.supervisorSignature }}"/>
+                            </td>                           
+                        </tr>    
+                        <tr>
+                            <td>
+                                Date
+                            </td>      
+                            <td>
+                                {{ incident.supervisedDate }}
+                            </td>                           
+                        </tr>   
+                        <tr>
+                            <td colspan="2">
+                                Comments: {{ incident.supervisorComments }}
+                            </td>                             
+                        </tr>                              
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div *ngIf="formImages.length>0" class="section" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+    
+                <table>
+                    <thead>
+                        <tr>
+                            <td colspan="3">
+                                Images
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let itemArray of formImages" class="imagetable">
+                            <td *ngFor = "let image of itemArray">
+                                <img class="images" src="{{ getIncidentImage(image) }}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                    
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span class="text-right">
+            <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                (click)="matDialogRef.close()">
+                Close
+            </button>
+        </span>
+
+    </div>
+</div>

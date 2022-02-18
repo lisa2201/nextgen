@@ -1,0 +1,393 @@
+<h3 class="my-16 mx-0"><i class="file alternate outline left icon mr-8"></i>Generate Report</h3>
+    <nz-spin [nzTip]="'Loading...'" [nzSpinning]="isLoadingForm" [nzIndicator]="indicatorTpl">
+        <form name="branchForm" [nzLayout]="'vertical'" [formGroup]="FilterForm" nz-form>
+
+            <div class="px-4">
+
+                <div nz-row [nzGutter]="24">
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+
+                            <div fxLayout="row" fxLayoutAlign="space-between center">
+                                <nz-form-label nzRequired fxFlex="60">Report Type</nz-form-label>
+                                <div fxFlex="40" fxLayoutAlign="end center" class="select-actions">
+
+                                        <button nz-button nzType="link" class="pr-4 pl-0"
+                                            (click)="addFav($event)">
+                                            <i *ngIf="!setIcon()" style="float: right!important;" nz-icon nzType="star" nzTheme="outline"></i>
+                                            <i *ngIf="setIcon()" style="float: right!important;" nz-icon nzType="star" nzTheme="fill"></i>
+                                        </button>
+                                    
+                                </div>
+                            </div>
+
+                            <nz-form-control nzHasFeedback [nzErrorTip]="typeErrorTpl">
+
+                                <nz-select formControlName="type" nzShowSearch nzAllowClear
+                                    nzPlaceHolder="select a report type">
+
+                                    <nz-option nzCustomContent *ngFor="let item of reports | orderBy: '-isFav'; trackBy: trackByFn;"
+                                    nzValue="{{ item.reportType }}" nzLabel="{{ item.name }}">{{ item.name }}
+                                        <i *ngIf="!item.isFav" style="float: right!important;" nz-icon nzType="star" nzTheme="outline"></i>
+                                        <i *ngIf="item.isFav" style="float: right!important;" nz-icon nzType="star" nzTheme="twotone"></i>
+                                    </nz-option>
+                                    <nz-option nzValue="CCR" nzLabel="Child Contact Report">Child Contact Report
+                                    </nz-option>
+                                    <nz-option nzValue="{{primaryPayerReport}}" nzLabel="Primary Payer Report">Primary Payer Report</nz-option>
+                                    
+
+                                </nz-select>
+
+                                <ng-template #typeErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please select a report type
+                                    </ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+                            <div fxLayout="row" fxLayoutAlign="space-between center">
+                                <nz-form-label *ngIf="isChildEmergencyContactAndParentReportSelected" fxFlex="60">Select Fields</nz-form-label>
+                                <nz-form-label *ngIf="!isChildEmergencyContactAndParentReportSelected" nzRequired fxFlex="60">Select Fields</nz-form-label>
+                                <div fxFlex="40" fxLayoutAlign="end center" class="select-actions">
+                                    <button *ngIf="!isChildEmergencyContactAndParentReportSelected" nz-button nzType="link" class="pr-4 pl-0"
+                                        (click)="saveField($event)">Save</button>
+                                    <span>|</span>
+                                    <button nz-button nzType="link" class="pr-4 pl-0"
+                                        (click)="toggleSelectAllField(true)">Select All</button>
+                                    <span>|</span>
+                                    <button nz-button nzType="link" class="pl-4 pr-0"
+                                        (click)="toggleSelectAllField(false)">Select None</button>
+                                </div>
+                            </div>
+                            <nz-form-control nzHasFeedback [nzErrorTip]="fieldErrorTpl">
+
+                                <nz-select [nzDisabled]="isChildEmergencyContactAndParentReportSelected || reportType === 'CON_PRIMARY_PAYER'" nzMode="multiple" formControlName="field" nzShowSearch nzAllowClear
+                                    nzPlaceHolder="select a field">
+
+                                    <nz-option *ngFor="let item of selectedField[0]; trackBy: trackByFn;"
+                                        nzValue="{{ item.res}}" nzLabel="{{ item.name}}">
+                                    </nz-option>
+
+                                </nz-select>
+
+                                <ng-template #fieldErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please select a Fields
+                                    </ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+
+                            <div fxLayout="row" fxLayoutAlign="space-between center">
+                                <nz-form-label nzRequired fxFlex="60">Filter By</nz-form-label>
+                                <div fxFlex="40" fxLayoutAlign="end center" class="select-actions">
+                                </div>
+                            </div>
+                            <nz-form-control nzHasFeedback [nzErrorTip]="filterByErrorTpl">
+
+                                <nz-select formControlName="filterBy" nzShowSearch nzAllowClear
+                                    nzPlaceHolder="select a filter type">
+
+                                    <nz-option *ngFor="let item of filterBy; trackBy: trackByFn;"
+                                        nzValue="{{ item.index }}" nzLabel="{{ item.name }}">
+                                    </nz-option>
+
+                                </nz-select>
+
+                                <ng-template #filterByErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please input your name
+                                    </ng-container>
+                                    <ng-container *ngIf="control.hasError('pattern')">Invalid input name
+                                    </ng-container>
+                                    <ng-container *ngIf="control.hasError('exists')">Name already exists
+                                    </ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12"
+                        *ngIf="filterByChild">
+
+                        <nz-form-item>
+                            <div fxLayout="row" fxLayoutAlign="space-between center">
+                                <nz-form-label nzRequired fxFlex="60">Child</nz-form-label>
+
+                                <div fxFlex="40" fxLayoutAlign="end center" class="select-actions">
+                                    <!-- <button nz-button nzType="link" class="pr-4 pl-0"
+                                        (click)="getChildren('1')" [disabled] = 'childStatus === "1"'> Active</button>
+                                    <span>|</span>
+                                    <button nz-button nzType="link" class="pr-4 pl-0"
+                                        (click)="getChildren('0')" [disabled] = 'childStatus === "0"'> Inactive</button>
+                                    <span>|</span>
+                                    <button nz-button nzType="link" class="pr-4 pl-0"
+                                        (click)="getChildren('2')" [disabled] = 'childStatus === "2"'> All Children</button>
+                                    <span>|</span> -->
+                                    <button nz-button nzType="link" class="pr-4 pl-0"
+                                        (click)="toggleSelectAllChild(true)"> Select All</button>
+                                    <span>|</span>
+                                    <button nz-button nzType="link" class="pl-4 pr-0"
+                                        (click)="toggleSelectAllChild(false)"> Select None</button>
+                                </div>
+                            </div>
+
+                            <nz-form-control nzHasFeedback [nzErrorTip]="childErrorTpl">
+
+                                <nz-select nzMode="multiple" formControlName="child" nzShowSearch nzAllowClear
+                                    nzPlaceHolder="select a child">
+
+                                    <nz-option *ngFor="let item of childList; trackBy: trackByFn;"
+                                        nzValue="{{ item.id }}" nzLabel="{{ item.getFullName()}}">
+                                        <img 
+                                            [ngStyle]="!item.isActive() && { 'padding': '3px' }" 
+                                            src="assets/icons/flat/ui_set/custom_icons/child/{{ (item.isActive()) ? 'tick' : 'cross' }}.svg"
+                                            alt="status">
+                                    </nz-option>
+
+                                </nz-select>
+
+                                <ng-template #childErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please selecte a child
+                                    </ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12"
+                        *ngIf="!filterByChild">
+
+                        <nz-form-item>
+                            <div fxLayout="row" fxLayoutAlign="space-between center">
+                                <nz-form-label nzRequired fxFlex="60">Room</nz-form-label>
+                                <div fxFlex="40" fxLayoutAlign="end center" class="select-actions">
+                                    <button nz-button nzType="link" class="pr-4 pl-0"
+                                        (click)="toggleSelectAllRooms(true)">Select All</button>
+                                    <span>|</span>
+                                    <button nz-button nzType="link" class="pl-4 pr-0"
+                                        (click)="toggleSelectAllRooms(false)">Select None</button>
+                                </div>
+                            </div>
+
+
+                            <nz-form-control nzHasFeedback [nzErrorTip]="roomErrorTpl">
+
+                                <nz-select nzMode="multiple" formControlName="room" nzShowSearch nzAllowClear
+                                    nzPlaceHolder="select a room">
+
+                                    <nz-option *ngFor="let item of roomList; trackBy: trackByFn;"
+                                        nzValue="{{ item.id }}" nzLabel="{{ item.title }}">
+                                    </nz-option>
+
+                                </nz-select>
+
+                                <ng-template #roomErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please select a room
+                                    </ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+
+                            <nz-form-label >Start Date From </nz-form-label>
+
+                            <nz-form-control nzHasFeedback [nzErrorTip]="edateErrorTpl">
+
+                                <nz-date-picker [nzInputReadOnly]="true" [nzAllowClear]="true" class="block" nzPlaceHolder="date joined from"
+                                    nzSize="small" nzAllowClear="false" formControlName="edate" [nzDisabled]="">
+                                </nz-date-picker>
+
+                                <ng-template #edateErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please select a date joined from 
+                                    </ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                        <nz-form-item>
+
+                            <nz-form-label >Start Date To</nz-form-label>
+
+                            <nz-form-control nzHasFeedback [nzErrorTip]="sdateErrorTpl">
+
+                                <nz-date-picker [nzInputReadOnly]="true" [nzAllowClear]="true" class="block" nzPlaceHolder="date joined to"
+                                    nzSize="small" nzAllowClear="false" formControlName="sdate" [nzDisabled]="">
+                                </nz-date-picker>
+
+                                <ng-template #sdateErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please select a date joined to
+                                    </ng-container>
+                                </ng-template>
+
+                            </nz-form-control>
+
+                        </nz-form-item>
+
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24" *ngIf = "FilterForm.get('type').value === 'CON_PACDR' || FilterForm.get('type').value === 'CON_CECR' || FilterForm.get('type').value === 'CCR'">
+                    
+                        <nz-form-item>
+                        
+                            <nz-form-label>Sort By</nz-form-label>
+                        
+                            <nz-form-control [nzErrorTip]="sortbyErrorTpl">
+    
+                                <nz-radio-group formControlName="sortby_toggle" nzButtonStyle="solid" class="has-img">
+    
+                                    <label nz-radio-button nzValue="first_name" class="font-12">
+                                        <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/children.svg"
+                                            alt="male icon">
+                                        <span>Child first name</span>
+                                    </label>
+    
+                                    <label nz-radio-button nzValue="last_name" class="font-12">
+                                        <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/children.svg"
+                                            alt="female icon">
+                                        <span>Child last name</span>
+                                    </label>
+                                    <!-- <label nz-radio-button nzValue="parents.first_name" class="font-12">
+                                        <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/family.svg"
+                                            alt="male icon">
+                                        <span>Parent first name</span>
+                                    </label>
+    
+                                    <label nz-radio-button nzValue="parents.last_name" class="font-12">
+                                        <img class="mr-8" src="assets/icons/flat/ui_set/custom_icons/family.svg"
+                                            alt="female icon">
+                                        <span>Parent last name</span>
+                                    </label> -->
+    
+                                </nz-radio-group>
+    
+                                <ng-template #sortbyErrorTpl let-control>
+                                    <ng-container *ngIf="control.hasError('required')">Please select one option
+                                    </ng-container>
+                                </ng-template>
+    
+                            </nz-form-control>
+                            <!-- <nz-form-control>
+                        
+                                <nz-switch formControlName="sortby_toggle" nzCheckedChildren="A-Z" nzUnCheckedChildren="Z-A"></nz-switch>
+                        
+                            </nz-form-control> -->
+                        
+                        </nz-form-item>
+    
+                    </div>
+
+                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    
+                        <nz-form-item>
+                        
+                            <nz-form-label>Show Inactive</nz-form-label>
+                        
+                            <nz-form-control>
+                        
+                                <nz-switch formControlName="status_toggle" nzCheckedChildren="Yes" nzUnCheckedChildren="No"></nz-switch>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+    
+                    </div>
+
+                    <div *ngIf="FilterForm.get('type').value === 'CCR'" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                    
+                        <nz-form-item>
+                        
+                            <nz-form-label>Include Authorisation Type</nz-form-label>
+                        
+                            <nz-form-control>
+                        
+                                <nz-switch formControlName="include_type" nzCheckedChildren="Yes" nzUnCheckedChildren="No"></nz-switch>
+                        
+                            </nz-form-control>
+                        
+                        </nz-form-item>
+    
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="text-right px-4 mt-8" fxLayout="row" fxLayoutAlign="space-between center">
+                <span>
+
+                </span>
+                <span class="text-right">
+                    
+
+                    <button class="mr-8" nz-button nzType="primary" [disabled]="!FilterForm.valid"
+                        (click)="viewReport($event)" [promiseBtn]="buttonLoader">
+                        <i nz-icon nzType="eye" nzTheme="outline"></i>
+                        <span>View</span>
+                    </button>
+
+                    <button class="mr-8" nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu" [disabled]="!FilterForm.valid"
+                        [promiseBtn]="buttonLoaderDownload">
+                        <i nz-icon nzType="download"></i>Download</button>
+                    <nz-dropdown-menu #menu="nzDropdownMenu">
+                        <ul nz-menu>
+                            <li nz-menu-item (click)="downloadPdf($event, true)">
+                                <i nz-icon nzType="file-pdf" nzTheme="outline"></i> <a>PDF</a>
+                            </li>
+                            <li nz-menu-item (click)="downloadPdf($event, false)">
+                                <i nz-icon nzType="file-text" nzTheme="outline"></i><a>CSV</a>
+                            </li>
+                        </ul>
+                    </nz-dropdown-menu>
+
+                    <button class="mr-8" nz-button nzType="primary" [disabled]="checkValid()"
+                        (click)="saveAs($event)">
+                        <i nz-icon nzType="file-add" nzTheme="fill"></i>
+                        <span>Save as report</span>
+                    </button>
+                </span>
+
+            </div>
+
+        </form>
+    </nz-spin>
+
+<ng-template #indicatorTpl>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>

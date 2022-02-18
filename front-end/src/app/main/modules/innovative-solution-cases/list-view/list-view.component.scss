@@ -1,0 +1,62 @@
+.mat-menu-panel {
+    min-height: 50px !important;
+}
+
+
+innovative-solution-cases-list-view {
+    .mat-menu-panel {
+        min-height: 50px !important;
+    }
+    .ant-pagination {
+
+        .ant-pagination-prev {
+            display: none;
+        }
+
+        .ant-pagination-item {
+            display: none;
+        }
+
+        .ant-pagination-next  {
+            display: none;
+        }
+
+        .ant-pagination-options {
+            margin: 0px;
+        }
+
+    }
+
+    .ant-table-thead {
+
+        tr {
+
+            th {
+                background-color:#ececec;
+            }
+
+        }
+
+    }
+
+    .pagination-row {
+
+        .pagination-wrapper {
+
+            .page-indicator {
+                padding: 4px 12px;
+                border-radius: 4px;
+                border: 3px solid #319fe9;
+                background-color: white;
+            }
+            
+            .page-indicator-disabled {
+                border: 3px solid #ddddde;
+                background-color: #f7f7f7;
+            }
+
+        }
+
+    }
+
+}

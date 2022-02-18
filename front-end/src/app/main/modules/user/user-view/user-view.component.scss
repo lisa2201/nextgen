@@ -1,0 +1,33 @@
+@import "src/@fuse/scss/fuse";
+
+user-view {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .custom-validator-error{
+        color: #e74c3c!important;
+    }
+    .has-error{
+        border-color: #ff7875!important;
+        border-right-width: 2px !important;
+        outline: 0;
+        box-shadow: 0 0 0 2px rgb(255,77,79,0.2);
+    }
+
+    .formWizard {
+
+    }
+
+    .pinreset{
+        margin-left: 25px;
+        margin-top: 30px;
+        padding: 1px 5px;
+    }
+
+}

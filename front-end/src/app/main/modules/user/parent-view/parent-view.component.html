@@ -1,0 +1,65 @@
+<div id="children" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Manage Parents</h1>
+
+            <ng-container *hasPermission="['AC1']; belongsTo 'N04'" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <button nz-button nz-dropdown
+                    nzType="primary"
+                    class="text-uppercase" 
+                    [nzDropdownMenu]="menu"
+                    [promiseBtn]="buttonLoader">
+                    Action <i class="chevron down icon ml-8"></i>
+                </button>
+
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu>
+                        <li nz-menu-item (click)="addDialog($event)">
+                            <span class="_icon mr-8"><i class="plus icon"></i></span>
+                            <span class="font-weight-600">Add</span>
+                        </li>
+                        <li nz-menu-item (click)="addDialogBulkInvitation($event)">
+                            <span class="_icon mr-8"><i class="envelope outline icon"></i></span>
+                            <span class="font-weight-600">Send Invitation</span>
+                        </li>
+                    </ul>
+                </nz-dropdown-menu>
+
+            </ng-container>
+
+        </div>
+
+        <div class="content-card ps" [ngClass]="{ 'current-item-selected' : currentUser }"
+            [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content" fxLayout="row">
+
+                <user-base-parent-list-view></user-base-parent-list-view>
+
+                <user-base-parent-details-view></user-base-parent-details-view>
+
+            </div>
+            <!-- / CONTENT -->
+
+            <!-- SIDEBAR -->
+
+            <!-- / SIDEBAR -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

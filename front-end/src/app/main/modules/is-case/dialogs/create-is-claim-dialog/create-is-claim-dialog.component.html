@@ -1,0 +1,328 @@
+<div class="dialog-content-wrapper">
+
+    <mat-toolbar class="mat-accent m-0">
+
+        <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="title dialog-title">Create IS Claim</span>
+
+            <button mat-icon-button disableRipple="true" type="button" (click)="matDialogRef.close()"
+                aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <form nz-form name="isClaimForm" fxLayout="column" [formGroup]="isClaimForm" [nzLayout]="'vertical'"
+        (ngSubmit)="onSubmit()" novalidate>
+
+        <div mat-dialog-content class="p-24 pt-16 m-0" fusePerfectScrollbar
+            [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+            <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }">
+
+                <nz-form-item nz-col nzMd="24" *ngIf="failedMessage">
+                    <nz-alert nzType="warning" [nzMessage]="failedMessage" nzShowIcon></nz-alert>
+                </nz-form-item>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>IS Payment Type</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="paymentTypeErrorTpl">
+    
+    
+                            <nz-select formControlName="payment_type" nzShowSearch nzPlaceHolder="IS Payment Type"
+                                [nzAllowClear]="true">
+    
+                                <nz-option *ngFor="let paymentType of paymentTypes" [nzValue]="paymentType.value"
+                                    [nzLabel]="paymentType.name">
+                                </nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #paymentTypeErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a payment type
+                                </ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Service Provision</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="serviceProvisionErrorTpl">
+    
+    
+                            <nz-select formControlName="service_provision" nzShowSearch nzPlaceHolder="Select Account"
+                                [nzAllowClear]="true">
+    
+                                <nz-option *ngFor="let serviceProvision of serviceProvisions"
+                                    [nzValue]="serviceProvision.value" [nzLabel]="serviceProvision.name">
+                                </nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #serviceProvisionErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select a service provision
+                                </ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>Hours Claimed</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="hoursClaimedErrorTpll">
+    
+                            <input nz-input formControlName="hours_claimed" placeholder="HHH:MM" type="text" />
+    
+                            <ng-template #hoursClaimedErrorTpll let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input hours claimed</ng-container>
+                                <ng-container *ngIf="!control.hasError('required') && control.hasError('pattern')">Please input valid hours and minutes in HHH:MM format</ng-container>
+                                <ng-container *ngIf="!control.hasError('required') && !control.hasError('pattern') && control.hasError('maxlength')">Please input valid hours and minutes in HHH:MM format</ng-container>
+                                <ng-container *ngIf="!control.hasError('required') && !control.hasError('pattern') && !control.hasError('maxlength') && control.hasError('totalHours')">Total hours should be sum of all additional educators ({{ control.getError('requiredHours') }})</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12">
+
+                    <nz-form-item>
+    
+                        <nz-form-label nzRequired>
+                            Week Ending Date
+                            <i nz-tooltip nzTooltipTitle="Week ending must be a sunday. Week ending date must be less than or equal to system date + 6 days. Week ending date must be greater than (Case Start Date + 6 days) and less than or equal to Case End Date." class="info circle right icon ml-8 primary-color"></i>
+                        </nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="weekEndingErrorTpl">
+    
+                            <nz-date-picker [nzInputReadOnly]="true" formControlName="week_ending" nzPlaceHolder="Week Ending Date" class="block">
+                            </nz-date-picker>
+    
+                            <ng-template #weekEndingErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please input week ending date
+                                </ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24">
+
+                    <nz-form-item>
+    
+                        <nz-form-label [nzRequired]="hasValidator('enrolments', 'required')">Enrolments</nz-form-label>
+    
+                        <nz-form-control nzHasFeedback [nzErrorTip]="enrolmentsErrorTpl">
+    
+    
+                            <nz-select nzMode="multiple" formControlName="enrolments" nzShowSearch nzPlaceHolder="Select Enrolments"
+                                [nzAllowClear]="true">
+    
+                                <nz-option *ngFor="let child of children"
+                                    [nzValue]="child.id" [nzLabel]="child.getFullName()">
+                                </nz-option>
+    
+                            </nz-select>
+    
+                            <ng-template #enrolmentsErrorTpl let-control>
+                                <ng-container *ngIf="control.hasError('required')">Please select an enrolment
+                                </ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [@fadeMotion]>
+
+                    <nz-form-item>
+    
+                        <nz-form-control [nzValidateStatus]="weekDayErrorStatus" [nzErrorTip]="weekDayErrorTpl">
+    
+                            <nz-form-label [nzRequired]="minimumAdditionalEducators > 0 ? true : false">Additional Educators (Minimum Required: {{ minimumAdditionalEducators }})</nz-form-label>
+    
+                            <nz-table class="mt-4" #weekDayTable [nzData]="getWeekDaysFormArrayContols()"
+                                [nzShowPagination]="false" [nzSize]="'small'" formArrayName="week_days">
+    
+                                <thead>
+                                    <tr>
+                                        <th nzWidth="200px" class="text-center">Day</th>
+                                        <th class="text-center">Additional Educators</th>
+                                    </tr>
+                                </thead>
+    
+                                <tbody>
+    
+                                    <ng-container *ngFor="let item of getWeekDaysFormArrayContols(); let i = index; trackBy: trackByFn">
+    
+                                        <tr>
+    
+                                            <td>
+    
+                                                <div class="weekday-info" fxLayout="column" fxLayoutAlign="center center">
+    
+                                                    <div class="mb-4 font-weight-500">{{ item?.value?.day | titlecase }}</div>
+    
+                                                    <div class="mb-4">{{ item?.value?.date }}</div>
+    
+                                                    <div class="hours-info" fxLayout="column">
+    
+                                                        <div fxLayout="row">
+                                                            <div class="hour-key">Claimed Hours:</div>
+                                                            <div>{{ getWeekClaimedHours(i) }}</div>
+                                                        </div>
+    
+                                                        <div fxLayout="row">
+                                                            <div class="hour-key">Available Hours:</div>
+                                                            <div>{{ getWeekAvailableHours(i) }}</div>
+                                                        </div>
+    
+                                                    </div>
+    
+                                                </div>
+    
+                                            </td>
+    
+                                            <td>
+                                                <div class="educators-container" fxLayout="row" fxLayoutAlign="start center">
+    
+                                                    <div 
+                                                        class="educator-item mr-8" 
+                                                        fxLayout="row"
+                                                        fxLayoutAlign="space-between center"
+                                                        *ngFor="let educatorRecord of getWeekDayEducatorArrayControls(i); let edIndex = index; trackBy: trackByFn;" 
+                                                        [@fadeMotion]>
+    
+                                                        <span class="educator-info" fxLayout="column" fxLayoutAlign="center start" (click)="addEducatorDialog($event, i, edIndex, true)">
+    
+                                                            <p class="mb-0 pl-8 text-truncate">
+                                                                <i class="user icon mr-8 ic"></i>
+                                                                <span>{{ educatorRecord?.value?.first_name + educatorRecord?.value?.last_name }}</span>
+                                                            </p>
+    
+                                                            <p class="mb-0 pl-8">
+                                                                <i class="clock outline icon mr-8 ic"></i>
+                                                                <span>{{ educatorRecord?.value?.hours_claimed |isCaseApiTimeConverter }}</span>
+                                                            </p>
+    
+                                                        </span>
+    
+                                                        <span 
+                                                            class="remove-button" 
+                                                            (click)="removeEducator(i, edIndex)"
+                                                            fxLayout="row" 
+                                                            fxLayoutAlign="center center" 
+                                                            [@fadeInOnEnter] [@fadeOutOnLeave]>
+                                                            <i class="trash alternate outline icon"></i>
+                                                        </span>
+    
+                                                    </div>
+    
+                                                    <button class="text-uppercase ml-8 add-btn"
+                                                        [disabled]="disableEducatorAddButton(i)"
+                                                        type="button"
+                                                        nz-button 
+                                                        nzType="default"
+                                                        [@fadeInOnEnter] [@fadeOutOnLeave]
+                                                        (click)="addEducatorDialog($event, i, null, false)">
+                                                    <i class="plus icon"></i>
+                                                </button>
+    
+                                                </div>
+    
+                                            </td>
+                                        </tr>
+    
+                                    </ng-container>
+    
+                                </tbody>
+    
+                            </nz-table>
+    
+                            <ng-template #weekDayErrorTpl let-control>
+                                <ng-container *ngIf="weekDaysArray.hasError('requiredNumber')">Please input minimum of {{ weekDaysArray.getError('requiredNumber') }} additional educator</ng-container>
+                            </ng-template>
+    
+                        </nz-form-control>
+    
+                    </nz-form-item>
+
+                </div>
+
+                <div class="mt-8" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" *ngIf="isClaimForm.get('educators_declaration').enabled">
+
+                    <nz-form-item>
+    
+                        <div class="declaration-container" [@fadeMotion]>
+    
+                            <label nz-checkbox formControlName="educators_declaration">Additional Educator Declaration</label>
+        
+                            <div>
+                                <p>
+                                    I declare that the Additional Educator/s listed were engaged to increase the staff to child ratio above that required by state or territory licensing and regulatory requirements
+                                </p>
+                            </div>
+    
+                        </div>
+    
+    
+                    </nz-form-item>
+                    
+                </div>
+
+            </div>
+
+        </div>
+
+        <div mat-dialog-actions class="m-0 py-16 px-24 fm-border-top" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span></span>
+
+            <span class="text-right">
+                <!-- [disabled]="!isClaimForm.valid" -->
+                <button class="text-uppercase mr-8" [disabled]="!isClaimForm.valid" type="submit" nz-button
+                    nzType="primary" [promiseBtn]="buttonLoading">
+                    <i class="plus icon mr-8"></i> Save
+                </button>
+
+                <button class="text-uppercase mat-close-btn" type="button" nz-button nzType="danger"
+                    (click)="matDialogRef.close()">
+                    Close
+                </button>
+
+            </span>
+
+        </div>
+
+    </form>
+
+</div>

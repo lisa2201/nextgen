@@ -1,0 +1,75 @@
+@import "src/@fuse/scss/fuse";
+
+.mat-menu-panel {
+    min-height: 50px !important;
+}
+
+query-payments-list-view {
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .ant-pagination {
+
+          .ant-pagination-prev {
+              display: none;
+          }
+
+          .ant-pagination-item {
+              display: none;
+          }
+
+          .ant-pagination-next  {
+              display: none;
+          }
+
+          .ant-pagination-options {
+              margin: 0px;
+          }
+
+    }
+
+    .ant-table-thead {
+
+      tr {
+
+        th {
+          background-color:#ececec;
+        }
+
+      }
+
+    }
+
+    .pagination-row {
+
+          .pagination-wrapper {
+
+              .page-indicator {
+                    padding: 4px 12px;
+                    border-radius: 4px;
+                    border: 3px solid #319fe9;
+                    background-color: white;
+              }
+
+              .page-indicator-disabled {
+                    border: 3px solid #ddddde;
+                    background-color: #f7f7f7;
+              }
+
+          }
+
+    }
+
+  .mat-menu-panel {
+    min-height: 50px !important;
+  }
+
+  
+
+}

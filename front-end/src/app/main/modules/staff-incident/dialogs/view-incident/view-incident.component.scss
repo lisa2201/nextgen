@@ -1,0 +1,55 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+.incident-view
+{
+
+    @include media-breakpoint('xs') {
+        width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        width: 840px;
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+    }
+
+    .dialog-content-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        .section{
+          margin-bottom:20px;
+        }
+    
+        table, tr{
+          width: 100%;
+        }
+        
+        thead{
+          font-size:16px;
+          background-color: rgb(219, 215, 215);
+        }
+    
+        tr, td{
+          border: 1px solid rgb(211, 207, 207);
+        }
+
+        .width20{
+          width: 20%;
+        }
+
+        .signature{
+          width:350px;
+          height:auto;
+        }
+
+        .imagetable{
+          border: none !important;
+        }
+
+    }    
+    
+}

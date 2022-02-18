@@ -1,0 +1,92 @@
+<div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <h2 [@animate]="{ value: '*', params: { delay: '200ms', x: '-25px' }}">
+        Service personnel
+    </h2>
+
+    <div>
+        <button class="text-uppercase" nz-button nzType="primary" (click)="addDialog($event)" [promiseBtn]="buttonLoader">
+            <i class="plus icon mr-8"></i> create new
+        </button>
+    </div>
+</div>
+
+<div class="content p-24 pt-0">
+        <nz-list [nzNoResult]="emptyBlock" [nzDataSource]="personalService" [nzRenderItem]="item"
+            [nzGrid]="{ gutter: 16, xs: 24, sm: 12, md: 8, lg: 8, xl: 6, xxl: 5 }">
+            <ng-template #item let-item let-index="index">
+
+                <nz-list-item [nzContent]="nzContent">
+
+                    <ng-template #nzContent>
+                        <nz-card 
+                            class="mb-20 zoom" 
+                            [nzBordered]="true"
+                            [routerLink]="[item.id,'view']"
+                            *hasPermission="['AC2']; belongsTo: 'N03'"
+                            style="cursor: pointer;">
+                            <div class="color-bar {{ item.isSynced === '0' || item.isSynced === '1'? 'active' : 'inactive' }}"></div>
+                            <p>
+                                <span class="font-weight-600">First Name</span>
+                                <br/>
+                                {{ item.firstName || 'N/A' }}
+                            </p>
+                            <p>
+                                <span class="font-weight-600">Last Name</span> <br />
+                                {{ item.lastName || 'N/A' }}
+                            </p>
+                            <p>
+                                <span class="font-weight-600">Email</span>
+                                <br />
+                                {{ item.email || 'N/A' }}
+                            </p>
+
+                            <p>
+                                <span class="font-weight-600">PRODA Organisation ID</span> <br />
+                                {{ item?.service?.provider?.ccsSetup?.PRODAOrgId || 'N/A' }}
+                            </p>
+
+                            <p>
+                                <span class="font-weight-600">Provider ID</span> <br />
+                                {{ item?.service?.provider?.providerId || 'N/A' }}
+                            </p>
+
+                            <p>
+                                <span class="font-weight-600">Service ID</span> <br />
+                                {{ item.serviceId || 'N/A' }}
+                            </p>
+
+                            <p>
+                                
+                                    <span class="font-weight-600">PRODA RA Number </span> <br />
+                                    {{ item.prodaId || 'N/A' }}
+                                <!-- <ng-template #personIdTpl>
+                                    <span class="font-weight-600">Person Id</span> <br />
+                                {{ item.prodaId || 'N/A' }}
+                                </ng-template> -->
+                                
+                            </p>
+                            <p>
+                                <span class="font-weight-600">Person Id</span> <br />
+                                {{ item.personId || 'N/A' }}
+                            </p>
+                        </nz-card>
+                    </ng-template>
+                </nz-list-item>
+            </ng-template>
+        </nz-list>
+
+
+    <ng-template #emptyBlock>
+        <nz-empty class="mb-16" [nzNotFoundImage]="
+            'assets/icons/flat/ui_set/navigation-maps/svg/location3.svg'
+        " [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+            <ng-template #contentTpl>
+                <h4 class="mt-24">To retrive Service personnel details from government system,please click 'Create New'
+                    button!!
+                </h4>
+            </ng-template>
+        </nz-empty>
+    </ng-template>
+
+</div>

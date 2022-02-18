@@ -1,0 +1,646 @@
+<div id="branch-edit-view" class="page-layout carded fullwidth inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header pt-24 pb-24" fxLayout="row" fxLayoutAlign="start center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Edit Branch - <span>{{ branch.name }}</span></h1>
+
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                <span class="text-uppercase go-back-link" (click)="onBack($event)">
+                    <i class="long arrow alternate left icon"></i>
+                    <span>Go Back</span>
+                </span>
+
+                <span class="text-right">
+
+                    <button class="text-uppercase" *hasPermission="['AC2']; belongsTo 'N03'" nz-button nzType="primary"
+                        [disabled]="!branchForm.valid || validateOpeningHours()" [promiseBtn]="buttonLoader" (click)="onFormSubmit($event)">
+                        <i class="save outline icon b-i mr-8"></i> Update
+                    </button>
+
+                </span>
+
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24 pt-16" fusePerfectScrollbar
+                [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+
+                <form name="branchForm" [nzLayout]="'vertical'" [formGroup]="branchForm" nz-form>
+
+                    <nz-tabset 
+                        [nzSize]="'large'"
+                        [nzSelectedIndex]="current"
+                        (nzSelectedIndexChange)="updatePosition($event)">
+
+                        <nz-tab [nzTitle]="titleTemplateBasic">
+
+                            <div class="px-4">
+
+                                <div nz-row [nzGutter]="24">
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                                        <nz-form-item>
+
+                                            <nz-form-label nzRequired>Name</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="nameErrorTpl">
+
+                                                <input nz-input formControlName="name" placeholder="name" type="text" />
+
+                                                <ng-template #nameErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('required')">Please input your name
+                                                    </ng-container>
+                                                    <ng-container *ngIf="control.hasError('pattern')">Invalid input name
+                                                    </ng-container>
+                                                    <ng-container *ngIf="control.hasError('exists')">Name already exists
+                                                    </ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+                                        
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+
+                                        <nz-form-item>
+
+                                            <nz-form-label nzRequired>Email</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl">
+
+                                                <input nz-input formControlName="email" placeholder="email" type="email" />
+
+                                                <ng-template #emailErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('required')">Please input your email
+                                                    </ng-container>
+                                                    <ng-container *ngIf="control.hasError('email')">Please enter a valid email
+                                                        address</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                        
+                                        <nz-form-item>
+
+                                            <nz-form-label>Domain</nz-form-label>
+
+                                            <nz-form-control>
+
+                                                <input nz-input formControlName="domain" placeholder="domain" type="text" />
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                        
+                                        <nz-form-item>
+
+                                            <nz-form-label>Description <small>(Max 250 characters)</small></nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="descErrorTpl">
+
+                                                <textarea formControlName="desc" nz-input rows="4"
+                                                    placeholder="description"></textarea>
+
+                                                <ng-template #descErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('maxlength')">Description can't be
+                                                        longer than 250 characters</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                        
+                                        <nz-form-item>
+
+                                            <nz-form-label nzRequired>Country</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="countryErrorTpl">
+
+                                                <nz-select formControlName="country" nzShowSearch nzAllowClear
+                                                    nzPlaceHolder="select a country">
+
+                                                    <nz-option *ngFor="let item of countries; trackBy: trackByFn;"
+                                                        nzValue="{{ item.code }}" 
+                                                        nzLabel="{{ item.name }}"></nz-option>
+
+                                                </nz-select>
+
+                                                <ng-template #countryErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('required')">Please input your
+                                                        country
+                                                    </ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                        
+                                        <nz-form-item>
+
+                                            <nz-form-label nzRequired>Timezone</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="timezoneErrorTpl">
+
+                                                <nz-select formControlName="timezone" nzShowSearch nzAllowClear
+                                                    nzPlaceHolder="select a timezone"
+                                                    [nzDisabled]="selectedTimezone.length < 1">
+
+                                                    <nz-option
+                                                        *ngFor="let item of selectedTimezone; trackBy: trackByFn;"
+                                                        nzValue="{{ item.name }}" 
+                                                        nzLabel="{{ item.name }}"></nz-option>
+
+                                                </nz-select>
+
+                                                <ng-template #timezoneErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('required')">Please input your
+                                                        timezone</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                    <ng-container *ngIf="hasCCS">
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                                            <nz-form-item>
+
+                                                <nz-form-label nzRequired>Provider</nz-form-label>
+
+                                                <nz-form-control nzHasFeedback [nzErrorTip]="providerErrorTpl">
+
+                                                    <nz-select formControlName="provider" nzShowSearch nzAllowClear
+                                                        nzPlaceHolder="select a provider">
+
+                                                        <nz-option *ngFor="let item of providers; trackBy: trackByFn;"
+                                                            nzValue="{{ item.id }}" nzLabel="{{ item.buisnessName }}">
+                                                        </nz-option>
+
+                                                    </nz-select>
+
+                                                    <ng-template #providerErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please select
+                                                            your provider</ng-container>
+                                                    </ng-template>
+
+                                                </nz-form-control>
+
+                                            </nz-form-item>
+
+                                        </div>
+
+                                        <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                            
+                                            <nz-form-item>
+
+                                                <nz-form-label nzRequired>Services</nz-form-label>
+
+                                                <nz-form-control nzHasFeedback [nzErrorTip]="serviceErrorTpl">
+
+                                                    <nz-select formControlName="service" nzShowSearch nzAllowClear
+                                                        nzPlaceHolder="select a service"
+                                                        [nzDisabled]="selectedServices.length < 1">
+
+                                                        <nz-option
+                                                            *ngFor="let item of selectedServices; trackBy: trackByFn;"
+                                                            nzValue="{{ item.id }}" nzLabel="{{ item.servicename }}">
+                                                        </nz-option>
+
+                                                    </nz-select>
+
+                                                    <ng-template #serviceErrorTpl let-control>
+                                                        <ng-container *ngIf="control.hasError('required')">Please select
+                                                            your service</ng-container>
+                                                    </ng-template>
+
+                                                </nz-form-control>
+
+                                            </nz-form-item>
+
+                                        </div>
+
+                                    </ng-container>
+
+                                </div>
+
+                            </div>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateContact">
+
+                            <div class="px-4">
+
+                                <div nz-row [nzGutter]="24">
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                        
+                                        <nz-form-item>
+
+                                            <nz-form-label>Phone Number</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="phoneErrorTpl">
+
+                                                <input nz-input formControlName="phone" placeholder="phone number"
+                                                    type="text" nzAllowClear />
+
+                                                <ng-template #phoneErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('maxlength')">Phone number can't
+                                                        be
+                                                        longer than 20 characters</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                        
+                                        <nz-form-item>
+
+                                            <nz-form-label>Fax Number</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="faxErrorTpl">
+
+                                                <input nz-input formControlName="fax" placeholder="fax number" type="text"
+                                                    nzAllowClear />
+
+                                                <ng-template #faxErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('maxlength')">Fax number can't be
+                                                        longer than 20 characters</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                        
+                                        <nz-form-item>
+
+                                            <nz-form-label>Address Line1</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="address1ErrorTpl">
+
+                                                <input nz-input formControlName="address1" placeholder="address line 1"
+                                                    type="text" nzAllowClear />
+
+                                                <ng-template #address1ErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('maxlength')">Address line 1 can't
+                                                        be
+                                                        longer than 200 characters</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                        
+                                        <nz-form-item>
+
+                                            <nz-form-label>Address Line2</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="address2ErrorTpl">
+
+                                                <input nz-input formControlName="address2" placeholder="address line 2"
+                                                    type="text" nzAllowClear />
+
+                                                <ng-template #address2ErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('maxlength')">Address line 2 can't
+                                                        be
+                                                        longer than 250 characters</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                        
+                                        <nz-form-item>
+
+                                            <nz-form-label>Zip code</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="zipErrorTpl">
+
+                                                <input nz-input formControlName="zip_code" placeholder="zip code"
+                                                    type="text" nzAllowClear />
+
+                                                <ng-template #zipErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('maxlength')">Zip code can't be
+                                                        longer than 32 characters</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="12" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                        
+                                        <nz-form-item>
+
+                                            <nz-form-label>City</nz-form-label>
+
+                                            <nz-form-control nzHasFeedback [nzErrorTip]="cityErrorTpl">
+
+                                                <input nz-input formControlName="city" placeholder="city" type="text"
+                                                    nzAllowClear />
+
+                                                <ng-template #cityErrorTpl let-control>
+                                                    <ng-container *ngIf="control.hasError('maxlength')">City can't be
+                                                        longer than 120 characters</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateOpeningHours">
+
+                            <div class="px-4">
+
+                                <div nz-row [nzGutter]="24">
+
+                                    <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                        
+                                        <nz-form-item>
+
+                                            <nz-form-label nzRequired>Opening closing times</nz-form-label>
+
+                                            <nz-form-control 
+                                                [nzValidateStatus]="openHoursFormStatus"
+                                                [nzErrorTip]="openHoursErrorTpl">
+
+                                                <nz-table 
+                                                    #openHours 
+                                                    [nzData]="attendanceList"
+                                                    [nzShowPagination]="false" 
+                                                    [nzSize]="'small'" 
+                                                    formArrayName="open_days">
+
+                                                    <thead>
+                                                        <tr>
+                                                            <th nzWidth="50px" 
+                                                                nzShowCheckbox 
+                                                                [(nzChecked)]="allChecked"
+                                                                [nzIndeterminate]="indeterminate"
+                                                                (nzCheckedChange)="checkAll($event)">
+                                                            </th>
+                                                            <th>Day</th>
+                                                            <th>Start - End Time</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr *ngFor="let item of openHours.data; trackBy: trackByFn;">
+                                                            <td class="ant-table-selection-column">
+
+                                                                <nz-switch
+                                                                    [formControlName]="item.index" 
+                                                                    (click)="updateSingleChecked(item, $event)"
+                                                                    [nzCheckedChildren]="checkedTemplate"
+                                                                    [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+
+                                                                <ng-template #checkedTemplate>
+                                                                    <i nz-icon nzType="check"></i>
+                                                                </ng-template>
+                                                                <ng-template #unCheckedTemplate>
+                                                                    <i nz-icon nzType="close"></i>
+                                                                </ng-template>
+                                                            </td>
+                                                            <td>
+                                                                {{ item.name }}
+                                                            </td>
+                                                            <td>
+                                                                <ry-time-picker #timePicker
+                                                                    [ngModelOptions]="{ standalone: true }"
+                                                                    ryFormat="h:mm A"
+                                                                    [(ngModel)]="openHourMap[item.index].value"
+                                                                    [ryType]="'range'" 
+                                                                    [ryMinuteStep]="15"
+                                                                    [ryDisabled]="openHourMap[item.index].disable"
+                                                                    [ryPlaceHolder]="'select ...'"
+                                                                    [ngClass]="{ 'ant-picker-has-error': !openHourMap[item.index].disable && checkOpenHourHasValue(openHourMap[item.index].value) }">
+                                                                </ry-time-picker>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </nz-table>
+
+                                                <ng-template #openHoursErrorTpl let-control>
+                                                    <ng-container>Please select at least one option</ng-container>
+                                                </ng-template>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateImage">
+
+                            <div class="px-4">
+
+                                coming soon . . .
+
+                            </div>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="titleTemplateOther">
+
+                            <div class="px-4">
+
+                                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                        
+                                    <nz-form-item>
+
+                                        <nz-form-label>Pincode</nz-form-label>
+
+                                        <nz-form-control nzHasFeedback [nzErrorTip]="pincodeErrorTpl">
+
+                                            <input nz-input formControlName="pincode" placeholder="pincode"
+                                                type="text" nzAllowClear />
+
+                                            <ng-template #pincodeErrorTpl let-control>
+                                                <ng-container *ngIf="control.hasError('maxlength')">Pincode can't
+                                                    be
+                                                    longer than 20 characters</ng-container>
+                                                <ng-container *ngIf="control.hasError('exists')">Pincode already exists</ng-container>
+                                            </ng-template>
+
+                                        </nz-form-control>
+
+                                    </nz-form-item>
+
+                                </div>
+
+                                <div nz-col [nzXs]="24" [nzSm]="24" [nzMd]="8" [nzLg]="8" [nzXl]="8" [nzXXl]="8">
+                                        
+                                    <nz-form-item>
+
+                                        <nz-form-label>Branch Start Date</nz-form-label>
+
+                                        <nz-form-control>
+
+                                            <input nz-input placeholder="Branch Start Date" type="text" disabled [value]="branch.startDate | date:'dd/MM/yyyy'" />
+
+                                        </nz-form-control>
+
+                                    </nz-form-item>
+
+                                </div>
+
+                                <div nz-row [nzGutter]="24">
+
+                                    <div nz-col>
+
+                                        <nz-form-item>
+
+                                            <nz-form-label>Branch Status</nz-form-label>
+
+                                            <nz-form-control>
+
+                                                <nz-switch formControlName="status" 
+                                                    nzCheckedChildren="Active"
+                                                    nzUnCheckedChildren="Inactive" >
+                                                </nz-switch>
+
+                                            </nz-form-control>
+
+                                        </nz-form-item>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </nz-tab>
+
+                    </nz-tabset>
+
+                    <div class="text-right px-4 mt-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+                        <button nz-button nzType="default" (click)="pre()" [disabled]="current < 1">
+                            <i class="arrow alternate circle left outline icon b-i mr-8"></i>
+                            <span>Previous</span>
+                        </button>
+
+                        <button nz-button nzType="default" (click)="next()" [disabled]="current === 4">
+                            <span>Next</span>
+                            <i class="arrow alternate circle right outline icon b-i ml-8"></i>
+                        </button>
+
+                    </div>
+
+                    <ng-template #titleTemplateBasic>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/custom_icons/branch/basic.svg" alt="img">
+                            <span>Basic</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateContact>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/custom_icons/branch/contact.svg" alt="img">
+                            <span>Contact Details</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateOpeningHours>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/custom_icons/branch/op-hours.svg" alt="img">
+                            <span>Opening Hours</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateImage>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/ui_set/custom_icons/branch/image.svg" alt="img">
+                            <span>Image</span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #titleTemplateOther>
+                        <div class="tab-image-view" fxLayoutAlign="center center">
+                            <img src="assets/icons/flat/business-and-office/svg/007-gears.svg" alt="img">
+                            <span>Others</span>
+                        </div>
+                    </ng-template>
+
+                </form>
+
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

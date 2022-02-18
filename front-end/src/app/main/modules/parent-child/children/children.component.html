@@ -1,0 +1,1078 @@
+<div class="page-layout carded left-sidebar inner-scroll" *canViewAuth [@fadeInOnEnter]>
+
+    <div class="center">
+        <div class="header pt-12 pb-12" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <h1 [@animate]="{ value:'*', params:{ delay: '100ms', x:'-25px' } }">Children Details</h1>
+
+        </div>
+
+        <div class="content-card no-border-radius">
+            <nz-spin [nzSpinning]="pageLoading" [nzIndicator]="indicatorTemplateToolbar">
+                <div class="toolbar px-8 set-min-height" style="min-height: 120px!important;">
+
+                    <span class="view-title">
+
+                        <button type="button" class="b-nav blank mr-8" nz-button nzType="default"
+                            (click)="childPrevious($event)" [disabled]="disabledPrev">
+                            <i class="chevron left icon"></i>
+                        </button>
+
+                        <span class="date-input-wrapper" fxLayout="row" fxLayoutAlign="center center">
+
+                            <span class="date-label">
+                                <nz-avatar [nzSize]="76" nzSrc="{{getChildProfileImage(defaultchild)}}"
+                                    class="child-list-img img-bg"></nz-avatar>
+
+                                <span class="child-name-set-margin">
+                                    {{defaultchild.firstName}}
+                                </span>
+                                <span class="child-name-set-margin mobile-view">
+                                    {{defaultchild.firstName | shorten: 7: '..'}}
+                                </span>
+                            </span>
+
+                        </span>
+
+                        <button type="button" class="b-nav blank ml-8" nz-button nzType="default"
+                            (click)="childNext($event)" [disabled]="disabledNext">
+                            <i class="chevron right icon"></i>
+                        </button>
+                    </span>
+                    <br>
+                    <span class="extra-data">
+                        <span class="att-lbl">
+                            Attendance:
+                        </span>
+                        <ng-container *ngFor="let item of defaultchild.attendance; trackBy: trackByFn">
+
+                            <button 
+                                class="att-button"
+                                [ngClass] = "{'dangerbtn' : item.is_weekend}"
+                                nz-button
+                                nzShape="circle">
+                                {{ item?.name | shorten: 2: '' }}
+                            </button>
+                        </ng-container>
+                    </span>
+                </div>
+            </nz-spin>
+
+            <div class="content p-12" fusePerfectScrollbar>
+                <nz-spin [nzTip]="'Loading...'" [nzSpinning]="pageLoading" [nzIndicator]="indicatorTemplate">
+                    <nz-tabset [nzSize]="'large'">
+
+                        <nz-tab [nzTitle]="titleTemplateBasic">
+
+                            <ng-template nz-tab>
+                                <div class="tabset-box">
+
+                                    <div nz-row [nzGutter]="{ xs: 12, sm: 12, md: 24, lg: 24, xl: 36, xxl: 36 }">
+
+                                        <div class="about-content" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                                            <div class="profile-box info-box general" fxLayout="column"
+                                                nzLoading="true">
+                                                <header class="accent">
+                                                    <div class="title">
+                                                        <div mat-dialog-actions class="m-0 p-16" fxLayout="row"
+                                                            fxLayoutAlign="space-between center">
+                                                            <span>Basic information</span>
+                                                            <span (click)="editBasicInfo($event, false)" style="    cursor: pointer">
+                                                                <i nz-icon nzType="edit" nzTheme="outline"></i>
+                                                            </span>
+                                                        </div>
+
+                                                    </div>
+
+                                                </header>
+
+                                                <div class="content">
+                                                    <ng-container>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">First Name</span>
+                                                                {{defaultchild.firstName || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Middle Name</span>
+                                                                {{defaultchild.middleName || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Last Name</span>
+                                                                {{defaultchild.lastName || 'N/A'}}
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Legal First Name</span>
+                                                                {{defaultchild.legalFirstName || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Legal Last Name</span>
+                                                                {{defaultchild.legalLastName || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">CRN</span>
+                                                                {{defaultchild.CRN || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Suburb</span>
+                                                                {{defaultchild.suburb || 'N/A'}}
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">State</span>
+                                                                {{defaultchild.state || 'N/A'}}
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Postalcode</span>
+                                                                {{defaultchild.postalCode || 'N/A'}}
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Gender</span>
+                                                                {{defaultchild.getGenderLabel() || 'N/A'}}
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="info-line">
+
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Date of Birth</span>
+                                                                {{defaultchild.dob || 'N/A'}}
+                                                            </p>
+
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Age</span>
+                                                                {{defaultchild.age || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Note</span>
+                                                                {{defaultchild.desc || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Join Date</span>
+                                                                {{defaultchild.joinDate || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                    </ng-container>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="about-content" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                            <div class="profile-box info-box general" fxLayout="column">
+                                                <header class="accent">
+                                                    <div class="title">
+                                                        <div mat-dialog-actions class="m-0 p-16" fxLayout="row"
+                                                            fxLayoutAlign="space-between center">
+                                                            <span>Cultural Background</span>
+                                                            <span (click)="editBasicInfo($event, false)" style="    cursor: pointer">
+                                                                <i nz-icon nzType="edit" nzTheme="outline"></i>
+                                                            </span>
+                                                        </div>
+
+                                                    </div>
+
+                                                </header>
+
+                                                <div class="content">
+                                                    <ng-container>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Aboriginal or Torres Strait Islander descent?</span>
+                                                                {{ defaultchild.cultural.ab_or_tsi || 'N/A' }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Child's cultural background?</span>
+                                                                {{ defaultchild.cultural.cultural_background || 'N/A' }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">What language is spoken at home?</span>
+                                                                {{ defaultchild.cultural.language || 'N/A' }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Does the child have any cultural requirements?</span>
+                                                                {{ ((defaultchild.cultural.cultural_requirements == '' || defaultchild.cultural.cultural_requirements == null) && defaultchild.cultural.cultural_requirements_chk == '1') ? 'Yes' : (defaultchild.cultural.cultural_requirements_chk == '0') ? 'No' : defaultchild.cultural.cultural_requirements  }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Does the child have any religious requirements?</span>
+                                                                {{ ((defaultchild.cultural.religious_requirements == '' || defaultchild.cultural.religious_requirements == null) && defaultchild.cultural.religious_requirements_chk == '1') ? 'Yes' : (defaultchild.cultural.religious_requirements_chk == '0') ? 'No' : defaultchild.cultural.religious_requirements }}
+                                                            </p>
+                                                        </div>
+
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="about-content" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+                                            <div class="profile-box info-box general" fxLayout="column">
+                                                <header class="accent">
+                                                    <div class="title">
+                                                        <div mat-dialog-actions class="m-0 p-16" fxLayout="row"
+                                                            fxLayoutAlign="space-between center">
+                                                            <span>Other Information</span>
+                                                        </div>
+
+                                                    </div>
+
+                                                </header>
+
+                                                <div class="content">
+                                                    <ng-container>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Room</span>
+                                                                <span *ngFor="let item of defaultchild.rooms">
+                                                                    {{item.title}}
+                                                                </span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Attendance</span>
+                                                                {{defaultchild.getAttendanceLabel() || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </ng-template>
+
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="cwaTemplateBasic">
+
+                            <div class="pl-4 pr-4">
+
+                                <ng-template nz-tab>
+                                    <div class="tabset-box pl-4 pr-4">
+                                        <div class="mb-24" fxLayout="row" fxLayoutAlign="space-between center">
+
+                                            <h3 class="header mb-0">Enrolment CCS Information</h3>
+                                        </div>
+                                        <div class="child-details-enrolment-view">
+                                            <nz-list class="enrolment-list" [nzBordered]="enrolment.length > 0"
+                                                [nzNoResult]="emptyEnrolmentBlock" [nzDataSource]="enrolment"
+                                                [nzRenderItem]="item">
+
+                                                <ng-template #item let-item>
+
+                                                    <nz-list-item [nzContent]="nzContent"
+                                                        [ngClass]="{'set-new-data-backround': item.parentApprovedStatus !== '2'}">
+
+                                                        <ng-template #nzContent>
+
+                                                            <nz-skeleton [nzAvatar]="true" [nzActive]="true"
+                                                                [nzTitle]="false" [nzParagraph]="{ rows: 2 }"
+                                                                [nzLoading]="item.isLoading">
+
+                                                                <nz-list-item-meta [nzTitle]="nzTitle"
+                                                                    [nzAvatar]="nzAvatar"
+                                                                    [nzDescription]="nzDescription">
+
+                                                                    <ng-template #nzTitle>
+
+                                                                        {{ item.enrolStart }}
+                                                                        ({{ item.arrangementType }})
+                                                                        ({{ item.sessionTypeLabel }})
+
+                                                                    </ng-template>
+
+                                                                    <ng-template #nzAvatar>
+
+                                                                        <img class="status-icon"
+                                                                            [src]="'assets/icons/flat/ui_set/custom_icons/child/execution.svg'"
+                                                                            alt="icon">
+
+                                                                    </ng-template>
+
+                                                                    <ng-template #nzDescription>
+
+                                                                        <p class="status-lbl">
+                                                                            <a class="action-btn"
+                                                                                (click)="openDialog($event, item)">
+                                                                                view
+                                                                            </a>
+                                                                            <span class="action-view">
+                                                                                {{ item.status }}
+                                                                            </span>
+                                                                        </p>
+
+                                                                    </ng-template>
+
+                                                                </nz-list-item-meta>
+
+                                                            </nz-skeleton>
+
+                                                        </ng-template>
+
+                                                    </nz-list-item>
+
+                                                </ng-template>
+
+                                            </nz-list>
+                                        </div>
+
+                                        <ng-template #emptyEnrolmentBlock>
+
+                                            <nz-empty class="m-0"
+                                                [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                                                [nzNotFoundContent]="contentTpl" [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                                                <ng-template #contentTpl>
+                                                    <h4 class="mt-24">No Data Found</h4>
+                                                </ng-template>
+
+                                            </nz-empty>
+
+                                        </ng-template>
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="healthTemplateBasic">
+
+                            <ng-template nz-tab>
+                                <div class="tabset-box">
+
+                                    <div nz-row [nzGutter]="{ xs: 12, sm: 12, md: 24, lg: 24, xl: 36, xxl: 36 }">
+
+                                        <div class="about-content" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                                            <div class="profile-box info-box general" fxLayout="column"
+                                                nzLoading="true">
+                                                <header class="accent">
+                                                    <div class="title">
+                                                        <div mat-dialog-actions class="m-0 p-16" fxLayout="row"
+                                                            fxLayoutAlign="space-between center">
+                                                            <span>Health and Medical</span>
+                                                            <span (click)="editBasicInfo($event, true)" style="    cursor: pointer">
+                                                                <i nz-icon nzType="edit" nzTheme="outline"></i>
+                                                            </span>
+                                                        </div>
+
+                                                    </div>
+
+                                                </header>
+
+                                                <div class="content">
+                                                    <ng-container>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Child's Medicare Number/Reference No.</span>
+                                                                {{defaultchild.healthAndMedical.ref_no || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Child's Medicare Expiry Date</span>
+                                                                {{defaultchild.healthAndMedical.medicare_expiry_date || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Ambulance Cover Number</span>
+                                                                {{defaultchild.healthAndMedical.ambulance_cover_no || 'N/A'}}
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Maternal & Child Health Centre</span>
+                                                                {{defaultchild.healthAndMedical.health_center || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Medical Personnel/Service Name</span>
+                                                                {{defaultchild.healthAndMedical.service_name || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Medical Personnel/Service Phone Number</span>
+                                                                {{defaultchild.healthAndMedical.service_phone_no || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Medical Personnel/Service Address</span>
+                                                                {{defaultchild.healthAndMedical.service_address || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                    </ng-container>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="about-content" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="12" [nzXl]="12" [nzXXl]="12">
+
+                                            <div class="profile-box info-box general" fxLayout="column"
+                                                nzLoading="true">
+                                                <header class="accent">
+                                                    <div class="title">
+                                                        <div mat-dialog-actions class="m-0 p-16" fxLayout="row"
+                                                            fxLayoutAlign="space-between center">
+                                                            <span>Allergies/special Dietary Needs</span>
+                                                            <span>
+                                                                <button class="text-uppercase" nz-button nzType="primary" [promiseBtn]="buttonLoader" (debounceClick)="addNewAllergy($event)">
+                                                                    <i class="plus icon mr-8"></i> Create New
+                                                                </button>
+                                                            </span>
+                                                        </div>
+
+                                                    </div>
+
+                                                </header>
+
+                                                <div class="content">
+                                                
+                                                    <nz-list class="demo-loadmore-list" [nzNoResult]="emptyAllergyBlock" [nzLoading]="initLoading"
+                                                        [nzDataSource]="defaultchild.allergy"[nzRenderItem]="item">
+                                                        <ng-template #item let-item>
+
+                                                            
+                                                        <nz-list-item >
+                                                            <ng-container *ngIf="!item.isLoading">
+                                                                <nz-list-item-meta nzAvatar="{{defaultchild.getImage()}}"
+                                                                    nzDescription="{{item.description}}">
+                                                                    <nz-list-item-meta-title>
+                                                                        {{ item.type.name}}
+                                                                    </nz-list-item-meta-title>
+                                                                </nz-list-item-meta>
+                                                                <ul nz-list-item-actions>
+                                                                    <nz-list-item-action>
+                                                                        <span (click)="editAllergy($event, item)" style="    cursor: pointer">
+                                                                            <i nz-icon nzType="edit" nzTheme="outline"></i>
+                                                                        </span>
+                                                                    </nz-list-item-action>
+                                                                    <nz-list-item-action>
+                                                                        <span (click)="delete(item, $event)" style="    cursor: pointer">
+                                                                            <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                                                        </span>
+                                                                    </nz-list-item-action>
+                                                                </ul>
+                                                            </ng-container>
+                                                            <nz-skeleton *ngIf="item.isLoading" [nzAvatar]="true" [nzActive]="true" [nzTitle]="false" [nzLoading]="true">
+                                                            </nz-skeleton>
+                                                        </nz-list-item>
+                                                        </ng-template>
+                                                    </nz-list>
+                                                
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </ng-template>
+                        </nz-tab>
+
+                        <nz-tab [nzTitle]="documentsTemplateBasic">
+                            <ng-template nz-tab>
+                                <div class="tabset-box">
+
+                                    <div nz-row [nzGutter]="{ xs: 12, sm: 12, md: 24, lg: 24, xl: 36, xxl: 36 }">
+
+                                        <div class="about-content" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+
+                                            <div class="profile-box info-box general" fxLayout="column"
+                                                nzLoading="true">
+                                                <header class="accent">
+                                                    <div class="title">
+                                                        <div mat-dialog-actions class="m-0 p-16" fxLayout="row"
+                                                            fxLayoutAlign="space-between center">
+                                                            <span>Documents</span>
+                                                            <span>
+                                                                <button class="text-uppercase" nz-button nzType="primary" (debounceClick)="addNewDocument($event)">
+                                                                    <i class="plus icon mr-8"></i> Create New
+                                                                </button>
+                                                            </span>
+                                                        </div>
+
+                                                    </div>
+
+                                                </header>
+
+                                                <ul nz-list nzBordered nzSize="large"  [nzDataSource]="healthDocuments">
+                                                    <ng-container *ngFor="let item of healthDocuments" >
+                                                        <li nz-list-item nzNoFlex >
+                                                            <ng-container *ngIf="item=='healthRecord'">
+                                                                <div nz-row [nzGutter]="24">
+                                                                    <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                                        Health Record
+                                                                    </div>
+                                                                    <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                                        <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'healthRecord')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                                                    </div>-->
+                                                                    <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                                        <ul nz-list>
+                                                                        <ng-container *ngIf="findDocument(item)">
+                                                                            <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                                                <li nz-list-item>
+                                                                                    <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                                        <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                                    </div>
+                                                                                    <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                                        <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank">  <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                                        <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc, item)"><i nz-icon nzType="delete"></i> Delete </button>
+                                                                                    </div>
+                                                                                </li>
+                                                                            </ng-container>
+                                                                            </ng-container>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="item=='childImmunised'">
+                                                                <div nz-row [nzGutter]="24">
+                                                                    <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                                        Medicare immunisation record
+                                                                    </div>
+                                                                    <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                                        <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'childImmunised')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                                                    </div>-->
+                                                                    <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                                        <ul nz-list>
+                                                                            <ng-container *ngIf="findDocument(item)">
+                                                                                <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                                                    <li nz-list-item>
+                                                                                        <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                                            <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                                        </div>
+                                                                                        <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"> <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc, item)"><i nz-icon nzType="delete"></i> Delete </button>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                </ng-container>
+                                                                            </ng-container>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="item=='prescribedMedicine'">
+                                                                <div nz-row [nzGutter]="24">
+                                                                    <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                                        Regular Prescribed Medicine
+                                                                    </div>
+                                                                    <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                                        <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'prescribedMedicine')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                                                    </div>-->
+                                                                    <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                                        <ul nz-list>
+                                                                            <ng-container *ngIf="findDocument(item)">
+                                                                                <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                                                    <li nz-list-item>
+                                                                                        <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                                            <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                                        </div>
+                                                                                        <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"> <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc, item)"><i nz-icon nzType="delete"></i> Delete </button>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                </ng-container>
+                                                                            </ng-container>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="item=='anaphylaxis'">
+                                                                <div nz-row [nzGutter]="24">
+                                                                    <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                                        Anaphylaxis Action Plan
+                                                                    </div>
+                                                                    <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                                        <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'anaphylaxis')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                                                    </div>-->
+                                                                    <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                                        <ul nz-list>
+                                                                            <ng-container *ngIf="findDocument(item)">
+                                                                                <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                                                    <li nz-list-item>
+                                                                                        <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                                            <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                                        </div>
+                                                                                        <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"> <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc, item)"><i nz-icon nzType="delete"></i> Delete </button>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                </ng-container>
+                                                                            </ng-container>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="item=='healthConditions'">
+                                                                <div nz-row [nzGutter]="24">
+                                                                    <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                                        Health Conditions
+                                                                    </div>
+                                                                    <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                                        <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'healthConditions')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                                                    </div>-->
+                                                                    <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                                        <ul nz-list>
+                                                                            <ng-container *ngIf="findDocument(item)">
+                                                                                <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                                                    <li nz-list-item>
+                                                                                        <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                                            <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                                        </div>
+                                                                                        <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"> <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc, item)"> <i nz-icon nzType="delete"></i>Delete </button>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                </ng-container>
+                                                                            </ng-container>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="item=='asthma'">
+                                                                <div nz-row [nzGutter]="24">
+                                                                    <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                                        Asthma Action Plan
+                                                                    </div>
+                                                                    <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                                        <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'asthma')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                                                    </div>-->
+                                                                    <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                                        <ul nz-list>
+                                                                            <ng-container *ngIf="findDocument(item)">
+                                                                                <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                                                    <li nz-list-item>
+                                                                                        <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                                            <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                                        </div>
+                                                                                        <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"><i nz-icon nzType="eye"></i>  Download </a></button>
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc, item)"><i nz-icon nzType="delete"></i> Delete </button>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                </ng-container>
+                                                                            </ng-container>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="item=='epipenOrAnipen'">
+                                                                <div nz-row [nzGutter]="24">
+                                                                    <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                                        Epipen or Anipen
+                                                                    </div>
+                                                                    <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                                        <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'asthma')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                                                    </div>-->
+                                                                    <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                                        <ul nz-list>
+                                                                            <ng-container *ngIf="findDocument(item)">
+                                                                                <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                                                    <li nz-list-item>
+                                                                                        <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                                            <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                                        </div>
+                                                                                        <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"><i nz-icon nzType="eye"></i>  Download </a></button>
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc, item)"><i nz-icon nzType="delete"></i> Delete </button>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                </ng-container>
+                                                                            </ng-container>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                        </li>
+                                                    </ng-container>
+                                                </ul>
+                                                <!-- <div class="content">
+                                                    <ng-container>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">First Name</span>
+                                                                {{defaultchild.firstName || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Middle Name</span>
+                                                                {{defaultchild.middleName || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Last Name</span>
+                                                                {{defaultchild.lastName || 'N/A'}}
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Legal First Name</span>
+                                                                {{defaultchild.legalFirstName || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Legal Last Name</span>
+                                                                {{defaultchild.legalLastName || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">CRN</span>
+                                                                {{defaultchild.CRN || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Suburb</span>
+                                                                {{defaultchild.suburb || 'N/A'}}
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">State</span>
+                                                                {{defaultchild.state || 'N/A'}}
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Postalcode</span>
+                                                                {{defaultchild.postalCode || 'N/A'}}
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Gender</span>
+                                                                {{defaultchild.getGenderLabel() || 'N/A'}}
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="info-line">
+
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Date of Birth</span>
+                                                                {{defaultchild.dob || 'N/A'}}
+                                                            </p>
+
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Age</span>
+                                                                {{defaultchild.age || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Note</span>
+                                                                {{defaultchild.desc || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                        <div class="info-line">
+                                                            <p>
+                                                                <span class="lbl font-weight-600">Join Date</span>
+                                                                {{defaultchild.joinDate || 'N/A'}}
+                                                            </p>
+                                                        </div>
+                                                    </ng-container>
+
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+                                        <div class="about-content" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                            <div class="profile-box info-box general" fxLayout="column">
+                                                <header class="accent">
+                                                    <div class="title">
+                                                        <div mat-dialog-actions class="m-0 p-16" fxLayout="row"
+                                                            fxLayoutAlign="space-between center">
+                                                            <span>Legal</span>
+                                                        </div>
+
+                                                    </div>
+
+                                                </header>
+
+                                                <ul nz-list nzBordered nzSize="large"  [nzDataSource]="legalDocuments">
+                                                    <ng-container *ngFor="let item of legalDocuments" >
+                                                        <li nz-list-item nzNoFlex >
+                                                            <ng-container *ngIf="item=='courtAppointed'">
+                                                                <div nz-row [nzGutter]="24">
+                                                                    <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                                        Court Appointed Orders
+                                                                    </div>
+                                                                    <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                                        <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'courtAppointed')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                                                    </div>-->
+                                                                    <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                                        <ul nz-list>
+                                                                            <ng-container *ngIf="findDocument(item)">
+                                                                                <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                                                    <li nz-list-item>
+                                                                                        <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                                            <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                                        </div>
+                                                                                        <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link"  target="_blank"> <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                                            <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc, item)"> <i nz-icon nzType="delete"></i>Delete </button>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                </ng-container>
+                                                                            </ng-container>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                        </li>
+                                                    </ng-container>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="about-content" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                            <div class="profile-box info-box general" fxLayout="column">
+                                                <header class="accent">
+                                                    <div class="title">
+                                                        <div mat-dialog-actions class="m-0 p-16" fxLayout="row"
+                                                            fxLayoutAlign="space-between center">
+                                                            <span>Other</span>
+                                                        </div>
+
+                                                    </div>
+
+                                                </header>
+                                                    <ul nz-list nzBordered nzSize="large"  [nzDataSource]="otherDocuments">
+                                                        <ng-container *ngFor="let item of otherDocuments" >
+                                                            <ng-container *ngIf="item=='birthCertificate'">
+                                                                <li nz-list-item nzNoFlex >
+                                                                    <div nz-row [nzGutter]="24">
+                                                                        <div  nz-col [nzMd]="6" [nzLg]="6">
+                                                                            Birth Certificate
+                                                                        </div>
+                                                                        <!--<div  nz-col [nzMd]="8" [nzLg]="8">
+                                                                            <s3-upload [bucket]="s3Bucket" (uploadedFileListChange)="handleUploadChange($event, 'birthCertificate')" [uploadTypeLimit]="uploadTypes" [path]="s3Path"></s3-upload>
+                                                                        </div>-->
+                                                                        <div  nz-col [nzMd]="18" [nzLg]="18">
+                                                                            <ul nz-list>
+                                                                                <ng-container *ngIf="findDocument(item)">
+                                                                                    <ng-container *ngFor="let doc of findDocument(item).fileurl">
+                                                                                        <li nz-list-item>
+                                                                                            <div  nz-col [nzMd]="5" [nzLg]="5">
+                                                                                                <a [href]="doc | s3Link" target="_blank" download>{{ getFileName(doc) }}</a>
+                                                                                            </div>
+                                                                                            <div  nz-col [nzMd]="13" [nzLg]="13">
+                                                                                                <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary"> <a [href]="doc | s3Link" target="_blank" > <i nz-icon nzType="eye"></i> Download </a></button>
+                                                                                                <button [nzSize]="DocButtonSize" style="margin-left:5px;" nz-button nzType="primary" (click)="deleteFile(doc, item)"> <i nz-icon nzType="delete"></i> Delete </button>
+                                                                                            </div>
+                                                                                        </li>
+                                                                                    </ng-container>
+                                                                                </ng-container>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                    </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </ng-template>
+                        </nz-tab>
+
+                        <ng-container *hasPermission="['AC0']; belongsTo 'N60'">
+                            <nz-tab [nzTitle]="immunisationTemplate">
+                                <ng-template nz-tab>
+                                    <div class="tabset-box">
+    
+                                        <div nz-row [nzGutter]="{ xs: 12, sm: 12, md: 24, lg: 24, xl: 36, xxl: 36 }">
+    
+                                            <div class="about-content" nz-col [nzXs]="24" [nzSm]="24" [nzMd]="24" [nzLg]="24" [nzXl]="24" [nzXXl]="24">
+                                                <div class="help-panel" [@slideMotion]="'bottom'">
+    
+                                                    <div class="booking-summary">
+                                
+                                                        <ul>
+                                                            <li>
+                                                                <span class="label">
+                                                                    <i class="hourglass half icon mr-4"></i>
+                                                                    Age
+                                                                </span>
+                                                                <span class="label highlight">
+                                                                    {{ defaultchild.age}}
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                    
+                                                        <ul>
+                                                            <li>
+                                                                <span class="label">
+                                                                    <i class="clock half icon mr-4"></i>
+                                                                    Date of birth
+                                                                </span>
+                                                                <span class="label highlight">
+                                                                    {{ defaultchild.dob}}
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                
+                                                    </div>
+                                
+                                                    <ul class="booking-types">
+                                                        <li *ngFor="let item of ImmunisationTrackingUITypes; trackBy: trackByFn;">
+                                                            <i class="color-box circle icon color-code mr-8 {{ item.color}}"></i>
+                                                            <span class="label">{{ item.name }}</span>
+                                                        </li>
+                                                    </ul>
+                                
+                                                </div>
+                                                <immunisation-tracker-detail-view></immunisation-tracker-detail-view>
+                                            </div>
+    
+                                        </div>
+                                    </div>
+    
+                                </ng-template>
+                            </nz-tab>
+                        </ng-container>
+                       
+
+                    </nz-tabset>
+                </nz-spin>
+            </div>
+
+            <!-- / CONTENT -->
+            <!-- </nz-spin> -->
+        </div>
+
+
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>
+
+<!-- LOADER VIEW -->
+<ng-template #indicatorTemplate>
+    <div class="is-loading">
+        <span class="btn-spinner card-loader"></span>
+    </div>
+</ng-template>
+
+<ng-template #indicatorTemplateToolbar>
+    <div class="is-loading">
+        <!-- <span class="btn-spinner card-loader"></span> -->
+    </div>
+</ng-template>
+<!-- / LOADER VIEW -->
+
+<ng-template #titleTemplateBasic>
+    <div class="tab-image-view" fxLayoutAlign="center center">
+        <img src="assets/icons/flat/ui_set/custom_icons/child/profile.svg" alt="img">
+        <span>Basic</span>
+    </div>
+</ng-template>
+
+<ng-template #cwaTemplateBasic>
+    <div class="tab-image-view" fxLayoutAlign="center center">
+        <img src="assets/icons/flat/ui_set/custom_icons/child/deal.svg" alt="img">
+        <span>CWA</span>
+    </div>
+</ng-template>
+
+<ng-template #healthTemplateBasic>
+    <div class="tab-image-view" fxLayoutAlign="center center">
+        <img src="assets/icons/flat/ui_set/custom_icons/child/medical.svg" alt="img">
+        <span>Health & Medical</span>
+    </div>
+</ng-template>
+
+<ng-template #documentsTemplateBasic>
+    <div class="tab-image-view" fxLayoutAlign="center center">
+        <img src="assets/icons/flat/ui_set/custom_icons/child/file.svg" alt="img">
+        <span>Documents</span>
+    </div>
+</ng-template>
+
+<ng-template #immunisationTemplate>
+    <div class="tab-image-view" fxLayoutAlign="center center">
+        <img src="assets/icons/flat/ui_set/custom_icons/child/immune-system.svg" alt="img">
+        <span>Immunisation</span>
+    </div>
+</ng-template>
+
+<!-- EMPTY VIEW -->
+<ng-template #emptyAllergyBlock>
+
+    <nz-empty 
+        class="m-0" 
+        [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+        [nzNotFoundContent]="contentTpl" 
+        [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+        <ng-template #contentTpl>
+            <h4 class="mt-24">No Data Found</h4>
+            <span>Please click on add button to add enrolment</span>
+        </ng-template>
+
+    </nz-empty>
+
+</ng-template>

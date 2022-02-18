@@ -1,0 +1,564 @@
+<ng-container *ngIf="isShowApiData; else showDataTpl">
+    <div id="service-view" class="p-20" [@fadeInOnEnter] [@fadeOutOnLeave]
+         [@animate]="{ value: '*', params: { delay: '100ms', y: '15px' } }">
+
+        <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="text-uppercase go-back-link" (click)="goBack()">
+                <i class="long arrow alternate left icon"></i>
+                <span>Go Back</span>
+            </span>
+
+            <span class="text-right" fxLayout="row">
+
+                <ng-container>
+                    <button class="text-uppercase ml-8" nz-button nzType="primary" (click)="apiservice($event)">
+                        <i class="save outline icon b-i mr-8"></i> Accs Percentage
+                    </button>
+                </ng-container>
+
+
+                <button class="text-uppercase ml-8" nz-button nzType="primary"
+                        (click)="editName($event, apiData['ServiceName']['results'][0].name)">
+                    <i class="save outline icon b-i mr-8"></i> Edit Name
+                </button>
+
+            </span>
+
+        </div>
+        <nz-divider nzText="Basic Information"></nz-divider>
+
+        <div class="basic-info">
+            <div nz-row [nzGutter]="6">
+                <div nz-col [nzSpan]="6">
+                    <th>Service ID</th>
+                    <br />
+                    <td>{{ apiData.serviceID }}</td>
+                </div>
+                <div nz-col [nzSpan]="6">
+                    <th>Service Type</th>
+                    <br />
+                    <td *ngIf="apiData.serviceType === 'ZOSH'"> Outside School Hours Care </td>
+                    <td *ngIf="apiData.serviceType === 'ZCDC'"> Centre-based Day Care </td>
+                    <td *ngIf="apiData.serviceType === 'ZFDC'"> Family Day Care </td>
+                    <td *ngIf="apiData.serviceType === 'ZIHC'"> In Home Care </td>
+
+                    <!-- <td>{{ apiData.serviceType }}</td> -->
+                </div>
+
+                <div nz-col [nzSpan]="6">
+                    <th>Service Name</th>
+                    <br />
+                    <td>{{apiData['ServiceName']['results'][0].name}}</td>
+                </div>
+
+                <div nz-col [nzSpan]="6">
+                    <th>Start Date</th>
+                    <br />
+                    <td>{{ apiData.startDate }}</td>
+                </div>
+
+                <br>
+                <br>
+                <nz-divider></nz-divider>
+                <nz-divider></nz-divider>
+
+
+                <div nz-col [nzSpan]="6">
+                    <th>End Date</th>
+                    <br />
+                    <td>{{ apiData.endDate }}</td>
+                </div>
+
+                <div nz-col [nzSpan]="6">
+                    <th>No Of Weeks</th>
+                    <br />
+                    <td>{{ apiData.numberOfWeeksPerYear }}</td>
+                </div>
+
+                <div nz-col [nzSpan]="6">
+                    <th>Commencement Date</th>
+                    <br />
+                    <td>{{ apiData.commencementDate || 'N/A'}}</td>
+                </div>
+
+                <div nz-col [nzSpan]="6">
+                    <th>ACECQA Registration Code</th>
+                    <br />
+                    <td>{{ apiData.ACECQARegistrationCode || 'N/A'}}</td>
+                </div>
+            </div>
+        </div>
+
+        <nz-divider nzText="Address Information"></nz-divider>
+
+        <nz-table [nzData]="apiData['Address']['results']" [nzShowPagination]="false">
+            <thead>
+            <tr>
+                <th>Address Type</th>
+                <th>Street Line1</th>
+                <th>Street Line2</th>
+                <th>Suburb</th>
+                <th>State</th>
+                <th>Post Code</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let addr of apiData['Address']['results']; let i = index">
+                <td *ngIf="addr.type === 'ZPHYSICAL'; else postAddTpl"> Physical </td>
+                <td *ngIf ="addr.type === 'ZPOSTAL'"> Postal Address </td>
+                <!-- <ng-template #postAddTpl>
+                    <td>Postal Address</td>
+                </ng-template> -->
+                <!-- <td>{{ addr.type }}</td> -->
+                <td>{{ addr.streetline1 }}</td>
+                <td>{{ addr.streetline2 }}</td>
+                <td>{{ addr.suburb}}</td>
+                <td>{{ addr.state }}</td>
+                <td>{{ addr.postcode }}</td>
+                <td>{{ addr.startDate || 'N/A' }}</td>
+                <td>{{ addr.endDate || 'N/A' }}</td>
+                <td>
+                    <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="addressActionsMenu">
+                        <i class="ellipsis vertical icon"></i>
+                    </button>
+
+                    <mat-menu #addressActionsMenu="matMenu">
+                        <ng-container *hasPermission="['AC2']; belongsTo: 'N20'">
+                            <button mat-menu-item (click)="editAddressDialog(i, true)">
+                                    <span class="pr-8 pl-8">
+                                        <i class="edit outline icon primary-color">
+                                        </i>
+                                        <span class="font-weight-600"> Edit</span>
+                                    </span>
+                            </button>
+                        </ng-container>
+                    </mat-menu>
+                </td>
+            </tr>
+            </tbody>
+        </nz-table>
+
+        <ng-container *ngIf="isShowApiData">
+            <nz-divider nzText="CCS Approvel Information"></nz-divider>
+
+            <nz-table [nzData]="apiData['CCSApproval']['results']" [nzShowPagination]="false" >
+                <thead>
+                <tr>
+                    <th>Reason</th>
+                    <th>Start date</th>
+                    <th>End date</th>
+                    <th>status</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <ng-container>
+                    <tr *ngFor="let approvel of apiData['CCSApproval']['results']; let i = index">
+
+                        <td *ngIf="approvel.reason === '195H' ">195H - Provider sanctioned</td>
+                        <td *ngIf="approvel.reason === '197AA' ">197A(a) - Immediate suspension as the Provider is not complying with Commonwealth, State and Territory laws</td>
+                        <td *ngIf="approvel.reason === '197AB' ">197A(b) - Immediate suspension due to an imminent threat to the health or safety of a child because of the care provided</td>
+                        <td *ngIf="approvel.reason === '197AC' ">197A(c) - Immediate suspension as it is not appropriate for (a) Service/s to provide care</td>
+                        <td *ngIf="approvel.reason === '197AD' ">197A(d) - Immediate suspension as it is not appropriate for the Provider to administer payments under the Family Assistance Law</td>
+
+                        <td *ngIf="approvel.reason === '197BA' ">197B(a) - The Provider has been issued 10 infringement notices within a 12 month period</td>
+                        <td *ngIf="approvel.reason === '197BB' ">197B(b) - The Provider has been issued 5 infringement notices within a 12 month period and penalties remain unpaid</td>
+                        <td *ngIf="approvel.reason === '197D' ">197D - Provider should not have been approved</td>
+
+                        <td *ngIf="approvel.reason === '197F' ">197F - All approved child care services have failed to provide child care for 3 continuous months or more</td>
+                        <td *ngIf="approvel.reason === '197H' ">197H - Provider has ceased to operate all of their approved child care services</td>
+                        <td *ngIf="approvel.reason === '197K' ">197K - Provider is no longer approved in respect of any child care service</td>
+
+                        <td *ngIf="approvel.reason === '197C' ">197C - Cancellation on request</td>
+                        <td *ngIf="approvel.reason === '196C' ">196C - Service removed on application</td>
+                        <td *ngIf="approvel.reason === '197E' ">197E - Provider should not have been approved for a service</td>
+                        <td *ngIf="approvel.reason === '197G' ">197G - Service has failed to provide child care for 3 continuous months or more</td>
+                        <td *ngIf="approvel.reason === '197J' ">197J - The Provider has ceased to operate the Service</td>
+                        <td *ngIf="approvel.reason === '' ">N/A</td>
+
+                        <td>{{approvel.startDate  || 'N/A' }}</td>
+                        <td>{{approvel.endDate || 'N/A' }}</td>
+
+                        <td *ngIf="approvel.status === 'CURR' ">Current</td>
+                        <td *ngIf="approvel.status === 'SUSP' ">Suspended</td>
+                        <td *ngIf="approvel.status === 'CANC' ">Cancelled</td>
+                        <td *ngIf="approvel.status === 'REFU' ">Refused</td>
+                        <td *ngIf="approvel.status === 'PEND' ">Pending</td>
+
+                    </tr>
+                </ng-container>
+                </tbody>
+            </nz-table>
+        </ng-container>
+
+
+
+        <nz-divider nzText="Financial Information"></nz-divider>
+
+        <nz-table [nzData]="apiData['Financial']['results']" [nzShowPagination]="false">
+            <thead>
+            <tr>
+                <th>Financial BSB</th>
+                <th>Account Number</th>
+                <th>Account Name</th>
+                <!-- <th>Date</th> -->
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let data of apiData['Financial']['results']; let i = index">
+                <td>{{ data.BSB }}</td>
+                <td>{{ data.accountNumber }}</td>
+                <td>{{ data.accountName }}</td>
+                <!-- <td>{{ data.date | date: 'mediumDate' }}</td> -->
+                <td>
+                    <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="financialActionMenu">
+                        <i class="ellipsis vertical icon"></i>
+                    </button>
+
+                    <mat-menu #financialActionMenu="matMenu">
+                        <ng-container *hasPermission="['AC2']; belongsTo: 'N20'">
+                            <button mat-menu-item (click)="editfinancialDialog(i)">
+                                    <span class="pr-8 pl-8">
+                                        <i class="edit outline icon primary-color"></i>
+                                        <span class="font-weight-600"> Edit</span>
+                                    </span>
+                            </button>
+                        </ng-container>
+                    </mat-menu>
+                </td>
+            </tr>
+            </tbody>
+        </nz-table>
+
+        <nz-divider nzText="Contact Information"></nz-divider>
+
+        <nz-table [nzData]="apiData['Contact']['results']" [nzShowPagination]="false">
+            <thead>
+            <tr>
+
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Mobile</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let data of apiData['Contact']['results']; let i = index">
+
+                <td>{{ data.email }}</td>
+                <td>{{ data.phone }}</td>
+                <td>{{ data.mobile }}</td>
+
+                <td>
+                    <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="contactActionsMenu">
+                        <i class="ellipsis vertical icon"></i>
+                    </button>
+
+                    <mat-menu #contactActionsMenu="matMenu">
+                        <ng-container *hasPermission="['AC2']; belongsTo: 'N20'">
+                            <button mat-menu-item (click)="editcontactDialog(i)">
+                                    <span class="pr-8 pl-8">
+                                        <i class="edit outline icon primary-color">
+                                        </i>
+                                        <span class="font-weight-600"> Edit</span>
+                                    </span>
+                            </button>
+                        </ng-container>
+                    </mat-menu>
+                </td>
+            </tr>
+            </tbody>
+        </nz-table>
+    </div>
+</ng-container>
+
+<ng-template #showDataTpl>
+
+    <div id="service-view" class="p-20" [@fadeInOnEnter] [@fadeOutOnLeave]
+         [@animate]="{ value: '*', params: { delay: '100ms', y: '15px' } }">
+
+        <div class="toolbar px-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <span class="text-uppercase go-back-link" (click)="goBack()">
+                <i class="long arrow alternate left icon"></i>
+                <span>Go Back</span>
+            </span>
+
+            <span>
+                <ng-container *ngIf="service.is_synced !== '0' && service.is_synced !== '1' ">
+                    <nz-alert nzType="warning" nzCloseable [nzMessage]="syncerror" (nzOnClose)="afterClose()">
+                    </nz-alert>
+                </ng-container>
+            </span>
+
+            <span class="text-right" fxLayout="row">
+
+                <ng-container>
+                    <button class="text-uppercase ml-8" nz-button nzType="primary" (click)="apiservice($event)">
+                        <i class="save outline icon b-i mr-8"></i> Accs Percentage
+                    </button>
+                </ng-container>
+
+                <ng-container *ngIf="service.is_synced === '3' || service.is_synced === '0'; else nameShowApiBtn">
+                    <button class="text-uppercase ml-8" nz-button nzType="primary"
+                            (click)="editName($event, service.service_name)">
+                        <i class="save outline icon b-i mr-8"></i> Edit Name
+                    </button>
+                </ng-container>
+
+                <ng-template #nameShowApiBtn>
+                    <button class="text-uppercase ml-8" nz-button nzType="primary"
+                            (click)="editName($event, apiData['ServiceName']['results'][0].name)">
+                        <i class="save outline icon b-i mr-8"></i> Edit Name
+                    </button>
+                </ng-template>
+
+
+            </span>
+
+        </div>
+
+        <nz-divider nzText="Basic Information"></nz-divider>
+
+        <div class="basic-info">
+            <div nz-row [nzGutter]="6">
+                <div nz-col [nzSpan]="6">
+                    <th>Service ID</th>
+                    <br />
+
+                    <td>{{ service.service_id }}</td>
+                </div>
+                <div nz-col [nzSpan]="6">
+                    <th>Service Type</th>
+                    <br />
+                    <td *ngIf="service.service_type === 'ZOSH'"> Outside School Hours Care </td>
+                    <td *ngIf="service.service_type === 'ZCDC'"> Centre-based Day Care </td>
+                    <td *ngIf="service.service_type === 'ZFDC'"> Family Day Care </td>
+                    <td *ngIf="service.service_type === 'ZIHC'"> In Home Care </td>
+                    <!-- <td>{{ service.service_type }}</td> -->
+                </div>
+
+                <div nz-col [nzSpan]="6">
+                    <th>Service Name</th>
+                    <br />
+                    <ng-container *ngIf="service.is_synced === '3' || service.is_synced === '0'; else nameShowApi">
+                        <td>{{service.service_name }}</td>
+                    </ng-container>
+                    <ng-template #nameShowApi>
+                        <td>{{apiData['ServiceName']['results'][0].name}}</td>
+                    </ng-template>
+
+                </div>
+
+                <div nz-col [nzSpan]="6">
+                    <th>Start Date</th>
+                    <br />
+                    <td>{{ service.start_date }}</td>
+                </div>
+
+                <br>
+                <br>
+                <nz-divider></nz-divider>
+                <nz-divider></nz-divider>
+
+
+                <div nz-col [nzSpan]="6">
+                    <th>End Date</th>
+                    <br />
+                    <td>{{ service.end_date }}</td>
+                </div>
+
+                <div nz-col [nzSpan]="6">
+                    <th>No Of Weeks</th>
+                    <br />
+                    <td>{{ service.no_of_weeks }}</td>
+                </div>
+
+                <div nz-col [nzSpan]="6">
+                    <th>Commencement Date</th>
+                    <br />
+                    <td>{{ service.commencementDate || 'N/A'}}</td>
+                </div>
+
+                <div nz-col [nzSpan]="6">
+                    <th>ACECQA Registration Code</th>
+                    <br />
+                    <td>{{ service.ACECQARegistrationCode || 'N/A'}}</td>
+                </div>
+            </div>
+        </div>
+
+        <nz-divider nzText="Address Information"></nz-divider>
+
+        <nz-table [nzData]="service.address" [nzShowPagination]="false">
+            <thead>
+            <tr>
+                <th>Address Type</th>
+                <th>Street Line1</th>
+                <th>Street Line2</th>
+                <th>Suburb</th>
+                <th>State</th>
+                <th>Post Code</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <ng-container *ngIf="service.is_synced === '2' || service.is_synced === '0'; else ShowApiAddressDate">
+                <tr *ngFor="let addr of service.address; let i = index">
+                    <td *ngIf="addr.type === 'ZPHYSICAL'; else postAddTpl"> Physical </td>
+                    <ng-template #postAddTpl>
+                        <td>Postal Address</td>
+                    </ng-template>
+                    <!-- <td>{{ addr.type }}</td> -->
+                    <td>{{ addr.streetline1 }}</td>
+                    <td>{{ addr.streetline2 }}</td>
+                    <td>{{ addr.suburb }}</td>
+                    <td>{{ addr.state }}</td>
+                    <td>{{ addr.postcode }}</td>
+                    <td>{{ addr.startDate || 'N/A' }}</td>
+                    <td>{{ addr.endDate || 'N/A' }}</td>
+                    <td>
+                        <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="addressActionsMenu">
+                            <i class="ellipsis vertical icon"></i>
+                        </button>
+
+                        <mat-menu #addressActionsMenu="matMenu">
+                            <ng-container *hasPermission="['AC2']; belongsTo: 'N20'">
+                                <button mat-menu-item (click)="editAddressDialog(i, false)">
+                                        <span class="pr-8 pl-8">
+                                            <i class="edit outline icon primary-color">
+                                            </i>
+                                            <span class="font-weight-600"> Edit</span>
+                                        </span>
+                                </button>
+                            </ng-container>
+                        </mat-menu>
+                    </td>
+                </tr>
+            </ng-container>
+            <ng-template #ShowApiAddressDate>
+                <tr *ngFor="let addr of apiData['Address']['results']; let i = index">
+                    <td>{{ addr.type }}</td>
+                    <td>{{ addr.streetline1 }}</td>
+                    <td>{{ addr.streetline2 }}</td>
+                    <td>{{ addr.suburb }}</td>
+                    <td>{{ addr.state }}</td>
+                    <td>{{ addr.postcode }}</td>
+                    <td>{{ addr.startDate || 'N/A' }}</td>
+                    <td>{{ addr.endDate || 'N/A' }}</td>
+                    <td>
+                        <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="addressActionsMenu">
+                            <i class="ellipsis vertical icon"></i>
+                        </button>
+
+                        <mat-menu #addressActionsMenu="matMenu">
+                            <ng-container *hasPermission="['AC2']; belongsTo: 'N20'">
+                                <button mat-menu-item (click)="editAddressDialog(i, true)">
+                                        <span class="pr-8 pl-8">
+                                            <i class="edit outline icon primary-color">
+                                            </i>
+                                            <span class="font-weight-600"> Edit</span>
+                                        </span>
+                                </button>
+                            </ng-container>
+                        </mat-menu>
+                    </td>
+                </tr>
+            </ng-template>
+
+            </tbody>
+        </nz-table>
+
+        <nz-divider nzText="Financial Information"></nz-divider>
+
+        <nz-table [nzData]="service.financial" [nzShowPagination]="false">
+            <thead>
+            <tr>
+                <th>Financial BSB</th>
+                <th>Account Number</th>
+                <th>Account Name</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let data of service.financial; let i = index">
+                <td>{{ data.BSB }}</td>
+                <td>{{ data.accountNumber }}</td>
+                <td>{{ data.accountName }}</td>
+                <td>{{ data.date | date: 'mediumDate' }}</td>
+                <td>
+                    <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="financialActionMenu">
+                        <i class="ellipsis vertical icon"></i>
+                    </button>
+
+                    <mat-menu #financialActionMenu="matMenu">
+                        <ng-container *hasPermission="['AC2']; belongsTo: 'N20'">
+                            <button mat-menu-item (click)="editfinancialDialog(i)">
+                                    <span class="pr-8 pl-8">
+                                        <i class="edit outline icon primary-color"></i>
+                                        <span class="font-weight-600"> Edit</span>
+                                    </span>
+                            </button>
+                        </ng-container>
+                    </mat-menu>
+                </td>
+            </tr>
+            </tbody>
+        </nz-table>
+
+        <nz-divider nzText="Contact Information"></nz-divider>
+
+        <nz-table [nzData]="service.contact" [nzShowPagination]="false">
+            <thead>
+            <tr>
+
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Mobile</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let data of service.contact; let i = index">
+
+                <td>{{ data.email }}</td>
+                <td>{{ data.phone }}</td>
+                <td>{{ data.mobile }}</td>
+
+                <td>
+                    <button nz-button nzType="link" nzSize="large" [matMenuTriggerFor]="contactActionsMenu">
+                        <i class="ellipsis vertical icon"></i>
+                    </button>
+
+                    <mat-menu #contactActionsMenu="matMenu">
+                        <ng-container *hasPermission="['AC2']; belongsTo: 'N20'">
+                            <button mat-menu-item (click)="editcontactDialog(i)">
+                                    <span class="pr-8 pl-8">
+                                        <i class="edit outline icon primary-color">
+                                        </i>
+                                        <span class="font-weight-600"> Edit</span>
+                                    </span>
+                            </button>
+                        </ng-container>
+                    </mat-menu>
+                </td>
+            </tr>
+            </tbody>
+        </nz-table>
+    </div>
+
+</ng-template>

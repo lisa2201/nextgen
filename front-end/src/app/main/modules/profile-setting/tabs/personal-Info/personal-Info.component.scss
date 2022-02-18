@@ -1,0 +1,227 @@
+@import "src/@fuse/scss/fuse";
+
+user-personal-Info {
+    #about {
+        max-width: 1200px;
+
+        .about-content {
+            .general {
+                .location {
+                    mat-icon {
+                        line-height: 13px !important;
+                    }
+                }
+            }
+
+            .work {
+                .job {
+                    .company {
+                        padding: 0 16px 0 0;
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+
+        .about-sidebar {
+            padding-left: 32px;
+
+            @include media-breakpoint("sm") {
+                padding: 8px;
+            }
+
+            .friends {
+                .content {
+                    .friend {
+                        padding: 4px;
+
+                        img {
+                            border-radius: 4px;
+                        }
+                    }
+                }
+            }
+
+            .groups {
+                .content {
+                    .group {
+                        margin-bottom: 24px;
+
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+
+                        .logo {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 48px;
+                            height: 48px;
+                            font-size: 21px;
+                            line-height: normal;
+                            border-radius: 50%;
+                            margin-right: 16px;
+                        }
+
+                        .name {
+                            font-weight: 600;
+                            font-size: 15px;
+                        }
+
+                        .members {
+                            margin-top: 8px;
+                        }
+                    }
+                }
+            }
+        }
+        .lbl {
+            @include media-breakpoint("xs") {
+                display: block;
+            }
+
+            &::after {
+                display: inline-block;
+                line-height: 1;
+                margin-left: 4px;
+                content: ":";
+            }
+        }
+        nz-form-label {
+            text-align: left !important;
+            width: 120px;
+            font-weight: 600;
+        }
+        input {
+            height: 35px !important;
+            // bottom: 7px!important;
+            // min-width: 200px;
+            // width: 250px;
+            // max-width: 300px;
+            // box-sizing: border-box!important;
+            // margin: 0!important;
+            // padding: 4px 11px!important;
+            // font-variant: tabular-nums!important;
+            // list-style: none!important;
+            // font-feature-settings: 'tnum'!important;
+            // position: relative!important;
+            // display: inline-block!important;
+            // height: 32px!important;
+            // color: rgba(0,0,0,.65)!important;
+            // font-size: 14px!important;
+            // line-height: 1.5!important;
+            // background-color: #fff!important;
+            // background-image: none!important;
+            // border: 1px solid #d9d9d9!important;
+            // border-radius: 4px!important;
+            // transition: all .3s!important;
+        }
+
+        // .ant-form-item-control{
+        //     height: 30px!important
+        // }
+
+        .timeline-sidebar {
+            padding-left: 32px;
+
+            @include media-breakpoint("lt-md") {
+                padding: 32px 0 0 0;
+            }
+
+            .latest-activity {
+                .content {
+                    .activities {
+                        .activity {
+                            padding: 16px 0;
+
+                            .avatar {
+                                margin-right: 16px;
+                            }
+
+                            .username {
+                                font-weight: 600;
+                            }
+
+                            .message {
+                                font-weight: 600;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Profile boxes
+    .profile-box {
+        header {
+            //same as header background color
+            // background: #1e7e7f !important;
+            // background-image: linear-gradient(-152deg, #2e5177 1%, #aed1b0 65%) !important;
+
+            background: #ABDDD5 !important;
+            // background-image: linear-gradient(
+            //     -152deg,
+            //     #1a6906 1%,
+            //     #059bca 65%
+            // ) !important;
+        }
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 16px;
+        @include mat-elevation(2);
+
+        header.margin-16 {
+            // padding: 16px;
+
+            .title {
+                font-size: 17px;
+            }
+
+            .more {
+                cursor: pointer;
+            }
+        }
+
+        .padding-16 {
+            padding: 16px;
+        }
+
+        .content {
+            padding: 16px;
+        }
+
+        footer {
+            padding: 8px;
+            border-top: 1px solid;
+        }
+
+        &.info-box {
+            .info-line {
+                margin-bottom: 24px;
+
+                .title {
+                    font-size: 15px;
+                    font-weight: 600;
+                    padding-bottom: 4px;
+                }
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    [nz-form] {
+        max-width: 600px;
+    }
+
+    .phone-select {
+        width: 70px;
+    }
+
+    .register-are {
+        margin-bottom: 8px;
+    }
+}

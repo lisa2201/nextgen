@@ -1,0 +1,325 @@
+@import "src/@fuse/scss/fuse";
+@import "src/@fuse/scss/variables";
+
+attendance-week-view {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 0;
+    overflow: hidden;
+
+    @include media-breakpoint('xs') {
+        // width: 100%;
+    }
+
+    @include media-breakpoint('gt-xs') {
+        // width: 640px;
+    }
+
+    .attendance-week-calendar {
+        position: relative;
+
+        .child-info {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+
+            .child-img {
+                border: 4px solid $ant-border-color;
+                box-shadow: $custom-box-shadow-high;
+                margin-right: 16px;
+            }
+
+            .child-name {
+                font-size: 21px;
+                max-width: 300px;
+
+                @media only screen and (max-width: 670px) {
+                    display: none;
+                }
+            }
+        }
+
+        .week-title {
+            font-weight: 600;
+            padding: 8px 0;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+
+            -webkit-transition: all .3s;
+            transition: all .3s;
+
+            @include media-breakpoint('xs') {
+                
+            }
+
+            img {
+                height: 30px;
+                width: 30px;
+                margin-right: 16px;
+
+                @include media-breakpoint('xs') {
+                    display: none;
+                }
+            }
+
+            .b-nav {
+
+                i {
+                    font-size: 23px !important;
+                    color: rgba(0, 0, 0, 0.25) !important;
+                }
+            }
+
+            .date-input-wrapper {
+                position: relative;
+
+                .date-label {
+                    position: relative;
+                    z-index: 2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    .text {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+
+                        p {
+                            margin: 0;
+
+                            &.sub {
+                                color: rgba(34, 34, 34, 0.4);
+                            }
+
+                            &.big {
+                                font-size: 21px;
+                            }
+                        }
+                    }
+                }
+
+                .date-input {
+                    position: absolute;
+                    z-index: 1;
+                    visibility: hidden;
+                    top: 0;
+                    width: calc(100% + 20px);
+                    left: -10px;
+                    pointer-events: none;
+
+                    .ant-calendar-picker {
+                        display: block;
+                    }
+
+                    @media screen and (max-width: 599px) {
+                        width: calc(100% + 72px);
+                        left: -20px;
+                    }
+                }
+            }
+        }
+
+        .calendar-view {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+
+            @media screen and (max-width: 1180px) {
+                flex-wrap: nowrap;
+                white-space: nowrap;
+                overflow-x: scroll;
+                overflow-y: hidden;
+            }
+
+            @include media-breakpoint('xs') {
+                flex-wrap: wrap;
+                white-space: initial;
+                overflow: hidden;
+            }
+
+            .calendar-day {
+                flex: 1 1 0;
+                width: 0;
+                margin-right: 8px;
+
+                &:last-of-type {
+                    margin-right: 0;
+                }
+
+                @media screen and (max-width: 1180px) {
+                    min-width: 150px !important;
+                    max-width: 150px !important;
+                }
+
+                @include media-breakpoint('xs') {
+                    flex-basis: 100% !important;
+                    min-width: 100% !important;
+                }
+
+                .calender-day-heading {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: space-between;
+                    
+                    .day {
+                        font-size: 27px;
+                        font-weight: 600;
+                    }
+
+                    .date {
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: rgba(34, 34, 34, 0.4);
+                    }
+
+                }
+
+                .calender-day-inner {
+                    flex: 1;
+                    margin-top: 8px;
+
+                    .calendar-item {
+                        position: relative;
+                        overflow: hidden;
+                        min-height: 210px;
+                        padding: 8px;
+                        border-radius: 4px;
+                        margin-bottom: 8px;
+                        box-shadow: $custom-box-shadow-high;
+                        border: 2px solid $input-border-color;
+
+                        &.completed {
+                            background-color: rgba(76, 175, 80, 0.6);
+                        }
+
+                        &.not-completed {
+                            background-color: rgba(255, 149, 0, 0.5);
+                        }
+
+                        &.no-attendance {
+                            background-color: rgba(231, 76, 60, 0.6);
+                        }
+
+                        &.absence {
+                            background-color: rgba(96, 125, 139, 0.55);
+                        }
+
+                        &.holiday {
+                            background-color: rgba(158, 158, 158, 0.35);
+                        }
+
+                        &.empty {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-weight: 600;
+                            
+                            background: -webkit-linear-gradient(135deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.4) 75%, transparent 75%, transparent);
+                            background: linear-gradient(-45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.4) 75%, transparent 75%, transparent);
+                            background-size: 15px 15px;
+                            background-color: #eee;
+
+                            img {
+                                height: 48px;
+                                width: 48px;
+                                opacity: 0.25;
+                            }
+                        }
+
+                        p {
+                            margin: 0;
+
+                            i {
+                                color: rgba(0, 0, 0, 0.45) !important;
+
+                                &.ic {
+                                    min-width: 15px !important;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        .attendance-summary {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+
+            @media only screen and (max-width: 768px) {
+                justify-content: center;
+            }
+
+            ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                
+                li {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 8px 12px;
+                    border-radius: 4px;
+                    background: #fff;
+                    margin-right: 16px;
+                    border: 1px solid $form-border-color;
+                    box-shadow: $custom-box-shadow;
+    
+                    &:last-of-type {
+                        margin: 0;
+                    }
+
+                    @media only screen and (max-width: 640px) {
+                        width: calc(50% - 8px);
+                        margin-right: 8px;
+                        margin-bottom: 8px;
+                        justify-content: space-between;
+
+                        &:nth-last-child(1),
+                        &:nth-last-child(2) {
+                            margin-bottom: 0;
+                        }
+                    }
+
+                    @media only screen and (max-width: 437px) {
+                        margin-right: 0px;
+                        width: 100%;
+
+                        &:nth-last-child(1),
+                        &:nth-last-child(2) {
+                            margin-bottom: 8px;
+                        }
+                    }
+    
+                    .color-box {
+                        font-size: 21px;
+                    }
+    
+                    .label {
+                        font-size: 14px;
+                        font-weight: 600;
+    
+                        &.highlight {
+                            padding-left: 6px;
+                            color: $success-color;
+                        }
+                    }
+                }
+            }
+
+            
+        }
+    }
+}

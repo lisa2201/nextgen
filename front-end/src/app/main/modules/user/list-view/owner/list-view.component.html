@@ -1,0 +1,173 @@
+<!-- CONTENT CARD -->
+<div class="content" [@animate]="{ value:'*', params:{ delay: '100ms', y:'15px' } }">
+
+    <!-- CONTENT TOOLBAR -->
+    <div class="toolbar px-8 py-8" fxLayout="row" fxLayoutAlign="space-between center">
+
+        <span fxLayout="row" fxLayoutAlign="space-between center" fxHide.gt-md [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+            <button class="text-uppercase blank"
+                nz-button nzType="link"
+                (click)="toggleSidebar('users-filter-sidebar')">
+                <i class="filter icon"></i>
+            </button>
+    
+        </span>
+
+        <nz-input-group class="search-container"
+            [nzSuffix]="suffixTemplate" 
+            [nzPrefix]="prefixTemplate">
+            <input type="text" nz-input placeholder="Search ..." [formControl]="searchInput" />
+        </nz-input-group>
+
+        <ng-template #prefixTemplate>
+            <i nz-icon nzType="search" class="search-icon"></i>
+        </ng-template>
+
+        <ng-template #suffixTemplate>
+            <i class="times circle outline icon ant-input-clear-icon"
+                *ngIf="searchInput.value" [@fadeInOnEnter] [@fadeOutOnLeave]
+                (click)="clearSearch($event)">
+            </i>
+        </ng-template>
+
+    </div>
+    <!-- / CONTENT TOOLBAR -->
+
+    <ng-container>
+
+        <!-- DATA TABLE VIEW -->
+        <nz-table class="table-view"
+            #usersTable
+            [nzFrontPagination]="false"
+            [nzData]="userList"
+            [nzLoading]="tableLoading"
+            [nzTotal]="total"
+            [(nzPageIndex)]="pageIndex"
+            [(nzPageSize)]="pageSize"
+            [nzShowSizeChanger]="pageSizeChanger"
+            [nzPageSizeOptions]="pageSizeOptions"
+            [nzShowTotal]="totalTemplate"
+            (nzPageIndexChange)="onTableChange()"
+            (nzPageSizeChange)="onTableChange(true)"
+            [nzNoResult]="emptyBlock"
+            [nzLoadingIndicator]="indicatorTemplate"
+            [nzSimple]="mobilePagination"
+            [ngClass]="{ 'ant-table-empty': userList.length === 0 }">
+
+            <thead>
+                <tr>
+                    <th [nzWidth]="'60px'" [nzAlign]="'center'">Image</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.name" (nzSortChange)="sortColumns('name', $event)">Name</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.email" (nzSortChange)="sortColumns('email', $event)">Email</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.branch" (nzSortChange)="sortColumns('branch', $event)">Branch</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.level" (nzSortChange)="sortColumns('level', $event)">Level</th>
+                    <th>Roles</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.status" (nzSortChange)="sortColumns('status', $event)">Status</th>
+                    <th nzShowSort [(nzSort)]="mapOfSort.login" (nzSortChange)="sortColumns('login', $event)">Login Access</th>
+                    <th *hasPermission="['AC2', 'AC3']; belongsTo 'N04'">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <ng-template ngFor let-data [ngForOf]="usersTable.data" [ngForTrackBy]="trackByFn">
+                    <tr>
+                        <td>
+                            <ng-container *ngIf="data.isAdministrator; else userImage">
+                                <nz-badge [nzCount]="iconTemplate">
+                                    <img src="{{ getStaffProfileImage(data) }}" class="user-pic" alt="{{ data.getFullName() }}">
+                                </nz-badge>
+                            </ng-container>
+
+                            <ng-template #userImage>
+                                <img src="{{ getStaffProfileImage(data) }}" class="user-pic" alt="{{ data.getFullName() }}">
+                            </ng-template>
+                        </td>
+                        <td [innerHTML]="data.getFullName()"></td>
+                        <td>{{ data.email }}</td>
+                        <td>{{ data.branch.name }}</td>
+                        <td>{{ data.roleLevel }}</td>
+                        <td class="roles">
+                            <span *ngFor="let item of data.roles; let isLast=last">
+                                {{ item.display_name }}{{isLast ? '' : ', '}}
+                            </span>
+                        </td>
+                        <td [innerHTML]="data.getStatusLabel()"></td>
+                        <td [innerHTML]="data.getLoginAccessLabel()"></td>
+                        <td *hasPermission="['AC2', 'AC3']; belongsTo 'N04'" class="tbl-style">
+
+                            <button 
+                                nz-button 
+                                nzType="link" 
+                                nzSize="large" 
+                                [matMenuTriggerFor]="menu">
+                                <i class="ellipsis vertical icon"></i>
+                            </button>
+
+                            <mat-menu #menu="matMenu" backdropClass="tlp-more">
+
+                                <ng-container *hasPermission="['AC2']; belongsTo 'N04'">
+                                    <button mat-menu-item [routerLink]="['/manage-users/user', data.id]">
+                                        <i class="edit outline icon primary-color"></i>
+                                        <span class="font-weight-600">Edit</span>
+                                    </button>
+                                </ng-container>
+
+                                <ng-container *hasPermission="['AC3']; belongsTo 'N04'">
+                                    <button mat-menu-item (click)="delete(data, $event)">
+                                        <i class="trash alternate outline icon danger-color"></i>
+                                        <span class="font-weight-600">Delete</span>
+                                    </button>
+                                </ng-container>
+
+                            </mat-menu>
+                            
+                        </td>
+                    </tr>
+                </ng-template>
+            </tbody>
+
+        </nz-table>
+        <!-- / DATA TABLE VIEW -->
+
+        <ng-template #iconTemplate>
+            <i nz-icon nzType="safety-certificate" nzTheme="fill" class="ant-scroll-number-custom-component administrator"></i>
+        </ng-template>
+
+        <!-- TOTAL LABEL VIEW -->
+        <ng-template #totalTemplate let-range="range" let-total>
+            <span fxHide fxShow.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">Showing {{ range[0] }} to {{ range[1] }} of {{ total }} entries</span>
+            <span fxHide.gt-sm [@fadeInOnEnter] [@fadeOutOnLeave] class="font-weight-600">{{ range[0] }} - {{ range[1] }} of {{ total }} entries</span>
+        </ng-template>
+        <!-- / TOTAL LABEL VIEW -->
+
+        <!-- LOADER VIEW -->
+        <ng-template #indicatorTemplate>
+            <div class="is-loading">
+                <span class="btn-spinner card-loader"></span>
+            </div>
+        </ng-template>
+        <!-- / LOADER VIEW -->
+
+        <!-- EMPTY VIEW -->
+        <ng-template #emptyBlock>
+
+            <nz-empty class="pt-24 pb-24 m-0"
+                [nzNotFoundImage]="'assets/icons/flat/ui_set/custom_icons/empty.svg'"
+                [nzNotFoundContent]="contentTpl"
+                [@fadeInOnEnter] [@fadeOutOnLeave]>
+
+                <ng-template #contentTpl>
+                    <h4 class="mt-24">No Data Found</h4>
+                    <span>Looks like there's no information to display here</span>
+                </ng-template>
+
+            </nz-empty>
+
+        </ng-template>
+        <!-- / EMPTY VIEW -->
+
+    </ng-container>
+    
+</div>
+<!-- / CONTENT CARD -->
